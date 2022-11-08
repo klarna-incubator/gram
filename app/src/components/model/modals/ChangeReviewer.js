@@ -1,4 +1,3 @@
-import { InfoRounded as InfoRoundedIcon } from "@mui/icons-material";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import {
   Box,
@@ -9,7 +8,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Link,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -26,16 +24,10 @@ export function ChangeReviewer({ modelId }) {
 
   const [newReviewer, setNewReviewer] = useState(null);
 
-  const [
-    changeReviewer,
-    { isUninitialized, isLoading, isSuccess, isError, error },
-  ] = useChangeReviewerMutation();
+  const [changeReviewer, { isUninitialized, isLoading, isSuccess, isError, error }] = useChangeReviewerMutation();
 
-  const { data: permissions, isLoading: permissionsIsLoading } =
-    useGetModelPermissionsQuery({ modelId });
-  const writeAllowed =
-    permissions?.includes(PERMISSIONS.WRITE) ||
-    permissions?.includes(PERMISSIONS.REVIEW);
+  const { data: permissions, isLoading: permissionsIsLoading } = useGetModelPermissionsQuery({ modelId });
+  const writeAllowed = permissions?.includes(PERMISSIONS.WRITE) || permissions?.includes(PERMISSIONS.REVIEW);
 
   return (
     <Dialog open={true} scroll={"paper"} fullWidth maxWidth="sm">
@@ -54,45 +46,29 @@ export function ChangeReviewer({ modelId }) {
       <DialogContent sx={{ paddingTop: "0" }}>
         {(isUninitialized || isLoading) && (
           <>
-            <DialogContentText>
-              Select who you would like to review your threat model
-            </DialogContentText>
-            <ReviewerDropdown
-              modelId={modelId}
-              value={newReviewer}
-              onChange={setNewReviewer}
-            />
+            <DialogContentText>Select who you would like to review your threat model</DialogContentText>
+            <ReviewerDropdown modelId={modelId} value={newReviewer} onChange={setNewReviewer} />
           </>
         )}
         {isSuccess && (
           <>
-            <DialogContentText>
-              Your request for review has been registered!
-            </DialogContentText>
+            <DialogContentText>Your request for review has been registered!</DialogContentText>
             <br />
             <DialogContentText>
-              You'll receive an email as a follow-up with feedback on the threat
-              model. Depending on the outcome of the review, you may be asked to
-              schedule a threat modeling session.
+              You'll receive an email as a follow-up with feedback on the threat model. Depending on the outcome of the
+              review, you may be asked to schedule a threat modeling session.
             </DialogContentText>
           </>
         )}
         {isError && (
           <>
-            <DialogContentText variant="h6">
-              Something went wrong :(
-            </DialogContentText>
-            <DialogContentText variant="caption">
-              Error: {error}
-            </DialogContentText>
+            <DialogContentText variant="h6">Something went wrong :(</DialogContentText>
+            <DialogContentText variant="caption">Error: {error}</DialogContentText>
           </>
         )}
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => dispatch(modalActions.close())}
-          variant="outlined"
-        >
+        <Button onClick={() => dispatch(modalActions.close())} variant="outlined">
           {isUninitialized || isLoading ? "Cancel" : "Close"}
         </Button>
         {(isUninitialized || isLoading) && (
@@ -102,9 +78,7 @@ export function ChangeReviewer({ modelId }) {
             variant="contained"
           >
             Change Reviewer
-            {isLoading && (
-              <CircularProgress size={20} sx={{ position: "absolute" }} />
-            )}
+            {isLoading && <CircularProgress size={20} sx={{ position: "absolute" }} />}
           </Button>
         )}
       </DialogActions>
