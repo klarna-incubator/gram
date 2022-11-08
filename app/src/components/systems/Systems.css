@@ -1,0 +1,33 @@
+div#systems .visualize {
+  display: flex;
+  font-size: 16px;
+  border: none;
+  font-family: "Open Sans", sans-serif;
+  padding: 10px 20px;
+  background-color: #3f3f3f;
+  color: #eee;
+  cursor: pointer;
+  width: 100px;
+  transition: width 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+div#systems .visualize:after {
+  content: "\2026";
+}
+
+div#systems .visualize:hover {
+  background-color: #ffb3c7;
+  color: black;
+  width: 250px;
+}
+
+div#systems .visualize:focus {
+  outline: 0;
+}
+
+div#systems .visualize:hover:after {
+  content: "Visualize All Systems";
+}

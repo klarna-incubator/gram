@@ -1,0 +1,14 @@
+*/.DS_Store
+*/.idea
+*/node_modules/
+*/.env
+*/deploy/
+*/Dockerfile
+*/log/
+*/config/development.json
+*/yarn-error.log
+*/npm-error.log
+*/build/
+api/assets/*
+!api/assets/*.svg
+!api/assets/*.png

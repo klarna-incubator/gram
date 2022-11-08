@@ -1,0 +1,19 @@
+#error-page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 100;
+  color: #999;
+  text-align: center;
+  font-size: 24px;
+}
+
+#error-page > .big {
+  font-size: 200px;
+  color: #444;
+}
+
+#error-page .pink {
+  color: #ffb3c7;
+}

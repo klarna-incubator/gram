@@ -1,0 +1,95 @@
+div.error,
+div.pending {
+  margin-top: 200px;
+  text-align: center;
+  color: #aaa;
+  font-size: 18px;
+}
+
+div#system {
+  width: 80%;
+  margin: auto;
+  margin-top: 50px;
+  color: #aaa;
+  font-weight: 100;
+}
+
+div#system > div.threat-models {
+  margin-top: 50px;
+}
+
+div#system h1.title,
+div#system h2.title,
+div#system h3.title {
+  font-weight: 100;
+  color: #fefefe;
+  margin-bottom: 20px;
+}
+
+div#system span.shortName {
+  color: #666;
+}
+
+div#system > span.team {
+  margin-bottom: 20px;
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+div#system > span.description {
+  margin-bottom: 10px;
+  margin-left: 5px;
+  font-size: 16px;
+}
+
+div#system > span.divider {
+  color: #555;
+}
+
+div#system p.notice {
+  font-size: 14px;
+  color: #777;
+}
+
+div#system div.model-list a:link,
+div#system div.model-list a:hover,
+div#system div.model-list a:active,
+div#system div.model-list a:visited {
+  text-decoration: none;
+  color: #eee;
+}
+
+div#system div.model-list .model {
+  position: relative;
+  width: 500px;
+  padding: 10px 20px;
+  margin-bottom: 5px;
+  background-color: #2d2d2d;
+}
+
+div#system div.model-list .model:hover {
+  background-color: #222;
+}
+
+div#system div.model-list .model .ts {
+  font-size: 12px;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translate(0, -50%);
+  color: #999;
+}
+
+div#system div.model-list .model .ts .label {
+  opacity: 0.7;
+  padding-right: 5px;
+}
+
+div#system a {
+  color: inherit;
+  text-decoration: none;
+}
+
+div#system a:hover {
+  text-decoration: underline;
+}

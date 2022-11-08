@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>Icon-Architecture/16/Arch_Amazon-Pinpoint-Journey_16</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#BD0816" offset="0%"></stop>
+            <stop stop-color="#FF5252" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Icon-Architecture/16/Arch_Amazon-Pinpoint-Journey_16" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon-Architecture-BG/16/Mobile" fill="url(#linearGradient-1)">
+            <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
+        </g>
+        <path d="M18,15 C17.448,15 17,14.551 17,14 C17,13.449 17.448,13 18,13 C18.552,13 19,13.449 19,14 C19,14.551 18.552,15 18,15 M15,7 C15,6.449 15.448,6 16,6 C16.552,6 17,6.449 17,7 C17,7.551 16.552,8 16,8 C15.448,8 15,7.551 15,7 M12,15 C12,16.654 10.654,18 9,18 C7.346,18 6,16.654 6,15 C6,13.346 7.346,12 9,12 C9.613,12 10.184,12.187 10.66,12.504 L8.746,14.824 L9.518,15.46 L11.384,13.199 C11.766,13.702 12,14.321 12,15 M18.143,12.015 L17.035,8.703 C17.611,8.352 18,7.723 18,7 C18,5.897 17.103,5 16,5 C14.897,5 14,5.897 14,7 C14,7.399 14.12,7.769 14.322,8.081 L14.314,8.075 L11.295,11.734 C10.645,11.275 9.855,11 9,11 C6.794,11 5,12.794 5,15 C5,17.206 6.794,19 9,19 C11.206,19 13,17.206 13,15 C13,14.011 12.626,13.116 12.028,12.417 L15.054,8.751 C15.337,8.905 15.656,9 16,9 C16.026,9 16.051,8.993 16.076,8.992 L17.148,12.197 C16.473,12.519 16,13.203 16,14 C16,15.103 16.897,16 18,16 C19.103,16 20,15.103 20,14 C20,12.946 19.178,12.089 18.143,12.015" id="Amazon-Pinpoint-Journey_Icon_32_Squid" fill="#FFFFFF"></path>
+    </g>
+</svg>

@@ -1,0 +1,37 @@
+#model {
+  height: 100%;
+  font-weight: 100;
+  background-color: #fff;
+}
+
+#model #diagram-container {
+  height: 100%;
+}
+
+.context-item > * {
+  display: block;
+}
+
+#board-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+}
+
+#diagram-container {
+  overflow: hidden;
+}
+
+#board-container .info-box {
+  border: 1px solid #000;
+  padding: 50px;
+  width: 350px;
+  height: 100px;
+}
+
+#board-container.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

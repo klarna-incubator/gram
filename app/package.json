@@ -1,0 +1,83 @@
+{
+  "name": "gram-app",
+  "proxy": "http://localhost:8080",
+  "version": "2.8.4",
+  "private": true,
+  "engines": {
+    "node": "16"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.6.0",
+    "@fortawesome/fontawesome-svg-core": "^1.3.0",
+    "@mui/icons-material": "^5.4.1",
+    "@mui/material": "^5.4.1",
+    "@reduxjs/toolkit": "^1.7.2",
+    "@sentry/react": "^7.6.0",
+    "@sentry/tracing": "^7.6.0",
+    "jwt-decode": "^3.1.2",
+    "konva": "^8.3.2",
+    "lodash": "^4.17.21",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-konva": "^17.0.2-4",
+    "react-konva-utils": "^0.2.0",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.4.1",
+    "redux": "^4.1.2",
+    "redux-thunk": "^2.4.1",
+    "use-image": "^1.0.6",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@iconify/react": "^3.1.3",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/react-hooks": "^3.4.1",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "jest-each": "^27.0.6",
+    "prettier": "^2.1.2",
+    "react-scripts": "^5.0.1",
+    "react-test-renderer": "^17.0.1",
+    "redux-test-utils": "^1.0.0",
+    "snyk": "^1.872.0"
+  },
+  "scripts": {
+    "start": "PORT=4726 REACT_APP_VERSION=$npm_package_version react-scripts start",
+    "lint": "node_modules/.bin/prettier --check src/",
+    "lint-fix": "node_modules/.bin/prettier -l src/ --write",
+    "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
+    "test": "snyk test --fail-on=all && ./node_modules/jest/bin/jest.js --silent",
+    "snyk": "snyk test",
+    "jest": "./node_modules/jest/bin/jest.js",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js",
+      "^konva": "<rootDir>/node_modules/konva/konva",
+      "^react-konva-utils": "<rootDir>/node_modules/react-konva-utils/es"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!konva|react-konva-utils)"
+    ],
+    "testEnvironment": "jsdom"
+  }
+}

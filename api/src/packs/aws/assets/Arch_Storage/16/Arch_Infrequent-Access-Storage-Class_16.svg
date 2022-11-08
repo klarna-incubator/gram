@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon-Architecture/16/Arch_Infrequent-Access-Storage-Class_16</title>
+    <defs>
+        <linearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#1B660F" offset="0%"></stop>
+            <stop stop-color="#6CAE3E" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Icon-Architecture/16/Arch_Infrequent-Access-Storage-Class_16" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Rectangle" fill="url(#linearGradient-1)">
+            <rect x="0" y="0" width="24" height="24"></rect>
+        </g>
+        <g id="Icon-Service/16/Infrequent-Access-Storage-Class_16" transform="translate(4.000000, 4.000000)" fill="#FFFFFF">
+            <path d="M15.146,13.146 L15.853,13.853 L13.853,15.853 C13.755,15.951 13.627,16 13.5,16 C13.372,16 13.244,15.951 13.146,15.853 L11.146,13.853 L11.853,13.146 L13,14.292 L13,8.707 L11.853,9.853 L11.146,9.146 L13.146,7.146 C13.341,6.951 13.658,6.951 13.853,7.146 L15.853,9.146 L15.146,9.853 L14,8.707 L14,14.292 L15.146,13.146 Z M7.5,1 C11.759,1 13.965,2.036 13.994,2.489 L13.99,2.519 C13.935,2.977 11.734,4 7.5,4 C3.27,4 1.07,2.979 1.011,2.521 L1.005,2.489 C1.036,2.035 3.242,1 7.5,1 L7.5,1 Z M15,2.5 C15,0.782 11.112,0 7.5,0 C3.887,0 1.39710465e-12,0.782 1.39710465e-12,2.5 L0.046,2.815 L2.006,14.254 C2.197,15.424 3.936,16 7.478,16 C8.514,16 9.421,15.919 10.174,15.822 L10.045,14.83 C9.335,14.922 8.471,15 7.478,15 C4.043,15 3.042,14.396 2.993,14.089 L1.258,3.964 C2.696,4.667 5.152,5 7.5,5 C9.85,5 12.31,4.666 13.748,3.961 L13.452,5.721 L14.438,5.887 L14.955,2.813 L15,2.5 Z" id="Infrequent-Access-Storage-Class_16_Squid"></path>
+        </g>
+    </g>
+</svg>

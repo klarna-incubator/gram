@@ -1,0 +1,27 @@
+.active-user-item {
+  width: 42px;
+  height: 42px;
+  background-color: #ccc;
+  border-radius: 50%;
+  font-family: sans-serif;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 3px;
+}
+
+.active-users-overlay {
+  position: relative;
+  z-index: 2;
+  margin-top: -55px;
+  margin-right: 7px;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  flex-direction: row-reverse;
+  width: 50%;
+  float: right;
+}

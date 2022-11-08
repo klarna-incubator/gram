@@ -1,0 +1,271 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:100,200,300,400");
+
+*,
+html {
+  padding: 0;
+  margin: 0;
+  /* user-select: none; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+::selection {
+  background: #ffb3c7; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: #ffb3c7; /* Gecko Browsers */
+}
+
+:focus {
+  outline-color: transparent;
+  outline-style: none;
+}
+
+dl,
+ol,
+ul {
+  list-style: none;
+  margin-top: 0;
+  padding-left: 0;
+}
+
+dl dl,
+dl ol,
+dl ul,
+ol dl,
+ol ol,
+ol ul,
+ul dl,
+ul ol,
+ul ul {
+  font-size: 90%;
+  margin: 1.5rem 0 1.5rem 3rem;
+}
+
+ol {
+  list-style: decimal inside;
+}
+
+ul {
+  list-style: circle inside;
+}
+
+dd,
+dt,
+li {
+  margin-bottom: 1rem;
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 100;
+}
+
+#root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.main {
+  box-sizing: border-box;
+  height: 100%;
+  padding-top: 50px;
+}
+
+/* fieldset,
+input,
+select,
+textarea {
+  margin-bottom: 1.5rem;
+} */
+
+/* Global CSS */
+
+.spacer {
+  margin-bottom: 10px;
+}
+
+.container,
+.container-fluid {
+  margin-right: auto;
+  margin-left: auto;
+  width: 80%;
+  margin-top: 20px;
+  color: white;
+}
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+input,
+button {
+  padding: 0.35em 0.75em;
+  border: 1px solid transparent;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+button.standard,
+button.standard:active:enabled,
+button.standard:visited:enabled {
+  margin-bottom: 40px;
+  outline: none;
+  font-size: 16px;
+  border: none;
+  font-family: "Open Sans", sans-serif;
+  padding: 10px 20px;
+  background-color: #3f3f3f;
+  color: #eee;
+  cursor: pointer;
+  white-space: nowrap;
+  width: 250px;
+}
+
+button.standard:disabled {
+  color: #333;
+  text-decoration: line-through;
+}
+
+button.standard:hover:enabled {
+  background-color: #ffb3c7;
+  color: #333;
+}
+
+select.standard,
+input[type="text"].standard {
+  padding: 10px 15px;
+  background-color: #444;
+  color: #ccc;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  border: none;
+  border: 1px solid #444;
+  width: 250px;
+}
+
+select.standard:active,
+select.standard:focus,
+input[type="text"].standard:active,
+input[type="text"].standard:focus {
+  border: 1px solid #ffb3c7;
+}
+
+hr {
+  margin: 15px;
+}
+
+a,
+button {
+  transition: all 100ms;
+}
+
+div.component {
+  margin-bottom: 10px;
+}
+
+div.component > input.name {
+  border: none;
+  color: #fff;
+  outline: none;
+  font-weight: 300;
+  font-size: 14px;
+  display: inline-block;
+  width: 150px;
+  background-color: #444;
+  padding: 0 15px;
+  line-height: 40px;
+  font-family: "Roboto Mono", monospace;
+  height: 40px;
+}
+
+div.component > select {
+  border: none;
+  color: #fff;
+  outline: none;
+  font-weight: 300;
+  display: inline-block;
+  background-color: #444;
+  padding: 0 15px;
+  line-height: 40px;
+  font-family: "Roboto Mono", monospace;
+  height: 40px;
+}
+
+div.component > span.label {
+  font-size: 14px;
+  font-weight: normal;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: 0 15px;
+  color: #ffb3c7;
+  background-color: #222;
+  text-align: center;
+  line-height: 40px;
+  height: 40px;
+  position: relative;
+}
+
+div.component > span.options {
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-block;
+  text-align: center;
+  line-height: 40px;
+  height: 40px;
+  padding: 0 10px;
+  font-weight: normal;
+  color: #999;
+}
+
+div.component > span.options:hover {
+  color: #ffb3c7;
+}
+
+.dimmed {
+  color: #aaa;
+}
+
+.dimmer {
+  color: #777;
+}
+
+.with-bottom-padding {
+  margin-bottom: 10px;
+}
+
+.info-box {
+  background-color: #fff;
+  border: 1px solid #000;
+  padding: 50px;
+  width: 350px;
+  min-height: 100px;
+}
+
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verticalCentered {
+  align-content: center;
+}
