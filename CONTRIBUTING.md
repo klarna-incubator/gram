@@ -2,7 +2,7 @@
 
 Are you here to help with this Klarna project? Welcome! Please read the following to better understand how to ask questions or work on something.
 
-All members of our community are expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md). Please make sure you are welcoming and friendly in all of our spaces.
+All members of our community are expected to follow our [Code of Conduct](https://github.com/klarna-incubator/.github/blob/main/CODE_OF_CONDUCT.md). Please make sure you are welcoming and friendly in all of our spaces.
 
 ## Get in touch
 
