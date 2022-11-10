@@ -4,20 +4,17 @@ import * as jwt from "../../../../auth/jwt";
 import { DataAccessLayer } from "../../../../data/dal";
 import { createPostgresPool } from "../../../../data/postgres";
 import { SuggestionStatus } from "../../../../data/suggestions/Suggestion";
-import * as dataSystems from "../../../../data/systems";
+import { systemProvider } from "../../../../data/systems/SystemProvider";
 import { _deleteAllTheThings } from "../../../../data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
-import {
-  genSuggestedControl,
-  genSuggestedThreat,
-} from "../../../../test-util/suggestions";
+import { genSuggestedControl, genSuggestedThreat } from "../../../../test-util/suggestions";
 
 describe("Suggestions.reject", () => {
   const validate = jest.spyOn(jwt, "validateToken");
-  const systemGetById = jest.spyOn(dataSystems, "getById");
+  const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   let app: any;
   let pool: any;
@@ -89,9 +86,7 @@ describe("Suggestions.reject", () => {
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();
 
-    const controls = await dal.suggestionService.listControlSuggestions(
-      modelId
-    );
+    const controls = await dal.suggestionService.listControlSuggestions(modelId);
     expect(controls[0].status).toBe(SuggestionStatus.Rejected);
   });
 

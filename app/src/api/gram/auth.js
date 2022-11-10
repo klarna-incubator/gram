@@ -12,17 +12,12 @@ const authApi = api.injectEndpoints({
       providesTags: ["User"],
     }),
     getGramToken: build.mutation({
-      query: ({ provider, credentials }) => ({
+      query: ({ provider, params }) => ({
         url: `/auth/token`,
         params: {
+          ...params,
           provider,
         },
-        headers:
-          provider === "google"
-            ? {
-                "x-google-id-token": credentials.idToken,
-              }
-            : {},
       }),
       transformResponse: (response) => ({ authenticated: true }),
       invalidatesTags: ["User"],
@@ -38,9 +33,4 @@ const authApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetAuthParamsQuery,
-  useGetUserQuery,
-  useGetGramTokenMutation,
-  useLogoutMutation,
-} = authApi;
+export const { useGetAuthParamsQuery, useGetUserQuery, useGetGramTokenMutation, useLogoutMutation } = authApi;

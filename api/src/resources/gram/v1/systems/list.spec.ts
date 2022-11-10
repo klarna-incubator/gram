@@ -1,15 +1,15 @@
 import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
-import * as dataSystems from "../../../../data/systems";
+import { systemProvider } from "../../../../data/systems/SystemProvider";
 import { createTestApp } from "../../../../test-util/app";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleUser } from "../../../../test-util/sampleUser";
 
-const validate = jest.spyOn(jwt, "validateToken");
-const list = jest.spyOn(dataSystems, "list");
-
 describe("systems.list", () => {
   let app: any;
+  let list: any;
+
+  const validate = jest.spyOn(jwt, "validateToken");
 
   beforeAll(async () => {
     ({ app } = await createTestApp());
@@ -18,6 +18,7 @@ describe("systems.list", () => {
   beforeEach(() => {
     validate.mockImplementation(async () => sampleUser);
 
+    list = jest.spyOn(systemProvider, "listSystems");
     list.mockImplementation(async () => {
       return { systems: [sampleOwnedSystem], total: 1 };
     });
@@ -29,18 +30,12 @@ describe("systems.list", () => {
   });
 
   it("should return 400 with no filter query parameter", async () => {
-    const res = await request(app)
-      .get("/api/v1/systems")
-      .set("Authorization", "bearer validToken");
-
+    const res = await request(app).get("/api/v1/systems").set("Authorization", "bearer validToken");
     expect(res.status).toBe(400);
   });
 
   it("should return 400 with invalid filter query parameter", async () => {
-    const res = await request(app)
-      .get("/api/v1/systems?filter=123")
-      .set("Authorization", "bearer validToken");
-
+    const res = await request(app).get("/api/v1/systems?filter=123").set("Authorization", "bearer validToken");
     expect(res.status).toBe(400);
   });
 
@@ -48,21 +43,16 @@ describe("systems.list", () => {
     list.mockImplementation(async () => {
       const error = new Error("Something messed up");
       error.name = "Some other error";
+      console.log("mock was called");
       throw error;
     });
 
-    const res = await request(app)
-      .get("/api/v1/systems?filter=search")
-      .set("Authorization", "bearer validToken");
-
+    const res = await request(app).get("/api/v1/systems?filter=search").set("Authorization", "bearer validToken");
     expect(res.status).toBe(500);
   });
 
   it("should return 200 with dummy results", async () => {
-    const res = await request(app)
-      .get("/api/v1/systems?filter=search")
-      .set("Authorization", "bearer validToken");
-
+    const res = await request(app).get("/api/v1/systems?filter=search").set("Authorization", "bearer validToken");
     expect(res.status).toBe(200);
     expect(res.body.systems[0]).toEqual(sampleOwnedSystem);
   });

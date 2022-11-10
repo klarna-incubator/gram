@@ -18,9 +18,7 @@ export default async function getAuthToken(req: Request, res: Response) {
     throw new Error("`mock` should not be enabled outside test env");
   }
 
-  const identity = await AuthProviderRegistry.get(provider)?.getIdentity(
-    req.headers
-  );
+  const identity = await AuthProviderRegistry.get(provider)?.getIdentity(req);
 
   if (!identity) {
     return res.sendStatus(400);

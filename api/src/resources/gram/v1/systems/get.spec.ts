@@ -1,17 +1,17 @@
 import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
-import * as dataSystems from "../../../../data/systems";
 import { genUser } from "../../../../test-util/authz";
 import { sampleUser } from "../../../../test-util/sampleUser";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { createTestApp } from "../../../../test-util/app";
 import { getMockedSystemById } from "../../../../test-util/system";
+import { systemProvider } from "../../../../data/systems/SystemProvider";
 
 const validate = jest.spyOn(jwt, "validateToken");
-const getById = jest.spyOn(dataSystems, "getById");
 
 describe("systems.get", () => {
   let app: any;
+  let getById: any;
 
   beforeAll(async () => {
     ({ app } = await createTestApp());
@@ -19,6 +19,7 @@ describe("systems.get", () => {
 
   beforeEach(() => {
     validate.mockImplementation(async () => sampleUser);
+    getById = jest.spyOn(systemProvider, "getSystem");
     getById.mockImplementation(getMockedSystemById);
   });
 
@@ -30,9 +31,7 @@ describe("systems.get", () => {
   it("should return 403 on unauthorized", async () => {
     validate.mockImplementation(async () => genUser({ roles: [] }));
 
-    const res = await request(app)
-      .get("/api/v1/systems/234")
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).get("/api/v1/systems/234").set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(403);
   });
@@ -40,9 +39,7 @@ describe("systems.get", () => {
   it("should return 404 on invalid system id", async () => {
     getById.mockImplementation(async () => null);
 
-    const res = await request(app)
-      .get("/api/v1/systems/234")
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).get("/api/v1/systems/234").set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(404);
   });
@@ -52,9 +49,7 @@ describe("systems.get", () => {
       throw new Error("Unknown");
     });
 
-    const res = await request(app)
-      .get("/api/v1/systems/123")
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).get("/api/v1/systems/123").set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(500);
   });

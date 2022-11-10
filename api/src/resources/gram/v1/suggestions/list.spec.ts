@@ -2,7 +2,7 @@ import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
 import { DataAccessLayer } from "../../../../data/dal";
 import { createPostgresPool } from "../../../../data/postgres";
-import * as dataSystems from "../../../../data/systems";
+import { systemProvider } from "../../../../data/systems/SystemProvider";
 import { _deleteAllTheThings } from "../../../../data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { genUser } from "../../../../test-util/authz";
@@ -13,7 +13,7 @@ import { genSuggestedControl } from "../../../../test-util/suggestions";
 
 describe("Suggestions.list", () => {
   const validate = jest.spyOn(jwt, "validateToken");
-  const systemGetById = jest.spyOn(dataSystems, "getById");
+  const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   let app: any;
   let pool: any;
@@ -41,9 +41,7 @@ describe("Suggestions.list", () => {
   });
 
   it("should return 400 on bad modelId", async () => {
-    const res = await request(app)
-      .get(`/api/v1/suggestions/kanelbulle`)
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).get(`/api/v1/suggestions/kanelbulle`).set("Authorization", "bearer validToken");
     expect(res.status).toBe(400);
   });
 
@@ -54,9 +52,7 @@ describe("Suggestions.list", () => {
       })
     );
 
-    const res = await request(app)
-      .get(`/api/v1/suggestions/${modelId}`)
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).get(`/api/v1/suggestions/${modelId}`).set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(403);
   });
@@ -69,9 +65,7 @@ describe("Suggestions.list", () => {
       controls: [control],
       threats: [],
     });
-    const res = await request(app)
-      .get(`/api/v1/suggestions/${modelId}`)
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).get(`/api/v1/suggestions/${modelId}`).set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(200);
     expect(res.body.controls).toHaveLength(1);

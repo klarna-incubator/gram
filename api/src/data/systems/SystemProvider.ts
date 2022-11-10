@@ -1,3 +1,5 @@
+import { Request } from "express";
+import { UserToken } from "../../auth/models/UserToken";
 import { Provider } from "../../util/provider";
 import System from "./System";
 
@@ -25,21 +27,26 @@ export interface SystemOwner {
   name: string;
 }
 
+export interface AppContext {
+  currentRequest: Request;
+}
+
 export interface SystemProvider extends Provider {
-  getSystem(systemId: string): Promise<System | null>;
+  getSystem(ctx: AppContext, systemId: string): Promise<System | null>;
   listSystems(
+    ctx: AppContext,
     input: SystemListInput,
     pagination: { page: number; pageSize: number }
   ): Promise<SystemListResult>;
-  //   lookupOwners(ownerIds: string[]): Promise<SystemOwner[]>;
 }
 
 class DefaultSystemProvider implements SystemProvider {
   key = "default";
-  getSystem(systemId: string): Promise<System | null> {
+  getSystem(ctx: AppContext, systemId: string): Promise<System | null> {
     throw new Error("Method not implemented.");
   }
   listSystems(
+    ctx: AppContext,
     input: SystemListInput,
     pagination: { page: number; pageSize: number } = { page: 0, pageSize: 10 }
   ): Promise<SystemListResult> {

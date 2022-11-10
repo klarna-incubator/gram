@@ -1,7 +1,7 @@
-import { IncomingHttpHeaders } from "http";
 import { UserToken } from "../models/UserToken";
 import { AuthProvider } from "../AuthProvider";
 import { Role } from "../models/Role";
+import { Request } from "express";
 
 export default class MockAuthProvider implements AuthProvider {
   key = "mock";
@@ -11,7 +11,7 @@ export default class MockAuthProvider implements AuthProvider {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getIdentity(headers: IncomingHttpHeaders): Promise<UserToken> {
+  async getIdentity(request: Request): Promise<UserToken> {
     return {
       sub: "payload",
       roles: [Role.User],

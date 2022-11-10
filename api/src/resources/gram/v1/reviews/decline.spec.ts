@@ -2,7 +2,7 @@ import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
 import { DataAccessLayer } from "../../../../data/dal";
 import { Review, ReviewStatus } from "../../../../data/reviews/Review";
-import * as dataSystems from "../../../../data/systems";
+import { systemProvider } from "../../../../data/systems/SystemProvider";
 import { _deleteAllTheThings } from "../../../../data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
@@ -11,7 +11,7 @@ import { sampleOtherUser } from "../../../../test-util/sampleUser";
 
 describe("Reviews.decline", () => {
   const validate = jest.spyOn(jwt, "validateToken");
-  const systemGetById = jest.spyOn(dataSystems, "getById");
+  const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   let app: any;
   let pool: any;
@@ -29,12 +29,7 @@ describe("Reviews.decline", () => {
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
 
-    review = new Review(
-      modelId,
-      "some-user",
-      ReviewStatus.Requested,
-      "some-reviewer"
-    );
+    review = new Review(modelId, "some-user", ReviewStatus.Requested, "some-reviewer");
     await dal.reviewService.create(review);
   });
 
@@ -46,17 +41,13 @@ describe("Reviews.decline", () => {
   it("should return 403 on unauthorized requests (by role.user)", async () => {
     validate.mockImplementation(async () => sampleOtherUser);
 
-    const res = await request(app)
-      .post(`/api/v1/reviews/${modelId}/decline`)
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).post(`/api/v1/reviews/${modelId}/decline`).set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(403);
   });
 
   it("should return 200 on succesful decline [without note] (by role.reviewer)", async () => {
-    const res = await request(app)
-      .post(`/api/v1/reviews/${modelId}/decline`)
-      .set("Authorization", "bearer validToken");
+    const res = await request(app).post(`/api/v1/reviews/${modelId}/decline`).set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();

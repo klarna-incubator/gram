@@ -9,4 +9,5 @@ export interface UserToken {
   picture?: string;
   slackId?: string;
   provider?: string;
+  providerToken?: string;
 }
