@@ -13,23 +13,19 @@ const log = getLogger("wss");
 const wssRegistry = new Map<string, ModelWebsocketServer>();
 
 function sanitizeOrigin(origin: string) {
-  origin = origin.trim();
-  if (!origin.endsWith("/")) {
-    origin += "/";
-  }
-  return origin;
+  return;
 }
 
 function validateRequestOrigin(request: AuthenticatedIncomingMessage) {
-  const origin = request.headers.origin || "";
+  const origin = (request.headers.origin || "").trim();
 
   const corsOrigin = config.get("origin");
   let validOrigin = false;
 
   if (Array.isArray(corsOrigin)) {
-    validOrigin = corsOrigin.includes(sanitizeOrigin(origin));
+    validOrigin = corsOrigin.includes(origin);
   } else {
-    validOrigin = corsOrigin === sanitizeOrigin(origin);
+    validOrigin = corsOrigin === origin;
   }
 
   if (!validOrigin) throw new Error("Invalid request origin");
