@@ -26,7 +26,7 @@ const reviewers: Reviewer[] = [
   {
     name: "Joakim Uddholm",
     recommended: false,
-    sub: "tethik@gmail.com",
+    sub: "Tethik", // Must be the same as sub provided by AuthProvider for authz to work
     mail: "tethik@gmail.com",
     teams: [],
   },
