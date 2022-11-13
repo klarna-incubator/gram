@@ -1,4 +1,10 @@
-import { Box, CssBaseline, darkScrollbar, Toolbar, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  CssBaseline,
+  darkScrollbar,
+  Toolbar,
+  useMediaQuery,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
@@ -57,7 +63,8 @@ export default function App() {
         components: {
           MuiCssBaseline: {
             styleOverrides: {
-              body: prefersDarkMode === "dark" ? darkScrollbar() : darkScrollbar(),
+              body:
+                prefersDarkMode === "dark" ? darkScrollbar() : darkScrollbar(),
             },
           },
         },
@@ -86,11 +93,18 @@ export default function App() {
           >
             <Toolbar />
             <Box component="main" sx={{ flexGrow: 1, minHeight: 0 }}>
-              <>{(!user || isError) && !isLoading && !isFetching && <LoginRedirect />}</>
+              <>
+                {(!user || isError) && !isLoading && !isFetching && (
+                  <LoginRedirect />
+                )}
+              </>
               <ModalManager />
               <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/login/callback/:provider" element={<LoginCallback />} />
+                <Route
+                  path="/login/callback/:provider"
+                  element={<LoginCallback />}
+                />
                 {user && !isError && (
                   <>
                     <Route path="/" element={<Home />} />

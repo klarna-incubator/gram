@@ -1,5 +1,11 @@
 import WifiOffIcon from "@mui/icons-material/WifiOff";
-import { Button, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { webSocketActions } from "../../../redux/webSocketSlice";
@@ -18,7 +24,13 @@ function ConnectivityCheck() {
   if (isConnected) return <></>;
 
   return (
-    <Dialog open={true} scroll={"paper"} fullWidth maxWidth="sm" sx={{ zIndex: 1600 }}>
+    <Dialog
+      open={true}
+      scroll={"paper"}
+      fullWidth
+      maxWidth="sm"
+      sx={{ zIndex: 1600 }}
+    >
       <DialogTitle>
         <WifiOffIcon color="primary" />
         &nbsp; Who broke the internet?
@@ -33,8 +45,9 @@ function ConnectivityCheck() {
         {!isEstablishing && !isConnected && !timeout && (
           <>
             <Typography>
-              Your websocket connection to the server has timed out or been closed remotely. This could be due to bad
-              connectivity, or the Gram server having a bad time.
+              Your websocket connection to the server has timed out or been
+              closed remotely. This could be due to bad connectivity, or the
+              Gram server having a bad time.
             </Typography>
 
             {fails > 0 && (

@@ -26,7 +26,9 @@ const componentTypes = {
 };
 
 function CustomPaper(props) {
-  return <Paper {...props} sx={{ colorScheme: (theme) => theme.palette.mode }} />;
+  return (
+    <Paper {...props} sx={{ colorScheme: (theme) => theme.palette.mode }} />
+  );
 }
 
 export function ComponentTab() {
@@ -60,7 +62,9 @@ export function ComponentTab() {
   }, [component.classes]);
 
   useEffect(() => {
-    setDescription(component.description === undefined ? "" : component.description);
+    setDescription(
+      component.description === undefined ? "" : component.description
+    );
   }, [component.description]);
 
   // Update type
@@ -136,8 +140,12 @@ export function ComponentTab() {
                 onChange={(e) => setType(e.target.value)}
               >
                 <MenuItem value={COMPONENT_TYPE.PROCESS}>Process</MenuItem>
-                <MenuItem value={COMPONENT_TYPE.DATA_STORE}>Data store</MenuItem>
-                <MenuItem value={COMPONENT_TYPE.EXTERNAL_ENTITY}>External entity</MenuItem>
+                <MenuItem value={COMPONENT_TYPE.DATA_STORE}>
+                  Data store
+                </MenuItem>
+                <MenuItem value={COMPONENT_TYPE.EXTERNAL_ENTITY}>
+                  External entity
+                </MenuItem>
               </TextField>
               <Autocomplete
                 autoHighlight
@@ -151,9 +159,15 @@ export function ComponentTab() {
                 disabled={readOnly}
                 value={techStacks}
                 options={loadedTechStacks}
-                getOptionLabel={(option) => (option.id ? option.id : option.name)}
-                isOptionEqualToValue={(option, value) => option.id === value.id || option.name === value.name}
-                renderInput={(props) => <TextField {...props} variant="standard" label="Tech Stack" />}
+                getOptionLabel={(option) =>
+                  option.id ? option.id : option.name
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option.id === value.id || option.name === value.name
+                }
+                renderInput={(props) => (
+                  <TextField {...props} variant="standard" label="Tech Stack" />
+                )}
                 onInputChange={(e, input) => {
                   setTechStackSearch(input);
                 }}
@@ -174,7 +188,9 @@ export function ComponentTab() {
                 filterOptions={(options, params) => {
                   const { inputValue } = params;
 
-                  const optionExists = options.some((option) => lowerCase(inputValue) === lowerCase(option.name));
+                  const optionExists = options.some(
+                    (option) => lowerCase(inputValue) === lowerCase(option.name)
+                  );
                   if (inputValue !== "" && !optionExists) {
                     options.push({
                       inputValue,
@@ -185,7 +201,11 @@ export function ComponentTab() {
                   return options;
                 }}
                 renderOption={(props, option) => (
-                  <Box component="li" sx={{ "& > img": { mr: 2, flexShrink: 0 }, margin: 0 }} {...props}>
+                  <Box
+                    component="li"
+                    sx={{ "& > img": { mr: 2, flexShrink: 0 }, margin: 0 }}
+                    {...props}
+                  >
                     {option.icon && (
                       <img
                         src={option.icon}
@@ -218,7 +238,10 @@ export function ComponentTab() {
                       label={option.name}
                       onDelete={() =>
                         setTechStacks((prevTechStack) =>
-                          prevTechStack.filter((ts) => ts.id !== option.id || ts.name !== option.name)
+                          prevTechStack.filter(
+                            (ts) =>
+                              ts.id !== option.id || ts.name !== option.name
+                          )
                         )
                       }
                     />

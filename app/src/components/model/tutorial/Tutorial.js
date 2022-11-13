@@ -389,8 +389,8 @@ const SystemContext = () => (
   <>
     <Typography>
       On the left panel in the system tab, there is information about your
-      system taken from the system inventory as well as other sources. This helps contextualize
-      the system that is being modeled.
+      system taken from the system inventory as well as other sources. This
+      helps contextualize the system that is being modeled.
     </Typography>
     <Typography>
       In addition to this, the left panel also contains information on any

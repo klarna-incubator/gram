@@ -19,10 +19,13 @@ import { PERMISSIONS } from "../constants";
 export function RequestMeeting({ modelId }) {
   const dispatch = useDispatch();
 
-  const [requestReviewMeeting, { isUninitialized, isLoading, isSuccess, isError, error }] =
-    useRequestReviewMeetingMutation();
+  const [
+    requestReviewMeeting,
+    { isUninitialized, isLoading, isSuccess, isError, error },
+  ] = useRequestReviewMeetingMutation();
 
-  const { data: permissions, isLoading: permissionsIsLoading } = useGetModelPermissionsQuery({ modelId });
+  const { data: permissions, isLoading: permissionsIsLoading } =
+    useGetModelPermissionsQuery({ modelId });
   const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
 
   return (
@@ -42,15 +45,16 @@ export function RequestMeeting({ modelId }) {
       <DialogContent sx={{ paddingTop: "0" }}>
         {(isUninitialized || isLoading) && (
           <Typography>
-            When you press request, an email will be sent out to the owning team requesting them to book a time with the
-            Secure Development Team.
+            When you press request, an email will be sent out to the owning team
+            requesting them to book a time with the Secure Development Team.
           </Typography>
         )}
         {isSuccess && (
           <>
             <br />
             <Typography>
-              An email has been sent out to the owning team requesting them to book a meeting with you.
+              An email has been sent out to the owning team requesting them to
+              book a meeting with you.
             </Typography>
           </>
         )}
@@ -62,7 +66,10 @@ export function RequestMeeting({ modelId }) {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => dispatch(modalActions.close())} variant="outlined">
+        <Button
+          onClick={() => dispatch(modalActions.close())}
+          variant="outlined"
+        >
           {isUninitialized || isLoading ? "Cancel" : "Close"}
         </Button>
         {(isUninitialized || isLoading) && (
@@ -72,7 +79,9 @@ export function RequestMeeting({ modelId }) {
             variant="contained"
           >
             Request
-            {isLoading && <CircularProgress size={20} sx={{ position: "absolute" }} />}
+            {isLoading && (
+              <CircularProgress size={20} sx={{ position: "absolute" }} />
+            )}
           </Button>
         )}
       </DialogActions>

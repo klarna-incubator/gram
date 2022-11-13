@@ -33,4 +33,9 @@ const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetAuthParamsQuery, useGetUserQuery, useGetGramTokenMutation, useLogoutMutation } = authApi;
+export const {
+  useGetAuthParamsQuery,
+  useGetUserQuery,
+  useGetGramTokenMutation,
+  useLogoutMutation,
+} = authApi;

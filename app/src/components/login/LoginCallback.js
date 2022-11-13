@@ -25,7 +25,11 @@ export function LoginCallback() {
   useEffect(
     () =>
       auth?.data?.authenticated &&
-      navigate(searchParams.get("return")?.startsWith("/") ? searchParams.get("return") : "/")
+      navigate(
+        searchParams.get("return")?.startsWith("/")
+          ? searchParams.get("return")
+          : "/"
+      )
   );
 
   // if (error === 403) {

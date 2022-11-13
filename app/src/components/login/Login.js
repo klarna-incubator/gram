@@ -2,7 +2,11 @@ import { Box, Button, Icon } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useGetAuthParamsQuery, useGetGramTokenMutation, useGetUserQuery } from "../../api/gram/auth";
+import {
+  useGetAuthParamsQuery,
+  useGetGramTokenMutation,
+  useGetUserQuery,
+} from "../../api/gram/auth";
 import Loading from "../loading";
 import "./Login.css";
 

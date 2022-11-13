@@ -16,7 +16,8 @@ export const store = configureStore({
     webSocket: webSocketReducer,
     [api.reducerPath]: api.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([api.middleware, thunk, webSocketMiddleware]),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([api.middleware, thunk, webSocketMiddleware]),
 });
 
 setupListeners(store.dispatch);

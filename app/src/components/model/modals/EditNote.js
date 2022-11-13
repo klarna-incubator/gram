@@ -13,7 +13,10 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useGetModelPermissionsQuery } from "../../../api/gram/model";
-import { useGetReviewQuery, useUpdateReviewMutation } from "../../../api/gram/review";
+import {
+  useGetReviewQuery,
+  useUpdateReviewMutation,
+} from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
 import { PERMISSIONS } from "../constants";
@@ -23,10 +26,14 @@ export function EditNote({ modelId }) {
 
   const { data: review } = useGetReviewQuery({ modelId });
 
-  const { data: permissions, isLoading: permissionsIsLoading } = useGetModelPermissionsQuery({ modelId });
+  const { data: permissions, isLoading: permissionsIsLoading } =
+    useGetModelPermissionsQuery({ modelId });
   const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
 
-  const [updateReview, { isUninitialized, isLoading, isSuccess, isError, error }] = useUpdateReviewMutation();
+  const [
+    updateReview,
+    { isUninitialized, isLoading, isSuccess, isError, error },
+  ] = useUpdateReviewMutation();
 
   const [localNote, setLocalNote] = useState("");
 
@@ -59,7 +66,11 @@ export function EditNote({ modelId }) {
       </DialogTitle>
       <LoadingPage isLoading={isLoading} />
       <DialogContent sx={{ paddingTop: "0" }}>
-        {reviewAllowed && <Typography>Use this field to write down notes, e.g. recommendations.</Typography>}
+        {reviewAllowed && (
+          <Typography>
+            Use this field to write down notes, e.g. recommendations.
+          </Typography>
+        )}
         <TextField
           fullWidth
           multiline
@@ -78,7 +89,10 @@ export function EditNote({ modelId }) {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => dispatch(modalActions.close())} variant="outlined">
+        <Button
+          onClick={() => dispatch(modalActions.close())}
+          variant="outlined"
+        >
           Close
         </Button>
         <Button
@@ -87,7 +101,9 @@ export function EditNote({ modelId }) {
           variant="contained"
         >
           Save and close
-          {isLoading && <CircularProgress size={20} sx={{ position: "absolute" }} />}
+          {isLoading && (
+            <CircularProgress size={20} sx={{ position: "absolute" }} />
+          )}
         </Button>
       </DialogActions>
     </Dialog>
