@@ -1,4 +1,5 @@
 import { App } from "octokit";
+import { join } from "path";
 import { Pack, PackRegistrator } from "..";
 import { AllPermissions, Permission } from "../../auth/authorization";
 import { AuthzProvider } from "../../auth/AuthzProvider";
@@ -80,5 +81,6 @@ export default class DemoPack implements Pack {
     reg.setAuthzProvider(new PassthroughAuthzProvider());
     reg.setReviewerProvider(new StaticReviewerProvider());
     reg.setUserProvider(new StaticUserProvider());
+    reg.registerAssets("github", join(__dirname, "assets"));
   }
 }

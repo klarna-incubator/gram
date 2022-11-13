@@ -4,15 +4,17 @@ import { App } from "octokit";
 import { AuthProvider } from "../../auth/AuthProvider";
 import { Role } from "../../auth/models/Role";
 import { UserToken } from "../../auth/models/UserToken";
+import config from "config";
 
 export class GithubAuthProvider implements AuthProvider {
   constructor(private app: App) {}
   async params() {
+    const origin = config.get("origin");
     const { url } = this.app!.oauth.getWebFlowAuthorizationUrl({
       state: randomUUID(),
-      redirectUrl: "http://localhost:4726/login/callback/github",
+      redirectUrl: `${origin}/login/callback/github`,
     });
-    return { redirectUrl: url, icon: "github" };
+    return { redirectUrl: url, icon: "/assets/github/github-icon.svg" };
   }
   async getIdentity(request: Request): Promise<UserToken> {
     const code = request.query.code?.toString();

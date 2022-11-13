@@ -11,6 +11,7 @@ services:
     build: .
     restart: unless-stopped
     environment:
+      ORIGIN: http://localhost:4726 # (or your domain)
       POSTGRES_HOST: database
       POSTGRES_USER: gram
       POSTGRES_PASSWORD: somethingsecret

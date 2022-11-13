@@ -1,24 +1,14 @@
-import { Box, Button, Icon } from "@mui/material";
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import {
-  useGetAuthParamsQuery,
-  useGetGramTokenMutation,
-  useGetUserQuery,
-} from "../../api/gram/auth";
+import { Box, Button } from "@mui/material";
+import React from "react";
+import { useGetAuthParamsQuery } from "../../api/gram/auth";
 import Loading from "../loading";
 import "./Login.css";
 
 export function Login() {
   const { data: authParams, isLoading } = useGetAuthParamsQuery();
-  const { data: user } = useGetUserQuery();
-  console.log(authParams);
-
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   // In case user is already authed
+  // const { data: user } = useGetUserQuery();
   // useEffect(() => user && navigate(searchParams.get("return")?.startsWith("/") ? searchParams.get("return") : "/"));
 
   return (
@@ -31,7 +21,7 @@ export function Login() {
         <Box>
           <Button
             href={provider.redirectUrl}
-            startIcon={provider.icon && <Icon accessKey={provider.icon}></Icon>}
+            startIcon={provider.icon && <img alt={`${provider.provider} icon`} width={32} src={provider.icon} />}
             variant="outlined"
           >
             Login via {provider.provider}
