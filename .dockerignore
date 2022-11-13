@@ -12,3 +12,4 @@
 api/assets/*
 !api/assets/*.svg
 !api/assets/*.png
+docker-compose.yml

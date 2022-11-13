@@ -89,30 +89,28 @@ function initPostgresMetrics(pool: Pool) {
 export async function createPostgresPool(passedOpts?: PoolConfig) {
   const defaultOpts: PoolConfig = {
     max: 100,
-    connectionTimeoutMillis:
-      process.env.NODE_ENV && ["test"].includes(process.env.NODE_ENV)
-        ? 0
-        : 5000,
+    connectionTimeoutMillis: process.env.NODE_ENV && ["test"].includes(process.env.NODE_ENV) ? 0 : 5000,
   };
 
   defaultOpts.host = await secrets.get("data._providers.postgres.host");
   defaultOpts.user = await secrets.get("data._providers.postgres.user");
   defaultOpts.password = await secrets.get("data._providers.postgres.password");
   defaultOpts.database = await secrets.get("data._providers.postgres.database");
-  defaultOpts.port = parseInt(
-    await secrets.get("data._providers.postgres.port")
-  );
+  defaultOpts.port = parseInt(await secrets.get("data._providers.postgres.port"));
 
   // Enable SSL except in development and test environment
-  defaultOpts.ssl = !["development", "test"].includes(process.env.NODE_ENV!);
+  //TODO: should be configuration...
+  defaultOpts.ssl = !["development", "test", "demo"].includes(process.env.NODE_ENV!);
 
   log.debug(`Postgres TLS/SSL: ${defaultOpts.ssl}`);
 
-  if (defaultOpts.ssl) {
-    defaultOpts.ssl = {
-      ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii"),
-    };
-  }
+  //TODO: should be configuration...
+  // if (defaultOpts.ssl) {
+  // Load AWS RDS CA to verify connection
+  // defaultOpts.ssl = {
+  //   ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii"),
+  // };
+  // }
 
   let opts = defaultOpts;
   if (passedOpts) {

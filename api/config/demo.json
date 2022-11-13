@@ -1,0 +1,46 @@
+{
+  "data": {
+    "_providers": {
+      "postgres": {
+        "host": "localhost",
+        "user": "gram",
+        "password": "somethingsecret",
+        "database": "gram",
+        "port": 5432
+      }
+    }
+  },
+
+  "jwt": {
+    "ttl": 86400
+  },
+
+  "auth": {
+    "providerOpts": {
+      "github": {}
+    }
+  },
+
+  "log": {
+    "layout": "coloured",
+    "level": "debug",
+    "auditHttp": {
+      "simplified": true
+    }
+  },
+
+  "notifications": {
+    "providers": {
+      "email": {
+        "user": "",
+        "host": "",
+        "port": 25,
+        "sender-name": "[Demo] Gram - Secure Development"
+      }
+    }
+  },
+
+  "secrets": {
+    "provider": "config"
+  }
+}

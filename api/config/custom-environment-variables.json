@@ -18,6 +18,17 @@
     }
   },
 
+  "auth": {
+    "providerOpts": {
+      "github": {
+        "appId": "GITHUB_APPID",
+        "clientId": "GITHUB_CLIENTID",
+        "clientSecret": "GITHUB_CLIENTSECRET",
+        "privateKey": "GITHUB_PRIVATEKEY"
+      }
+    }
+  },
+
   "notifications": {
     "providers": {
       "email": {
