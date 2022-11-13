@@ -41,7 +41,9 @@ describe("Suggestions.list", () => {
   });
 
   it("should return 400 on bad modelId", async () => {
-    const res = await request(app).get(`/api/v1/suggestions/kanelbulle`).set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get(`/api/v1/suggestions/kanelbulle`)
+      .set("Authorization", "bearer validToken");
     expect(res.status).toBe(400);
   });
 
@@ -52,7 +54,9 @@ describe("Suggestions.list", () => {
       })
     );
 
-    const res = await request(app).get(`/api/v1/suggestions/${modelId}`).set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get(`/api/v1/suggestions/${modelId}`)
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(403);
   });
@@ -65,7 +69,9 @@ describe("Suggestions.list", () => {
       controls: [control],
       threats: [],
     });
-    const res = await request(app).get(`/api/v1/suggestions/${modelId}`).set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get(`/api/v1/suggestions/${modelId}`)
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(200);
     expect(res.body.controls).toHaveLength(1);

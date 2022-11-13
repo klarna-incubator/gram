@@ -6,12 +6,19 @@
 import { Request, Response } from "express";
 import { DataAccessLayer } from "../../../../data/dal";
 import { ReviewSystemCompliance } from "../../../../data/reviews/ReviewSystemCompliance";
-import { SystemListFilter, SystemListResult, systemProvider } from "../../../../data/systems/SystemProvider";
+import {
+  SystemListFilter,
+  SystemListResult,
+  systemProvider,
+} from "../../../../data/systems/SystemProvider";
 
 export default (dal: DataAccessLayer) => async (req: Request, res: Response) => {
   const { filter, page, pagesize, ...opts } = req.query;
 
-  if (!filter || !Object.values<string>(SystemListFilter).includes(filter.toString())) {
+  if (
+    !filter ||
+    !Object.values<string>(SystemListFilter).includes(filter.toString())
+  ) {
     return res.status(400).json("Invalid filter type.");
   }
 
@@ -56,9 +63,14 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
   });
 };
 
-async function getComplianceStuff(result: SystemListResult, dal: DataAccessLayer) {
+async function getComplianceStuff(
+  result: SystemListResult,
+  dal: DataAccessLayer
+) {
   const systemIds = result.systems.map((s) => s.id);
-  const compliances = await dal.reviewService.getComplianceForSystems(systemIds);
+  const compliances = await dal.reviewService.getComplianceForSystems(
+    systemIds
+  );
   const resultMap = new Map<string, ReviewSystemCompliance>();
   compliances.forEach((c) => resultMap.set(c.SystemID, c));
 

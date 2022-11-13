@@ -35,11 +35,6 @@
     }
   },
 
-  "cors": {
-    "origin": "http://localhost:4726/",
-    "credentials": true
-  },
-
   "cookie": {
     "secure": false,
     "httpOnly": true

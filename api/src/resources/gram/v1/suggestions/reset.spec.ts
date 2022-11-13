@@ -10,7 +10,10 @@ import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
-import { genSuggestedControl, genSuggestedThreat } from "../../../../test-util/suggestions";
+import {
+  genSuggestedControl,
+  genSuggestedThreat,
+} from "../../../../test-util/suggestions";
 
 describe("Suggestions.reset", () => {
   const validate = jest.spyOn(jwt, "validateToken");
@@ -86,7 +89,9 @@ describe("Suggestions.reset", () => {
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();
 
-    const controls = await dal.suggestionService.listControlSuggestions(modelId);
+    const controls = await dal.suggestionService.listControlSuggestions(
+      modelId
+    );
     expect(controls[0].status).toBe(SuggestionStatus.New);
   });
 

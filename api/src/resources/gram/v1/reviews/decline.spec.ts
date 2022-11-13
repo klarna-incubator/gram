@@ -29,7 +29,12 @@ describe("Reviews.decline", () => {
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
 
-    review = new Review(modelId, "some-user", ReviewStatus.Requested, "some-reviewer");
+    review = new Review(
+      modelId,
+      "some-user",
+      ReviewStatus.Requested,
+      "some-reviewer"
+    );
     await dal.reviewService.create(review);
   });
 
@@ -41,13 +46,17 @@ describe("Reviews.decline", () => {
   it("should return 403 on unauthorized requests (by role.user)", async () => {
     validate.mockImplementation(async () => sampleOtherUser);
 
-    const res = await request(app).post(`/api/v1/reviews/${modelId}/decline`).set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .post(`/api/v1/reviews/${modelId}/decline`)
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(403);
   });
 
   it("should return 200 on succesful decline [without note] (by role.reviewer)", async () => {
-    const res = await request(app).post(`/api/v1/reviews/${modelId}/decline`).set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .post(`/api/v1/reviews/${modelId}/decline`)
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();

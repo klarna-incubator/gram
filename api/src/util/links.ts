@@ -5,7 +5,7 @@ function trimEndSlash(s: string) {
 }
 
 export function linkToModel(modelId: string) {
-  const origins: string | string[] = config.get("cors.origin");
+  const origins: string | string[] = config.get("origin");
   if (!origins || (Array.isArray(origins) && origins.length === 0)) {
     throw new Error("Couldn't find cors origin for generating model link");
   }

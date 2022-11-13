@@ -7,7 +7,11 @@ import { systemProvider } from "../../../../data/systems/SystemProvider";
 import { _deleteAllTheThings } from "../../../../data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
-import { sampleOtherUser, sampleReviewer, sampleUser } from "../../../../test-util/sampleUser";
+import {
+  sampleOtherUser,
+  sampleReviewer,
+  sampleUser,
+} from "../../../../test-util/sampleUser";
 
 describe("Reviews.approve", () => {
   const validate = jest.spyOn(jwt, "validateToken");
@@ -33,7 +37,12 @@ describe("Reviews.approve", () => {
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
 
-    review = new Review(modelId, "some-user", ReviewStatus.Requested, "some-reviewer");
+    review = new Review(
+      modelId,
+      "some-user",
+      ReviewStatus.Requested,
+      "some-reviewer"
+    );
     await dal.reviewService.create(review);
   });
 
@@ -45,13 +54,17 @@ describe("Reviews.approve", () => {
   it("should return 403 on non-reviewer approval request (default user)", async () => {
     validate.mockImplementation(async () => sampleOtherUser);
 
-    const res = await request(app).post(`/api/v1/reviews/${modelId}/approve`).set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .post(`/api/v1/reviews/${modelId}/approve`)
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(403);
   });
 
   it("should return 200 on succesful approve [without note] for role.reviewer", async () => {
-    const res = await request(app).post(`/api/v1/reviews/${modelId}/approve`).set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .post(`/api/v1/reviews/${modelId}/approve`)
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();

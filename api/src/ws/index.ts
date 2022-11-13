@@ -22,9 +22,8 @@ function sanitizeOrigin(origin: string) {
 
 function validateRequestOrigin(request: AuthenticatedIncomingMessage) {
   const origin = request.headers.origin || "";
-  const corsOpts: cors.CorsOptions = config.get("cors");
 
-  const corsOrigin = corsOpts.origin;
+  const corsOrigin = config.get("origin");
   let validOrigin = false;
 
   if (Array.isArray(corsOrigin)) {

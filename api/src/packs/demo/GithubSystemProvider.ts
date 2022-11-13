@@ -1,5 +1,9 @@
 import { App } from "octokit";
-import { SystemProperty, SystemPropertyProvider, SystemPropertyValue } from "../../data/system-property";
+import {
+  SystemProperty,
+  SystemPropertyProvider,
+  SystemPropertyValue,
+} from "../../data/system-property";
 import System from "../../data/systems/System";
 import {
   AppContext,
@@ -9,7 +13,9 @@ import {
   SystemProvider,
 } from "../../data/systems/SystemProvider";
 
-export class GithubSystemProvider implements SystemProvider, SystemPropertyProvider {
+export class GithubSystemProvider
+  implements SystemProvider, SystemPropertyProvider
+{
   constructor(private app: App) {}
 
   id: string = "github";
@@ -22,7 +28,10 @@ export class GithubSystemProvider implements SystemProvider, SystemPropertyProvi
       description: "Github repository url",
     },
   ];
-  async provide(systemObjectId: string, quick: boolean): Promise<SystemPropertyValue[]> {
+  async provide(
+    systemObjectId: string,
+    quick: boolean
+  ): Promise<SystemPropertyValue[]> {
     // this.getSystem(systemObjectId)
     const repo = Buffer.from(systemObjectId, "base64").toString("ascii");
     return [
@@ -75,31 +84,46 @@ export class GithubSystemProvider implements SystemProvider, SystemPropertyProvi
     const octo = await this.getOcto(ctx);
 
     if (input.filter === SystemListFilter.Team) {
-      const resp = await octo.request(`GET /user/installations/{installationId}/repositories{?per_page,page}`, {
-        installationId: input.opts.teamId,
-        per_page: pagination.pageSize,
-        page: pagination.page,
-      });
-      const systems = resp.data.repositories.map((r: any) => this.repoToSystem(r));
+      const resp = await octo.request(
+        `GET /user/installations/{installationId}/repositories{?per_page,page}`,
+        {
+          installationId: input.opts.teamId,
+          per_page: pagination.pageSize,
+          page: pagination.page,
+        }
+      );
+      const systems = resp.data.repositories.map((r: any) =>
+        this.repoToSystem(r)
+      );
       return { systems, total: resp.data.total_count };
     } else if (input.filter === SystemListFilter.Batch) {
       //TODO: make this query a bit smarter
-      const systems = (await Promise.all(input.opts.ids.map((id) => this.getSystem(ctx, id)))).filter(
-        (s) => !!s
-      ) as System[];
+      const systems = (
+        await Promise.all(input.opts.ids.map((id) => this.getSystem(ctx, id)))
+      ).filter((s) => !!s) as System[];
       return { systems, total: systems.length };
     } else if (input.filter === SystemListFilter.Search) {
-      const { data: installations } = await octo.request("GET /user/installations", {});
+      const { data: installations } = await octo.request(
+        "GET /user/installations",
+        {}
+      );
       const q =
         input.opts.search +
         " in:name fork:true " +
-        installations.installations.map((inst) => `user:${inst.account?.login}`).join(" ");
-      const searchResp = await octo.request("GET /search/repositories{?q,sort,order,per_page,page}", {
-        q,
-        per_page: pagination.pageSize,
-        page: pagination.page,
-      });
-      const systems = searchResp.data.items.map((i: any) => this.repoToSystem(i));
+        installations.installations
+          .map((inst) => `user:${inst.account?.login}`)
+          .join(" ");
+      const searchResp = await octo.request(
+        "GET /search/repositories{?q,sort,order,per_page,page}",
+        {
+          q,
+          per_page: pagination.pageSize,
+          page: pagination.page,
+        }
+      );
+      const systems = searchResp.data.items.map((i: any) =>
+        this.repoToSystem(i)
+      );
       return { systems, total: searchResp.data.total_count };
     }
 

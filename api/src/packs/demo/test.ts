@@ -7,7 +7,9 @@ dotenv.config();
 async function main() {
   const appId = await secrets.get("auth.providerOpts.github.appId");
   const clientId = await secrets.get("auth.providerOpts.github.clientId");
-  const clientSecret = await secrets.get("auth.providerOpts.github.clientSecret");
+  const clientSecret = await secrets.get(
+    "auth.providerOpts.github.clientSecret"
+  );
   const privateKey = await secrets.get("auth.providerOpts.github.privateKey");
 
   const app = new App({
@@ -24,7 +26,10 @@ async function main() {
   const octo = await app.oauth.getUserOctokit({ token });
 
   // https://docs.github.com/en/rest/apps/installations#list-repositories-accessible-to-the-app-installation
-  const { data: installations } = await octo.request("GET /user/installations", {});
+  const { data: installations } = await octo.request(
+    "GET /user/installations",
+    {}
+  );
   // const resp = await octo.request("GET /user/orgs", {});
   console.log(JSON.stringify(installations, null, 2));
 
@@ -38,9 +43,15 @@ async function main() {
   // });
 
   const q =
-    "burn in:name fork:true " + installations.installations.map((inst) => `user:${inst.account?.login}`).join(" ");
+    "burn in:name fork:true " +
+    installations.installations
+      .map((inst) => `user:${inst.account?.login}`)
+      .join(" ");
 
-  const searchResp = await octo.request("GET /search/repositories{?q,sort,order,per_page,page}", { q });
+  const searchResp = await octo.request(
+    "GET /search/repositories{?q,sort,order,per_page,page}",
+    { q }
+  );
   console.log(searchResp.data);
   console.log(q);
 }

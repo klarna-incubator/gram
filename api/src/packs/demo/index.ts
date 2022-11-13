@@ -14,10 +14,16 @@ import { GithubAuthProvider } from "./GithubAuthProvider";
 import { GithubSystemProvider } from "./GithubSystemProvider";
 
 class PassthroughAuthzProvider implements AuthzProvider {
-  async getPermissionsForSystem(systemId: string, user: UserToken): Promise<Permission[]> {
+  async getPermissionsForSystem(
+    systemId: string,
+    user: UserToken
+  ): Promise<Permission[]> {
     return AllPermissions;
   }
-  async getPermissionsForModel(model: Model, user: UserToken): Promise<Permission[]> {
+  async getPermissionsForModel(
+    model: Model,
+    user: UserToken
+  ): Promise<Permission[]> {
     return AllPermissions;
   }
   key: string = "passthrough";
@@ -42,7 +48,9 @@ const reviewers: Reviewer[] = [
 
 class StaticReviewerProvider implements ReviewerProvider {
   async lookup(userIds: string[]): Promise<Reviewer[]> {
-    return userIds.map((uid) => reviewers.find((r) => r.sub === uid)).filter((r) => !!r) as Reviewer[];
+    return userIds
+      .map((uid) => reviewers.find((r) => r.sub === uid))
+      .filter((r) => !!r) as Reviewer[];
   }
   async getReviewersForModel(model: Model): Promise<Reviewer[]> {
     return reviewers;
@@ -58,7 +66,9 @@ class StaticReviewerProvider implements ReviewerProvider {
 
 class StaticUserProvider implements UserProvider {
   async lookup(userIds: string[]): Promise<User[]> {
-    return userIds.map((uid) => reviewers.find((r) => r.sub === uid)).filter((r) => !!r) as User[];
+    return userIds
+      .map((uid) => reviewers.find((r) => r.sub === uid))
+      .filter((r) => !!r) as User[];
   }
   key: string = "static";
 }
@@ -67,7 +77,9 @@ export default class DemoPack implements Pack {
   async bootstrap(reg: PackRegistrator): Promise<void> {
     const appId = await secrets.get("auth.providerOpts.github.appId");
     const clientId = await secrets.get("auth.providerOpts.github.clientId");
-    const clientSecret = await secrets.get("auth.providerOpts.github.clientSecret");
+    const clientSecret = await secrets.get(
+      "auth.providerOpts.github.clientSecret"
+    );
     const privateKey = await secrets.get("auth.providerOpts.github.privateKey");
 
     const app = new App({

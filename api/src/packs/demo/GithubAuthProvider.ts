@@ -43,7 +43,10 @@ export class GithubAuthProvider implements AuthProvider {
       }
     }`)) as any; // hack as I didnt find types for gql
 
-    const { data: installations } = await octo.request("GET /user/installations", {});
+    const { data: installations } = await octo.request(
+      "GET /user/installations",
+      {}
+    );
 
     return {
       roles: [Role.User],

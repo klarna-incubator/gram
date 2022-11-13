@@ -31,7 +31,9 @@ describe("systems.get", () => {
   it("should return 403 on unauthorized", async () => {
     validate.mockImplementation(async () => genUser({ roles: [] }));
 
-    const res = await request(app).get("/api/v1/systems/234").set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get("/api/v1/systems/234")
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(403);
   });
@@ -39,7 +41,9 @@ describe("systems.get", () => {
   it("should return 404 on invalid system id", async () => {
     getById.mockImplementation(async () => null);
 
-    const res = await request(app).get("/api/v1/systems/234").set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get("/api/v1/systems/234")
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(404);
   });
@@ -49,7 +53,9 @@ describe("systems.get", () => {
       throw new Error("Unknown");
     });
 
-    const res = await request(app).get("/api/v1/systems/123").set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get("/api/v1/systems/123")
+      .set("Authorization", "bearer validToken");
 
     expect(res.status).toBe(500);
   });

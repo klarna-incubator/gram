@@ -52,7 +52,10 @@ async function createApp(pool: Pool) {
   // JSON middleware to automatically parse incoming requests
   app.use(express.json());
 
-  const corsOpts: cors.CorsOptions = config.get("cors");
+  const corsOpts: cors.CorsOptions = {
+    origin: config.get("origin"),
+    credentials: true,
+  };
   app.use(cors(corsOpts));
   app.use(cookieParser());
 

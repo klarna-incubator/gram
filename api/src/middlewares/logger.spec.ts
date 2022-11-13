@@ -29,7 +29,11 @@ describe("logger middleware", () => {
 
   beforeAll(async () => {
     ({ app } = await createTestApp());
-    app.post("/logged-endpoint/:excludedParam/:id", logger(loggerOpts), (req: any, res: any) => res.end());
+    app.post(
+      "/logged-endpoint/:excludedParam/:id",
+      logger(loggerOpts),
+      (req: any, res: any) => res.end()
+    );
   });
 
   it("should call log.info with logEvent arg", async () => {
@@ -61,9 +65,15 @@ describe("logger middleware", () => {
     expect(calledEvent.meta.originalUrl).toBe(logEvent.originalUrl);
     expect(calledEvent.meta.path).toBe(logEvent.path);
     expect(calledEvent.meta.srcIp).toMatch(/(127.0.0.1|^::1$)/);
-    expect(calledEvent.payload.headers).toEqual(expect.objectContaining({ "x-include-me": "1" }));
-    expect(calledEvent.payload.headers).toEqual(expect.objectContaining({ "correlation-id": "123" }));
-    expect(calledEvent.payload.headers).toEqual(expect.objectContaining({ "x-include-me": "1" }));
+    expect(calledEvent.payload.headers).toEqual(
+      expect.objectContaining({ "x-include-me": "1" })
+    );
+    expect(calledEvent.payload.headers).toEqual(
+      expect.objectContaining({ "correlation-id": "123" })
+    );
+    expect(calledEvent.payload.headers).toEqual(
+      expect.objectContaining({ "x-include-me": "1" })
+    );
     expect(calledEvent.payload.body).toMatchObject({ includedBody: "1" });
     expect(calledEvent.payload.params).toMatchObject({ id: "1" });
     expect(calledEvent.payload.query).toMatchObject({ sampleQuery: "test" });
@@ -72,8 +82,12 @@ describe("logger middleware", () => {
     expect(calledEvent.payload.latencyMs).toBeLessThan(1000);
 
     // Exclusion assertions
-    expect(calledEvent.payload.headers).not.toEqual(expect.objectContaining({ "x-exclude-me": "1" }));
-    expect(calledEvent.payload.headers).not.toEqual(expect.objectContaining({ "forgotten-secret-header": "1" }));
+    expect(calledEvent.payload.headers).not.toEqual(
+      expect.objectContaining({ "x-exclude-me": "1" })
+    );
+    expect(calledEvent.payload.headers).not.toEqual(
+      expect.objectContaining({ "forgotten-secret-header": "1" })
+    );
     expect(calledEvent.payload.body).not.toMatchObject({ excludedBody: "1" });
     expect(calledEvent.payload.params).not.toMatchObject({
       excludedParam: "1",

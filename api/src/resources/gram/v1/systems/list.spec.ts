@@ -30,12 +30,16 @@ describe("systems.list", () => {
   });
 
   it("should return 400 with no filter query parameter", async () => {
-    const res = await request(app).get("/api/v1/systems").set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get("/api/v1/systems")
+      .set("Authorization", "bearer validToken");
     expect(res.status).toBe(400);
   });
 
   it("should return 400 with invalid filter query parameter", async () => {
-    const res = await request(app).get("/api/v1/systems?filter=123").set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get("/api/v1/systems?filter=123")
+      .set("Authorization", "bearer validToken");
     expect(res.status).toBe(400);
   });
 
@@ -47,12 +51,16 @@ describe("systems.list", () => {
       throw error;
     });
 
-    const res = await request(app).get("/api/v1/systems?filter=search").set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get("/api/v1/systems?filter=search")
+      .set("Authorization", "bearer validToken");
     expect(res.status).toBe(500);
   });
 
   it("should return 200 with dummy results", async () => {
-    const res = await request(app).get("/api/v1/systems?filter=search").set("Authorization", "bearer validToken");
+    const res = await request(app)
+      .get("/api/v1/systems?filter=search")
+      .set("Authorization", "bearer validToken");
     expect(res.status).toBe(200);
     expect(res.body.systems[0]).toEqual(sampleOwnedSystem);
   });
