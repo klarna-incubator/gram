@@ -20,10 +20,7 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
       .sort((a, b) => b.recommended - a.recommended);
 
     if (anyOption) {
-      options = [
-        { value: "any", label: "Any", recommended: false },
-        ...options,
-      ];
+      options = [{ value: "any", label: "Any", recommended: false }, ...options];
     }
     setOptions(options);
   }, [reviewers, setOptions, anyOption, value]);
@@ -52,13 +49,7 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
         <MenuItem value={opt.value} key={opt.value}>
           {opt.label}
           {"  "}
-          {opt.recommended && (
-            <Chip
-              label="Recommended"
-              size="small"
-              sx={{ marginLeft: "10px" }}
-            />
-          )}
+          {opt.recommended && <Chip label="Recommended" size="small" sx={{ marginLeft: "10px" }} />}
         </MenuItem>
       ))}
     </TextField>

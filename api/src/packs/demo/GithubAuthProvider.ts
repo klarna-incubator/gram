@@ -45,7 +45,7 @@ export class GithubAuthProvider implements AuthProvider {
 
     return {
       roles: [Role.User],
-      sub: email,
+      sub: email || login, //TODO get email (is currently null)
       teams: installations.installations.map((inst) => ({
         id: inst.id.toString(),
         name: inst.account?.login || inst.id.toString(),

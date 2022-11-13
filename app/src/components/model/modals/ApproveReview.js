@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
   Typography,
@@ -14,10 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useGetModelPermissionsQuery } from "../../../api/gram/model";
-import {
-  useApproveReviewMutation,
-  useGetReviewQuery,
-} from "../../../api/gram/review";
+import { useApproveReviewMutation, useGetReviewQuery } from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
 import { PERMISSIONS } from "../constants";
@@ -27,14 +23,10 @@ export function ApproveReview({ modelId }) {
 
   const { data: review } = useGetReviewQuery({ modelId });
 
-  const { data: permissions, isLoading: permissionsIsLoading } =
-    useGetModelPermissionsQuery({ modelId });
+  const { data: permissions, isLoading: permissionsIsLoading } = useGetModelPermissionsQuery({ modelId });
   const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
 
-  const [
-    approveReview,
-    { isUninitialized, isLoading, isSuccess, isError, error },
-  ] = useApproveReviewMutation();
+  const [approveReview, { isUninitialized, isLoading, isSuccess, isError, error }] = useApproveReviewMutation();
 
   useEffect(() => {
     setLocalNote(review?.note);
@@ -59,10 +51,9 @@ export function ApproveReview({ modelId }) {
       <DialogContent sx={{ paddingTop: "0" }}>
         {(isUninitialized || isLoading) && (
           <>
-            <DialogContentText>
-              Do you have any recommendations to the owning team? Your notes
-              here will be forwarded via email.
-            </DialogContentText>
+            <Typography>
+              Do you have any recommendations to the owning team? Your notes here will be forwarded via email.
+            </Typography>
             <TextField
               fullWidth
               multiline
@@ -77,36 +68,25 @@ export function ApproveReview({ modelId }) {
         )}
         {isSuccess && (
           <>
-            <DialogContentText>
-              The threat model is now registered as approved!
-            </DialogContentText>
+            <Typography>The threat model is now registered as approved!</Typography>
             <br />
-            <DialogContentText>
-              The owners of the threat model will be notified by email which
-              also contains the summary of your recommendations.
-            </DialogContentText>
+            <Typography>
+              The owners of the threat model will be notified by email which also contains the summary of your
+              recommendations.
+            </Typography>
             <br />
-            <DialogContentText>
-              Thank you for your contribution.
-            </DialogContentText>
+            <Typography>Thank you for your contribution.</Typography>
           </>
         )}
         {isError && (
           <>
-            <DialogContentText variant="h6">
-              Something went wrong :(
-            </DialogContentText>
-            <DialogContentText variant="caption">
-              Error: {error}
-            </DialogContentText>
+            <Typography variant="h6">Something went wrong :(</Typography>
+            <Typography variant="caption">Error: {error}</Typography>
           </>
         )}
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => dispatch(modalActions.close())}
-          variant="outlined"
-        >
+        <Button onClick={() => dispatch(modalActions.close())} variant="outlined">
           {isUninitialized || isLoading ? "Cancel" : "Close"}
         </Button>
         {(isUninitialized || isLoading) && (
@@ -116,9 +96,7 @@ export function ApproveReview({ modelId }) {
             variant="contained"
           >
             Approve
-            {isLoading && (
-              <CircularProgress size={20} sx={{ position: "absolute" }} />
-            )}
+            {isLoading && <CircularProgress size={20} sx={{ position: "absolute" }} />}
           </Button>
         )}
       </DialogActions>

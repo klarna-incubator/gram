@@ -33,8 +33,8 @@ const reviewers: Reviewer[] = [
   {
     name: "Security Team",
     recommended: true,
-    sub: "tethik@gmail.com",
-    mail: "tethik@gmail.com",
+    sub: "tethik+securityteam@gmail.com",
+    mail: "tethik+securityteam@gmail.com",
     teams: [],
   },
 ];

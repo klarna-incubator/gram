@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Typography,
 } from "@mui/material";
@@ -20,13 +19,10 @@ import { PERMISSIONS } from "../constants";
 export function RequestMeeting({ modelId }) {
   const dispatch = useDispatch();
 
-  const [
-    requestReviewMeeting,
-    { isUninitialized, isLoading, isSuccess, isError, error },
-  ] = useRequestReviewMeetingMutation();
+  const [requestReviewMeeting, { isUninitialized, isLoading, isSuccess, isError, error }] =
+    useRequestReviewMeetingMutation();
 
-  const { data: permissions, isLoading: permissionsIsLoading } =
-    useGetModelPermissionsQuery({ modelId });
+  const { data: permissions, isLoading: permissionsIsLoading } = useGetModelPermissionsQuery({ modelId });
   const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
 
   return (
@@ -45,36 +41,28 @@ export function RequestMeeting({ modelId }) {
       <LoadingPage isLoading={isLoading} />
       <DialogContent sx={{ paddingTop: "0" }}>
         {(isUninitialized || isLoading) && (
-          <DialogContentText>
-            When you press request, an email will be sent out to the owning team
-            requesting them to book a time with the Secure Development Team.
-          </DialogContentText>
+          <Typography>
+            When you press request, an email will be sent out to the owning team requesting them to book a time with the
+            Secure Development Team.
+          </Typography>
         )}
         {isSuccess && (
           <>
             <br />
-            <DialogContentText>
-              An email has been sent out to the owning team requesting them to
-              book a meeting with you.
-            </DialogContentText>
+            <Typography>
+              An email has been sent out to the owning team requesting them to book a meeting with you.
+            </Typography>
           </>
         )}
         {isError && (
           <>
-            <DialogContentText variant="h6">
-              Something went wrong :(
-            </DialogContentText>
-            <DialogContentText variant="caption">
-              Error: {error}
-            </DialogContentText>
+            <Typography variant="h6">Something went wrong :(</Typography>
+            <Typography variant="caption">Error: {error}</Typography>
           </>
         )}
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => dispatch(modalActions.close())}
-          variant="outlined"
-        >
+        <Button onClick={() => dispatch(modalActions.close())} variant="outlined">
           {isUninitialized || isLoading ? "Cancel" : "Close"}
         </Button>
         {(isUninitialized || isLoading) && (
@@ -84,9 +72,7 @@ export function RequestMeeting({ modelId }) {
             variant="contained"
           >
             Request
-            {isLoading && (
-              <CircularProgress size={20} sx={{ position: "absolute" }} />
-            )}
+            {isLoading && <CircularProgress size={20} sx={{ position: "absolute" }} />}
           </Button>
         )}
       </DialogActions>

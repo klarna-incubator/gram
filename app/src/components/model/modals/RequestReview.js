@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Typography,
 } from "@mui/material";
@@ -46,24 +45,24 @@ export function RequestReview({ modelId }) {
       <DialogContent sx={{ paddingTop: "0" }}>
         {(isUninitialized || isLoading) && (
           <>
-            <DialogContentText>Select who you would like to review your threat model</DialogContentText>
+            <Typography>Select who you would like to review your threat model</Typography>
             <ReviewerDropdown modelId={modelId} value={reviewedBy} onChange={setReviewedBy} />
           </>
         )}
         {isSuccess && (
           <>
-            <DialogContentText>Your request for review has been registered!</DialogContentText>
+            <Typography>Your request for review has been registered!</Typography>
             <br />
-            <DialogContentText>
+            <Typography>
               You'll receive an email as a follow-up with feedback on the threat model. Depending on the outcome of the
               review, you may be asked to schedule a threat modeling session.
-            </DialogContentText>
+            </Typography>
           </>
         )}
         {isError && (
           <>
-            <DialogContentText variant="h6">Something went wrong :(</DialogContentText>
-            <DialogContentText variant="caption">Error: {error}</DialogContentText>
+            <Typography variant="h6">Something went wrong :(</Typography>
+            <Typography variant="caption">Error: {error}</Typography>
           </>
         )}
       </DialogContent>
