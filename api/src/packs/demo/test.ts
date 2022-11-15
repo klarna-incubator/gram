@@ -1,7 +1,8 @@
-import { App } from "octokit";
+import { App, Octokit } from "octokit";
 import secrets from "../../secrets";
 import * as dotenv from "dotenv";
 import System from "../../data/systems/System";
+import { createAppAuth } from "@octokit/auth-app";
 dotenv.config();
 
 async function main() {
@@ -18,20 +19,20 @@ async function main() {
     oauth: { clientId, clientSecret },
   });
 
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    console.log("y no token?");
-    return;
-  }
-  const octo = await app.oauth.getUserOctokit({ token });
+  // const token = process.env.GITHUB_TOKEN;
+  // if (!token) {
+  //   console.log("y no token?");
+  //   return;
+  // }
+  // const octo = await app.oauth.getUserOctokit({ token });
 
-  // https://docs.github.com/en/rest/apps/installations#list-repositories-accessible-to-the-app-installation
-  const { data: installations } = await octo.request(
-    "GET /user/installations",
-    {}
-  );
-  // const resp = await octo.request("GET /user/orgs", {});
-  console.log(JSON.stringify(installations, null, 2));
+  // // https://docs.github.com/en/rest/apps/installations#list-repositories-accessible-to-the-app-installation
+  // const { data: installations } = await octo.request(
+  //   "GET /user/installations",
+  //   {}
+  // );
+  // // const resp = await octo.request("GET /user/orgs", {});
+  // console.log(JSON.stringify(installations, null, 2));
 
   // installations.installations.forEach(async (inst) => {
   //   const resp2 = await octo.request(`GET /user/installations/{installationId}/repositories`, {
@@ -42,18 +43,33 @@ async function main() {
   //   console.log(resp2.data.repositories[0]);
   // });
 
-  const q =
-    "burn in:name fork:true " +
-    installations.installations
-      .map((inst) => `user:${inst.account?.login}`)
-      .join(" ");
+  // const q =
+  //   "burn in:name fork:true " +
+  //   installations.installations
+  //     .map((inst) => `user:${inst.account?.login}`)
+  //     .join(" ");
 
-  const searchResp = await octo.request(
-    "GET /search/repositories{?q,sort,order,per_page,page}",
-    { q }
-  );
-  console.log(searchResp.data);
-  console.log(q);
+  // const searchResp = await octo.request(
+  //   "GET /search/repositories{?q,sort,order,per_page,page}",
+  //   { q }
+  // );
+  // console.log(searchResp.data);
+  // console.log(q);
+
+  const appAuth = createAppAuth({
+    appId,
+    privateKey,
+    clientId,
+    clientSecret,
+  });
+
+  const auth: any = await app.octokit.auth({ type: "app" });
+  console.log(auth);
+  // const auth2 = await appAuth({type: "app"});
+  // console.log(auth2);
+  const o = new Octokit({ token: auth.token });
+  const resp = await o.request(`GET /users/{userId}`, { userId: "tethik" });
+  console.log(resp);
 }
 
 main();

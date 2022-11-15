@@ -16,28 +16,22 @@ export function setUserProvider(newUserProvider: UserProvider) {
   userProvider = newUserProvider;
 }
 
-/**
- * Gets the accountable team a user belongs to.
- *
- * @param email
- * @returns {id: number, name: string}
- */
-export async function lookupUser(email: string): Promise<User | null> {
+export async function lookupUser(sub: string): Promise<User | null> {
   try {
-    const result = await lookupUsers([email]);
+    const result = await lookupUsers([sub]);
     if (result.length === 0) return null;
     return result[0];
   } catch (err) {
-    log.warn(`Errored while trying to look up user: ${email}`, err);
+    log.warn(`Errored while trying to look up user: ${sub}`, err);
     return null;
   }
 }
 
-export async function lookupUsers(emails: Array<string>): Promise<User[]> {
+export async function lookupUsers(subs: Array<string>): Promise<User[]> {
   try {
-    return await userProvider.lookup(emails);
+    return await userProvider.lookup(subs);
   } catch (err) {
-    log.warn(`Errored while trying to look up users: ${emails}`, err);
+    log.warn(`Errored while trying to look up users: ${subs}`, err);
     return [];
   }
 }

@@ -1,22 +1,13 @@
 import { App } from "octokit";
 import { join } from "path";
 import { Pack, PackRegistrator } from "..";
-import { User } from "../../auth/models/User";
-import { UserProvider } from "../../auth/UserProvider";
 import secrets from "../../secrets";
 import { GithubAuthProvider } from "./GithubAuthProvider";
 import { GithubSystemProvider } from "./GithubSystemProvider";
 import { GithubAuthzProvider } from "./GithubAuthzProvider";
-import { reviewers, StaticReviewerProvider } from "./StaticReviewerProvider";
-
-class StaticUserProvider implements UserProvider {
-  async lookup(userIds: string[]): Promise<User[]> {
-    return userIds
-      .map((uid) => reviewers.find((r) => r.sub === uid))
-      .filter((r) => !!r) as User[];
-  }
-  key: string = "static";
-}
+import { StaticReviewerProvider } from "./StaticReviewerProvider";
+import { GithubUserProvider } from "./GithubUserProvider";
+import { createAppAuth } from "@octokit/auth-app";
 
 export default class DemoPack implements Pack {
   async bootstrap(reg: PackRegistrator): Promise<void> {
@@ -37,7 +28,7 @@ export default class DemoPack implements Pack {
     reg.setSystemProvider(new GithubSystemProvider(app));
     reg.setAuthzProvider(new GithubAuthzProvider(app));
     reg.setReviewerProvider(new StaticReviewerProvider());
-    reg.setUserProvider(new StaticUserProvider());
+    reg.setUserProvider(new GithubUserProvider(app));
     reg.registerAssets("github", join(__dirname, "assets"));
   }
 }

@@ -3,10 +3,7 @@ import { Permission } from "../../../../auth/authorization";
 import { DataAccessLayer } from "../../../../data/dal";
 import { lookupUser } from "../../../../auth/user";
 import { validateUUID } from "../../../../util/uuid";
-import {
-  lookupReviewer,
-  reviewerProvider,
-} from "../../../../data/reviews/ReviewerProvider";
+import { lookupReviewer } from "../../../../data/reviews/ReviewerProvider";
 
 /**
  * GET /api/v1/reviews/{modelId}

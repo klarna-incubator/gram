@@ -7,9 +7,8 @@ It needs the `repo: metadata` permission. This allows it to search/view reposito
 Pass the following environment variables to the docker container.
 
 ```yaml
-GITHUB_APPID: 
-GITHUB_CLIENTID: 
-GITHUB_CLIENTSECRET: 
-GITHUB_PRIVATEKEY: 
+GITHUB_APPID:
+GITHUB_CLIENTID:
+GITHUB_CLIENTSECRET:
+GITHUB_PRIVATEKEY:
 ```
-
