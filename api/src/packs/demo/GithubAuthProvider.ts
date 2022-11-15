@@ -8,6 +8,7 @@ import config from "config";
 
 export class GithubAuthProvider implements AuthProvider {
   constructor(private app: App) {}
+
   async params() {
     const origin = config.get("origin");
     const { url } = this.app!.oauth.getWebFlowAuthorizationUrl({
@@ -16,6 +17,7 @@ export class GithubAuthProvider implements AuthProvider {
     });
     return { redirectUrl: url, icon: "/assets/github/github-icon.svg" };
   }
+
   async getIdentity(request: Request): Promise<UserToken> {
     const code = request.query.code?.toString();
     const state = request.query.state?.toString();

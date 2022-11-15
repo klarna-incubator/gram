@@ -41,7 +41,7 @@ class TestAuthzProvider implements AuthzProvider {
     return permissions;
   }
 
-  async getPermissionsForModel(
+  async getPermissionsForStandaloneModel(
     model: Model,
     user: UserToken
   ): Promise<Permission[]> {

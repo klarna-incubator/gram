@@ -41,7 +41,10 @@ class DefaultAuthzProvider implements AuthzProvider {
   ): Promise<Permission[]> {
     throw new Error(this.err);
   }
-  getPermissionsForModel(model: Model, user: UserToken): Promise<Permission[]> {
+  getPermissionsForStandaloneModel(
+    model: Model,
+    user: UserToken
+  ): Promise<Permission[]> {
     throw new Error(this.err);
   }
   getReviewersForModel(model: Model): Promise<Reviewer[]> {
@@ -76,7 +79,7 @@ export async function getPermissionsForSystem(
  * @returns
  */
 export async function getPermissionsForModel(model: Model, user: UserToken) {
-  return authzProvider.getPermissionsForModel(model, user);
+  return authzProvider.getPermissionsForStandaloneModel(model, user);
 }
 
 /**

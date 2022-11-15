@@ -28,6 +28,7 @@ export class GithubSystemProvider
       description: "Github repository url",
     },
   ];
+
   async provide(
     systemObjectId: string,
     quick: boolean
@@ -45,6 +46,7 @@ export class GithubSystemProvider
       },
     ];
   }
+
   async list(propertyId: string, value: any): Promise<string[]> {
     return [];
   }
@@ -69,11 +71,18 @@ export class GithubSystemProvider
     const decoded = Buffer.from(systemId, "base64").toString("ascii");
     const parts = decoded.split("/");
 
-    const resp = await octo.request(`GET /repos/${parts[0]}/${parts[1]}`);
-    if (!resp.data) {
-      return null;
+    try {
+      const resp = await octo.request(`GET /repos/${parts[0]}/${parts[1]}`);
+      if (!resp.data) {
+        return null;
+      }
+      return this.repoToSystem(resp.data);
+    } catch (err: any) {
+      if (err?.status === 404) {
+        return null;
+      }
+      throw err;
     }
-    return this.repoToSystem(resp.data);
   }
 
   async listSystems(

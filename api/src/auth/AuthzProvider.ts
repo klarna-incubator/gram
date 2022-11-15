@@ -12,5 +12,8 @@ export interface AuthzProvider extends Provider {
     systemId: string,
     user: UserToken
   ): Promise<Permission[]>;
-  getPermissionsForModel(model: Model, user: UserToken): Promise<Permission[]>;
+  getPermissionsForStandaloneModel(
+    model: Model,
+    user: UserToken
+  ): Promise<Permission[]>;
 }
