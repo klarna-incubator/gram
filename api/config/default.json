@@ -38,5 +38,9 @@
   "cookie": {
     "secure": false,
     "httpOnly": true
+  },
+
+  "allowedSrc": {
+    "img": ["https:"]
   }
 }

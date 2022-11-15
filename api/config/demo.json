@@ -23,7 +23,7 @@
 
   "log": {
     "layout": "coloured",
-    "level": "debug",
+    "level": "info",
     "auditHttp": {
       "simplified": true
     }
@@ -42,5 +42,9 @@
 
   "secrets": {
     "provider": "config"
+  },
+
+  "allowedSrc": {
+    "img": ["https://avatars.githubusercontent.com"]
   }
 }

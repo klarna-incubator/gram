@@ -1,5 +1,4 @@
 import config from "config";
-import cors from "cors";
 import { Server } from "http";
 import url from "url";
 import WebSocket from "ws";
@@ -11,10 +10,6 @@ import { AuthenticatedIncomingMessage } from "./types";
 
 const log = getLogger("wss");
 const wssRegistry = new Map<string, ModelWebsocketServer>();
-
-function sanitizeOrigin(origin: string) {
-  return;
-}
 
 function validateRequestOrigin(request: AuthenticatedIncomingMessage) {
   const origin = (request.headers.origin || "").trim();

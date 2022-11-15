@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/node";
 import config from "config";
 import cookieParser from "cookie-parser";
-import cors from "cors";
 import express from "express";
 import errorWrap from "express-async-error-wrapper";
 import path from "path";
@@ -18,6 +17,7 @@ import { AuthzMiddleware } from "./middlewares/authz";
 import cacheMw from "./middlewares/cache";
 import { csrfTokenRequired } from "./middlewares/csrf";
 import loggerMw from "./middlewares/logger";
+import { securityHeaders } from "./middlewares/securityHeaders";
 import { AssetDir } from "./packs";
 import crash from "./resources/gram/v1/admin/crash";
 import dropRole from "./resources/gram/v1/admin/dropRole";
@@ -51,12 +51,7 @@ async function createApp(pool: Pool) {
 
   // JSON middleware to automatically parse incoming requests
   app.use(express.json());
-
-  const corsOpts: cors.CorsOptions = {
-    origin: config.get("origin"),
-    credentials: true,
-  };
-  app.use(cors(corsOpts));
+  app.use(securityHeaders());
   app.use(cookieParser());
 
   const auditHttpLogOptions: object = config.get("log.auditHttp");
