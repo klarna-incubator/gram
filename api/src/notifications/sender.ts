@@ -11,6 +11,13 @@ export async function notificationSender(
   notificationService: NotificationDataService,
   templateHandler: TemplateHandler
 ) {
+  const notifications = await notificationService.pollNewNotifications();
+
+  if (notifications.length === 0) {
+    log.debug("No new notifications to send");
+    return;
+  }
+
   const host = await secrets.get("notifications.providers.email.host");
   const port = parseInt(
     await secrets.getOrDefault("notifications.providers.email.port", "25")
@@ -28,13 +35,6 @@ export async function notificationSender(
     port,
     tls: true, // NOT OPTIONAL 🙅
   });
-
-  const notifications = await notificationService.pollNewNotifications();
-
-  if (notifications.length === 0) {
-    log.debug("No new notifications to send");
-    return;
-  }
 
   const result = await Promise.all(
     notifications.map(async (notification) => {
