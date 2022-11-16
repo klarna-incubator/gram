@@ -45,10 +45,17 @@ export const webSocketMiddleware =
     }
 
     // Send redux actions out to the world
-    if (whitelistedActionsToReflect.indexOf(action.type) > -1 && !action.remote) {
+    if (
+      whitelistedActionsToReflect.indexOf(action.type) > -1 &&
+      !action.remote
+    ) {
       const modelId = getState().model.id;
-      const permissions = getState().api.queries[`getModelPermissions({"modelId":"${modelId}"})`]; // wat
-      if (getState().webSocket.isConnected && permissions?.data.includes(PERMISSIONS.WRITE)) {
+      const permissions =
+        getState().api.queries[`getModelPermissions({"modelId":"${modelId}"})`]; // wat
+      if (
+        getState().webSocket.isConnected &&
+        permissions?.data.includes(PERMISSIONS.WRITE)
+      ) {
         socket.send(JSON.stringify(action));
       }
     }
@@ -62,7 +69,8 @@ function connect(dispatch, modelId) {
   //TODO get websocket host / configurable
   socket = new WebSocket(
     `${document.location.protocol === "http:" ? "ws" : "wss"}://${
-      document.location.host === "localhost:4726" && process.env.NODE_ENV === "development"
+      document.location.host === "localhost:4726" &&
+      process.env.NODE_ENV === "development"
         ? "localhost:8080" // hack as react doesnt seem to proxy the websocket correctly
         : document.location.host
     }/ws/model/${modelId}`
@@ -77,7 +85,16 @@ function bind(dispatch, modelId) {
     dispatch(webSocketActions.connectionEstablished());
 
     // How to get redux toolkit APIs to reload
-    dispatch(api.util.invalidateTags(["Review", "Model", "Threats", "Controls", "Mitigations", "Suggestions"]));
+    dispatch(
+      api.util.invalidateTags([
+        "Review",
+        "Model",
+        "Threats",
+        "Controls",
+        "Mitigations",
+        "Suggestions",
+      ])
+    );
   };
 
   socket.onerror = (error) => {
