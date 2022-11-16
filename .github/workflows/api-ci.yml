@@ -37,6 +37,10 @@ jobs:
       - name: 'Clean install'
         shell: bash
         run: npm ci
+
+      - name: 'Setup database'
+        shell: bash
+        run: NODE_ENV=test npm run migrate-database
       
       - name: 'Test'
         shell: bash
