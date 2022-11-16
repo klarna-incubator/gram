@@ -23,7 +23,6 @@ env:
 
 jobs:
   build:
-    needs: [api-ci, app-ci]
     runs-on: ubuntu-latest
     permissions:
       contents: read
