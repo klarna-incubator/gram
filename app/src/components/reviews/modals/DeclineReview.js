@@ -55,9 +55,9 @@ export function DeclineReview(props) {
       <DialogContent sx={{ padding: "0" }}>
         {(isUninitialized || isLoading) && (
           <DialogContentText>
-            Are you sure you want to decline this review? The review will
-            automatically be reassigned to the Secure Development team, so no
-            worries.
+            Are you sure you want to decline this review? 
+            {/* The review will automatically be reassigned to the Secure Development team, so no
+            worries. */}
           </DialogContentText>
         )}
         {isError && (

@@ -46,7 +46,7 @@ export function RequestMeeting({ modelId }) {
         {(isUninitialized || isLoading) && (
           <Typography>
             When you press request, an email will be sent out to the owning team
-            requesting them to book a time with the Secure Development Team.
+            requesting them to book a meeting with the assigned reviewer.
           </Typography>
         )}
         {isSuccess && (

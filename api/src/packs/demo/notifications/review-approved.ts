@@ -37,7 +37,7 @@ export const EmailReviewApproved = () =>
       const recipients = [variables.requester];
 
       return {
-        cc: [],
+        cc: [variables.reviewer],
         recipients,
         ...variables,
       };

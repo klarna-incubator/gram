@@ -21,7 +21,7 @@ export async function generalReviewNotificationVariables(
       // Handle the special case where Secure Development team is assigned
       const reviewer = await lookupReviewer(review.reviewedBy);
       return {
-        email: review.reviewedBy,
+        email: reviewer?.mail,
         name: reviewer?.name,
       };
     })(),
@@ -29,7 +29,7 @@ export async function generalReviewNotificationVariables(
     (async () => {
       const requester = await lookupUser(review.requestedBy);
       return {
-        email: review.requestedBy,
+        email: requester?.mail,
         name: requester?.name,
       };
     })(),

@@ -16,15 +16,14 @@ export class GithubUserProvider implements UserProvider {
     const auth: any = await this.app.octokit.auth({ type: "app" });
     const octo = new Octokit({ token: auth.token });
     try {
-      const resp = await octo.request(`GET /users/{userId}`, { userId });
+      const resp = await octo.request(`GET /users/{userId}`, { userId });      
       return {
         sub: resp.data.login,
         name: resp.data.name,
         teams: [],
         mail: resp.data.email,
       };
-    } catch (err: any) {
-      console.log(err);
+    } catch (err: any) {      
       if (err?.status === 404) {
         return null;
       }
