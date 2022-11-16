@@ -68,7 +68,7 @@ Object {
           <div
             class="active-user-item"
             style="background-color: rgb(0, 170, 85); border: 2px solid; border-color: #00aa55;"
-            title="Joakim Uddholm"
+            title="Joakim"
           >
             <img
               alt=""
@@ -144,7 +144,7 @@ Object {
         <div
           class="active-user-item"
           style="background-color: rgb(0, 170, 85); border: 2px solid; border-color: #00aa55;"
-          title="Joakim Uddholm"
+          title="Joakim"
         >
           <img
             alt=""
