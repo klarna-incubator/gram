@@ -1,0 +1,50 @@
+
+on:
+  push:
+    branches:
+      - "main"
+      - "master"
+      - "ci"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: api
+
+jobs:
+  api-ci:
+    runs-on: ubuntu-latest
+
+    # Service containers to run with `container-job`
+    services:      
+      postgres:
+        # Docker Hub image
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: somethingsecretfortesting
+          POSTGRES_USER: gram-test
+        ports:
+          - 5433:5432
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+    
+      - name: 'Clean install'
+        shell: bash
+        run: npm ci
+      
+      - name: 'Test'
+        shell: bash
+        run: npm test
+      
+      - name: 'Lint'
+        shell: bash
+        run: npm run lint
+
+      - name: 'Build'
+        shell: bash
+        run: npm run build        
