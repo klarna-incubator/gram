@@ -11,7 +11,7 @@ const systems = [sampleOwnedSystem];
 
 export async function getMockedSystemById(
   systemId: string
-): Promise<System | null> {  
+): Promise<System | null> {
   return systems.find((s) => s.id === systemId) || null;
 }
 

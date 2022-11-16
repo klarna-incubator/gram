@@ -21,7 +21,15 @@ export function Login() {
         <Box>
           <Button
             href={provider.redirectUrl}
-            startIcon={provider.icon && <img alt={`${provider.provider} icon`} width={32} src={provider.icon} />}
+            startIcon={
+              provider.icon && (
+                <img
+                  alt={`${provider.provider} icon`}
+                  width={32}
+                  src={provider.icon}
+                />
+              )
+            }
             variant="outlined"
           >
             Login via {provider.provider}
