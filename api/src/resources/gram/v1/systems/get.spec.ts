@@ -20,7 +20,10 @@ describe("systems.get", () => {
   beforeEach(() => {
     validate.mockImplementation(async () => sampleUser);
     getById = jest.spyOn(systemProvider, "getSystem");
-    getById.mockImplementation(getMockedSystemById);
+    // maybe unnecessary, same exists in the TestSystemProvider.
+    getById.mockImplementation((ctx: any, systemId: string) =>
+      getMockedSystemById(systemId)
+    );
   });
 
   it("should return 401 on un-authenticated request", async () => {

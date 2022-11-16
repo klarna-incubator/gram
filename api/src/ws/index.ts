@@ -12,11 +12,14 @@ const log = getLogger("wss");
 const wssRegistry = new Map<string, ModelWebsocketServer>();
 
 function validateRequestOrigin(request: AuthenticatedIncomingMessage) {
-  const origin = (request.headers.origin || "").trim();
+  let origin = (request.headers.origin || "").trim();
+
+  if (origin.endsWith("/") && origin.length > 1) {
+    origin = origin.substring(0, origin.length - 1);
+  }
 
   const corsOrigin = config.get("origin");
   let validOrigin = false;
-
   if (Array.isArray(corsOrigin)) {
     validOrigin = corsOrigin.includes(origin);
   } else {
