@@ -7,7 +7,6 @@ import { GithubSystemProvider } from "./GithubSystemProvider";
 import { GithubAuthzProvider } from "./GithubAuthzProvider";
 import { StaticReviewerProvider } from "./StaticReviewerProvider";
 import { GithubUserProvider } from "./GithubUserProvider";
-import { createAppAuth } from "@octokit/auth-app";
 import { EmailReviewApproved } from "./notifications/review-approved";
 import { EmailReviewMeetingRequested } from "./notifications/review-meeting-requested";
 import { EmailReviewMeetingRequestedReminder } from "./notifications/review-meeting-requested-reminder";
@@ -38,12 +37,12 @@ export default class DemoPack implements Pack {
     reg.registerAssets("github", join(__dirname, "assets"));
 
     reg.registerNotificationTemplates([
-      EmailReviewApproved(octane),
-      EmailReviewMeetingRequested(octane),
-      EmailReviewMeetingRequestedReminder(octane),
-      EmailReviewRequested(octane),
-      EmailReviewerChanged(octane),
-      EmailReviewRequestedReminder(octane),
+      EmailReviewApproved(),
+      EmailReviewMeetingRequested(),
+      EmailReviewMeetingRequestedReminder(),
+      EmailReviewRequested(),
+      EmailReviewerChanged(),
+      EmailReviewRequestedReminder(),
     ]);
   }
 }

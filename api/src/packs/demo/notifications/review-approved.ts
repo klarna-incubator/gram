@@ -1,6 +1,5 @@
-import { SystemProvider } from "../../../data/systems/SystemProvider";
 import { PlaintextHandlebarsNotificationTemplate } from "../../../notifications/NotificationTemplate";
-import { CoolestTeam, generalReviewNotificationVariables } from "./util";
+import { generalReviewNotificationVariables } from "./util";
 
 const key = "review-approved";
 

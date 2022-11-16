@@ -1,6 +1,7 @@
 import { lookupUser } from "../../../auth/user";
 import { DataAccessLayer } from "../../../data/dal";
 import { Review } from "../../../data/reviews/Review";
+import { lookupReviewer } from "../../../data/reviews/ReviewerProvider";
 import { linkToModel } from "../../../util/links";
 
 export async function generalReviewNotificationVariables(
@@ -18,7 +19,7 @@ export async function generalReviewNotificationVariables(
     // Lookup Reviewer
     (async () => {
       // Handle the special case where Secure Development team is assigned
-      const reviewer = await lookupUser(review.reviewedBy);
+      const reviewer = await lookupReviewer(review.reviewedBy);
       return {
         email: review.reviewedBy,
         name: reviewer?.name,
