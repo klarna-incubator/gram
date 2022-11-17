@@ -5,9 +5,11 @@ import { AuthProvider } from "../../auth/AuthProvider";
 import { Role } from "../../auth/models/Role";
 import { UserToken } from "../../auth/models/UserToken";
 import config from "config";
+import { GithubUserProvider } from "./GithubUserProvider";
+import { User } from "../../auth/models/User";
 
 export class GithubAuthProvider implements AuthProvider {
-  constructor(private app: App) {}
+  constructor(private app: App, private userProvider: GithubUserProvider) {}
 
   async params() {
     const origin = config.get("origin");
@@ -35,32 +37,49 @@ export class GithubAuthProvider implements AuthProvider {
 
     // Helpful: https://docs.github.com/en/graphql/overview/explorer
     const {
-      viewer: { login, email, name, avatarUrl },
+      viewer: { login, name, avatarUrl },
     } = (await octo.graphql(`{ 
       viewer { 
-        login
-        email
+        login      
         name
         avatarUrl
       }
     }`)) as any; // hack as I didnt find types for gql
+
+    // Fetch email, needed for email notifications (public one can also be used, but not reliable enough)
+    const { data: emails } = await octo.request(
+      "GET /user/emails{?per_page,page}",
+      {}
+    );
+    let email =
+      emails.find((e: any) => e.primary && e.verified).email ||
+      emails.length > 0
+        ? emails[0].email
+        : null;
 
     const { data: installations } = await octo.request(
       "GET /user/installations",
       {}
     );
 
-    return {
-      roles: [Role.User],
-      sub: login, //TODO get email (is currently null)
+    const user: User = {
+      name: name || login,
+      mail: email,
+      sub: login,
       teams: installations.installations.map((inst) => ({
         id: inst.id.toString(),
         name: inst.account?.login || inst.id.toString(),
       })),
+    };
+
+    await this.userProvider.insert(user);
+
+    return {
+      roles: [Role.User],
       provider: this.key,
-      name: name || login,
       picture: avatarUrl,
       providerToken: token,
+      ...user,
     };
   }
   key: string = "github";

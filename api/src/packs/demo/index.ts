@@ -13,6 +13,7 @@ import { EmailReviewMeetingRequestedReminder } from "./notifications/review-meet
 import { EmailReviewRequested } from "./notifications/review-requested";
 import { EmailReviewerChanged } from "./notifications/reviewer-changed";
 import { EmailReviewRequestedReminder } from "./notifications/review-requested-reminder";
+import { additionalMigrations } from "./data";
 
 export default class DemoPack implements Pack {
   async bootstrap(reg: PackRegistrator): Promise<void> {
@@ -29,11 +30,14 @@ export default class DemoPack implements Pack {
       oauth: { clientId, clientSecret },
     });
 
-    reg.registerAuthProvider(new GithubAuthProvider(app));
+    additionalMigrations(); //TODO rethink this..
+
+    const userProvider = new GithubUserProvider(app);
     reg.setSystemProvider(new GithubSystemProvider(app));
     reg.setAuthzProvider(new GithubAuthzProvider(app));
     reg.setReviewerProvider(new StaticReviewerProvider());
-    reg.setUserProvider(new GithubUserProvider(app));
+    reg.setUserProvider(userProvider);
+    reg.registerAuthProvider(new GithubAuthProvider(app, userProvider));
     reg.registerAssets("github", join(__dirname, "assets"));
 
     reg.registerNotificationTemplates([
