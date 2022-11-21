@@ -24,7 +24,7 @@ export function TeamSystemsPageList({
   const [page, setPage] = useState(1);
 
   const opts = { filter: "team", teamId, pagesize, page };
-  const { data, isLoading } = useListSystemsQuery(opts);
+  const { data, isLoading, isFetching } = useListSystemsQuery(opts);
 
   // Because too lazy to write a new endpoint to fetch team name.
   const teamName =
@@ -38,7 +38,7 @@ export function TeamSystemsPageList({
         <Typography variant="h5">{teamName}</Typography>
 
         <List sx={{ height: listHeight, overflow: "auto" }}>
-          {isLoading ? (
+          {isLoading || isFetching ? (
             <Loading />
           ) : data.systems ? (
             data.systems.map((system) => (

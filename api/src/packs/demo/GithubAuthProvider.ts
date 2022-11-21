@@ -67,7 +67,7 @@ export class GithubAuthProvider implements AuthProvider {
       mail: email,
       sub: login,
       teams: installations.installations.map((inst) => ({
-        id: inst.id.toString(),
+        id: inst.account?.login || inst.id.toString(),
         name: inst.account?.login || inst.id.toString(),
       })),
     };

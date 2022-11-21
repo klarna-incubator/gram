@@ -72,7 +72,10 @@ export class GithubSystemProvider
     const parts = decoded.split("/");
 
     try {
-      const resp = await octo.request(`GET /repos/${parts[0]}/${parts[1]}`);
+      const resp = await octo.request(`GET /repos/{account}/{repo}`, {
+        account: parts[0],
+        repo: parts[1],
+      });
       if (!resp.data) {
         return null;
       }
@@ -85,6 +88,12 @@ export class GithubSystemProvider
     }
   }
 
+  async getInstallations(ctx: AppContext) {
+    const octo = await this.getOcto(ctx);
+    const { data } = await octo.request("GET /user/installations", {});
+    return data.installations;
+  }
+
   async listSystems(
     ctx: AppContext,
     input: SystemListInput,
@@ -93,10 +102,22 @@ export class GithubSystemProvider
     const octo = await this.getOcto(ctx);
 
     if (input.filter === SystemListFilter.Team) {
+      const installations = await this.getInstallations(ctx);
+      const installationId = installations.find(
+        (i: any) => i.account.login === input.opts.teamId
+      )?.id;
+      if (!installationId) {
+        return {
+          systems: [],
+          total: 0,
+        };
+      }
+      // This makes it so only orgs connected to the user will show up.
+      // could add a fallback here if installationId is undefined to look for public repos.
       const resp = await octo.request(
         `GET /user/installations/{installationId}/repositories{?per_page,page}`,
         {
-          installationId: input.opts.teamId,
+          installationId,
           per_page: pagination.pageSize,
           page: pagination.page,
         }
@@ -112,16 +133,11 @@ export class GithubSystemProvider
       ).filter((s) => !!s) as System[];
       return { systems, total: systems.length };
     } else if (input.filter === SystemListFilter.Search) {
-      const { data: installations } = await octo.request(
-        "GET /user/installations",
-        {}
-      );
+      const installations = await this.getInstallations(ctx);
       const q =
         input.opts.search +
         " in:name fork:true " +
-        installations.installations
-          .map((inst) => `user:${inst.account?.login}`)
-          .join(" ");
+        installations.map((inst) => `user:${inst.account?.login}`).join(" ");
       const searchResp = await octo.request(
         "GET /search/repositories{?q,sort,order,per_page,page}",
         {
@@ -130,6 +146,7 @@ export class GithubSystemProvider
           page: pagination.page,
         }
       );
+
       const systems = searchResp.data.items.map((i: any) =>
         this.repoToSystem(i)
       );

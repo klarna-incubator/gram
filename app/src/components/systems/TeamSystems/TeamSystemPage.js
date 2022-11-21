@@ -1,14 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import { useMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useGetUserQuery } from "../../../api/gram/auth";
 import { useTitle } from "../../../hooks/useTitle";
 import "../Systems.css";
 import { TeamSystemsPageList } from "./TeamSystemsPageList";
 
 export function TeamSystemsPage() {
-  const match = useMatch("/team/:teamId");
-  const teamId = parseInt(match?.params?.teamId);
+  const { teamId } = useParams("/team/:teamId");
   const { data: user } = useGetUserQuery();
 
   let teams;
