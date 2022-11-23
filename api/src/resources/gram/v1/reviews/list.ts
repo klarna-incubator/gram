@@ -47,7 +47,12 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
   const dateOrder = req.query["date-order"] === "DESC" ? "DESC" : "ASC";
   const page = req.query["page"] ? parseInt(req.query["page"].toString()) : 0;
 
-  const reviews = await dal.reviewService.list(filters, page, dateOrder);
+  const reviews = await dal.reviewService.list(
+    { currentRequest: req },
+    filters,
+    page,
+    dateOrder
+  );
 
   const reslookupUsers = await lookupUsers(
     reviews.items
@@ -57,8 +62,6 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
   const employees = reslookupUsers.map((employee) => ({
     requester: employee,
   }));
-
-  // console.log(employees.length - reviews.items.length);
 
   const result = {
     total: reviews.total,

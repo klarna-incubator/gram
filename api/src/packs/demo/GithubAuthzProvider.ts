@@ -29,6 +29,8 @@ export class GithubAuthzProvider implements AuthzProvider {
       return [];
     }
 
+    // TODO: use permission object instead.
+    // permissions: { admin: true, maintain: true, push: true, triage: true, pull: true },
     const octo = await this.app.oauth.getUserOctokit({ token });
     try {
       const resp = await octo.request(

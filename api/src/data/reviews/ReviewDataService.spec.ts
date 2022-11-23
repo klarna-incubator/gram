@@ -137,9 +137,12 @@ describe("ReviewDataService implementation", () => {
       review3.note = "Another review";
       await data.create(review3);
 
-      const result = await data.list({
-        reviewedBy: "some-reviewer",
-      });
+      const result = await data.list(
+        {},
+        {
+          reviewedBy: "some-reviewer",
+        }
+      );
 
       expect(
         result.items.some((r) => r.modelId === review.modelId)
@@ -203,9 +206,12 @@ describe("ReviewDataService implementation", () => {
       review3.note = "Another review";
       await data.create(review3);
 
-      const result = await data.list({
-        requestedBy: "some-user",
-      });
+      const result = await data.list(
+        {},
+        {
+          requestedBy: "some-user",
+        }
+      );
 
       expect(
         result.items.some((r) => r.modelId === review.modelId)
@@ -248,9 +254,12 @@ describe("ReviewDataService implementation", () => {
       await data.create(review3);
 
       const statuses = [ReviewStatus.Requested, ReviewStatus.Declined];
-      const result = await data.list({
-        statuses,
-      });
+      const result = await data.list(
+        {},
+        {
+          statuses,
+        }
+      );
 
       expect(
         result.items.some((r) => r.modelId === review.modelId)
@@ -290,11 +299,14 @@ describe("ReviewDataService implementation", () => {
       await data.create(review3);
 
       const statuses = [ReviewStatus.Approved, ReviewStatus.Declined];
-      const result = await data.list({
-        statuses,
-        reviewedBy: "another-reviewer",
-        requestedBy: "another-user",
-      });
+      const result = await data.list(
+        {},
+        {
+          statuses,
+          reviewedBy: "another-reviewer",
+          requestedBy: "another-user",
+        }
+      );
 
       expect(
         result.items.some((r) => r.modelId === review3.modelId)
@@ -314,17 +326,20 @@ describe("ReviewDataService implementation", () => {
         await data.create(review);
       }
 
-      let result = await data.list({});
+      let result = await data.list({}, {});
       expect(result.items.length).toEqual(10); // Should not be hardcoded ideally == pagesize
       expect(result.total).toEqual(11);
 
-      result = await data.list({}, 2);
+      result = await data.list({}, {}, 2);
       expect(result.items.length).toEqual(1);
       expect(result.total).toEqual(11);
     });
 
     it("should returns empty when no reviews exist for model", async () => {
-      const result = await data.list({ reviewedBy: "some-unknown-reviewer" });
+      const result = await data.list(
+        {},
+        { reviewedBy: "some-unknown-reviewer" }
+      );
       expect(result.total).toEqual(0);
       expect(result.items).toEqual([]);
     });

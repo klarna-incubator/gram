@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import { getLogger } from "../../logger";
 import { DataAccessLayer } from "../dal";
 import { SystemPropertyFilter, SystemPropertyValue } from "../system-property";
+import { AppContext } from "../systems/SystemProvider";
 import { Review, ReviewStatus } from "./Review";
 import { reviewerProvider } from "./ReviewerProvider";
 import { ReviewSystemCompliance } from "./ReviewSystemCompliance";
@@ -85,6 +86,7 @@ export class ReviewDataService extends EventEmitter {
   }
 
   async list(
+    ctx: AppContext,
     filters: ReviewListFilter,
     page?: number,
     dateOrder?: "ASC" | "DESC"
@@ -102,7 +104,10 @@ export class ReviewDataService extends EventEmitter {
     if (filters.properties && filters.properties.length > 0) {
       // This might not scale well if filtering returns a lot of systems.
       const systemsFromProperties = Array.from(
-        await this.dal.sysPropHandler.listSystemsByFilters(filters.properties)
+        await this.dal.sysPropHandler.listSystemsByFilters(
+          ctx,
+          filters.properties
+        )
       );
       systems = new Set(
         systemsFromProperties.filter(
@@ -187,6 +192,7 @@ export class ReviewDataService extends EventEmitter {
               systemId: row.model_system_id,
             },
             systemProperties: await this.dal.sysPropHandler.contextualize(
+              ctx,
               row.model_system_id,
               true
             ),

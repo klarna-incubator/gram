@@ -6,16 +6,16 @@ describe("SystemPropertyProvider implementation", () => {
       const niceProvider: SystemPropertyProvider = {
         id: "nice",
         definitions: [],
-        list: async (filters) => [],
-        provide: async () => [],
+        listSystemByPropertyValue: async (filters) => [],
+        provideSystemProperties: async () => [],
       };
       const badProvider: SystemPropertyProvider = {
         id: "bad",
         definitions: [],
-        list: async (filters) => {
+        listSystemByPropertyValue: async (filters) => {
           throw new Error("not good");
         },
-        provide: async () => {
+        provideSystemProperties: async () => {
           throw new Error("not good");
         },
       };
@@ -24,7 +24,7 @@ describe("SystemPropertyProvider implementation", () => {
       handler.registerSystemPropertyProvider(niceProvider);
       handler.registerSystemPropertyProvider(badProvider);
 
-      const items = await handler.contextualize("some-system-id");
+      const items = await handler.contextualize({}, "some-system-id");
       const expected: any[] = [];
       expect(items).toStrictEqual(expected);
     });
@@ -33,8 +33,8 @@ describe("SystemPropertyProvider implementation", () => {
       const niceProvider: SystemPropertyProvider = {
         id: "nice",
         definitions: [],
-        list: async (filters) => [],
-        provide: async (systemObjectId, quick) => [
+        listSystemByPropertyValue: async (filters) => [],
+        provideSystemProperties: async (systemObjectId, quick) => [
           {
             batchFilterable: false,
             displayInList: false,
@@ -49,7 +49,7 @@ describe("SystemPropertyProvider implementation", () => {
       const handler = new SystemPropertyHandler();
       handler.registerSystemPropertyProvider(niceProvider);
 
-      const items = await handler.contextualize("some-system-id");
+      const items = await handler.contextualize({}, "some-system-id");
       const expected: any[] = [
         {
           batchFilterable: false,
@@ -66,7 +66,7 @@ describe("SystemPropertyProvider implementation", () => {
 
     it("should return empty when no providers", async () => {
       const handler = new SystemPropertyHandler();
-      const items = await handler.contextualize("some-system-id");
+      const items = await handler.contextualize({}, "some-system-id");
       const expected: any[] = [];
       expect(items).toStrictEqual(expected);
     });
@@ -79,18 +79,18 @@ describe("SystemPropertyProvider implementation", () => {
         definitions: [
           { batchFilterable: true, id: "good-prop", label: "good-prop" },
         ],
-        list: async (filters) => [],
-        provide: async () => [],
+        listSystemByPropertyValue: async (filters) => [],
+        provideSystemProperties: async () => [],
       };
       const badProvider: SystemPropertyProvider = {
         id: "bad",
         definitions: [
           { batchFilterable: true, id: "bad-prop", label: "bad-prop" },
         ],
-        list: async (filters) => {
+        listSystemByPropertyValue: async (filters) => {
           throw new Error("not good");
         },
-        provide: async () => {
+        provideSystemProperties: async () => {
           throw new Error("not good");
         },
       };
@@ -99,7 +99,7 @@ describe("SystemPropertyProvider implementation", () => {
       handler.registerSystemPropertyProvider(niceProvider);
       handler.registerSystemPropertyProvider(badProvider);
 
-      const items = await handler.listSystemsByFilters([
+      const items = await handler.listSystemsByFilters({}, [
         { propertyId: "good-prop", value: "yes" },
         { propertyId: "bad-prop", value: "42" },
       ]);
@@ -113,14 +113,17 @@ describe("SystemPropertyProvider implementation", () => {
         definitions: [
           { batchFilterable: true, id: "good-prop", label: "good-prop" },
         ],
-        list: async (filters) => ["some-system-id", "another-one"],
-        provide: async (systemObjectId, quick) => [],
+        listSystemByPropertyValue: async (filters) => [
+          "some-system-id",
+          "another-one",
+        ],
+        provideSystemProperties: async (systemObjectId, quick) => [],
       };
 
       const handler = new SystemPropertyHandler();
       handler.registerSystemPropertyProvider(niceProvider);
 
-      const items = await handler.listSystemsByFilters([
+      const items = await handler.listSystemsByFilters({}, [
         { propertyId: "good-prop", value: "yes" },
       ]);
       const expected: any[] = ["some-system-id", "another-one"];
@@ -129,7 +132,7 @@ describe("SystemPropertyProvider implementation", () => {
 
     it("should return empty when no providers", async () => {
       const handler = new SystemPropertyHandler();
-      const items = await handler.listSystemsByFilters([
+      const items = await handler.listSystemsByFilters({}, [
         { propertyId: "good-prop", value: "yes" },
       ]);
       const expected: any[] = [];

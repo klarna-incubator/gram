@@ -1,4 +1,5 @@
 import { getLogger } from "../../logger";
+import { AppContext } from "../systems/SystemProvider";
 
 export interface SystemPropertyValue extends SystemProperty {
   /**
@@ -42,23 +43,27 @@ export interface SystemPropertyProvider {
   id: string;
 
   /**
-   *
+   * Set definitions of System Properties
    */
   definitions: SystemProperty[];
 
   /**
-   *
-   * @param model Threat Model
+   * Provide a list of System Property values for a given system
    */
-  provide(
+  provideSystemProperties(
+    ctx: AppContext,
     systemObjectId: string,
     quick: boolean
   ): Promise<SystemPropertyValue[]>;
 
   /**
-   *
+   * Used for lists filtering
    */
-  list(propertyId: string, value: any): Promise<string[]>;
+  listSystemByPropertyValue(
+    ctx: AppContext,
+    propertyId: string,
+    value: any
+  ): Promise<string[]>;
 }
 
 export class SystemPropertyHandler {
@@ -98,14 +103,15 @@ export class SystemPropertyHandler {
    * @returns
    */
   async contextualize(
-    systemObjectId: string,
+    ctx: AppContext,
+    systemId: string,
     quick = false
   ): Promise<SystemPropertyValue[]> {
     const items: SystemPropertyValue[] = [];
     const batches = await Promise.all(
       this.providers.map(async (p) => {
         try {
-          const pItems = await p.provide(systemObjectId, quick);
+          const pItems = await p.provideSystemProperties(ctx, systemId, quick);
           return pItems.map((i) => ({ ...i, source: p.id }));
         } catch (error: any) {
           this.log.error(
@@ -124,7 +130,10 @@ export class SystemPropertyHandler {
    * List systems based on Properties and their values. To avoid expensive lookups, this will only
    * work with system properties that are marked "batchFilterable"
    */
-  async listSystemsByFilters(filters: { propertyId: string; value: any }[]) {
+  async listSystemsByFilters(
+    ctx: AppContext,
+    filters: { propertyId: string; value: any }[]
+  ) {
     // Don't filter by properties that are not marked as batchFilterable.
     filters = filters.filter(
       (f) => this.properties.get(f.propertyId)?.batchFilterable
@@ -137,7 +146,11 @@ export class SystemPropertyHandler {
           return null;
         }
         try {
-          return await provider.list(propertyId, value);
+          return await provider.listSystemByPropertyValue(
+            ctx,
+            propertyId,
+            value
+          );
         } catch (err: any) {
           this.log.error(
             `provider ${provider.id} errored while attempting to filter for systems`,

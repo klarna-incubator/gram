@@ -76,6 +76,7 @@ export function TableRow(props) {
         <TableCell>
           {review.systemProperties
             .filter((prop) => prop.displayInList)
+            .filter((prop) => prop.value && prop.value !== "false")
             .map((prop) => (
               <Chip label={prop.label} />
             ))}

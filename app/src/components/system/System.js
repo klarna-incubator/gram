@@ -54,7 +54,9 @@ export function System() {
         ))}
       </span>
       <span className="divider"> &mdash; </span>
-      <span className="description">{system.description}</span>
+      <span className="description">
+        {system.description || "(system has no description)"}
+      </span>
 
       <div className="threat-models">
         {permissions.includes(PERMISSIONS.WRITE) && (

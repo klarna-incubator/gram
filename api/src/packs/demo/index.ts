@@ -33,7 +33,9 @@ export default class DemoPack implements Pack {
     additionalMigrations(); //TODO rethink this..
 
     const userProvider = new GithubUserProvider(app);
-    reg.setSystemProvider(new GithubSystemProvider(app));
+    const systemProvider = new GithubSystemProvider(app);
+    reg.setSystemProvider(systemProvider);
+    reg.registerSystemPropertyProvider(systemProvider);
     reg.setAuthzProvider(new GithubAuthzProvider(app));
     reg.setReviewerProvider(new StaticReviewerProvider());
     reg.setUserProvider(userProvider);

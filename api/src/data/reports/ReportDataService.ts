@@ -3,6 +3,7 @@ import { getLogger } from "../../logger";
 import { linkToModel } from "../../util/links";
 import { DataAccessLayer } from "../dal";
 import { SystemProperty } from "../system-property";
+import { AppContext } from "../systems/SystemProvider";
 
 interface SystemCompliance {
   SystemID: string;
@@ -31,6 +32,7 @@ export class ReportDataService {
   log = getLogger("ReportDataService");
 
   async listSystemCompliance(
+    ctx: AppContext,
     pagesize?: number,
     page?: number
   ): Promise<SystemComplianceReport> {
@@ -95,6 +97,7 @@ export class ReportDataService {
             PendingStatus: hasPending ? row.status : null,
             PendingModelCreatedAt: hasPending ? row.created_at : null,
             Properties: await this.dal.sysPropHandler.contextualize(
+              ctx,
               row.system_id,
               true
             ),

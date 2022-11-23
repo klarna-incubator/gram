@@ -15,7 +15,11 @@ export function listSystemCompliance(dal: DataAccessLayer) {
       ? parseInt(req.query["pagesize"] as string)
       : undefined;
 
-    const report = await dal.reportService.listSystemCompliance(pagesize, page);
+    const report = await dal.reportService.listSystemCompliance(
+      { currentRequest: req },
+      pagesize,
+      page
+    );
     return res.json(report);
   };
 }

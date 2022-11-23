@@ -28,7 +28,7 @@ export interface SystemOwner {
 }
 
 export interface AppContext {
-  currentRequest: Request;
+  currentRequest?: Request;
 }
 
 export interface SystemProvider extends Provider {
