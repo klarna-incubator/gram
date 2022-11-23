@@ -1,9 +1,7 @@
 import { getLogger } from "log4js";
 import { App } from "octokit";
 import {
-  SystemProperty,
-  SystemPropertyProvider,
-  SystemPropertyValue,
+  SystemProperty
 } from "../../data/system-property";
 import System from "../../data/systems/System";
 import {
@@ -11,14 +9,12 @@ import {
   SystemListFilter,
   SystemListInput,
   SystemListResult,
-  SystemProvider,
+  SystemProvider
 } from "../../data/systems/SystemProvider";
 
 const log = getLogger("GithubSystemProvider");
 
-export class GithubSystemProvider
-  implements SystemProvider, SystemPropertyProvider
-{
+export class GithubSystemProvider implements SystemProvider {
   constructor(private app: App) {}
 
   id: string = "github";
@@ -55,54 +51,6 @@ export class GithubSystemProvider
       description: "How many stars the repo has",
     },
   ];
-
-  async provideSystemProperties(
-    ctx: AppContext,
-    systemId: string,
-    quick: boolean
-  ): Promise<SystemPropertyValue[]> {
-    const repo = await this.getRepo(ctx, systemId);
-    const repoName = Buffer.from(systemId, "base64").toString("ascii");
-
-    return [
-      {
-        id: "url",
-        label: "URL",
-        description: "Github repository url",
-        value: "https://github.com/" + repoName,
-        displayInList: false,
-        batchFilterable: false,
-      },
-      {
-        id: "language",
-        label: "Language",
-        value: repo.language || "unknown",
-        displayInList: false,
-        batchFilterable: false,
-      },
-      {
-        id: "private",
-        label: "Private",
-        value: repo.private.toString(),
-        displayInList: true,
-        batchFilterable: true,
-      },
-      {
-        id: "fork",
-        label: "Fork",
-        value: repo.fork.toString(),
-        displayInList: true,
-        batchFilterable: true,
-      },
-      {
-        id: "stars",
-        label: "Stars",
-        value: repo.stargazers_count,
-        displayInList: false,
-        batchFilterable: false,
-      },
-    ];
-  }
 
   async listSystemByPropertyValue(
     ctx: AppContext,

@@ -14,6 +14,7 @@ import { EmailReviewRequested } from "./notifications/review-requested";
 import { EmailReviewerChanged } from "./notifications/reviewer-changed";
 import { EmailReviewRequestedReminder } from "./notifications/review-requested-reminder";
 import { additionalMigrations } from "./data";
+import { GithubSystemPropertyProvider } from "./GithubSystemPropertyProvider";
 
 export default class DemoPack implements Pack {
   async bootstrap(reg: PackRegistrator): Promise<void> {
@@ -35,7 +36,9 @@ export default class DemoPack implements Pack {
     const userProvider = new GithubUserProvider(app);
     const systemProvider = new GithubSystemProvider(app);
     reg.setSystemProvider(systemProvider);
-    reg.registerSystemPropertyProvider(systemProvider);
+    reg.registerSystemPropertyProvider(
+      new GithubSystemPropertyProvider(app, systemProvider)
+    );
     reg.setAuthzProvider(new GithubAuthzProvider(app));
     reg.setReviewerProvider(new StaticReviewerProvider());
     reg.setUserProvider(userProvider);
