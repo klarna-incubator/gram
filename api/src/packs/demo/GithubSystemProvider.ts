@@ -1,15 +1,13 @@
 import { getLogger } from "log4js";
 import { App } from "octokit";
-import {
-  SystemProperty
-} from "../../data/system-property";
+import { SystemProperty } from "../../data/system-property";
 import System from "../../data/systems/System";
 import {
   AppContext,
   SystemListFilter,
   SystemListInput,
   SystemListResult,
-  SystemProvider
+  SystemProvider,
 } from "../../data/systems/SystemProvider";
 
 const log = getLogger("GithubSystemProvider");
