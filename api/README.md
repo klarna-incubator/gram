@@ -19,7 +19,7 @@ Create a new file `config/development.json`, using the following as a template.
   "data": {
     "_providers": {
       "postgres": {
-        "host": "localhost",
+        "host": "127.0.0.1",
         "user": "gram",
         "password": "somethingsecret",
         "database": "gram",
