@@ -413,6 +413,12 @@ export class ModelDataService extends EventEmitter {
     return res.rowCount > 0;
   }
 
+  async setTemplate(modelId: string, isTemplate: boolean) {
+    const res = await this.pool.query("UPDATE models SET is_template = $2::boolean WHERE id = $1::uuid", [modelId, isTemplate])
+    this.emit("updated-for", { modelId });
+    return res.rowCount === 1;
+  }
+
   async logAction(userId: string, modelId: string, action: string) {
     const insertQuery = `
       INSERT INTO user_activity (user_id, model_id, action_type)

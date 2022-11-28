@@ -96,10 +96,11 @@ async function createApp(pool: Pool) {
   const models = modelsV1(dal.modelService);
   authenticatedRoutes.get("/models", errorWrap(models.list));
   authenticatedRoutes.post("/models", errorWrap(models.create));
-  authenticatedRoutes.get("/models/templates", errorWrap(models.templates)); // Model templates
+  authenticatedRoutes.get("/models/templates", errorWrap(models.templates)); // Model templates  
   authenticatedRoutes.patch("/models/:id", errorWrap(models.patch));
   authenticatedRoutes.delete("/models/:id", errorWrap(models.delete));
-  authenticatedRoutes.get("/models/:id", errorWrap(models.get));
+  authenticatedRoutes.get("/models/:id", errorWrap(models.get));  
+  authenticatedRoutes.patch("/models/:id/set-template", errorWrap(models.setTemplate));
   authenticatedRoutes.get(
     "/models/:id/permissions",
     errorWrap(models.permissions)

@@ -6,6 +6,7 @@ import templates from "./templates";
 import list from "./list";
 import patch from "./patch";
 import permissions from "./permissions";
+import setTemplate from "./setTemplate";
 
 export default (service: ModelDataService) => ({
   list: list(service),
@@ -15,4 +16,5 @@ export default (service: ModelDataService) => ({
   delete: _delete(service),
   permissions: permissions(service),
   templates: templates(service),
+  setTemplate: setTemplate(service),
 });
