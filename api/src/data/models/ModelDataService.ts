@@ -18,6 +18,7 @@ function convertToModel(row: any) {
   model.updatedAt = row.updated_at * 1000;
   model.reviewApprovedAt = row.review_approved_at;
   model.reviewStatus = row.review_status;
+  model.isTemplate = row.is_template;
   if (row.data) model.data = row.data;
   return model;
 }
@@ -99,7 +100,8 @@ export class ModelDataService extends EventEmitter {
         r.status as review_status,
         r.approved_at as review_approved_at,
         extract(epoch from m.created_at) as created_at,
-        extract(epoch from m.updated_at) as updated_at
+        extract(epoch from m.updated_at) as updated_at,
+        is_template
       FROM models m
       LEFT JOIN reviews r ON r.model_id = m.id AND r.deleted_at IS NULL
       ${joinClause}
@@ -127,7 +129,8 @@ export class ModelDataService extends EventEmitter {
         data,
         created_by,
         extract(epoch from created_at) as created_at,
-        extract(epoch from updated_at) as updated_at
+        extract(epoch from updated_at) as updated_at,
+        is_template
       FROM models
       WHERE id = $1::uuid
       AND deleted_at IS NULL

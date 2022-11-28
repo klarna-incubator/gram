@@ -127,6 +127,7 @@ export default class Model {
   // Joined from review table, bit ugly to put here.
   reviewStatus?: ReviewStatus;
   reviewApprovedAt?: Date;
+  isTemplate?: boolean;
 
   constructor(
     public systemId: string,
@@ -147,6 +148,7 @@ export default class Model {
       updatedAt: this.updatedAt,
       reviewApprovedAt: this.reviewApprovedAt,
       reviewStatus: this.reviewStatus,
+      isTemplate: this.isTemplate,
     };
   }
 }
