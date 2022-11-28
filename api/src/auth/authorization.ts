@@ -1,5 +1,6 @@
 import { DataAccessLayer } from "../data/dal";
 import Model from "../data/models/Model";
+import { RequestContext } from "../data/providers/RequestContext";
 import { NotFoundError } from "../util/errors";
 import { AuthzError } from "./AuthzError";
 import { AuthzProvider } from "./AuthzProvider";
@@ -36,18 +37,17 @@ class DefaultAuthzProvider implements AuthzProvider {
   err = "Method not implemented.";
 
   getPermissionsForSystem(
+    ctx: RequestContext,
     systemId: string,
     user: UserToken
   ): Promise<Permission[]> {
     throw new Error(this.err);
   }
   getPermissionsForStandaloneModel(
+    ctx: RequestContext,
     model: Model,
     user: UserToken
   ): Promise<Permission[]> {
-    throw new Error(this.err);
-  }
-  getReviewersForModel(model: Model): Promise<Reviewer[]> {
     throw new Error(this.err);
   }
 }
@@ -65,10 +65,11 @@ export function setAuthorizationProvider(newAuthzProvider: AuthzProvider) {
  * @returns
  */
 export async function getPermissionsForSystem(
+  ctx: RequestContext,
   systemId: string,
   user: UserToken
 ) {
-  return authzProvider.getPermissionsForSystem(systemId, user);
+  return authzProvider.getPermissionsForSystem(ctx, systemId, user);
 }
 
 /**
@@ -78,8 +79,12 @@ export async function getPermissionsForSystem(
  * @param user
  * @returns
  */
-export async function getPermissionsForModel(model: Model, user: UserToken) {
-  return authzProvider.getPermissionsForStandaloneModel(model, user);
+export async function getPermissionsForModel(
+  ctx: RequestContext,
+  model: Model,
+  user: UserToken
+) {
+  return authzProvider.getPermissionsForStandaloneModel(ctx, model, user);
 }
 
 /**
@@ -92,6 +97,7 @@ export async function getPermissionsForModel(model: Model, user: UserToken) {
  * @param requiredPermissions
  */
 export async function hasPermissionsForModelId(
+  ctx: RequestContext,
   dal: DataAccessLayer,
   modelId: string,
   user: UserToken,
@@ -103,7 +109,7 @@ export async function hasPermissionsForModelId(
     throw new NotFoundError();
   }
 
-  await hasPermissionsForModel(model, user, requiredPermissions);
+  await hasPermissionsForModel(ctx, model, user, requiredPermissions);
 }
 
 /**
@@ -117,6 +123,7 @@ export async function hasPermissionsForModelId(
  * @param requiredPermissions
  */
 export async function hasAnyPermissionsForModelId(
+  ctx: RequestContext,
   dal: DataAccessLayer,
   modelId: string,
   user: UserToken,
@@ -128,7 +135,7 @@ export async function hasAnyPermissionsForModelId(
     throw new NotFoundError();
   }
 
-  await hasAnyPermissionsForModel(model, user, requiredPermissions);
+  await hasAnyPermissionsForModel(ctx, model, user, requiredPermissions);
 }
 
 /**
@@ -139,11 +146,12 @@ export async function hasAnyPermissionsForModelId(
  * @param requiredPermissions
  */
 export async function hasPermissionsForModel(
+  ctx: RequestContext,
   model: Model,
   user: UserToken,
   requiredPermissions: Permission[]
 ) {
-  const permissions = await getPermissionsForModel(model, user);
+  const permissions = await getPermissionsForModel(ctx, model, user);
 
   if (!requiredPermissions.every((ep) => permissions.includes(ep))) {
     throw new AuthzError(
@@ -164,11 +172,12 @@ export async function hasPermissionsForModel(
  * @param requiredPermissions
  */
 export async function hasAnyPermissionsForModel(
+  ctx: RequestContext,
   model: Model,
   user: UserToken,
   requiredPermissions: Permission[]
 ) {
-  const permissions = await getPermissionsForModel(model, user);
+  const permissions = await getPermissionsForModel(ctx, model, user);
 
   if (!requiredPermissions.find((ep) => permissions.includes(ep))) {
     throw new AuthzError(
@@ -191,11 +200,12 @@ export async function hasAnyPermissionsForModel(
  * @param requiredPermissions
  */
 export async function hasPermissionsForSystemId(
+  ctx: RequestContext,
   systemId: string,
   user: UserToken,
   requiredPermissions: Permission[]
 ) {
-  const permissions = await getPermissionsForSystem(systemId, user);
+  const permissions = await getPermissionsForSystem(ctx, systemId, user);
 
   if (!requiredPermissions.every((ep) => permissions.includes(ep))) {
     throw new AuthzError(

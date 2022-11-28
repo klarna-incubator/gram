@@ -8,7 +8,7 @@ import { DataAccessLayer } from "../../../../data/dal";
 import { lookupUsers } from "../../../../auth/user";
 import { ReviewStatus } from "../../../../data/reviews/Review";
 import { validStatus } from "../../../../data/reviews/ReviewDataService";
-import { SystemPropertyFilter } from "../../../../data/system-property";
+import { SystemPropertyFilter } from "../../../../data/system-property/types";
 import { getLogger } from "../../../../logger";
 
 const log = getLogger("list.reviews");
@@ -55,6 +55,7 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
   );
 
   const reslookupUsers = await lookupUsers(
+    { currentRequest: req },
     reviews.items
       .filter((review) => review.requestedBy)
       .map((review) => review.requestedBy as string)

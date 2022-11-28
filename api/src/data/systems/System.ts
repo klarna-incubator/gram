@@ -1,4 +1,4 @@
-import { SystemOwner } from "./SystemProvider";
+import { SystemOwner } from "./systems";
 
 /**
  * Class definition for system

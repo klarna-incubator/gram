@@ -7,11 +7,12 @@ import { UserToken } from "../../auth/models/UserToken";
 import config from "config";
 import { GithubUserProvider } from "./GithubUserProvider";
 import { User } from "../../auth/models/User";
+import { RequestContext } from "../../data/providers/RequestContext";
 
 export class GithubAuthProvider implements AuthProvider {
   constructor(private app: App, private userProvider: GithubUserProvider) {}
 
-  async params() {
+  async params(ctx: RequestContext) {
     const origin = config.get("origin");
     const { url } = this.app!.oauth.getWebFlowAuthorizationUrl({
       state: randomUUID(),
@@ -20,9 +21,9 @@ export class GithubAuthProvider implements AuthProvider {
     return { redirectUrl: url, icon: "/assets/github/github-icon.svg" };
   }
 
-  async getIdentity(request: Request): Promise<UserToken> {
-    const code = request.query.code?.toString();
-    const state = request.query.state?.toString();
+  async getIdentity(ctx: RequestContext): Promise<UserToken> {
+    const code = ctx.currentRequest?.query.code?.toString();
+    const state = ctx.currentRequest?.query.state?.toString();
 
     if (!code) {
       throw new Error("Invalid code-param in Github OAuth callback");

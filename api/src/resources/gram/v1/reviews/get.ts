@@ -25,8 +25,14 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
   if (!review) {
     return res.sendStatus(404);
   }
-  const requester = await lookupUser(review.requestedBy);
-  const reviewer = await lookupReviewer(review.reviewedBy);
+  const requester = await lookupUser(
+    { currentRequest: req },
+    review.requestedBy
+  );
+  const reviewer = await lookupReviewer(
+    { currentRequest: req },
+    review.reviewedBy
+  );
 
   return res.json({
     review: {

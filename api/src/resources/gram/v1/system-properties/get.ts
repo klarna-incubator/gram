@@ -4,8 +4,8 @@
  */
 import { Request, Response } from "express";
 import { Permission } from "../../../../auth/authorization";
-import { SystemPropertyHandler } from "../../../../data/system-property";
 import { ModelDataService } from "../../../../data/models/ModelDataService";
+import { SystemPropertyHandler } from "../../../../data/system-property/SystemPropertyHandler";
 
 export function getProperties(
   sysPropHandler: SystemPropertyHandler,

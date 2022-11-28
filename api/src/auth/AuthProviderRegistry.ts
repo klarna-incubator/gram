@@ -1,4 +1,4 @@
-import { ProviderRegistry } from "../util/provider";
+import { ProviderRegistry } from "../data/providers/ProviderRegistry";
 import { AuthProvider } from "./AuthProvider";
 
 const AuthProviderRegistry: ProviderRegistry<AuthProvider> = new Map<

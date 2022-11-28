@@ -2,6 +2,7 @@ import { App, Octokit } from "octokit";
 import { User } from "../../auth/models/User";
 import { UserProvider } from "../../auth/UserProvider";
 import { createPostgresPool } from "../../data/postgres";
+import { RequestContext } from "../../data/providers/RequestContext";
 import { getDatabaseName } from "./data";
 
 export class GithubUserProvider implements UserProvider {
@@ -13,7 +14,7 @@ export class GithubUserProvider implements UserProvider {
     return pool;
   }
 
-  async lookup(userIds: string[]): Promise<User[]> {
+  async lookup(ctx: RequestContext, userIds: string[]): Promise<User[]> {
     // Could be batched smarter...
     return (await Promise.all(userIds.map((uid) => this.getUser(uid)))).filter(
       (r) => !!r

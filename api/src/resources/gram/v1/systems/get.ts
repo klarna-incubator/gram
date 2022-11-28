@@ -5,7 +5,7 @@
 
 import { Request, Response } from "express";
 import { Permission } from "../../../../auth/authorization";
-import { systemProvider } from "../../../../data/systems/SystemProvider";
+import { systemProvider } from "../../../../data/systems/systems";
 
 export default async (req: Request, res: Response) => {
   const id = req.params.id;

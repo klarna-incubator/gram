@@ -5,7 +5,7 @@ import { sampleUser } from "../../../../test-util/sampleUser";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { createTestApp } from "../../../../test-util/app";
 import { getMockedSystemById } from "../../../../test-util/system";
-import { systemProvider } from "../../../../data/systems/SystemProvider";
+import { systemProvider } from "../../../../data/systems/systems";
 
 const validate = jest.spyOn(jwt, "validateToken");
 

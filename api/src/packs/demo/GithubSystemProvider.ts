@@ -1,14 +1,14 @@
 import { getLogger } from "log4js";
 import { App } from "octokit";
-import { SystemProperty } from "../../data/system-property";
+import { SystemProperty } from "../../data/system-property/types";
 import System from "../../data/systems/System";
 import {
-  AppContext,
   SystemListFilter,
   SystemListInput,
   SystemListResult,
-  SystemProvider,
-} from "../../data/systems/SystemProvider";
+} from "../../data/systems/systems";
+import { RequestContext } from "../../data/providers/RequestContext";
+import { SystemProvider } from "../../data/systems/SystemProvider";
 
 const log = getLogger("GithubSystemProvider");
 
@@ -51,7 +51,7 @@ export class GithubSystemProvider implements SystemProvider {
   ];
 
   async listSystemByPropertyValue(
-    ctx: AppContext,
+    ctx: RequestContext,
     propertyId: string,
     value: any
   ): Promise<string[]> {
@@ -112,7 +112,7 @@ export class GithubSystemProvider implements SystemProvider {
     return systemIds;
   }
 
-  async getOcto(ctx: AppContext) {
+  async getOcto(ctx: RequestContext) {
     const token = ctx.currentRequest?.user.providerToken;
     return this.app.oauth.getUserOctokit({ token });
   }
@@ -127,7 +127,7 @@ export class GithubSystemProvider implements SystemProvider {
     );
   }
 
-  async getRepo(ctx: AppContext, systemId: string) {
+  async getRepo(ctx: RequestContext, systemId: string) {
     const octo = await this.getOcto(ctx);
     const decoded = Buffer.from(systemId, "base64").toString("ascii");
     const parts = decoded.split("/");
@@ -149,19 +149,19 @@ export class GithubSystemProvider implements SystemProvider {
     }
   }
 
-  async getSystem(ctx: AppContext, systemId: string): Promise<System | null> {
+  async getSystem(ctx: RequestContext, systemId: string): Promise<System | null> {
     const repo = await this.getRepo(ctx, systemId);
     return this.repoToSystem(repo);
   }
 
-  async getInstallations(ctx: AppContext) {
+  async getInstallations(ctx: RequestContext) {
     const octo = await this.getOcto(ctx);
     const { data } = await octo.request("GET /user/installations", {});
     return data.installations;
   }
 
   async listSystems(
-    ctx: AppContext,
+    ctx: RequestContext,
     input: SystemListInput,
     pagination: { page: number; pageSize: number }
   ): Promise<SystemListResult> {

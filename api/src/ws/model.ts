@@ -75,7 +75,12 @@ export class ModelWebsocketServer {
     ws: WebSocket,
     request: AuthenticatedIncomingMessage
   ) {
-    const permissions = await getPermissionsForModel(this.model, request.user);
+    // TODO: pass WS AppContext
+    const permissions = await getPermissionsForModel(
+      {},
+      this.model,
+      request.user
+    );
 
     if (!permissions.includes(Permission.Read)) {
       ws.terminate();

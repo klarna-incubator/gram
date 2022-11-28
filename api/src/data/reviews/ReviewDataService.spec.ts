@@ -376,7 +376,7 @@ describe("ReviewDataService implementation", () => {
       const review = new Review(modelId, "some-user", ReviewStatus.Requested);
       await data.create(review);
       expect(notificationQueue.mock.calls.length).toBe(1);
-      const res = await data.decline(review.modelId);
+      const res = await data.decline({}, review.modelId);
       // expect(notificationQueue.mock.calls.length).toBe(2);
       expect(res).toBeTruthy();
 
@@ -386,7 +386,7 @@ describe("ReviewDataService implementation", () => {
 
     it("should return false on no matching review", async () => {
       const fakeId = randomUUID();
-      const res = await data.decline(fakeId);
+      const res = await data.decline({}, fakeId);
       expect(res).toBeFalsy();
     });
   });

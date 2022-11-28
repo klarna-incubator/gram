@@ -3,7 +3,7 @@ import { Pool } from "pg";
 import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
 import { DataAccessLayer } from "../../../../data/dal";
-import { systemProvider } from "../../../../data/systems/SystemProvider";
+import { systemProvider } from "../../../../data/systems/systems";
 import { _deleteAllTheThings } from "../../../../data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";

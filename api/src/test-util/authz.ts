@@ -6,6 +6,7 @@ import Model from "../data/models/Model";
 import { getMockedSystemById } from "./system";
 import { sampleReviewer, sampleUser } from "./sampleUser";
 import { Reviewer } from "../auth/models/Reviewer";
+import { RequestContext } from "../data/providers/RequestContext";
 
 export const genUser = (user?: Partial<UserToken>): UserToken => ({
   ...sampleUser,
@@ -15,6 +16,7 @@ export const genUser = (user?: Partial<UserToken>): UserToken => ({
 // Maybe this should be the default?
 class TestAuthzProvider implements AuthzProvider {
   async getPermissionsForSystem(
+    ctx: RequestContext,
     systemId: string,
     user: UserToken
   ): Promise<Permission[]> {
@@ -42,6 +44,7 @@ class TestAuthzProvider implements AuthzProvider {
   }
 
   async getPermissionsForStandaloneModel(
+    ctx: RequestContext,
     model: Model,
     user: UserToken
   ): Promise<Permission[]> {
@@ -49,7 +52,7 @@ class TestAuthzProvider implements AuthzProvider {
       model.systemId &&
       model.systemId != "00000000-0000-0000-0000-000000000000"
     ) {
-      return this.getPermissionsForSystem(model.systemId, user);
+      return this.getPermissionsForSystem(ctx, model.systemId, user);
     }
 
     if (user.roles.length === 0) return [];
@@ -73,10 +76,6 @@ class TestAuthzProvider implements AuthzProvider {
     // console.log(permissions);
 
     return permissions;
-  }
-
-  async getReviewersForModel(model: Model): Promise<Reviewer[]> {
-    return [{ name: "reviewer", ...sampleReviewer, recommended: false }];
   }
   key = "test";
 }

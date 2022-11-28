@@ -1,6 +1,6 @@
 import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
-import { SystemPropertyHandler } from "../../../../data/system-property";
+import { SystemPropertyHandler } from "../../../../data/SystemPropertyHandler";
 import { sampleUser } from "../../../../test-util/sampleUser";
 import { createTestApp } from "../../../../test-util/app";
 

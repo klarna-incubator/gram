@@ -1,8 +1,3 @@
-/**
- * Copied from an unfinished NPM package.
- * Will refactor later, either to move it back to the NPM package or distribute it better across this app
- */
-
 import { NextFunction, Request, Response } from "express";
 import {
   hasPermissionsForModel,
@@ -83,7 +78,7 @@ export class Authz {
   }
 
   public handleRequest(req: Request) {
-    req.authz = new CurrentAuthz(req.user, this.options.dal);
+    req.authz = new CurrentAuthz(req, this.options.dal);
     return req.authz;
   }
 }
@@ -95,12 +90,11 @@ export class Authz {
 export class CurrentAuthz {
   public user: UserToken;
   public check: Checks;
-  private dal: DataAccessLayer;
 
-  constructor(user: UserToken, dal: DataAccessLayer) {
-    this.user = user;
+  constructor(private req: Request, private dal: DataAccessLayer) {
+    this.user = req.user;
     this.dal = dal;
-    this.check = new Checks(user);
+    this.check = new Checks(req.user);
   }
 
   public any(...roles: Role[]) {
@@ -129,6 +123,7 @@ export class CurrentAuthz {
     ...expectedPermissions: Permission[]
   ) {
     await hasPermissionsForModelId(
+      { currentRequest: this.req },
       this.dal,
       modelId,
       this.user,
@@ -141,6 +136,7 @@ export class CurrentAuthz {
     ...anyOfThesePermissions: Permission[]
   ) {
     await hasAnyPermissionsForModelId(
+      { currentRequest: this.req },
       this.dal,
       modelId,
       this.user,
@@ -152,18 +148,32 @@ export class CurrentAuthz {
     model: Model,
     ...expectedPermissions: Permission[]
   ) {
-    await hasPermissionsForModel(model, this.user, expectedPermissions);
+    await hasPermissionsForModel(
+      { currentRequest: this.req },
+      model,
+      this.user,
+      expectedPermissions
+    );
   }
 
   public async hasPermissionsForSystemId(
     systemId: string,
     ...expectedPermissions: Permission[]
   ) {
-    await hasPermissionsForSystemId(systemId, this.user, expectedPermissions);
+    await hasPermissionsForSystemId(
+      { currentRequest: this.req },
+      systemId,
+      this.user,
+      expectedPermissions
+    );
   }
 
   public async getPermissionsForModel(model: Model) {
-    return await getPermissionsForModel(model, this.user);
+    return await getPermissionsForModel(
+      { currentRequest: this.req },
+      model,
+      this.user
+    );
   }
 }
 

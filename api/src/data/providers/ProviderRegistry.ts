@@ -1,5 +1,3 @@
-export interface Provider {
-  key: string;
-}
+import { Provider } from "./Provider";
 
 export type ProviderRegistry<T extends Provider> = Map<string, T>;

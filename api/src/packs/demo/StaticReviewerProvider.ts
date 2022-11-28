@@ -1,5 +1,6 @@
 import { Reviewer } from "../../auth/models/Reviewer";
 import Model from "../../data/models/Model";
+import { RequestContext } from "../../data/providers/RequestContext";
 import { ReviewerProvider } from "../../data/reviews/ReviewerProvider";
 
 export const reviewers: Reviewer[] = [
@@ -20,18 +21,21 @@ export const reviewers: Reviewer[] = [
 ];
 
 export class StaticReviewerProvider implements ReviewerProvider {
-  async lookup(userIds: string[]): Promise<Reviewer[]> {
+  async lookup(ctx: RequestContext, userIds: string[]): Promise<Reviewer[]> {
     return userIds
       .map((uid) => reviewers.find((r) => r.sub === uid))
       .filter((r) => !!r) as Reviewer[];
   }
-  async getReviewersForModel(model: Model): Promise<Reviewer[]> {
+  async getReviewersForModel(
+    ctx: RequestContext,
+    model: Model
+  ): Promise<Reviewer[]> {
     return reviewers;
   }
-  async getReviewers(): Promise<Reviewer[]> {
+  async getReviewers(ctx: RequestContext): Promise<Reviewer[]> {
     return reviewers;
   }
-  async getFallbackReviewer(): Promise<Reviewer> {
+  async getFallbackReviewer(ctx: RequestContext): Promise<Reviewer> {
     return reviewers[1];
   }
   key: string = "static";

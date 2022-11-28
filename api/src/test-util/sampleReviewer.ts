@@ -1,5 +1,6 @@
 import { Reviewer } from "../auth/models/Reviewer";
 import Model from "../data/models/Model";
+import { RequestContext } from "../data/providers/RequestContext";
 import { ReviewerProvider } from "../data/reviews/ReviewerProvider";
 import { sampleOtherTeam, sampleTeam } from "./sampleTeam";
 
@@ -23,13 +24,16 @@ const reviewers = [sampleReviewer, sampleOtherReviewer];
 
 class TestReviewerProvider implements ReviewerProvider {
   key = "test";
-  async lookup(userIds: string[]): Promise<Reviewer[]> {
+  async lookup(ctx: RequestContext, userIds: string[]): Promise<Reviewer[]> {
     return userIds
       .map((uid) => reviewers.find((u) => u.sub === uid))
       .filter((u) => u) as Reviewer[];
   }
 
-  async getReviewersForModel(model: Model): Promise<Reviewer[]> {
+  async getReviewersForModel(
+    ctx: RequestContext,
+    model: Model
+  ): Promise<Reviewer[]> {
     return reviewers;
   }
 

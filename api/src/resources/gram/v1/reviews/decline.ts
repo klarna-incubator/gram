@@ -11,7 +11,11 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
   const note = req.body.note;
 
   await req.authz.hasPermissionsForModelId(modelId, Permission.Review);
-  const result = await dal.reviewService.decline(modelId, note);
+  const result = await dal.reviewService.decline(
+    { currentRequest: req },
+    modelId,
+    note
+  );
 
   return res.json({ result });
 };

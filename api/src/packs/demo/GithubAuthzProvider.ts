@@ -4,6 +4,7 @@ import { AllPermissions, Permission } from "../../auth/authorization";
 import { AuthzProvider } from "../../auth/AuthzProvider";
 import { UserToken } from "../../auth/models/UserToken";
 import Model from "../../data/models/Model";
+import { RequestContext } from "../../data/providers/RequestContext";
 import { NotFoundError } from "../../util/errors";
 
 const log = getLogger("GithubAuthzProvider");
@@ -12,6 +13,7 @@ export class GithubAuthzProvider implements AuthzProvider {
   constructor(private app: App) {}
 
   async getPermissionsForSystem(
+    ctx: RequestContext,
     systemId: string,
     user: UserToken
   ): Promise<Permission[]> {
@@ -60,6 +62,7 @@ export class GithubAuthzProvider implements AuthzProvider {
   }
 
   async getPermissionsForStandaloneModel(
+    ctx: RequestContext,
     model: Model,
     user: UserToken
   ): Promise<Permission[]> {

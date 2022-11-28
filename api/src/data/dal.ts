@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import { TemplateHandler } from "../notifications/TemplateHandler";
 import { SuggestionEngine } from "../suggestions/engine";
 import { ComponentClassHandler } from "./component-classes";
-import { SystemPropertyHandler } from "./system-property";
+import { SystemPropertyHandler } from "./system-property/SystemPropertyHandler";
 import { ControlDataService } from "./controls/ControlDataService";
 import { MitigationDataService } from "./mitigations/MitigationDataService";
 import { ModelDataService } from "./models/ModelDataService";

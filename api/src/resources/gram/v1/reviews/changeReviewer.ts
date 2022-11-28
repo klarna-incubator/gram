@@ -13,7 +13,8 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
 
   if (
     !newReviewer ||
-    (await reviewerProvider.lookup([newReviewer])).length === 0
+    (await reviewerProvider.lookup({ currentRequest: req }, [newReviewer]))
+      .length === 0
   ) {
     return res.sendStatus(400);
   }

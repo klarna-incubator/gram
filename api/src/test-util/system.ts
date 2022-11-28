@@ -1,10 +1,7 @@
 import System from "../data/systems/System";
-import {
-  AppContext,
-  SystemListInput,
-  SystemListResult,
-  SystemProvider,
-} from "../data/systems/SystemProvider";
+import { SystemListInput, SystemListResult } from "../data/systems/systems";
+import { RequestContext } from "../data/providers/RequestContext";
+import { SystemProvider } from "../data/systems/SystemProvider";
 import { sampleOwnedSystem } from "./sampleOwnedSystem";
 
 const systems = [sampleOwnedSystem];
@@ -16,11 +13,11 @@ export async function getMockedSystemById(
 }
 
 class TestSystemProvider implements SystemProvider {
-  async getSystem(ctx: AppContext, systemId: string): Promise<System | null> {
+  async getSystem(ctx: RequestContext, systemId: string): Promise<System | null> {
     return getMockedSystemById(systemId);
   }
   async listSystems(
-    ctx: AppContext,
+    ctx: RequestContext,
     input: SystemListInput,
     pagination: { page: number; pageSize: number }
   ): Promise<SystemListResult> {

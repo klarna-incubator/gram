@@ -1,6 +1,7 @@
-import { Provider } from "../util/provider";
+import { RequestContext } from "../data/providers/RequestContext";
+import { Provider } from "../data/providers/Provider";
 import { User } from "./models/User";
 
 export interface UserProvider extends Provider {
-  lookup(userIds: string[]): Promise<User[]>;
+  lookup(ctx: RequestContext, userIds: string[]): Promise<User[]>;
 }

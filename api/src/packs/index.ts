@@ -1,7 +1,6 @@
 import { readdirSync, symlinkSync, unlinkSync } from "fs";
 import { isAbsolute, join } from "path";
 import { ComponentClass } from "../data/component-classes";
-import { SystemPropertyProvider } from "../data/system-property";
 import { DataAccessLayer } from "../data/dal";
 import { getLogger } from "../logger";
 import { NotificationTemplate } from "../notifications/NotificationTemplate";
@@ -10,20 +9,21 @@ import { AuthzProvider } from "../auth/AuthzProvider";
 import { AuthProvider } from "../auth/AuthProvider";
 import AuthProviderRegistry from "../auth/AuthProviderRegistry";
 import { setAuthorizationProvider as setAuthzProvider } from "../auth/authorization";
-import {
-  setSystemProvider,
-  SystemProvider,
-} from "../data/systems/SystemProvider";
+import { setSystemProvider } from "../data/systems/systems";
+import { SystemProvider } from "../data/systems/SystemProvider";
 import { UserProvider } from "../auth/UserProvider";
 import { setUserProvider } from "../auth/user";
 import {
   ReviewerProvider,
   setReviewerProvider,
 } from "../data/reviews/ReviewerProvider";
+import { SystemPropertyProvider } from "../data/system-property/SystemPropertyProvider";
+import { Application } from "express";
 
 export interface PackRegistrator {
   // Expose DataAccessLayer to packs in case they need to query the database.
   dal: DataAccessLayer;
+  app: Application;
 
   registerAssets(name: string, path: string): void;
   /**
@@ -61,7 +61,7 @@ export class PackCompiler implements PackRegistrator {
   assetPaths: { name: string; path: string }[];
   log: any;
 
-  constructor(public dal: DataAccessLayer) {
+  constructor(public dal: DataAccessLayer, public app: Application) {
     this.assetPaths = [];
     this.log = getLogger("PackCompiler");
   }

@@ -2,8 +2,11 @@ import { EventEmitter } from "events";
 import { Pool } from "pg";
 import { getLogger } from "../../logger";
 import { DataAccessLayer } from "../dal";
-import { SystemPropertyFilter, SystemPropertyValue } from "../system-property";
-import { AppContext } from "../systems/SystemProvider";
+import {
+  SystemPropertyFilter,
+  SystemPropertyValue,
+} from "../system-property/types";
+import { RequestContext } from "../providers/RequestContext";
 import { Review, ReviewStatus } from "./Review";
 import { reviewerProvider } from "./ReviewerProvider";
 import { ReviewSystemCompliance } from "./ReviewSystemCompliance";
@@ -86,7 +89,7 @@ export class ReviewDataService extends EventEmitter {
   }
 
   async list(
-    ctx: AppContext,
+    ctx: RequestContext,
     filters: ReviewListFilter,
     page?: number,
     dateOrder?: "ASC" | "DESC"
@@ -314,10 +317,10 @@ export class ReviewDataService extends EventEmitter {
     });
   }
 
-  async decline(modelId: string, note?: string) {
+  async decline(ctx: RequestContext, modelId: string, note?: string) {
     return await this.update(modelId, {
       status: ReviewStatus.Declined,
-      reviewedBy: (await reviewerProvider.getFallbackReviewer()).sub,
+      reviewedBy: (await reviewerProvider.getFallbackReviewer(ctx)).sub,
       note: note,
     });
   }

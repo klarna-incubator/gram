@@ -1,6 +1,6 @@
 import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
-import { systemProvider } from "../../../../data/systems/SystemProvider";
+import { systemProvider } from "../../../../data/systems/systems";
 import { createTestApp } from "../../../../test-util/app";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleUser } from "../../../../test-util/sampleUser";

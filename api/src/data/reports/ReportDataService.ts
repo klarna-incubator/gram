@@ -2,8 +2,8 @@ import { Pool } from "pg";
 import { getLogger } from "../../logger";
 import { linkToModel } from "../../util/links";
 import { DataAccessLayer } from "../dal";
-import { SystemProperty } from "../system-property";
-import { AppContext } from "../systems/SystemProvider";
+import { SystemProperty } from "../system-property/types";
+import { RequestContext } from "../providers/RequestContext";
 
 interface SystemCompliance {
   SystemID: string;
@@ -32,7 +32,7 @@ export class ReportDataService {
   log = getLogger("ReportDataService");
 
   async listSystemCompliance(
-    ctx: AppContext,
+    ctx: RequestContext,
     pagesize?: number,
     page?: number
   ): Promise<SystemComplianceReport> {

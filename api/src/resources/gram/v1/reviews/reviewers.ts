@@ -9,9 +9,10 @@ import { reviewerProvider } from "../../../../data/reviews/ReviewerProvider";
 
 export default (dal: DataAccessLayer) => async (req: Request, res: Response) => {
   const { modelId } = req.query;
+  const ctx = { currentRequest: req };
 
   if (!modelId) {
-    const reviewers = await reviewerProvider.getReviewers();
+    const reviewers = await reviewerProvider.getReviewers(ctx);
     return res.json({ reviewers });
   } else {
     const model = await dal.modelService.getById(modelId as string);
@@ -20,7 +21,7 @@ export default (dal: DataAccessLayer) => async (req: Request, res: Response) => 
       return res.status(404);
     }
 
-    const reviewers = await reviewerProvider.getReviewersForModel(model);
+    const reviewers = await reviewerProvider.getReviewersForModel(ctx, model);
 
     return res.json({ reviewers });
   }

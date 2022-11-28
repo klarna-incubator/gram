@@ -1,4 +1,5 @@
-import { SystemPropertyProvider, SystemPropertyHandler } from "./index";
+import { SystemPropertyProvider } from "./SystemPropertyProvider";
+import { SystemPropertyHandler } from "./SystemPropertyHandler";
 
 describe("SystemPropertyProvider implementation", () => {
   describe("contextualize", () => {

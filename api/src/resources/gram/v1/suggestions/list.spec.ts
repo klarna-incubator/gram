@@ -2,7 +2,7 @@ import request from "supertest";
 import * as jwt from "../../../../auth/jwt";
 import { DataAccessLayer } from "../../../../data/dal";
 import { createPostgresPool } from "../../../../data/postgres";
-import { systemProvider } from "../../../../data/systems/SystemProvider";
+import { systemProvider } from "../../../../data/systems/systems";
 import { _deleteAllTheThings } from "../../../../data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { genUser } from "../../../../test-util/authz";

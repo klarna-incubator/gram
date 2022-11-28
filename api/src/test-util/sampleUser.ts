@@ -2,6 +2,7 @@ import { Role } from "../auth/models/Role";
 import { User } from "../auth/models/User";
 import { UserToken } from "../auth/models/UserToken";
 import { UserProvider } from "../auth/UserProvider";
+import { RequestContext } from "../data/providers/RequestContext";
 import { sampleOtherTeam, sampleTeam } from "./sampleTeam";
 
 export const sampleUser: UserToken = {
@@ -32,7 +33,7 @@ const users = [sampleUser, sampleOtherUser, sampleReviewer, sampleAdmin];
 
 class TestUserProvider implements UserProvider {
   key = "default";
-  async lookup(userIds: string[]): Promise<User[]> {
+  async lookup(ctx: RequestContext, userIds: string[]): Promise<User[]> {
     return userIds
       .map((uid) => users.find((u) => u.sub === uid))
       .filter((u) => u) as User[];

@@ -19,7 +19,7 @@ export async function generalReviewNotificationVariables(
     // Lookup Reviewer
     (async () => {
       // Handle the special case where Secure Development team is assigned
-      const reviewer = await lookupReviewer(review.reviewedBy);
+      const reviewer = await lookupReviewer({}, review.reviewedBy);
       return {
         email: reviewer?.mail,
         name: reviewer?.name,
@@ -27,7 +27,7 @@ export async function generalReviewNotificationVariables(
     })(),
     // Lookup Requester
     (async () => {
-      const requester = await lookupUser(review.requestedBy);
+      const requester = await lookupUser({}, review.requestedBy);
       return {
         email: requester?.mail,
         name: requester?.name,

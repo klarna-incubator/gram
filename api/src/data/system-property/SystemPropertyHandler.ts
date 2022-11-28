@@ -1,70 +1,7 @@
 import { getLogger } from "../../logger";
-import { AppContext } from "../systems/SystemProvider";
-
-export interface SystemPropertyValue extends SystemProperty {
-  /**
-   * The value of the item
-   */
-  value: string | string[];
-  /**
-   * Whether this property should be displayed in a list or not.
-   */
-  displayInList: boolean;
-}
-
-export interface SystemPropertyFilter {
-  propertyId: string;
-  value: string;
-}
-
-export interface SystemProperty {
-  /**
-   * A unique ID for this item. A slug is recommended, i.e. aws-region
-   */
-  id: string;
-  /**
-   * A human readable label for the item
-   */
-  label: string;
-  /**
-   * Description of the item, to explain what it means.
-   */
-  description?: string;
-  /**
-   * Batchable and filterable. These will be available when listing systems.
-   */
-  batchFilterable: boolean;
-}
-
-export interface SystemPropertyProvider {
-  /**
-   * A unique id to identify this provider. A slug is recommended
-   */
-  id: string;
-
-  /**
-   * Set definitions of System Properties
-   */
-  definitions: SystemProperty[];
-
-  /**
-   * Provide a list of System Property values for a given system
-   */
-  provideSystemProperties(
-    ctx: AppContext,
-    systemObjectId: string,
-    quick: boolean
-  ): Promise<SystemPropertyValue[]>;
-
-  /**
-   * Used for lists filtering
-   */
-  listSystemByPropertyValue(
-    ctx: AppContext,
-    propertyId: string,
-    value: any
-  ): Promise<string[]>;
-}
+import { RequestContext } from "../providers/RequestContext";
+import { SystemProperty, SystemPropertyValue } from "./types";
+import { SystemPropertyProvider } from "./SystemPropertyProvider";
 
 export class SystemPropertyHandler {
   constructor() {
@@ -103,7 +40,7 @@ export class SystemPropertyHandler {
    * @returns
    */
   async contextualize(
-    ctx: AppContext,
+    ctx: RequestContext,
     systemId: string,
     quick = false
   ): Promise<SystemPropertyValue[]> {
@@ -131,7 +68,7 @@ export class SystemPropertyHandler {
    * work with system properties that are marked "batchFilterable"
    */
   async listSystemsByFilters(
-    ctx: AppContext,
+    ctx: RequestContext,
     filters: { propertyId: string; value: any }[]
   ) {
     // Don't filter by properties that are not marked as batchFilterable.

@@ -2,11 +2,11 @@ import { getLogger } from "log4js";
 import { App } from "octokit";
 import {
   SystemProperty,
-  SystemPropertyProvider,
   SystemPropertyValue,
-} from "../../data/system-property";
-import { AppContext } from "../../data/systems/SystemProvider";
+} from "../../data/system-property/types";
+import { RequestContext } from "../../data/providers/RequestContext";
 import { GithubSystemProvider } from "./GithubSystemProvider";
+import { SystemPropertyProvider } from "../../data/system-property/SystemPropertyProvider";
 
 const log = getLogger("GithubSystemProvider");
 
@@ -49,7 +49,7 @@ export class GithubSystemPropertyProvider implements SystemPropertyProvider {
   ];
 
   async provideSystemProperties(
-    ctx: AppContext,
+    ctx: RequestContext,
     systemId: string,
     quick: boolean
   ): Promise<SystemPropertyValue[]> {
@@ -97,7 +97,7 @@ export class GithubSystemPropertyProvider implements SystemPropertyProvider {
   }
 
   async listSystemByPropertyValue(
-    ctx: AppContext,
+    ctx: RequestContext,
     propertyId: string,
     value: any
   ): Promise<string[]> {
@@ -158,7 +158,7 @@ export class GithubSystemPropertyProvider implements SystemPropertyProvider {
     return systemIds;
   }
 
-  async getOcto(ctx: AppContext) {
+  async getOcto(ctx: RequestContext) {
     const token = ctx.currentRequest?.user.providerToken;
     return this.app.oauth.getUserOctokit({ token });
   }

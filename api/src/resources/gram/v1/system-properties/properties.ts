@@ -3,7 +3,7 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { SystemPropertyHandler } from "../../../../data/system-property";
+import { SystemPropertyHandler } from "../../../../data/system-property/SystemPropertyHandler";
 
 export function listProperties(sysPropHandler: SystemPropertyHandler) {
   return async (req: Request, res: Response) => {

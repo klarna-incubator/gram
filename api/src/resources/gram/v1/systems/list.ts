@@ -10,7 +10,7 @@ import {
   SystemListFilter,
   SystemListResult,
   systemProvider,
-} from "../../../../data/systems/SystemProvider";
+} from "../../../../data/systems/systems";
 
 export default (dal: DataAccessLayer) => async (req: Request, res: Response) => {
   const { filter, page, pagesize, ...opts } = req.query;
