@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto";
-import { Request } from "express";
 import { App } from "octokit";
 import { AuthProvider } from "../../auth/AuthProvider";
 import { Role } from "../../auth/models/Role";
@@ -10,7 +9,11 @@ import { User } from "../../auth/models/User";
 import { RequestContext } from "../../data/providers/RequestContext";
 
 export class GithubAuthProvider implements AuthProvider {
-  constructor(private app: App, private userProvider: GithubUserProvider) {}
+  admins: string[] = [];
+
+  constructor(private app: App, private userProvider: GithubUserProvider) {
+    this.admins = config.has("admins") ? config.get("admins") : [];
+  }
 
   async params(ctx: RequestContext) {
     const origin = config.get("origin");
@@ -20,6 +23,7 @@ export class GithubAuthProvider implements AuthProvider {
     });
     return { redirectUrl: url, icon: "/assets/github/github-icon.svg" };
   }
+
 
   async getIdentity(ctx: RequestContext): Promise<UserToken> {
     const code = ctx.currentRequest?.query.code?.toString();
@@ -76,7 +80,7 @@ export class GithubAuthProvider implements AuthProvider {
     await this.userProvider.insert(user);
 
     return {
-      roles: [Role.User],
+      roles: this.admins.includes(login) ? [Role.User, Role.Admin] : [Role.User],
       provider: this.key,
       picture: avatarUrl,
       providerToken: token,

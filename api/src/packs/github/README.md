@@ -15,3 +15,8 @@ GITHUB_CLIENTID:
 GITHUB_CLIENTSECRET:
 GITHUB_PRIVATEKEY:
 ```
+
+Configure who is an administrator with the toplevel "admins" setting.
+```
+    "admins": ["Tethik"]
+```
