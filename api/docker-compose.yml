@@ -2,7 +2,7 @@ services:
   development-database:
     container_name: gram-postgres
     image: postgres:12
-    restart: unless-stopped
+    # restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: somethingsecret
       POSTGRES_USER: gram
@@ -11,7 +11,7 @@ services:
   test-database:
     container_name: gram-test-postgres
     image: postgres:12
-    restart: unless-stopped
+    # restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: somethingsecretfortesting
       POSTGRES_USER: gram-test
