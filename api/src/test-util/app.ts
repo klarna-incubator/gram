@@ -41,7 +41,7 @@ export async function createTestApp() {
   const pool = await createPostgresPool();
   const { app, dal } = await createApp(pool);
 
-  const compiler = new PackCompiler(dal);
+  const compiler = new PackCompiler(dal, app);
   const pack = new TestPack();
   await pack.bootstrap(compiler);
 
