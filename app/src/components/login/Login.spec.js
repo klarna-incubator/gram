@@ -13,12 +13,6 @@ jest.mock("react-router-dom", () => {
   }));
 });
 
-jest.mock("../../actions/google", () => {
-  return jest.fn(() => ({
-    googleSignIn: mockGoogleSignIn,
-  }));
-});
-
 // TODO make this more reusable
 const wrappedRender = (login) =>
   render(
