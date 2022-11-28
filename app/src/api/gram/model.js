@@ -10,6 +10,7 @@ const modelApi = api.injectEndpoints({
     getTemplates: build.query({
       query: () => `/models/templates`,
       transformResponse: (response) => response.templates,
+      providesTags: ["Templates"],
     }),
     createModel: build.mutation({
       query: ({ version, systemId, sourceModelId }) => ({
@@ -55,6 +56,15 @@ const modelApi = api.injectEndpoints({
       transformResponse: (response) => response,
       invalidatesTags: ["Model", "Models"],
     }),
+    setTemplate: build.mutation({
+      query: ({ id, isTemplate }) => ({
+        url: `/models/${id}/set-template`,
+        body: { isTemplate },
+        method: "PATCH",
+      }),
+      transformResponse: (response) => response,
+      invalidatesTags: ["Model", "Models", "Templates"],
+    }),
   }),
 });
 
@@ -66,4 +76,5 @@ export const {
   useListModelsQuery,
   usePatchModelMutation,
   useDeleteModelMutation,
+  useSetTemplateMutation,
 } = modelApi;

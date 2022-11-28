@@ -12,16 +12,11 @@ import {
 import React, { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  useGetAuthParamsQuery,
-  useGetUserQuery,
-  useLogoutMutation,
-} from "../../api/gram/auth";
+import { useGetUserQuery, useLogoutMutation } from "../../api/gram/auth";
 import { Search } from "./Search";
 
 export function Navbar() {
   const dispatch = useDispatch();
-  const { data: authParams } = useGetAuthParamsQuery();
   const { data: user } = useGetUserQuery();
 
   const pages = [

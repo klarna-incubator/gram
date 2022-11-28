@@ -1,10 +1,21 @@
-import { Box, Card, CardContent, Link, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  FormControlLabel,
+  Link,
+  Switch,
+  ToggleButton,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import { patchVersion } from "../../../../actions/model/patchVersion";
+import { useGetUserQuery } from "../../../../api/gram/auth";
 import {
   useGetModelQuery,
   usePatchModelMutation,
+  useSetTemplateMutation,
 } from "../../../../api/gram/model";
 import { useGetSystemQuery } from "../../../../api/gram/system";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
@@ -26,9 +37,13 @@ export function SystemTab() {
 
   // Grab version from local state. This syncs differently than RTK API for ... reasons.
   const version = useSelector(({ model: { version } }) => version);
+  const isTemplate = useSelector(({ model: { isTemplate } }) => isTemplate);
 
   const systemLoading = !system || system.pending;
   const [patchModel] = usePatchModelMutation();
+  const [setTemplate] = useSetTemplateMutation();
+
+  const { data: user } = useGetUserQuery();
   const readOnly = useReadOnly();
   const dispatch = useDispatch();
 
@@ -103,6 +118,26 @@ export function SystemTab() {
                     </Typography>
                   </Link>
                 ))}
+              </>
+            )}
+
+            {user?.roles.includes("admin") && (
+              <>
+                <Typography sx={{ fontWeight: "bold" }}>Template</Typography>
+                <FormControlLabel
+                  value="end"
+                  control={
+                    <Switch
+                      color="primary"
+                      checked={isTemplate}
+                      onChange={(val) => {
+                        setTemplate({ id: modelId, isTemplate: !isTemplate });
+                      }}
+                    />
+                  }
+                  label="Set As Template"
+                  labelPlacement="end"
+                />
               </>
             )}
 
