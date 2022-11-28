@@ -13,7 +13,10 @@ export async function getMockedSystemById(
 }
 
 class TestSystemProvider implements SystemProvider {
-  async getSystem(ctx: RequestContext, systemId: string): Promise<System | null> {
+  async getSystem(
+    ctx: RequestContext,
+    systemId: string
+  ): Promise<System | null> {
     return getMockedSystemById(systemId);
   }
   async listSystems(

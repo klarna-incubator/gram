@@ -11,7 +11,10 @@ class DefaultReviewerProvider implements ReviewerProvider {
     throw new Error("Method not implemented.");
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getReviewersForModel(ctx: RequestContext, _model: Model): Promise<Reviewer[]> {
+  getReviewersForModel(
+    ctx: RequestContext,
+    _model: Model
+  ): Promise<Reviewer[]> {
     throw new Error("Method not implemented.");
   }
 
@@ -76,7 +79,10 @@ export async function lookupReviewer(ctx: RequestContext, userId: string) {
   }
 }
 
-export async function lookupReviewers(ctx: RequestContext, ...userIds: string[]) {
+export async function lookupReviewers(
+  ctx: RequestContext,
+  ...userIds: string[]
+) {
   try {
     return await reviewerProvider.lookup(ctx, userIds);
   } catch (err) {

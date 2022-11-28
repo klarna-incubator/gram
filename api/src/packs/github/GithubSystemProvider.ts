@@ -149,7 +149,10 @@ export class GithubSystemProvider implements SystemProvider {
     }
   }
 
-  async getSystem(ctx: RequestContext, systemId: string): Promise<System | null> {
+  async getSystem(
+    ctx: RequestContext,
+    systemId: string
+  ): Promise<System | null> {
     const repo = await this.getRepo(ctx, systemId);
     return this.repoToSystem(repo);
   }

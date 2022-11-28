@@ -26,7 +26,7 @@ export async function additionalMigrations() {
   log.info("Created DB (if not exist): " + databaseName);
 
   pool = await createPostgresPool({ database: databaseName });
-  const migs = await migrate({ client: pool }, "src/packs/demo/migrations");
+  const migs = await migrate({ client: pool }, "src/packs/github/migrations");
   migs.forEach((mig) => {
     log.info(`Ran migration: ${mig.name}`);
   });
