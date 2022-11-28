@@ -24,7 +24,6 @@ export class GithubAuthProvider implements AuthProvider {
     return { redirectUrl: url, icon: "/assets/github/github-icon.svg" };
   }
 
-
   async getIdentity(ctx: RequestContext): Promise<UserToken> {
     const code = ctx.currentRequest?.query.code?.toString();
     const state = ctx.currentRequest?.query.state?.toString();
@@ -80,7 +79,9 @@ export class GithubAuthProvider implements AuthProvider {
     await this.userProvider.insert(user);
 
     return {
-      roles: this.admins.includes(login) ? [Role.User, Role.Admin] : [Role.User],
+      roles: this.admins.includes(login)
+        ? [Role.User, Role.Admin]
+        : [Role.User],
       provider: this.key,
       picture: avatarUrl,
       providerToken: token,

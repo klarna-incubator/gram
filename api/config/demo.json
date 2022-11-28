@@ -1,4 +1,6 @@
 {
+  "admins": ["Tethik"],
+
   "data": {
     "_providers": {
       "postgres": {

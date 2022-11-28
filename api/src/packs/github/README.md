@@ -17,6 +17,7 @@ GITHUB_PRIVATEKEY:
 ```
 
 Configure who is an administrator with the toplevel "admins" setting.
+
 ```
     "admins": ["Tethik"]
 ```

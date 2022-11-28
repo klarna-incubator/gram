@@ -3,9 +3,7 @@ import * as jwt from "../../../../auth/jwt";
 import { DataAccessLayer } from "../../../../data/dal";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
-import {
-  sampleAdmin, sampleUser
-} from "../../../../test-util/sampleUser";
+import { sampleAdmin, sampleUser } from "../../../../test-util/sampleUser";
 
 describe("models.setTemplate", () => {
   const validate = jest.spyOn(jwt, "validateToken");
@@ -15,22 +13,20 @@ describe("models.setTemplate", () => {
 
   beforeAll(async () => {
     ({ app, dal } = await createTestApp());
-    const modelId = await createSampleModel(dal)
+    const modelId = await createSampleModel(dal);
     url = `/api/v1/models/${modelId}/set-template`;
   });
-  
+
   beforeEach(() => {
-    validate.mockImplementation(async () => sampleAdmin);        
+    validate.mockImplementation(async () => sampleAdmin);
   });
 
   afterAll(() => {
-    validate.mockRestore();  
+    validate.mockRestore();
   });
 
   it("should return 401 on un-authenticated request", async () => {
-    const res = await request(app)
-      .patch(url)
-      .send({ isTemplate: true });
+    const res = await request(app).patch(url).send({ isTemplate: true });
     expect(res.status).toBe(401);
   });
 
@@ -56,13 +52,13 @@ describe("models.setTemplate", () => {
       .set("Authorization", "bearer validToken")
       .send({ isTemplate: false });
     expect(res.status).toBe(200);
-  });  
+  });
 
-  it("should return 400 on bad request", async () => {    
+  it("should return 400 on bad request", async () => {
     let res = await request(app)
       .patch(url)
       .set("Authorization", "bearer validToken")
       .send({ isTemplate: "hej" });
     expect(res.status).toBe(400);
-  });  
+  });
 });

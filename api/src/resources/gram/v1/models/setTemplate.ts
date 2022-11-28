@@ -9,12 +9,12 @@ import { ModelDataService } from "../../../../data/models/ModelDataService";
 
 export default (dataModels: ModelDataService) => {
   return async (req: Request, res: Response) => {
-    req.authz.is(Role.Admin)
+    req.authz.is(Role.Admin);
 
     const modelId = req.params.id;
     const { isTemplate } = req.body;
 
-    if (!modelId || typeof isTemplate !== "boolean" ) {
+    if (!modelId || typeof isTemplate !== "boolean") {
       return res.status(400).json({ error: "bad input" });
     }
 
