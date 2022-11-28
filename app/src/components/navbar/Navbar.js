@@ -12,7 +12,6 @@ import {
 import React, { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { googleSignout } from "../../actions/google";
 import {
   useGetAuthParamsQuery,
   useGetUserQuery,
@@ -52,8 +51,7 @@ export function Navbar() {
   const profileActions = [
     {
       name: "Logout",
-      action: () =>
-        dispatch(googleSignout(authParams?.google?.clientId)) && logout(),
+      action: () => logout(),
     },
   ];
 
