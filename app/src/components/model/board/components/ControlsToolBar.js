@@ -1,72 +1,57 @@
-import { Box, IconButton } from "@mui/material";
-import { Icon } from "@iconify/react";
+import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
+import PanToolIcon from "@mui/icons-material/PanTool";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
+import { Paper, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   changeCursorMode,
   CURSOR_PAN,
   CURSOR_POINTER,
 } from "../../../../actions/model/controlsToolbarActions";
-import { useDispatch, useSelector } from "react-redux";
-import React from "react";
 
 export const ControlsToolBar = (props) => {
   const { zoomInCenter } = props;
 
   const dispatch = useDispatch();
 
-  let { selectedAction } = useSelector(({ model }) => ({
-    selectedAction: model.cursorType,
+  let { cursorMode } = useSelector(({ model }) => ({
+    cursorMode: model.cursorType,
   }));
 
-  const buttonStyle = {
-    height: "48px",
-    padding: "5px",
-    width: "50px",
-    borderRadius: 0,
-    color: "#212121",
-    "&:hover": {
-      backgroundColor: "#efefef",
-    },
-    "&.selectedAction": {
-      backgroundColor: "#ececec",
-      color: "#1c73e8",
-    },
-  };
-  const containerStyle = {
-    position: "absolute",
-    bottom: "10px",
-    left: "8px",
-    height: "48px",
-    width: "50%",
-    maxWidth: "220px",
-    backgroundColor: "#fff",
-    zIndex: 2,
-    boxShadow: "0px 2px 10px #05003814",
-    borderRadius: "10px",
-    padding: "0px 5px",
-  };
-
   return (
-    <Box sx={containerStyle}>
-      <IconButton
-        sx={buttonStyle}
-        onClick={() => dispatch(changeCursorMode(CURSOR_POINTER))}
-        className={selectedAction === CURSOR_POINTER ? "selectedAction" : ""}
+    <Paper
+      elevation={0}
+      sx={{
+        position: "absolute",
+        bottom: "10px",
+        left: "8px",
+        zIndex: 2,
+        border: (theme) => `1px solid ${theme.palette.divider}`,
+      }}
+    >
+      <ToggleButtonGroup
+        value={cursorMode}
+        exclusive
+        onChange={(_, mode) => dispatch(changeCursorMode(mode))}
+        aria-label="cursor mode"
       >
-        <Icon icon="fa6-solid:arrow-pointer" />
-      </IconButton>
-      <IconButton
-        sx={buttonStyle}
-        onClick={() => dispatch(changeCursorMode(CURSOR_PAN))}
-        className={selectedAction === CURSOR_PAN ? "selectedAction" : ""}
-      >
-        <Icon icon="ic:baseline-pan-tool" />
-      </IconButton>
-      <IconButton sx={buttonStyle} onClick={() => zoomInCenter(-1)}>
-        <Icon icon="iconoir:zoom-in" />
-      </IconButton>
-      <IconButton sx={buttonStyle} onClick={() => zoomInCenter(1)}>
-        <Icon icon="iconoir:zoom-out" />
-      </IconButton>
-    </Box>
+        <ToggleButton value={CURSOR_POINTER} aria-label="pointer mode">
+          <HighlightAltIcon />
+        </ToggleButton>
+        <ToggleButton value={CURSOR_PAN} aria-label="pan mode">
+          <PanToolIcon />
+        </ToggleButton>
+      </ToggleButtonGroup>
+      <ToggleButtonGroup>
+        <ToggleButton onClick={() => zoomInCenter(-1)}>
+          <ZoomInIcon />
+        </ToggleButton>
+        <ToggleButton onClick={() => zoomInCenter(1)}>
+          <ZoomOutIcon />
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Paper>
   );
 };
