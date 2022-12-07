@@ -2,12 +2,9 @@
  * GET /api/v1/token
  * @exports {function} handler
  */
-import config from "config";
 import { Request, Response } from "express";
 import AuthProviderRegistry from "../../../../auth/AuthProviderRegistry";
 import * as jwt from "../../../../auth/jwt";
-
-const cookieOpts: any = config.get("cookie");
 
 export default async function getAuthToken(req: Request, res: Response) {
   if (req.query.provider === undefined) return res.sendStatus(400);
@@ -27,6 +24,5 @@ export default async function getAuthToken(req: Request, res: Response) {
   }
 
   const token = await jwt.generateToken(identity);
-  res.cookie("bearerToken", token, cookieOpts);
   res.json({ token });
 }

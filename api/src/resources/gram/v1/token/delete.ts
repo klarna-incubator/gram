@@ -11,6 +11,6 @@
 import { Request, Response } from "express";
 
 export default async function deleteToken(req: Request, res: Response) {
-  res.clearCookie("bearerToken");
+  //TODO: pass through to authProvider in case logic is needed to logout.
   res.end();
 }

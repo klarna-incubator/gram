@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getCsrfToken } from "./util/csrf";
+import { getAuthToken } from "./util/authToken";
 
 export const BASE_URL = `${window.location.origin}`;
 
@@ -22,8 +22,10 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${BASE_URL}/api/v1/`,
     prepareHeaders: async (headers) => {
-      const token = await getCsrfToken();
-      headers.set("x-csrf-token", token);
+      const token = getAuthToken();
+      if (token) {
+        headers.set("authorization", `bearer ${token}`);
+      }
       return headers;
     },
   }),

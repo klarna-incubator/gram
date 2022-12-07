@@ -19,8 +19,6 @@ export async function validateTokenMiddleware(
   const authString = req.headers["authorization"] || "no-auth";
   if (authString.toLowerCase().startsWith("bearer ")) {
     token = authString.replace(/^bearer /i, "");
-  } else if (req.cookies.bearerToken) {
-    token = req.cookies.bearerToken;
   }
 
   if (token) {

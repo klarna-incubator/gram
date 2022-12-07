@@ -44,12 +44,7 @@ describe("token.get", () => {
   it("should return 200 with tokens when everything passes", async () => {
     const res = await request(app).get("/api/v1/auth/token?provider=mock");
     const jwtPattern = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
-    const cookieHeader = res.headers["set-cookie"][0];
-    const cookies = cookie.parse(cookieHeader);
-
     expect(res.status).toBe(200);
-    expect(cookies.bearerToken).toMatch(jwtPattern);
-    expect(cookieHeader).toMatch(/HttpOnly$/);
     expect(res.body.token).toMatch(jwtPattern);
   });
 

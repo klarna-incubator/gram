@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useGetGramTokenMutation } from "../../api/gram/auth";
+import { setAuthToken } from "../../api/gram/util/authToken";
 import Loading from "../loading";
 import "./Login.css";
 
@@ -19,7 +20,11 @@ export function LoginCallback() {
         params[key] = value;
       }
     }
-    getGramToken({ provider, params });
+
+    (async () => {
+      const { data } = await getGramToken({ provider, params });
+      setAuthToken(data.token);
+    })();
   }, [provider, searchParams, getGramToken]);
 
   useEffect(

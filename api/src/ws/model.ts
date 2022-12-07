@@ -4,7 +4,7 @@ import { UserToken } from "../auth/models/UserToken";
 import { DataAccessLayer } from "../data/dal";
 import Model from "../data/models/Model";
 import { getLogger } from "../logger";
-import { AuthenticatedIncomingMessage } from "./types";
+import * as jwt from "../auth/jwt";
 
 export class ModelWebsocketServer {
   constructor(model: Model, dal: DataAccessLayer) {
@@ -64,35 +64,15 @@ export class ModelWebsocketServer {
   }
 
   broadcast(sender: WebSocket | null, msg: any) {
-    this.server.clients.forEach((client: any) => {
-      if (client !== sender && client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(msg));
+    this.wsUserMap.forEach(({ ws, permissions }) => {
+      if (
+        ws !== sender &&
+        ws.readyState === WebSocket.OPEN &&
+        permissions.includes(Permission.Read)
+      ) {
+        ws.send(JSON.stringify(msg));
       }
     });
-  }
-
-  async acceptNewUserConnection(
-    ws: WebSocket,
-    request: AuthenticatedIncomingMessage
-  ) {
-    // TODO: pass WS AppContext
-    const permissions = await getPermissionsForModel(
-      {},
-      this.model,
-      request.user
-    );
-
-    if (!permissions.includes(Permission.Read)) {
-      ws.terminate();
-      return false;
-    }
-
-    this.wsUserMap.push({
-      ws,
-      user: request.user,
-      permissions,
-    });
-    return true;
   }
 
   sendPing(ws: WebSocket) {
@@ -110,40 +90,61 @@ export class ModelWebsocketServer {
   }
 
   bind() {
-    this.server.on(
-      "connection",
-      async (ws: WebSocket, request: AuthenticatedIncomingMessage) => {
-        if (!(await this.acceptNewUserConnection(ws, request))) {
-          return;
-        }
+    this.server.on("connection", async (ws: WebSocket) => {
+      // if (!(await this.acceptNewUserConnection(ws, request))) {
+      //   return;
+      // }
+      ws.on("message", this.authenticate(ws));
 
-        this.publishUserList();
+      let timeout = setTimeout(() => this.onTimeout(ws), this.pingTimeoutMS);
+      const pingInterval = setInterval(() => {
+        this.sendPing(ws);
+      }, this.pingIntervalMS);
 
-        let timeout = setTimeout(() => this.onTimeout(ws), this.pingTimeoutMS);
-        const pingInterval = setInterval(() => {
-          this.sendPing(ws);
-        }, this.pingIntervalMS);
+      ws.on("close", (ws: WebSocket) => {
+        clearTimeout(timeout);
+        clearInterval(pingInterval);
+        this.onClose(ws);
+      });
 
-        ws.on("message", this.onMessage(ws, request.user));
-
-        ws.on("close", (ws: WebSocket) => {
+      ws.on("pong", () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
           clearTimeout(timeout);
           clearInterval(pingInterval);
+          this.onTimeout(ws);
           this.onClose(ws);
-        });
-
-        ws.on("pong", () => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => {
-            clearTimeout(timeout);
-            clearInterval(pingInterval);
-            this.onTimeout(ws);
-            this.onClose(ws);
-          }, this.pingTimeoutMS);
-        });
-      }
-    );
+        }, this.pingTimeoutMS);
+      });
+    });
   }
+
+  authenticate = (ws: WebSocket) => async (data: any) => {
+    try {
+      const { token } = JSON.parse(data);
+      const user = await jwt.validateToken(token);
+      const permissions = await getPermissionsForModel({}, this.model, user);
+
+      if (!permissions.includes(Permission.Read)) {
+        ws.send(JSON.stringify({ msg: "authorization failed" }));
+        ws.terminate();
+        return false;
+      }
+
+      ws.removeAllListeners("message");
+      ws.on("message", this.onMessage(ws, user));
+      this.wsUserMap.push({
+        ws,
+        user,
+        permissions,
+      });
+      this.publishUserList();
+    } catch (e) {
+      ws.send(JSON.stringify({ msg: "authentication failed" }));
+      ws.terminate();
+      return false;
+    }
+  };
 
   validate = (sender: WebSocket, msg: any) => {
     if (!this.VALID_TYPES.includes(msg.type)) {

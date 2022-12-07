@@ -66,14 +66,6 @@ describe("auth middleware", () => {
       .set("Authorization", "bearer expired_token");
     expect(res.status).toBe(200);
   });
-
-  it("should return 200 on protected path with valid token (cookie)", async () => {
-    validate.mockImplementation(async () => sampleUser);
-    const res = await request(app)
-      .get("/protected")
-      .set("Cookie", "bearerToken=expired_token");
-    expect(res.status).toBe(200);
-  });
 });
 
 afterAll(() => {

@@ -6,6 +6,7 @@ import { PATCH_COMPONENT } from "../../actions/model/patchComponent";
 import { PATCH_DATA_FLOW } from "../../actions/model/patchDataFlow";
 import { PATCH_VERSION } from "../../actions/model/patchVersion";
 import { api } from "../../api/gram/api";
+import { getAuthToken } from "../../api/gram/util/authToken";
 import { PERMISSIONS } from "../../components/model/constants";
 import { webSocketActions } from "../webSocketSlice";
 
@@ -73,7 +74,9 @@ function connect(dispatch, modelId) {
       process.env.NODE_ENV === "development"
         ? "localhost:8080" // hack as react doesnt seem to proxy the websocket correctly
         : document.location.host
-    }/ws/model/${modelId}`
+    }/ws/model/${modelId}`,
+    null,
+    { headers: { Authorization: getAuthToken() } }
   );
 
   bind(dispatch, modelId);
@@ -82,6 +85,10 @@ function connect(dispatch, modelId) {
 
 function bind(dispatch, modelId) {
   socket.onopen = () => {
+    const token = getAuthToken();
+    // Send token to authenticate
+    socket.send(JSON.stringify({ token }));
+
     dispatch(webSocketActions.connectionEstablished());
 
     // How to get redux toolkit APIs to reload

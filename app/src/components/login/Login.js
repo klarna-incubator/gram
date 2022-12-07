@@ -18,7 +18,7 @@ export function Login() {
       </Box>
       {isLoading && <Loading />}
       {authParams?.map((provider) => (
-        <Box>
+        <Box key={`login-${provider.provider}`}>
           <Button
             href={provider.redirectUrl}
             startIcon={

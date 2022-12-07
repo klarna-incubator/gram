@@ -15,7 +15,6 @@ import {
 } from "./middlewares/auth";
 import { AuthzMiddleware } from "./middlewares/authz";
 import cacheMw from "./middlewares/cache";
-import { csrfTokenRequired } from "./middlewares/csrf";
 import loggerMw from "./middlewares/logger";
 import { securityHeaders } from "./middlewares/securityHeaders";
 import { AssetDir } from "./packs";
@@ -81,7 +80,6 @@ async function createApp(pool: Pool) {
   // Authenticated routes
   const authenticatedRoutes = express.Router();
   authenticatedRoutes.use(authRequiredMiddleware);
-  authenticatedRoutes.use(csrfTokenRequired);
   authenticatedRoutes.get("/user", errorWrap(userV1.get));
 
   const systems = systemsV1(dal);

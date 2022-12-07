@@ -19,7 +19,10 @@ const authApi = api.injectEndpoints({
           provider,
         },
       }),
-      transformResponse: (response) => ({ authenticated: true }),
+      transformResponse: (response) => ({
+        authenticated: true,
+        token: response.token,
+      }),
       invalidatesTags: ["User"],
     }),
     logout: build.mutation({

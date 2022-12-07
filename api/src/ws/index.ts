@@ -1,17 +1,15 @@
 import config from "config";
-import { Server } from "http";
+import { IncomingMessage, Server } from "http";
 import url from "url";
 import WebSocket from "ws";
 import { DataAccessLayer } from "../data/dal";
 import { getLogger } from "../logger";
-import { authenticate } from "./auth";
 import { ModelWebsocketServer } from "./model";
-import { AuthenticatedIncomingMessage } from "./types";
 
 const log = getLogger("wss");
 const wssRegistry = new Map<string, ModelWebsocketServer>();
 
-function validateRequestOrigin(request: AuthenticatedIncomingMessage) {
+function validateRequestOrigin(request: IncomingMessage) {
   let origin = (request.headers.origin || "").trim();
 
   if (origin.endsWith("/") && origin.length > 1) {
@@ -32,16 +30,15 @@ function validateRequestOrigin(request: AuthenticatedIncomingMessage) {
 export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
   server.on(
     "upgrade",
-    async function upgrade(
-      request: AuthenticatedIncomingMessage,
-      socket: any,
-      head
-    ) {
-      if (!request.url) return;
+    async function upgrade(request: IncomingMessage, socket: any, head) {
+      if (!request.url) {
+        socket.write("HTTP/1.1 400 Bad Request\r\n\r\n");
+        socket.destroy();
+        return;
+      }
 
       try {
         validateRequestOrigin(request);
-        request.user = await authenticate(request);
       } catch (error: any) {
         log.warn("Unauthorized websocket connection", error);
         socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
@@ -65,9 +62,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
       }
 
       if (!wssRegistry.has(id)) {
-        log.info(
-          `opened new websocket server for diagram with id ${id} for user ${request.user.sub}`
-        );
+        log.info(`opened new websocket server for diagram with id ${id}`);
         wssRegistry.set(id, new ModelWebsocketServer(model, dal));
       }
 
@@ -91,6 +86,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     if (!server) return;
     server.tellClientsToRefetch("controls", { modelId, componentId });
   });
+
   dal.controlService.on("deleted-for", ({ modelId, componentId }) => {
     const server = wssRegistry.get(modelId);
     log.debug(`control was deleted via api ${modelId} ${componentId}`);
