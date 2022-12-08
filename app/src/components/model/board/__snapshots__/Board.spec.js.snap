@@ -74,6 +74,7 @@ Object {
               class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
+              value="zoom-in"
             >
               <svg
                 aria-hidden="true"
@@ -98,6 +99,7 @@ Object {
               class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
+              value="zoom-out"
             >
               <svg
                 aria-hidden="true"
@@ -212,6 +214,7 @@ Object {
             class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
+            value="zoom-in"
           >
             <svg
               aria-hidden="true"
@@ -236,6 +239,7 @@ Object {
             class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
+            value="zoom-out"
           >
             <svg
               aria-hidden="true"

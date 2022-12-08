@@ -10,6 +10,7 @@ const store = createMockStore({
   navbar: { troll: "no" },
   user: { picture: "", name: "testname" },
   login: { authenticated: true },
+  auth: { authenticated: true },
 });
 
 const renderComponent = (props) =>
@@ -25,11 +26,7 @@ const renderComponent = (props) =>
 
 describe("Navbar", () => {
   it("renders Navbar", () => {
-    const props = {
-      authenticated: false,
-      logout: jest.fn(),
-    };
-    expect(renderComponent(props)).toMatchSnapshot();
+    expect(renderComponent()).toMatchSnapshot();
   });
 
   afterAll(() => {
