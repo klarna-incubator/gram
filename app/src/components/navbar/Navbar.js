@@ -10,14 +10,16 @@ import {
   Typography,
 } from "@mui/material";
 import React, { Fragment, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { useGetUserQuery, useLogoutMutation } from "../../api/gram/auth";
+import { setAuthToken } from "../../api/gram/util/authToken";
 import { Search } from "./Search";
 
 export function Navbar() {
-  const dispatch = useDispatch();
   const { data: user } = useGetUserQuery();
+  const authenticated = useSelector(({ auth }) => auth.authenticated);
+  const navigate = useNavigate();
 
   const pages = [
     { name: "Team", path: "/team", external: false },
@@ -46,7 +48,11 @@ export function Navbar() {
   const profileActions = [
     {
       name: "Logout",
-      action: () => logout(),
+      action: () => {
+        setAuthToken(null);
+        logout();
+        navigate("/login");
+      },
     },
   ];
 
@@ -98,7 +104,7 @@ export function Navbar() {
           </Typography>
         </Button>
 
-        {user && <Search />}
+        {authenticated && user && <Search />}
 
         <Box
           sx={{
@@ -127,7 +133,7 @@ export function Navbar() {
               </Button>
             ) : (
               <Fragment key={page.name}>
-                {user && (
+                {authenticated && user && (
                   <Button
                     disableRipple
                     component={Link}
@@ -147,7 +153,7 @@ export function Navbar() {
             )
           )}
         </Box>
-        {user ? (
+        {authenticated && user ? (
           <Box sx={{ flexGrow: 0 }}>
             <IconButton
               disableRipple
@@ -177,7 +183,7 @@ export function Navbar() {
                   key={action.name}
                   onClick={() => {
                     handleCloseUserMenu();
-                    dispatch(action.action());
+                    action.action();
                   }}
                 >
                   <Typography textAlign="center">{action.name}</Typography>

@@ -1,15 +1,19 @@
 import { Box, Button } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useGetAuthParamsQuery } from "../../api/gram/auth";
 import Loading from "../loading";
 import "./Login.css";
 
 export function Login() {
-  const { data: authParams, isLoading } = useGetAuthParamsQuery();
+  const { data: authParams, isLoading, isError } = useGetAuthParamsQuery();
 
-  // In case user is already authed
-  // const { data: user } = useGetUserQuery();
-  // useEffect(() => user && navigate(searchParams.get("return")?.startsWith("/") ? searchParams.get("return") : "/"));
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const returnPath = searchParams.get("return") || "/";
+    localStorage.setItem("returnPath", decodeURIComponent(returnPath));
+  }, [searchParams]);
 
   return (
     <div id="login">
@@ -17,6 +21,7 @@ export function Login() {
         <p>Authentication required</p>
       </Box>
       {isLoading && <Loading />}
+      {isError && <p>Failed to load authentication params. Try reloading.</p>}
       {authParams?.map((provider) => (
         <Box key={`login-${provider.provider}`}>
           <Button

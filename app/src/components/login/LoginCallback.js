@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useGetGramTokenMutation } from "../../api/gram/auth";
-import { setAuthToken } from "../../api/gram/util/authToken";
 import Loading from "../loading";
 import "./Login.css";
 
@@ -22,33 +21,22 @@ export function LoginCallback() {
     }
 
     (async () => {
-      const { data } = await getGramToken({ provider, params });
-      setAuthToken(data.token);
+      const auth = await getGramToken({ provider, params });
+      if (auth?.data?.authenticated) {
+        const returnPath = localStorage.getItem("returnPath");
+        navigate(returnPath?.startsWith("/") ? returnPath : "/");
+      }
     })();
-  }, [provider, searchParams, getGramToken]);
-
-  useEffect(
-    () =>
-      auth?.data?.authenticated &&
-      navigate(
-        searchParams.get("return")?.startsWith("/")
-          ? searchParams.get("return")
-          : "/"
-      )
-  );
-
-  // if (error === 403) {
-  //   return <ErrorPage code={403} />;
-  // }
-  // if (error) {
-  //   console.error(error);
-  //   return <ErrorPage code={500} />;
-  // }
+  }, [provider, searchParams, getGramToken, navigate]);
 
   return (
     <div id="login">
       <Box>
-        <p>Authenticating...</p>
+        {auth.isError ? (
+          <p>An error occured while authenticating.</p>
+        ) : (
+          <p>Authenticating...</p>
+        )}
       </Box>
       {auth.isLoading && <Loading />}
     </div>

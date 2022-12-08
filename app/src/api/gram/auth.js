@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { setAuthToken } from "./util/authToken";
 
 const authApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -19,10 +20,12 @@ const authApi = api.injectEndpoints({
           provider,
         },
       }),
-      transformResponse: (response) => ({
-        authenticated: true,
-        token: response.token,
-      }),
+      transformResponse: (response) => {
+        setAuthToken(response.token);
+        return {
+          authenticated: true,
+        };
+      },
       invalidatesTags: ["User"],
     }),
     logout: build.mutation({

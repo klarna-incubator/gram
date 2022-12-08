@@ -7,8 +7,8 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { useGetUserQuery } from "./api/gram/auth";
 import "./App.css";
 import { ModalManager } from "./components/elements/modal/ModalManager";
 import ErrorPage from "./components/error-page";
@@ -26,18 +26,21 @@ import UserModels from "./components/user-models/UserModels/UserModels";
 
 function LoginRedirect() {
   const navigate = useNavigate();
-  const path = window.location.pathname;
+  const authenticated = useSelector(({ auth }) => auth.authenticated);
 
   useEffect(() => {
-    !path.startsWith("/login") && navigate(`/login?return=${path}`);
-  }, [navigate, path]);
+    const path = window.location.pathname + window.location.search;
+    if (!authenticated && !path.startsWith("/login")) {
+      navigate(`/login?return=${encodeURIComponent(path)}`);
+    }
+  }, [authenticated, navigate]);
 
   return <></>;
 }
 
 export default function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const { data: user, isError, isFetching, isLoading } = useGetUserQuery();
+  const authenticated = useSelector(({ auth }) => auth.authenticated);
 
   const theme = React.useMemo(
     () =>
@@ -93,11 +96,7 @@ export default function App() {
           >
             <Toolbar />
             <Box component="main" sx={{ flexGrow: 1, minHeight: 0 }}>
-              <>
-                {(!user || isError) && !isLoading && !isFetching && (
-                  <LoginRedirect />
-                )}
-              </>
+              <LoginRedirect />
               <ModalManager />
               <Routes>
                 <Route path="/login" element={<Login />} />
@@ -105,7 +104,7 @@ export default function App() {
                   path="/login/callback/:provider"
                   element={<LoginCallback />}
                 />
-                {user && !isError && (
+                {authenticated && (
                   <>
                     <Route path="/" element={<Home />} />
                     <Route path="/system/:id" element={<System />} />
