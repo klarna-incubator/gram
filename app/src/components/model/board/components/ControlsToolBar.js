@@ -45,10 +45,10 @@ export const ControlsToolBar = (props) => {
         </ToggleButton>
       </ToggleButtonGroup>
       <ToggleButtonGroup>
-        <ToggleButton onClick={() => zoomInCenter(-1)}>
+        <ToggleButton value="zoom-in" onClick={() => zoomInCenter(-1)}>
           <ZoomInIcon />
         </ToggleButton>
-        <ToggleButton onClick={() => zoomInCenter(1)}>
+        <ToggleButton value="zoom-out" onClick={() => zoomInCenter(1)}>
           <ZoomOutIcon />
         </ToggleButton>
       </ToggleButtonGroup>
