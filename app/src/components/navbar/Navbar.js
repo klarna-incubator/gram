@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetUserQuery, useLogoutMutation } from "../../api/gram/auth";
 import { setAuthToken } from "../../api/gram/util/authToken";
+import { Banner } from "./Banner";
 import { Search } from "./Search";
 
 export function Navbar() {
@@ -210,6 +211,7 @@ export function Navbar() {
           </Button>
         )}
       </Toolbar>
+      <Banner />
     </AppBar>
   );
 }

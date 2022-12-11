@@ -12,6 +12,7 @@ import { SuggestionDataService } from "./suggestions/SuggestionDataService";
 import { ThreatDataService } from "./threats/ThreatDataService";
 import { ReportDataService } from "./reports/ReportDataService";
 import { GramConnectionPool } from "./postgres";
+import { BannerDataService } from "./banners/BannerDataService";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
@@ -30,6 +31,7 @@ export class DataAccessLayer {
   templateHandler: TemplateHandler;
   suggestionEngine: SuggestionEngine;
   reportService: ReportDataService;
+  bannerService: BannerDataService;
 
   constructor(pool: Pool) {
     this.pool = pool;
@@ -47,5 +49,6 @@ export class DataAccessLayer {
     this.suggestionService = new SuggestionDataService(pool, this);
     this.suggestionEngine = new SuggestionEngine(this);
     this.reportService = new ReportDataService(pool, this);
+    this.bannerService = new BannerDataService(pool, this);
   }
 }

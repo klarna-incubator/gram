@@ -20,6 +20,7 @@ import { securityHeaders } from "./middlewares/securityHeaders";
 import { AssetDir } from "./packs";
 import crash from "./resources/gram/v1/admin/crash";
 import dropRole from "./resources/gram/v1/admin/dropRole";
+import { getBanner } from "./resources/gram/v1/banners/get";
 import { searchClasses } from "./resources/gram/v1/component-classes/search";
 import controlsV1 from "./resources/gram/v1/controls";
 import { mitigationsV1 } from "./resources/gram/v1/mitigations";
@@ -72,6 +73,7 @@ async function createApp(pool: Pool) {
 
   // Register Routes
   const unauthenticatedRoutes = express.Router();
+  unauthenticatedRoutes.get("/banners", errorWrap(getBanner(dal)));
   unauthenticatedRoutes.get("/auth/token", errorWrap(tokenV1.get));
   unauthenticatedRoutes.get("/auth/csrf", errorWrap(tokenV1.csrf));
   unauthenticatedRoutes.get("/auth/params", errorWrap(tokenV1.params));

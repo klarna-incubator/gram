@@ -2,7 +2,6 @@
  * Removes a target role from the user's token. Useful for debugging authorization.
  * Only allows removing authorization, not adding. For security :)
  *
- * CSRF DoS risk here is acceptable, imo.
  *
  * Examples:
  * GET /api/v1/admin/drop_role?role=admin
@@ -43,11 +42,11 @@ export default async function dropRole(req: Request, res: Response) {
         provider: user.provider,
         slackId: user.slackId,
       };
-      const token = await jwt.generateToken(payload);      
+      const token = await jwt.generateToken(payload);
       res.json({ token, new_roles: user.roles });
     } else {
       res.json({ new_roles: user.roles });
-    }    
+    }
   } catch (error: any) {
     if (error.message === "missing") return res.sendStatus(400);
     if (error.message === "forbidden") return res.sendStatus(403);
