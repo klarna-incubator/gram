@@ -1,10 +1,11 @@
+import React from "react";
 import { Alert } from "@mui/material";
 import { useGetBannersQuery } from "../../api/gram/banner";
 
 export function Banner() {
-  const { data: banners, isLoading } = useGetBannersQuery();
+  const { data: banners, isSuccess } = useGetBannersQuery();
 
-  if (isLoading) {
+  if (!isSuccess) {
     return <></>;
   }
   return banners.map(({ id, type, text }) => (
