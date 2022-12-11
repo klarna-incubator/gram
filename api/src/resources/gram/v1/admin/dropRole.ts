@@ -43,10 +43,11 @@ export default async function dropRole(req: Request, res: Response) {
         provider: user.provider,
         slackId: user.slackId,
       };
-      const token = await jwt.generateToken(payload);
-      res.cookie("bearerToken", token, cookieOpts);
-    }
-    res.json({ new_roles: user.roles });
+      const token = await jwt.generateToken(payload);      
+      res.json({ token, new_roles: user.roles });
+    } else {
+      res.json({ new_roles: user.roles });
+    }    
   } catch (error: any) {
     if (error.message === "missing") return res.sendStatus(400);
     if (error.message === "forbidden") return res.sendStatus(403);
