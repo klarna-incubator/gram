@@ -16,7 +16,7 @@ export class BannerDataService {
 
   async listBanners(): Promise<Banner[]> {
     const query = `        
-        SELECT * FROM banners
+        SELECT * FROM banners WHERE active = true
       `;
 
     const res = await this.pool.query(query);
