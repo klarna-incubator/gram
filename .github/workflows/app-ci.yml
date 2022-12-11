@@ -13,7 +13,7 @@ defaults:
     working-directory: app
 
 jobs:
-  api-ci:
+  app-ci:
     runs-on: ubuntu-latest
     
     steps:
