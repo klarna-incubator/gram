@@ -5,6 +5,7 @@ import AWSPack from "./packs/aws";
 import GithubPack from "./packs/github";
 import StaticPack from "./packs/static";
 import SVGPornPack from "./packs/svgporn";
+import { ThreatLibPack } from "./packs/threatlib";
 
 export async function bootstrapPacks(app: Application, dal: DataAccessLayer) {
   // TODO: load these dynamically via config (i.e. install as npm package, or some config defines packages to load and bootstrap)
@@ -13,7 +14,8 @@ export async function bootstrapPacks(app: Application, dal: DataAccessLayer) {
     new AWSPack().bootstrap(compiler),
     new SVGPornPack().bootstrap(compiler),
     new GithubPack().bootstrap(compiler),
-    new StaticPack().bootstrap(compiler),
+    new StaticPack().bootstrap(compiler),    
+    new ThreatLibPack().bootstrap(compiler),
   ]);
   compiler.compileAssets();
 }

@@ -3,17 +3,26 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Tooltip,
   Typography,
 } from "@mui/material";
 import {
   useAcceptSuggestionMutation,
+  useListSuggestionsQuery,
   useRejectSuggestionMutation,
   useResetSuggestionMutation,
 } from "../../../../api/gram/suggestions";
+import { useModelID } from "../../hooks/useModelID";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export function Suggestion(props) {
   const { suggestion, rejected, readOnly, isControl } = props;
+
+  const modelId = useModelID();
+  const selectedComponent = useSelectedComponent();
+  const { data: suggestions } = useListSuggestionsQuery(modelId);
+  const threatSuggestions = suggestions?.threatsMap[selectedComponent.id] || [];
 
   const [acceptSuggestion] = useAcceptSuggestionMutation();
   const [rejectSuggestion] = useRejectSuggestionMutation();
@@ -58,6 +67,30 @@ export function Suggestion(props) {
               >
                 {suggestion.description}
               </Typography>
+            )}
+            {suggestion.mitigates && (
+              <>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{
+                    paddingBottom: "10px",
+                    lineHeight: "1.45",
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  Mitigates:
+                </Typography>
+                {suggestion.mitigates.map((m) => (
+                  <Chip
+                    label={
+                      threatSuggestions.find((t) =>
+                        t.id.includes(m.partialThreatId)
+                      )?.title
+                    }
+                  />
+                ))}
+              </>
             )}
             {suggestion.reason && (
               <Tooltip title={suggestion.reason}>
