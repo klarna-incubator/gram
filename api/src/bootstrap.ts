@@ -14,7 +14,7 @@ export async function bootstrapPacks(app: Application, dal: DataAccessLayer) {
     new AWSPack().bootstrap(compiler),
     new SVGPornPack().bootstrap(compiler),
     new GithubPack().bootstrap(compiler),
-    new StaticPack().bootstrap(compiler),    
+    new StaticPack().bootstrap(compiler),
     new ThreatLibPack().bootstrap(compiler),
   ]);
   compiler.compileAssets();
