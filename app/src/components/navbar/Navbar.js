@@ -13,6 +13,7 @@ import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetUserQuery, useLogoutMutation } from "../../api/gram/auth";
+import { useGetMenuQuery } from "../../api/gram/menu";
 import { setAuthToken } from "../../api/gram/util/authToken";
 import { Banner } from "./Banner";
 import { Search } from "./Search";
@@ -21,27 +22,17 @@ export function Navbar() {
   const { data: user } = useGetUserQuery();
   const authenticated = useSelector(({ auth }) => auth.authenticated);
   const navigate = useNavigate();
+  const { data: menu, isLoading } = useGetMenuQuery();
+  const menuPages = isLoading || !menu ? [] : menu;
 
   const pages = [
-    { name: "Team", path: "/team", external: false },
-    { name: "My Models", path: "/models", external: false },
+    { name: "Team", path: "/team" },
+    { name: "My Models", path: "/models" },
     {
       name: "Reviews",
       path: "/reviews?statuses=requested%2Cdeclined",
-      external: false,
     },
-    {
-      name: "Feedback",
-      //TODO make configurable?
-      path: "",
-      external: true,
-    },
-    {
-      name: "Docs",
-      //TODO make configurable?
-      path: "",
-      external: true,
-    },
+    ...menuPages,
   ];
 
   const [logout] = useLogoutMutation();
@@ -119,7 +110,7 @@ export function Navbar() {
           }}
         >
           {pages.map((page) =>
-            page.external ? (
+            !page.path.startsWith("/") ? (
               <Button
                 disableRipple
                 target="_blank"

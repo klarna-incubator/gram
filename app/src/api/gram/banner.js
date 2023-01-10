@@ -1,6 +1,6 @@
 import { api } from "./api";
 
-const authApi = api.injectEndpoints({
+const bannerApi = api.injectEndpoints({
   endpoints: (build) => ({
     getBanners: build.query({
       query: () => `/banners`,
@@ -9,4 +9,4 @@ const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetBannersQuery } = authApi;
+export const { useGetBannersQuery } = bannerApi;

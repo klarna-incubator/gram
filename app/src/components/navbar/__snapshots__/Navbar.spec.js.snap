@@ -29,26 +29,7 @@ Object {
           </a>
           <div
             class="MuiBox-root css-15zye3l"
-          >
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-8mcpn7-MuiButtonBase-root-MuiButton-root"
-              href=""
-              tabindex="0"
-              target="_blank"
-              type="button"
-            >
-              Feedback
-            </button>
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-8mcpn7-MuiButtonBase-root-MuiButton-root"
-              href=""
-              tabindex="0"
-              target="_blank"
-              type="button"
-            >
-              Docs
-            </button>
-          </div>
+          />
           <a
             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1cur2jf-MuiButtonBase-root-MuiButton-root"
             href="/login"
@@ -85,26 +66,7 @@ Object {
         </a>
         <div
           class="MuiBox-root css-15zye3l"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-8mcpn7-MuiButtonBase-root-MuiButton-root"
-            href=""
-            tabindex="0"
-            target="_blank"
-            type="button"
-          >
-            Feedback
-          </button>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-8mcpn7-MuiButtonBase-root-MuiButton-root"
-            href=""
-            tabindex="0"
-            target="_blank"
-            type="button"
-          >
-            Docs
-          </button>
-        </div>
+        />
         <a
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1cur2jf-MuiButtonBase-root-MuiButton-root"
           href="/login"

@@ -48,5 +48,12 @@
 
   "allowedSrc": {
     "img": ["https://avatars.githubusercontent.com"]
-  }
+  },
+
+  "menu": [
+    {
+      "name": "Github",      
+      "path": "https://github.com/klarna-incubator/gram"    
+    }
+  ]
 }
