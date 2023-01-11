@@ -138,6 +138,42 @@ describe("ThreatDataService implementation", () => {
     });
   });
 
+  describe("list action items", () => {
+    it("should return threats of model that are marked as action items", async () => {
+      const componentId = randomUUID();
+      const threat1 = new Threat(
+        "title1",
+        "description1",
+        model.id!,
+        componentId,
+        "createdBy1"
+      );
+      threat1.id = await data.create(threat1);
+
+      const threat2 = new Threat(
+        "title2",
+        "description2",
+        model.id!,
+        componentId,
+        "createdBy2"
+      );
+      threat2.id = await data.create(threat2);
+      await data.update(model.id!, threat2.id!, { isActionItem: true });
+
+      const threats = await data.listActionItems(model.id!);
+
+      expect(threats.length).toEqual(1);
+
+      expect(threats[0].toJSON()).toBeDefined();
+      expect(threats[0].id).toBe(threat2.id);
+    });
+
+    it("should return null value by default", async () => {
+      const threats = await data.list(randomUUID());
+      expect(threats).toEqual([]);
+    });
+  });
+
   describe("delete threat", () => {
     it("should return false on deleting non-existent threat", async () => {
       const res = await data.delete(model.id!, randomUUID());

@@ -2,6 +2,7 @@ import {
   Circle as CircleIcon,
   ClearRounded as ClearRoundedIcon,
 } from "@mui/icons-material";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import { Box, Card, CardContent, IconButton, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
@@ -9,20 +10,25 @@ import {
   useCreateMitigationMutation,
   useListMitigationsQuery,
 } from "../../../../api/gram/mitigations";
+import { useGetModelPermissionsQuery } from "../../../../api/gram/model";
 import {
   useDeleteThreatMutation,
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
+import { PERMISSIONS } from "../../constants";
+import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
-import { useSelectedComponentControls } from "../../hooks/useSelectedComponentControls";
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
 
-export function Threat(props) {
-  const { threat, scrollToId, selected } = props;
-
+export function Threat({
+  threat,
+  scrollToId,
+  selected,
+  readOnly: propReadOnly,
+}) {
   const modelId = useModelID();
   const [deleteThreat] = useDeleteThreatMutation();
   const [updateThreat] = useUpdateThreatMutation();
@@ -32,21 +38,21 @@ export function Threat(props) {
   const [title, setTitle] = useState(threat.title);
   const [description, setDescription] = useState(threat.description);
 
-  const controls = useSelectedComponentControls();
+  const controls = useComponentControls(threat.componentId);
   const { data: mitigations } = useListMitigationsQuery({ modelId });
   const threatsMap = mitigations?.threatsMap || {};
 
-  const readOnly = useReadOnly();
+  const readOnly = useReadOnly() || propReadOnly;
+  const { data: permissions } = useGetModelPermissionsQuery({ modelId });
+  const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
 
   const linkedControls = controls.filter((c) =>
     threatsMap[threat.id]?.includes(c.id)
   );
 
-  useEffect(() => {
-    setTitle(threat.title);
-    setDescription(threat.description);
-  }, [threat]);
+  console.log(threat.componentId, controls, linkedControls);
 
+  //TODO clean this up, not the correct way to use useEffect imo
   useEffect(() => {
     if (title !== threat.title || description !== threat.description) {
       updateThreat({
@@ -103,7 +109,7 @@ export function Threat(props) {
         border: 2,
         ...(selected
           ? {
-              borderColor: (theme) => theme.palette.common.gramPink,
+              borderColor: (theme) => theme.palette.common.klarnaPink,
             }
           : {
               borderColor: "transparent",
@@ -127,6 +133,27 @@ export function Threat(props) {
                 }}
                 color={threatColor}
               />
+              {reviewAllowed && (
+                <Tooltip title="Mark as action item">
+                  <IconButton
+                    onClick={() =>
+                      updateThreat({
+                        id: threat.id,
+                        modelId: threat.modelId,
+                        isActionItem: !threat.isActionItem,
+                      })
+                    }
+                    disabled={readOnly}
+                  >
+                    <AssignmentTurnedInIcon
+                      sx={{
+                        fontSize: 20,
+                        color: threat.isActionItem ? "#fff" : "#666",
+                      }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              )}
               <EditableTypography
                 text={title}
                 placeholder="Title"
@@ -139,6 +166,7 @@ export function Threat(props) {
                   fontSize: "1.0rem",
                 }}
               />
+
               {!readOnly && (
                 <Tooltip title="Delete Threat">
                   <IconButton
@@ -154,7 +182,11 @@ export function Threat(props) {
             </Box>
             <EditableTypography
               text={description}
-              placeholder="Add description (optional)"
+              placeholder={
+                readOnly
+                  ? "No description provided."
+                  : "Add description (optional)"
+              }
               variant="body1"
               color={description ? "text.secondary" : "text.disabled"}
               onSubmit={setDescription}

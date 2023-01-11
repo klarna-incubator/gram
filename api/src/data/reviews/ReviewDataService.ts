@@ -2,11 +2,11 @@ import { EventEmitter } from "events";
 import { Pool } from "pg";
 import { getLogger } from "../../logger";
 import { DataAccessLayer } from "../dal";
+import { RequestContext } from "../providers/RequestContext";
 import {
   SystemPropertyFilter,
   SystemPropertyValue,
 } from "../system-property/types";
-import { RequestContext } from "../providers/RequestContext";
 import { Review, ReviewStatus } from "./Review";
 import { reviewerProvider } from "./ReviewerProvider";
 import { ReviewSystemCompliance } from "./ReviewSystemCompliance";
@@ -23,6 +23,7 @@ export function convertToReview(row: any): Review {
   review.meetingRequestedAt = row.meeting_requested_at;
   review.meetingRequestedReminderSentCount =
     row.meeting_requested_reminder_sent_count;
+  if (row.extras) review.extras = row.extras;
   return review;
 }
 
@@ -75,7 +76,8 @@ export class ReviewDataService extends EventEmitter {
         updated_at,
         approved_at,
         requested_at,
-        meeting_requested_at
+        meeting_requested_at,
+        extras
       FROM reviews
       WHERE model_id = $1::uuid AND deleted_at IS NULL
     `;
@@ -325,16 +327,24 @@ export class ReviewDataService extends EventEmitter {
     });
   }
 
-  async approve(modelId: string, approvingUser?: string, note?: string) {
+  async approve(
+    modelId: string,
+    approvingUser?: string,
+    note?: string,
+    extras?: any
+  ) {
     const review = await this.update(modelId, {
       status: ReviewStatus.Approved,
       reviewedBy: approvingUser,
       note: note,
+      extras,
     });
     if (!review) {
       this.log.error(`No review exists for ${modelId}`);
       return review;
     }
+
+    this.emit("approved", { review });
 
     await this.dal.notificationService.queue({
       templateKey: "review-approved",
@@ -406,6 +416,7 @@ export class ReviewDataService extends EventEmitter {
       reviewedBy?: string | null;
       requestedBy?: string | null;
       note?: string;
+      extras?: object;
     }
   ) {
     const fieldStatements = [];
@@ -436,6 +447,11 @@ export class ReviewDataService extends EventEmitter {
     if (fields.note !== undefined) {
       params.push(fields.note);
       fieldStatements.push(`note = $${params.length}`);
+    }
+
+    if (fields.extras !== undefined) {
+      params.push(JSON.stringify(fields.extras));
+      fieldStatements.push(`extras = $${params.length}::json`);
     }
 
     if (params.length === 0) return false;

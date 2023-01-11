@@ -22,6 +22,8 @@ export class Review {
   requestedReminderSentCount: number;
   meetingRequestedAt: Date | null;
   meetingRequestedReminderSentCount: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  extras: any;
 
   constructor(
     modelId: string,
@@ -33,6 +35,7 @@ export class Review {
     this.requestedBy = requestedBy;
     this.status = status;
     this.note = "";
+    this.extras = {};
     this.reviewedBy = reviewedBy;
     this.createdAt = new Date(Date.now());
     this.updatedAt = new Date(Date.now());
@@ -56,6 +59,7 @@ export class Review {
       requestedAt: this.requestedAt,
       status: this.status,
       note: this.note,
+      extras: this.extras,
     };
   }
 }

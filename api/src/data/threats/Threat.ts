@@ -8,6 +8,7 @@ export default class Threat {
   createdAt: number;
   updatedAt: number;
   deletedAt?: number;
+  isActionItem?: boolean;
 
   constructor(
     public title: string,
@@ -33,6 +34,7 @@ export default class Threat {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,
+      isActionItem: this.isActionItem,
     };
   }
 }

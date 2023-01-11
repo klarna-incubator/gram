@@ -24,6 +24,7 @@ export function convertToThreat(row: any): Threat {
   threat.id = row.id;
   threat.createdAt = row.created_at * 1000;
   threat.updatedAt = row.updated_at * 1000;
+  threat.isActionItem = row.is_action_item || false;
   return threat;
 }
 
@@ -88,7 +89,8 @@ export class ThreatDataService extends EventEmitter {
         suggestion_id,
         created_by,
         extract(epoch from created_at) as created_at,
-        extract(epoch from updated_at) as updated_at
+        extract(epoch from updated_at) as updated_at,
+        is_action_item
       FROM threats
       WHERE id = $1::uuid
       AND deleted_at IS NULL
@@ -119,12 +121,40 @@ export class ThreatDataService extends EventEmitter {
         created_by,
         extract(epoch from created_at) as created_at,
         extract(epoch from updated_at) as updated_at,
-        suggestion_id
+        suggestion_id,
+        is_action_item
       FROM threats
       WHERE model_id = $1::uuid 
       AND deleted_at IS NULL
       ORDER BY created_at DESC
     `;
+    const res = await this.pool.query(query, [modelId]);
+
+    if (res.rows.length === 0) {
+      return [];
+    }
+
+    return res.rows.map((record) => convertToThreat(record));
+  }
+
+  async listActionItems(modelId: string) {
+    const query = `
+    SELECT
+      id,
+      title,
+      description,
+      model_id,
+      component_id,
+      created_by,
+      extract(epoch from created_at) as created_at,
+      extract(epoch from updated_at) as updated_at,
+      suggestion_id,
+      is_action_item
+    FROM threats
+    WHERE model_id = $1::uuid and is_action_item = true
+    AND deleted_at IS NULL
+    ORDER BY created_at DESC
+  `;
     const res = await this.pool.query(query, [modelId]);
 
     if (res.rows.length === 0) {
@@ -142,7 +172,7 @@ export class ThreatDataService extends EventEmitter {
   async update(
     modelId: string,
     id: string,
-    fields: { title?: string; description?: string }
+    fields: { title?: string; description?: string; isActionItem?: boolean }
   ) {
     const fieldStatements = [];
     const params = [];
@@ -153,6 +183,10 @@ export class ThreatDataService extends EventEmitter {
     if (fields.description !== undefined) {
       params.push(fields.description);
       fieldStatements.push(`description = $${params.length}`);
+    }
+    if (fields.isActionItem !== undefined) {
+      params.push(fields.isActionItem);
+      fieldStatements.push(`is_action_item = $${params.length}::boolean`);
     }
 
     if (params.length === 0) return false;
