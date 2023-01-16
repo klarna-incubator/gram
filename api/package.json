@@ -5,7 +5,7 @@
   "description": "API for threat modelling",
   "main": "src/index.ts",
   "scripts": {
-    "start": "NODE_ENV=development forever -c \"ts-node --project tsconfig.json --files\" --watch --watchDirectory src/ --watchDirectory config/ --minUptime 1000 --spinSleepTime 1000 src/index.ts",
+    "start": "NODE_ENV=development nodemon --files src/index.ts",
     "build": "rm -rf build/* && tsc",
     "docker-start": "NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node build/src/data/migrate.js && NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node build/src/index.js",
     "lint": "prettier --check src/",
@@ -82,8 +82,8 @@
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "eslint": "^8.15.0",
-    "forever": "^4.0.2",
     "jest": "^26.6.3",
+    "nodemon": "^2.0.20",
     "prettier": "^2.3.2",
     "snyk": "^1.760.0",
     "supertest": "^4.0.2",
