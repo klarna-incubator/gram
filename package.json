@@ -1,0 +1,33 @@
+{
+  "name": "gram",
+  "version": "3.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-backend": "npm start --workspace=core/api",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klarna-incubator/gram.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/klarna-incubator/gram/issues"
+  },
+  "homepage": "https://github.com/klarna-incubator/gram#readme",
+  "workspaces": [
+    "app",
+    "api",
+    "plugins/aws",
+    "plugins/github",
+    "plugins/threatlib",
+    "plugins/static",
+    "plugins/svgporn"
+  ],
+  "private": true,
+  "devDependencies": {
+    "lerna": "^6.4.1"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "gram-plugin-svgporn",
+  "version": "1.0.0",
+  "description": "Taken from https://github.com/gilbarbara/logos",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gram-api": "^2.8.4"
+  }
+}

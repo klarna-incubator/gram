@@ -1,0 +1,15 @@
+{
+  "name": "gram-plugin-aws",
+  "version": "1.0.0",
+  "description": "AWS icons for Gram",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gram-api": "^2.8.4"
+  },
+  "private": true
+}

@@ -1,21 +1,21 @@
 import { Application } from "express";
 import { DataAccessLayer } from "./data/dal";
-import { PackCompiler } from "./packs";
-import AWSPack from "./packs/aws";
-import GithubPack from "./packs/github";
-import StaticPack from "./packs/static";
-import SVGPornPack from "./packs/svgporn";
-import { ThreatLibPack } from "./packs/threatlib";
+import { PluginCompiler } from "./plugin";
 
-export async function bootstrapPacks(app: Application, dal: DataAccessLayer) {
-  // TODO: load these dynamically via config (i.e. install as npm package, or some config defines packages to load and bootstrap)
-  const compiler = new PackCompiler(dal, app);
+import AWSPlugin from "gram-plugin-aws";
+import SVGPornPlugin from "gram-plugin-svgporn";
+import StaticPlugin from "gram-plugin-static";
+import ThreatLibPlugin from "gram-plugin-threatlib";
+import GithubPlugin from "gram-plugin-github";
+
+export async function bootstrapPlugins(app: Application, dal: DataAccessLayer) {
+  const compiler = new PluginCompiler(dal, app);
   await Promise.all([
-    new AWSPack().bootstrap(compiler),
-    new SVGPornPack().bootstrap(compiler),
-    new GithubPack().bootstrap(compiler),
-    new StaticPack().bootstrap(compiler),
-    new ThreatLibPack().bootstrap(compiler),
+    new AWSPlugin().bootstrap(compiler),
+    new SVGPornPlugin().bootstrap(compiler),
+    new GithubPlugin().bootstrap(compiler),
+    new StaticPlugin().bootstrap(compiler),
+    new ThreatLibPlugin().bootstrap(compiler),
   ]);
   compiler.compileAssets();
 }

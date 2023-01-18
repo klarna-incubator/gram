@@ -3,7 +3,6 @@
   "private": true,
   "version": "2.8.4",
   "description": "API for threat modelling",
-  "main": "src/index.ts",
   "scripts": {
     "start": "NODE_ENV=development nodemon --files src/index.ts",
     "build": "rm -rf build/* && tsc",
@@ -18,6 +17,7 @@
     "sender": "NODE_ENV=development ts-node src/notifications/sender.ts",
     "gh": "ts-node src/packs/demo/test.ts"
   },
+  "main": "src/index.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/klarna/gram.git"
@@ -89,11 +89,9 @@
     "supertest": "^4.0.2",
     "ts-jest": "^26.5.6",
     "ts-node": "^10.9.1",
-    "typescript": "^4.6.4"
+    "typescript": "^4.9.4"
   },
   "optionalDependencies": {
-    "@octokit/types": "^8.0.0",
-    "dotenv": "^16.0.3",
-    "octokit": "^2.0.10"
+    "dotenv": "^16.0.3"
   }
 }

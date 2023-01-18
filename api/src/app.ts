@@ -17,7 +17,7 @@ import { AuthzMiddleware } from "./middlewares/authz";
 import cacheMw from "./middlewares/cache";
 import loggerMw from "./middlewares/logger";
 import { securityHeaders } from "./middlewares/securityHeaders";
-import { AssetDir } from "./packs";
+import { AssetDir } from "./plugin";
 import crash from "./resources/gram/v1/admin/crash";
 import dropRole from "./resources/gram/v1/admin/dropRole";
 import { getBanner } from "./resources/gram/v1/banners/get";

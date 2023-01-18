@@ -1,6 +1,6 @@
 import createApp from "../app";
 import { createPostgresPool } from "../data/postgres";
-import { Pack, PackCompiler, PackRegistrator } from "../packs";
+import { Plugin, PluginCompiler, PluginRegistrator } from "../plugin";
 import { testAuthzProvider } from "./authz";
 import {
   SampleEmailMeetingRequested,
@@ -22,8 +22,8 @@ const toComponentClass = (o: any): ComponentClass => {
   };
 };
 
-class TestPack implements Pack {
-  async bootstrap(reg: PackRegistrator): Promise<void> {
+class TestPack implements Plugin {
+  async bootstrap(reg: PluginRegistrator): Promise<void> {
     reg.setAuthzProvider(testAuthzProvider);
     reg.setSystemProvider(testSystemProvider);
     reg.registerNotificationTemplates([
@@ -41,7 +41,7 @@ export async function createTestApp() {
   const pool = await createPostgresPool();
   const { app, dal } = await createApp(pool);
 
-  const compiler = new PackCompiler(dal, app);
+  const compiler = new PluginCompiler(dal, app);
   const pack = new TestPack();
   await pack.bootstrap(compiler);
 

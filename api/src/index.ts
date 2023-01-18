@@ -19,7 +19,7 @@ import { createControlApp } from "./controlApp";
 import { createPostgresPool } from "./data/postgres";
 import { getLogger } from "./logger";
 import { notificationSender } from "./notifications/sender";
-import { bootstrapPacks } from "./bootstrap";
+import { bootstrapPlugins } from "./bootstrap";
 import { attachWebsocketServer } from "./ws";
 
 const NOTIFICATION_INTERVAL = 1000 * 30; // 30 seconds
@@ -43,7 +43,7 @@ const listen = async () => {
   const controlApp = createControlApp(dal);
 
   // Bootstrap packs with custom functionality / addons
-  await bootstrapPacks(app, dal);
+  await bootstrapPlugins(app, dal);
 
   // Set up HTTP servers and start listening
   const appPort = config.get("appPort");

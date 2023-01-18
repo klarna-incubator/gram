@@ -13,7 +13,7 @@ import config from "config";
 import { getLogger } from "../logger";
 import { InvalidSecretError, InvalidSecretProviderError } from "./errors";
 import { SecretProvider } from "./SecretProvider";
-import { SSMSecretProvider } from "./ssm/";
+import { SSMSecretProvider } from "./ssm";
 import { ConfigSecretProvider } from "./config";
 
 const log = getLogger("secrets");
