@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start-backend": "npm start --workspace=core/api",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker-start": "NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node api/build/src/data/migrate.js && NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/build/src/index.js"
   },
   "repository": {
     "type": "git",

@@ -13,3 +13,6 @@ api/assets/*
 !api/assets/*.svg
 !api/assets/*.png
 docker-compose.yml
+**/*.spec.js
+**/*.spec.ts
+**/__mocks__/*

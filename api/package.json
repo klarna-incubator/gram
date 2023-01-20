@@ -6,7 +6,6 @@
   "scripts": {
     "start": "NODE_ENV=development nodemon --files src/index.ts",
     "build": "rm -rf build/* && tsc",
-    "docker-start": "NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node build/src/data/migrate.js && NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node build/src/index.js",
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
     "debug": "NODE_ENV=development node --inspect=0.0.0.0 src/index.js",

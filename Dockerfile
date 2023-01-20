@@ -16,15 +16,18 @@ FROM node:16-alpine
 WORKDIR /home/gram
 USER root
 
-ADD api .
+ADD package.json .
+ADD package-lock.json .
+ADD api api
+ADD plugins plugins
 
 RUN npm i --loglevel=warn --no-progress
 
-RUN npm run build
+RUN npm -w api run build
 
 COPY --from=builder /home/gram/build ./frontend/
 
-# Remove dev dependencies (needed typescript to build)
+# Remove dev dependencies (needed typescript and types to build)
 RUN npm prune --omit=dev
 
 # gram user needs write access to the assets folder in order to set up the symlinks
@@ -34,7 +37,7 @@ USER root
 
 RUN addgroup -S gram && adduser -S gram -G gram
 
-RUN chown gram:gram assets
+RUN chown gram:gram api/assets
 
 # drop back to gram
 USER gram
