@@ -1,0 +1,60 @@
+import { NotificationTemplateKey } from "gram-api/src/data/notifications/NotificationInput";
+import { lookupReviewers } from "gram-api/src/data/reviews/ReviewerProvider";
+import {
+  EmailRecipient,
+  PlaintextHandlebarsNotificationTemplate,
+} from "gram-api/src/notifications/NotificationTemplate";
+import { OctaneSystemProvider } from "../system/OctaneSystemProvider";
+import { generalReviewNotificationVariables } from "./util";
+
+const key: NotificationTemplateKey = "review-reviewer-changed";
+
+const subject = `{{model.name}} threat model reassigned`;
+
+const template = `
+Hi {{reviewer.name}} and {{previousReviewer.name}}! 
+
+This email is to inform you that the threat model {{model.name}} ({{model.link}}) was just reassigned from 
+{{previousReviewer.name}} to {{reviewer.name}}. 
+
+Happy reviewing!
+`.trim();
+
+export const EmailReviewerChanged = (systemProvider: OctaneSystemProvider) =>
+  new PlaintextHandlebarsNotificationTemplate(
+    key,
+    subject,
+    template,
+    async (dal, { review, previousReviewer }) => {
+      const variables = await generalReviewNotificationVariables(
+        dal,
+        review,
+        systemProvider
+      );
+      const recipients: EmailRecipient[] = [variables.reviewer];
+      const cc = [variables.requester];
+      const previousReviewerLookup = await lookupReviewers(previousReviewer);
+      const previous: EmailRecipient = {
+        name: "unknown",
+      };
+      if (previousReviewerLookup && previousReviewerLookup.length > 0) {
+        previous.name = previousReviewerLookup[0].name;
+        previous.email = previousReviewerLookup[0].mail;
+
+        if (previous.email) {
+          recipients.push(previous);
+        }
+      }
+
+      if (variables.owner.email && variables.owner.email !== "UNDEFINED") {
+        cc.push(variables.owner);
+      }
+
+      return {
+        cc,
+        recipients,
+        ...variables,
+        previousReviewer: previous,
+      };
+    }
+  );

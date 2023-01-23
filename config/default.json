@@ -16,7 +16,24 @@
   },
 
   "auth": {
-    "providerOpts": {}
+    "providerOpts": {
+      "google": {
+        "clientId": "795236967504-kjvh3ouinnnqboilg3vf92v2k6mhijm6.apps.googleusercontent.com"
+      },
+      "ldap": {
+        "url": "ldaps://ldap.klarna.net",
+        "searchFilter": "(uid={{username}})",
+        "requiredGroup": "access.1288598.stag.system-api-access",
+        "roleMap": {
+          "admin": ["access.1288598.stag.admins", "domain.security.leads"],
+          "reviewer": [
+            "access.1288598.stag.reviewers",
+            "access.secure-development"
+          ],
+          "user": ["access.1288598.stag.users", "access.1288598.stag.sso-prod"]
+        }
+      }
+    }
   },
 
   "log": {
@@ -40,14 +57,30 @@
     "httpOnly": true
   },
 
+  "data": {
+    "_providers": {
+      "threatsaurus": {
+        "baseUrl": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+      }
+    }
+  },
+
   "allowedSrc": {
     "img": ["https:"]
   },
 
   "menu": [
     {
-      "name": "Github",      
-      "path": "https://github.com/klarna-incubator/gram"    
+      "name": "Github",
+      "path": "https://github.com/klarna-incubator/gram"
+    },
+    {
+      "name": "Feedback",
+      "path": "https://docs.google.com/forms/d/e/1FAIpQLSfVTLCR_VHTzIhDZ8MRFLpfm58LNlf0zICS2brYMOok7LrURA/viewform?usp=sf_link"
+    },
+    {
+      "name": "Docs",
+      "path": "https://kep.klarna.net/docs/secure-development/threat_modeling/threat_modeling/"
     }
   ]
 }

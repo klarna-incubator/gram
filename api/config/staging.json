@@ -1,0 +1,62 @@
+{
+  "origin": "https://gram-eu.staging.c2c.klarna.net",
+
+  "jira": {
+    "host": "jira-staging.int.klarna.net/jira"
+  },
+
+  "appPort": 8080,
+  "controlPort": 8081,
+
+  "secrets": {
+    "provider": "config"
+  },
+
+  "auth": {
+    "providerOpts": {
+      "google": {
+        "clientId": "795236967504-mm20qlqb84ecm3u5ejofr0p8h13hrjpl.apps.googleusercontent.com"
+      },
+      "ldap": {
+        "url": "ldaps://ldap.klarna.net",
+        "searchBase": "ou=People,dc=internal,dc=machines",
+        "searchFilter": "(uid={{username}})",
+        "requiredGroup": "access.1288598.stag.system-api-access",
+        "roleMap": {
+          "admin": ["access.1288598.stag.admins", "domain.security.leads"],
+          "reviewer": ["access.1288598.stag.reviewers"],
+          "user": ["access.1288598.stag.users", "access.1288598.stag.sso-prod"]
+        }
+      }
+    }
+  },
+
+  "notifications": {
+    "providers": {
+      "email": {
+        "override-recipient": "secure-development@klarna.com",
+        "sender-name": "[Staging] Gram - Secure Development"
+      }
+    }
+  },
+
+  "data": {
+    "_providers": {
+      "threatsaurus": {
+        "baseUrl": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+      },
+      "hsf": {
+        "bucket": "secdev-qliksense-exporter-staging-source",
+        "key": "hsf-systems-daily.csv",
+        "awsRole": "arn:aws:iam::422554941857:role/iam-sync/gram/c2c/gram/eu/staging/gram.c2c_gram",
+        "awsExternalId": "73fddbb9-a953-4f1c-9198-16a6113fe681"
+      }
+    }
+  },
+
+  "cookie": {
+    "secure": true
+  },
+
+  "sentryDSN": "https://7755cd2515424f6cbcef6a4d43e54fdb@o24547.ingest.sentry.io/6023867"
+}

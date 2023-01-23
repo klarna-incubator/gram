@@ -1,0 +1,189 @@
+import { ChainableTemporaryCredentials, Credentials, S3, STS } from "aws-sdk";
+import { execSync } from "child_process";
+import config from "config";
+import fs from "fs";
+import proxy from "proxy-agent";
+import { uniqueId } from "lodash";
+import readline from "readline";
+import { Readable } from "stream";
+import { getLogger } from "gram-api/src/logger";
+import { isDevelopment } from "gram-api/src/util/env";
+import { SystemPropertyProvider } from "gram-api/src/data/system-property/SystemPropertyProvider";
+import {
+  SystemProperty,
+  SystemPropertyValue,
+} from "gram-api/src/data/system-property/types";
+import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+
+const log = getLogger("HSFContextProvider");
+
+async function assumeRole(): Promise<Credentials> {
+  const params: STS.AssumeRoleRequest = {
+    RoleArn: config.get("data._providers.hsf.awsRole") as string,
+    RoleSessionName: `gram-hsf-access-${uniqueId(Date.now().toString())}`,
+    ExternalId: config.get("data._providers.hsf.awsExternalId") as string,
+  };
+
+  let masterCredentials: Credentials | undefined; // Credentials to inherit from
+  if (
+    isDevelopment() &&
+    config.get("data._providers.hsf.doCursedThing") === true
+  ) {
+    // Cursed workaround to assume role in a development environment. This uses the staging c2c container
+    // to assume the role. Normally, you should not need to do this, and can use mocked data instead.
+    // Note: You'll need to have an active production Gram_Idp.admin session to access grond. Ensure `grond whoami` works.
+    //
+    // Blame oh-police for being too annoying to create the custom policy needed for our admin roles to emulate
+    // the roleAssumption used by C2C.
+    log.warn(
+      `Using extremely cursed method to borrow the staging C2C credentials. You most likely should not be using this, only turn this on if you're debugging AWS assumeRole stuff.`
+    );
+    const cmd = `grond service execute -n gram -p eu -s staging -c 'curl -s 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI'`;
+    let res = execSync(cmd).toString();
+    res = res.split("\n").slice(1).join("\n");
+    const jsoned = JSON.parse(res);
+    masterCredentials = new Credentials({
+      accessKeyId: jsoned.AccessKeyId,
+      secretAccessKey: jsoned.SecretAccessKey,
+      sessionToken: jsoned.Token,
+    });
+  }
+  // Assume role the normal way. This should work from C2C.
+  const creds = new ChainableTemporaryCredentials({
+    params,
+    stsConfig: {
+      region: process.env.AWS_REGION,
+      httpOptions: {
+        // STS is not whitelisted by C2C, so we need to use the proxy to access it.
+        // https://stash.int.klarna.net/projects/DEVSERV/repos/docs/pull-requests/1985/diff#content/documentation/c2c-platform/05_explanations/c2c_networking.md
+        agent: process.env.HTTP_PROXY
+          ? proxy(process.env.HTTP_PROXY)
+          : undefined,
+      },
+    },
+    masterCredentials,
+  });
+
+  await creds.getPromise();
+
+  return creds;
+}
+
+function errorHandler(err: any) {
+  log.error(`Failed to parse HSF data`, err);
+}
+
+const HSF_REFRESH_TIME_MS = 1000 * 60 * 60;
+
+export class HSFContextProvider implements SystemPropertyProvider {
+  id = "hsf";
+  hsfset: Set<string>;
+  refreshInterval?: NodeJS.Timeout;
+
+  constructor() {
+    this.hsfset = new Set();
+    this.load();
+    if (process.env.NODE_ENV !== "test") {
+      this.refreshInterval = setInterval(
+        () => this.load(),
+        HSF_REFRESH_TIME_MS
+      );
+    }
+  }
+
+  async listSystemByPropertyValue(
+    ctx: RequestContext,
+    propertyId: string,
+    value: any
+  ): Promise<string[]> {
+    if (propertyId !== "hsf") {
+      throw new Error("Method not implemented.");
+    }
+    return Array.from(this.hsfset);
+  }
+
+  definitions: SystemProperty[] = [
+    {
+      id: "hsf",
+      label: "HSF - High Security Footprint",
+      batchFilterable: true,
+    },
+  ];
+
+  async provideSystemProperties(
+    ctx: RequestContext,
+    systemId: string,
+    quick: boolean
+  ): Promise<SystemPropertyValue[]> {
+    const item: SystemPropertyValue = {
+      id: "hsf",
+      label: "HSF - High Security Footprint",
+      value: this.hsfset.has(systemId).toString(),
+      batchFilterable: true,
+      displayInList: this.hsfset.has(systemId),
+    };
+
+    return [item];
+  }
+
+  async load() {
+    const configKeys = [
+      "data._providers.hsf.bucket",
+      "data._providers.hsf.key",
+      "data._providers.hsf.awsRole",
+      "data._providers.hsf.awsExternalId",
+    ];
+
+    try {
+      let stream: Readable;
+      if (configKeys.reduce((p, key) => p && config.has(key), true)) {
+        const s3Params = {
+          Bucket: config.get("data._providers.hsf.bucket") as string,
+          Key: config.get("data._providers.hsf.key") as string,
+        };
+
+        const credentials = await assumeRole();
+        const s3 = new S3({
+          credentials,
+          region: process.env.AWS_REGION,
+        });
+
+        stream = s3
+          .getObject(s3Params)
+          .createReadStream()
+          .on("error", errorHandler); // This stream is read asyncronously, but is not under await/async, so we have to handle it separately
+      } else {
+        log.info("No s3 config found, loading mocked data for HSF systems");
+        stream = fs.createReadStream(
+          __dirname + "/mock-data/hsf-systems-mocked.csv"
+        );
+      }
+
+      // Load the CSV stream (file or s3)
+      const rl = readline.createInterface({
+        input: stream,
+      });
+
+      const newHsfSet = new Set<string>();
+
+      const parseLine = (line: string) => {
+        // Rows contain:
+        // i,id,system_id,team_name,team_key
+        const objectId = line.split(",")[2];
+        if (objectId === "system_id") {
+          // skip the first line
+          return;
+        }
+        newHsfSet.add(objectId);
+      };
+      rl.on("line", parseLine);
+      rl.on("close", () => {
+        this.hsfset = newHsfSet;
+        log.info(`Loaded ${this.hsfset.size} hsf systems`);
+      });
+      rl.on("error", errorHandler);
+    } catch (err: any) {
+      errorHandler(err);
+    }
+  }
+}

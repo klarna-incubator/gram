@@ -1,0 +1,23 @@
+{
+  "name": "gram-plugin-klarna",
+  "version": "1.0.0",
+  "description": "Custom Gram logic for Klarna",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "NODE_CONFIG_DIR=../../api/config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "google-auth-library": "^6.1.6",
+    "gram-api": "*",
+    "jira-client": "^8.2.2",
+    "openid-client": "^5.3.2"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/jest": "^29.2.6",
+    "@types/jira-client": "^7.1.6",
+    "ts-jest": "^29.0.5"
+  }
+}

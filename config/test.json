@@ -17,7 +17,12 @@
   },
 
   "auth": {
-    "providerOpts": {}
+    "providerOpts": {
+      "ldap": {
+        "bindDN": "uid=sys.gram.ldap,ou=People,dc=internal,dc=machines",
+        "bindCredentials": "nope"
+      }
+    }
   },
 
   "notifications": {
