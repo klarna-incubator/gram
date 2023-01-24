@@ -36,7 +36,7 @@
     "@testing-library/react-hooks": "^3.4.1",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "canvas": "^2.11.0",
+    "jest-canvas-mock": "^2.4.0",
     "jest-each": "^27.0.6",
     "prettier": "^2.7.1",
     "react-scripts": "^5.0.1",
@@ -78,6 +78,9 @@
     "transformIgnorePatterns": [
       "node_modules/(?!konva|react-konva-utils)"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "setupFiles": [
+      "jest-canvas-mock"
+    ]
   }
 }
