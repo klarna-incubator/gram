@@ -1,4 +1,3 @@
-import { ReviewStatus } from "aws-sdk/clients/ssm";
 import { ComponentClass } from "../component-classes";
 
 export interface DataFlow {
@@ -125,7 +124,7 @@ export default class Model {
   updatedAt?: number;
 
   // Joined from review table, bit ugly to put here.
-  reviewStatus?: ReviewStatus;
+  reviewStatus?: string;
   reviewApprovedAt?: Date;
   isTemplate?: boolean;
 

@@ -21,7 +21,7 @@ ADD package-lock.json .
 ADD api api
 ADD plugins plugins
 
-RUN npm i --loglevel=warn --no-progress
+RUN npm i --loglevel=warn --no-progress -w api
 
 RUN npm -w api run build
 
