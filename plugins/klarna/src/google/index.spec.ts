@@ -6,7 +6,7 @@ import * as user from "gram-api/src/auth/user";
 describe("auth.provider.google", () => {
   const lookupUser = jest.spyOn(user, "lookupUser");
 
-  const google = new GoogleAuthProvider();
+  // const google = new GoogleAuthProvider();
 
   describe("getRoles", () => {
     it("should return admin for admin group users", () => {

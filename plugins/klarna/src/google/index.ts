@@ -19,7 +19,6 @@ import { Client, Issuer, generators } from "openid-client";
 import { aes256gcm } from "./util";
 import secrets from "gram-api/src/secrets";
 
-const clientId: string = config.get("auth.providerOpts.google.clientId");
 const log = getLogger("googleAuth");
 
 /**
