@@ -16,7 +16,7 @@
     "@sentry/react": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
     "jwt-decode": "^3.1.2",
-    "konva": "^8.3.2",
+    "konva": "^8.4.2",
     "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
@@ -45,12 +45,12 @@
   },
   "scripts": {
     "start": "PORT=4726 REACT_APP_VERSION=$npm_package_version react-scripts start",
-    "lint": "node_modules/.bin/prettier --check src/",
-    "lint-fix": "node_modules/.bin/prettier -l src/ --write",
+    "lint": "prettier --check src/",
+    "lint-fix": "prettier -l src/ --write",
     "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
-    "test": "./node_modules/jest/bin/jest.js --silent",
+    "test": "jest --silent",
     "snyk": "snyk test",
-    "jest": "./node_modules/jest/bin/jest.js",
+    "jest": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -72,8 +72,7 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js",
-      "^konva": "<rootDir>/node_modules/konva/konva",
-      "^react-konva-utils": "<rootDir>/node_modules/react-konva-utils/es"
+      "^react-konva-utils": "<rootDir>/../node_modules/react-konva-utils/es"
     },
     "transformIgnorePatterns": [
       "node_modules/(?!konva|react-konva-utils)"

@@ -13,11 +13,11 @@ defaults:
     working-directory: api
 
 jobs:
-  api-ci:
+  ci:
     runs-on: ubuntu-latest
 
     # Service containers to run with `container-job`
-    services:      
+    services:
       postgres:
         # Docker Hub image
         image: postgres
@@ -26,30 +26,34 @@ jobs:
           POSTGRES_USER: gram-test
         ports:
           - 5433:5432
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-    
-      - name: 'Clean install'
+
+      - name: "Clean install"
         shell: bash
         run: npm ci
 
-      - name: 'Setup database'
+      - name: "Setup database"
         shell: bash
-        run: NODE_ENV=test npm run migrate-database
-      
-      - name: 'Test'
+        run: NODE_ENV=test npm run -w api migrate-database
+
+      - name: "Test"
         shell: bash
         run: npm test
-      
-      - name: 'Lint'
+
+      - name: "Lint"
         shell: bash
         run: npm run lint
 
-      - name: 'Build'
+      - name: "Build"
         shell: bash
-        run: npm run build        
+        run: npm run build
+
+      - name: "Snyk"
+        shell: bash
+        run: npm run snyk
