@@ -27,7 +27,7 @@
   },
 
   "auth": {
-    "oidc-session-secret": "AUTH_OIDC_SESSION_SECRET",
+    "oidcSessionSecret": "AUTH_OIDC_SESSION_SECRET",
     "providerOpts": {
       "ldap": {
         "bindDN": "AUTH_LDAP_BIND_DN",

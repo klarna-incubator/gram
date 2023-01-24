@@ -104,7 +104,7 @@ export default class GoogleAuthProvider implements AuthProvider {
       code_challenge_method: "S256",
     });
 
-    const key = await secrets.get("auth.oidc-session-secret");
+    const key = await secrets.get("auth.oidcSessionSecret");
     ctx.currentRequest?.res?.cookie(
       "oidc-code",
       aes256gcm(key).encrypt(code_verifier).join("."),
@@ -132,7 +132,7 @@ export default class GoogleAuthProvider implements AuthProvider {
       throw new Error("Request is undefined or null");
     }
 
-    const key = await secrets.get("auth.oidc-session-secret");
+    const key = await secrets.get("auth.oidcSessionSecret");
     const [ct, iv, authTag] =
       ctx.currentRequest.cookies["oidc-code"].split(".");
     const code_verifier = aes256gcm(key).decrypt(ct, iv, authTag);
