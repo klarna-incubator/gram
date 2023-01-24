@@ -1,8 +1,21 @@
 # Initial setup
 
-Fork/clone the repository via git.
+Fork/clone the repository via git. Add your own SCM/or the original repository as an origin.
+
+```
+git clone <your own repo / fork>
+git remote add github git@github.com:klarna-incubator/gram.git
+```
 
 ## Configuring plugins
+
+```
+"gram-plugin-aws": "^1.0.0",
+"gram-plugin-github": "^1.0.0",
+"gram-plugin-static": "^1.0.0",
+"gram-plugin-svgporn": "^1.0.0",
+"gram-plugin-threatlib": "^1.0.0",
+```
 
 Modify the `api/bootstrap.ts` file to load your custom plugins.
 It will look something like this.
