@@ -48,13 +48,12 @@ RUN npm prune --omit=dev
 # swap here briefly to root to fix the permissions.
 # USER root 
 
-RUN addgroup -S gram && adduser -S gram -G gram
+# RUN addgroup -S gram && adduser -S gram -G gram
 
 RUN cp api/assets/* assets/
-
-RUN chown gram:gram assets
+RUN chown klarna:klarna api/assets
 
 # drop back to gram
-USER gram
+USER klarna
 EXPOSE 8080 8081
 CMD ["npm", "run", "docker-start"]
