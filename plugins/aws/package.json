@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "AWS icons for Gram",
   "main": "src/index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC",
   "dependencies": {
