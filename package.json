@@ -3,15 +3,9 @@
   "version": "3.0.3",
   "description": "",
   "scripts": {
-<<<<<<< HEAD
     "test": "lerna run test",
     "build": "lerna run clean && lerna run build --scope=@gram/api --scope=@gram/app --include-filtered-dependencies",
     "build-all": "lerna run build",
-=======
-    "start-backend": "npm start --workspace=core/api",
-    "test": "npm test -w app && npm test -w api",
-    "build": "lerna run build",
->>>>>>> try out a fix for skipping the circular dependency
     "snyk": "lerna run snyk",
     "lint": "lerna run lint",
     "clean": "lerna run clean",

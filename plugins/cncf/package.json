@@ -1,13 +1,13 @@
 {
   "name": "gram-plugin-cncf",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "CNCF icons for Gram",
   "main": "src/index.ts",
   "scripts": {},
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "gram-api": "*"
+    "gram-api": "^3.0.0"
   },
   "private": true
 }
