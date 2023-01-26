@@ -4,13 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-backend": "npm start --workspace=core/api",
     "test": "lerna run test",
     "build": "lerna run build",
     "snyk": "lerna run snyk",
     "lint": "lerna run lint",
     "lint-fix": "lerna run lint-fix",
-    "docker-start": "NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node api/build/src/data/migrate.js && NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/build/src/index.js"
+    "docker-start": "NODE_CONFIG_DIR=./api/config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node api/build/src/data/migrate.js && NODE_CONFIG_DIR=./api/config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/build/src/index.js"
   },
   "repository": {
     "type": "git",
