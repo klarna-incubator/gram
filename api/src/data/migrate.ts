@@ -30,7 +30,10 @@ async function main() {
   await createDb(databaseName, { client: pool._pool });
   log.info("Created DB (if not exist): " + databaseName);
 
-  const migs = await migrate({ client: pool._pool }, "src/data/migrations");
+  const migrationDir = __dirname.includes("/build/")
+    ? __dirname + "/../../../src/data/migrations"
+    : __dirname + "/migrations";
+  const migs = await migrate({ client: pool._pool }, migrationDir);
   migs.forEach((mig) => {
     log.info(`Ran migration: ${mig.name}`);
   });
