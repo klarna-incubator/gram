@@ -27,6 +27,9 @@
           "reviewer": ["access.1288598.prod.reviewers"],
           "user": ["access.1288598.prod.users", "access.1288598.prod.sso-prod"]
         }
+      },
+      "okta": {
+        "discoverUrl": "https://sso.klarna.net/"
       }
     }
   },
