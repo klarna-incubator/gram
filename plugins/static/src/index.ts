@@ -1,4 +1,4 @@
-import { Plugin, PluginRegistrator } from "gram-api/src/plugin";
+import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
 import { EmailReviewApproved } from "./notifications/review-approved";
 import { EmailReviewMeetingRequested } from "./notifications/review-meeting-requested";
 import { EmailReviewMeetingRequestedReminder } from "./notifications/review-meeting-requested-reminder";

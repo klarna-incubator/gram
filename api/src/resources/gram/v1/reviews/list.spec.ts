@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto";
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { DataAccessLayer } from "../../../../data/dal";
-import { Review, ReviewStatus } from "../../../../data/reviews/Review";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 import { createTestApp } from "../../../../test-util/app";
 import { sampleUser } from "../../../../test-util/sampleUser";
 

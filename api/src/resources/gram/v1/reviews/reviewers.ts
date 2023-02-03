@@ -4,8 +4,8 @@
  */
 
 import { Request, Response } from "express";
-import { DataAccessLayer } from "../../../../data/dal";
-import { reviewerProvider } from "../../../../data/reviews/ReviewerProvider";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { reviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {

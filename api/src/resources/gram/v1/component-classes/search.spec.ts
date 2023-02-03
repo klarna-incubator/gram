@@ -1,7 +1,7 @@
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { sampleUser } from "@gram/core/dist/test-util/sampleUser";
 import { createTestApp } from "../../../../test-util/app";
-import { sampleUser } from "../../../../test-util/sampleUser";
 
 /**
  * Tests are based on the classes added in the test-util/classes.json

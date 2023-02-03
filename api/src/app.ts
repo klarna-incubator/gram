@@ -5,9 +5,9 @@ import express from "express";
 import errorWrap from "express-async-error-wrapper";
 import path from "path";
 import { Pool } from "pg";
-import { Role } from "./auth/models/Role";
-import { DataAccessLayer } from "./data/dal";
-import { getLogger } from "./logger";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { getLogger } from "@gram/core/dist/logger";
 import { metricsMiddleware } from "./metrics/metrics";
 import {
   authRequiredMiddleware,
@@ -17,7 +17,7 @@ import { AuthzMiddleware } from "./middlewares/authz";
 import cacheMw from "./middlewares/cache";
 import loggerMw from "./middlewares/logger";
 import { securityHeaders } from "./middlewares/securityHeaders";
-import { AssetDir } from "./plugin";
+import { AssetDir } from "@gram/core/dist/plugin";
 import crash from "./resources/gram/v1/admin/crash";
 import dropRole from "./resources/gram/v1/admin/dropRole";
 import { getBanner } from "./resources/gram/v1/banners/get";
@@ -34,7 +34,7 @@ import systemsV1 from "./resources/gram/v1/systems";
 import threatsV1 from "./resources/gram/v1/threats";
 import tokenV1 from "./resources/gram/v1/token";
 import userV1 from "./resources/gram/v1/user";
-import errorHandler from "./util/errorHandler";
+import errorHandler from "./middlewares/errorHandler";
 import { initSentry } from "./util/sentry";
 
 async function createApp(pool: Pool) {

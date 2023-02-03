@@ -1,9 +1,9 @@
-import { Plugin, PluginRegistrator } from "gram-api/src/plugin";
-import Model from "gram-api/src/data/models/Model";
+import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
+import Model from "@gram/core/dist/data/models/Model";
 import {
   SuggestionResult,
   SuggestionSource,
-} from "gram-api/src/suggestions/models";
+} from "@gram/core/dist/suggestions/models";
 import { mapControls } from "./controls";
 import { mapThreats } from "./threats";
 

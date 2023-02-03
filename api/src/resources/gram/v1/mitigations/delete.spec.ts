@@ -1,11 +1,11 @@
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import Control from "../../../../data/controls/Control";
-import { DataAccessLayer } from "../../../../data/dal";
-import Mitigation from "../../../../data/mitigations/Mitigation";
-import Model from "../../../../data/models/Model";
-import Threat from "../../../../data/threats/Threat";
-import { _deleteAllTheThings } from "../../../../data/utils";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import Control from "@gram/core/dist/data/controls/Control";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
+import Model from "@gram/core/dist/data/models/Model";
+import Threat from "@gram/core/dist/data/threats/Threat";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleUser } from "../../../../test-util/sampleUser";

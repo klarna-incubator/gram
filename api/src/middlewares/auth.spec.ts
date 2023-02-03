@@ -1,8 +1,8 @@
 import cookieParser from "cookie-parser";
 import express from "express";
 import request from "supertest";
-import * as jwt from "../auth/jwt";
-import { UserToken } from "../auth/models/UserToken";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 import { sampleUser } from "../test-util/sampleUser";
 import { authRequiredMiddleware, validateTokenMiddleware } from "./auth";
 
@@ -40,7 +40,7 @@ describe("auth middleware", () => {
   });
 
   it("should return 401 on protected path with expired token (header)", async () => {
-    validate.mockImplementation(async (token: string): Promise<UserToken> => {
+    validate.mockImplementation(async (): Promise<UserToken> => {
       throw new Error("expired");
     });
     const res = await request(app)
@@ -50,7 +50,7 @@ describe("auth middleware", () => {
   });
 
   it("should return 401 on protected path with expired token (cookie)", async () => {
-    validate.mockImplementation(async (token: string): Promise<UserToken> => {
+    validate.mockImplementation(async (): Promise<UserToken> => {
       throw new Error("expired");
     });
     const res = await request(app)

@@ -2,8 +2,8 @@ import config from "config";
 import { IncomingMessage, Server } from "http";
 import url from "url";
 import WebSocket from "ws";
-import { DataAccessLayer } from "../data/dal";
-import { getLogger } from "../logger";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { getLogger } from "@gram/core/dist/logger";
 import { ModelWebsocketServer } from "./model";
 
 const log = getLogger("wss");

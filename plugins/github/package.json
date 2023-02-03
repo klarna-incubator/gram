@@ -1,9 +1,18 @@
 {
-  "name": "gram-plugin-github",
+  "name": "@gram/github",
+  "type": "module",
   "version": "1.0.0",
   "description": "To run this GitHub integration, you'll need to set up your own Github App.",
-  "main": "src/index.ts",
-  "scripts": {},
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

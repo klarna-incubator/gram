@@ -1,5 +1,4 @@
-import { DataAccessLayer } from "../../../../data/dal";
-import { MitigationDataService } from "../../../../data/mitigations/MitigationDataService";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { create } from "./create";
 import { _delete } from "./delete";
 import { list } from "./list";

@@ -4,12 +4,12 @@
  */
 import { Request, Response } from "express";
 import { merge } from "lodash";
-import { DataAccessLayer } from "../../../../data/dal";
-import { lookupUsers } from "../../../../auth/user";
-import { ReviewStatus } from "../../../../data/reviews/Review";
-import { validStatus } from "../../../../data/reviews/ReviewDataService";
-import { SystemPropertyFilter } from "../../../../data/system-property/types";
-import { getLogger } from "../../../../logger";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { lookupUsers } from "@gram/core/dist/auth/user";
+import { ReviewStatus } from "@gram/core/dist/data/reviews/Review";
+import { validStatus } from "@gram/core/dist/data/reviews/ReviewDataService";
+import { SystemPropertyFilter } from "@gram/core/dist/data/system-property/types";
+import { getLogger } from "@gram/core/dist/logger";
 
 const log = getLogger("list.reviews");
 

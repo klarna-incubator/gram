@@ -1,4 +1,4 @@
-import { PlaintextHandlebarsNotificationTemplate } from "../notifications/NotificationTemplate";
+import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate";
 
 const key = "review-approved";
 

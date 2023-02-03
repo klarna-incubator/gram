@@ -1,9 +1,9 @@
 import { Pool } from "pg";
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { DataAccessLayer } from "../../../../data/dal";
-import Model, { Component } from "../../../../data/models/Model";
-import { _deleteAllTheThings } from "../../../../data/utils";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import Model, { Component } from "@gram/core/dist/data/models/Model";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import {

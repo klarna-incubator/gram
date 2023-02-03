@@ -1,4 +1,4 @@
-import { Team } from "../auth/models/Team";
+import { Team } from "@gram/core/dist/auth/models/Team";
 
 export const sampleTeam: Team = {
   id: "123",

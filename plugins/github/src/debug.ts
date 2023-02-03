@@ -1,7 +1,6 @@
 import { App, Octokit } from "octokit";
-import secrets from "../../../api/src/secrets";
+import secrets from "@gram/core/dist/secrets";
 import * as dotenv from "dotenv";
-import System from "../../../api/src/data/systems/System";
 import { createAppAuth } from "@octokit/auth-app";
 dotenv.config();
 

@@ -2,14 +2,18 @@
   "name": "gram",
   "version": "3.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "lerna run test",
-    "build": "lerna run build",
+    "build": "lerna run clean && lerna run build --scope=@gram/api --scope=@gram/app --include-filtered-dependencies",
+    "build-all": "lerna run build",
     "snyk": "lerna run snyk",
     "lint": "lerna run lint",
+    "clean": "lerna run clean",
     "lint-fix": "lerna run lint-fix",
-    "docker-start": "NODE_CONFIG_DIR=./api/config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node api/build/src/data/migrate.js && NODE_CONFIG_DIR=./api/config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/build/src/index.js"
+    "start-frontend": "npm run -w app start",
+    "start-backend": "NODE_CONFIG_DIR=../config/ npm run -w api start",
+    "docker-start": "NODE_CONFIG_DIR=./config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node core/dist/data/migrate.js && NODE_CONFIG_DIR=./config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/dist/index.js",
+    "migrate-database": "NODE_CONFIG_DIR=../config/ lerna run migrate-database"
   },
   "repository": {
     "type": "git",
@@ -24,16 +28,15 @@
   "workspaces": [
     "app",
     "api",
-    "plugins/aws",
-    "plugins/github",
-    "plugins/threatlib",
-    "plugins/static",
-    "plugins/svgporn"
+    "core",
+    "plugins/*"
   ],
   "private": true,
   "devDependencies": {
-    "@types/jest": "^29.2.6",
+    "@types/jest": "^29.4.0",
     "lerna": "^6.4.1",
-    "ts-jest": "^29.0.5"
+    "rimraf": "^4.1.2",
+    "ts-jest": "^29.0.5",
+    "typescript": "^4.9.5"
   }
 }

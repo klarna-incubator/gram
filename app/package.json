@@ -1,5 +1,5 @@
 {
-  "name": "gram-app",
+  "name": "@gram/app",
   "proxy": "http://localhost:8080",
   "version": "2.8.4",
   "private": true,

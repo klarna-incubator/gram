@@ -1,5 +1,5 @@
-import { NotificationTemplateKey } from "gram-api/src/data/notifications/NotificationInput";
-import { PlaintextHandlebarsNotificationTemplate } from "gram-api/src/notifications/NotificationTemplate";
+import { NotificationTemplateKey } from "@gram/core/dist/data/notifications/NotificationInput";
+import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate";
 import { generalReviewNotificationVariables } from "./util";
 
 const key: NotificationTemplateKey = "review-requested-reminder";

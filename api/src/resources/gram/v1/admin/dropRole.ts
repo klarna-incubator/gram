@@ -12,14 +12,12 @@
  * @exports {function} handler
  */
 
-import config from "config";
 import { Request, Response } from "express";
-import { Role } from "../../../../auth/models/Role";
-import * as jwt from "../../../../auth/jwt";
-import { getLogger } from "../../../../logger";
-import { UserToken } from "../../../../auth/models/UserToken";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { getLogger } from "@gram/core/dist/logger";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 
-const cookieOpts: any = config.get("cookie");
 const log = getLogger("dropRole");
 
 export default async function dropRole(req: Request, res: Response) {

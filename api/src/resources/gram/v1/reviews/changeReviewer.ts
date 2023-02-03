@@ -3,9 +3,9 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import { DataAccessLayer } from "../../../../data/dal";
-import { reviewerProvider } from "../../../../data/reviews/ReviewerProvider";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { reviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {

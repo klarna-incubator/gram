@@ -3,8 +3,8 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import AuthProviderRegistry from "../../../../auth/AuthProviderRegistry";
-import * as jwt from "../../../../auth/jwt";
+import AuthProviderRegistry from "@gram/core/dist/auth/AuthProviderRegistry";
+import * as jwt from "@gram/core/dist/auth/jwt";
 
 export default async function getAuthToken(req: Request, res: Response) {
   if (req.query.provider === undefined) return res.sendStatus(400);

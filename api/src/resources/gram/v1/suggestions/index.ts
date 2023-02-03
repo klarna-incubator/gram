@@ -1,4 +1,4 @@
-import { DataAccessLayer } from "../../../../data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import accept from "./accept";
 import list from "./list";
 import reject from "./reject";

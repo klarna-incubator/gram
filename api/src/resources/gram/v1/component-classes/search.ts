@@ -7,7 +7,7 @@ import {
   ComponentClassHandler,
   ComponentTypes,
   ComponentType,
-} from "../../../../data/component-classes";
+} from "@gram/core/dist/data/component-classes";
 
 export const searchClasses =
   (ccHandler: ComponentClassHandler) => async (req: Request, res: Response) => {

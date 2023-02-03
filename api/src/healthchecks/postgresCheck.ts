@@ -1,13 +1,13 @@
 import physical from "express-physical";
-import { DataAccessLayer } from "../data/dal";
-import { getLogger } from "../logger";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { getLogger } from "@gram/core/dist/logger";
 
 const log = getLogger("postgresCheck");
 
 export async function postgresSimpleQueryCheck(dal: DataAccessLayer) {
   return async (done: any) => {
     const check: any = {
-      name: "gram-api-postgres",
+      name: "@gram/api-postgres",
       actionable: true,
       healthy: true,
       dependentOn: "postgres",
@@ -31,7 +31,7 @@ export async function postgresSimpleQueryCheck(dal: DataAccessLayer) {
 export async function postgresAvailableConnectionsCheck(dal: DataAccessLayer) {
   return async (done: any) => {
     const check: any = {
-      name: "gram-api-postgres-available-connections",
+      name: "@gram/api-postgres-available-connections",
       actionable: true,
       healthy: dal.pool.waitingCount === 0,
       dependentOn: "postgres",

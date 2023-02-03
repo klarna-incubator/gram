@@ -1,8 +1,8 @@
-import { Role } from "../auth/models/Role";
-import { User } from "../auth/models/User";
-import { UserToken } from "../auth/models/UserToken";
-import { UserProvider } from "../auth/UserProvider";
-import { RequestContext } from "../data/providers/RequestContext";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { User } from "@gram/core/dist/auth/models/User";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import { UserProvider } from "@gram/core/dist/auth/UserProvider";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 import { sampleOtherTeam, sampleTeam } from "./sampleTeam";
 
 export const sampleUser: UserToken = {

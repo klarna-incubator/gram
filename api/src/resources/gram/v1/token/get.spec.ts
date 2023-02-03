@@ -1,9 +1,8 @@
-import cookie from "cookie";
+import AuthProviderRegistry from "@gram/core/dist/auth/AuthProviderRegistry";
+import MockAuthProvider from "@gram/core/dist/auth/mock";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
 import request from "supertest";
 import { createTestApp } from "../../../../test-util/app";
-import AuthProviderRegistry from "../../../../auth/AuthProviderRegistry";
-import MockAuthProvider from "../../../../auth/mock";
-import { createPostgresPool } from "../../../../data/postgres";
 import { sampleUser } from "../../../../test-util/sampleUser";
 
 describe("token.get", () => {

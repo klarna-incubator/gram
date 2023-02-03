@@ -1,9 +1,21 @@
 {
-  "name": "gram-plugin-threatlib",
+  "name": "@gram/threatlib",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
-  "scripts": {},
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^2.8.4"
+  }
 }

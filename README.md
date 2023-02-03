@@ -1,5 +1,7 @@
 # Gram
 
+For reference: https://github.com/NiGhTTraX/ts-monorepo/blob/master/packages/bar/package.json
+
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
 [![Developed at Klarna][klarna-image]][klarna-url]
@@ -17,11 +19,78 @@ _For more examples and usage, please refer to the [Docs](TODO)._ -->
 ## Repository Layout 🗺️
 
 - `app/` contains the frontend react application
+- `core/` contains the nodejs backend library; most data related logic lies here
 - `api/` contains the nodejs backend API
+- `plugins/` contains backend plugins, which when installed into api allows for customization
 
 ## Development setup 💻
 
-The recommended way to run the app locally is via `npm start` in each application directory (`app` and `api`), read the [the app README](app/README.md) and [the api README](api/README.md) for instructions.
+1. Install the dependencies with `npm i`
+
+2. `npm run build` to build the api and any installed plugins
+
+3. Create a new file `config/development.json`, using the following as a template.
+
+```json
+{
+  "data": {
+    "_providers": {
+      "postgres": {
+        "host": "127.0.0.1",
+        "user": "gram",
+        "password": "somethingsecret",
+        "database": "gram",
+        "port": 5432
+      }
+    }
+  },
+
+  "jwt": {
+    "ttl": 86400,
+    "secret": {
+      "auth": "6bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f",
+      "csrf": "9c05a2fc393078b75a5819ad06cab73ce17ec262909c1be475bbb0cdcfac9b42"
+    }
+  },
+
+  "auth": {
+    "providerOpts": {}
+  },
+
+  "log": {
+    "layout": "coloured",
+    "level": "debug",
+    "auditHttp": {
+      "simplified": true
+    }
+  },
+
+  "notifications": {
+    "providers": {
+      "email": {
+        "user": "",
+        "host": "",
+        "port": 25,
+        "sender-name": "[Development] Gram - Secure Development"
+      }
+    }
+  },
+
+  "secrets": {
+    "provider": "config"
+  }
+}
+```
+
+4. Start the test and development databases via docker compose `docker compose up -d`
+
+5. Run the database migrations via `NODE_ENV=development npm run migrate-database`
+
+   - (For running the tests you'll want to also migrate the test environment `NODE_ENV=test npm run migrate-database`)
+
+6. `npm run start-backend` to start the backend API
+
+7. `npm run start-frontend` to start the react app frontend.
 
 ## How to contribute
 

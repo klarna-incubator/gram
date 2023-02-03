@@ -1,12 +1,11 @@
-import { AllPermissions, Permission } from "../auth/authorization";
-import { AuthzProvider } from "../auth/AuthzProvider";
-import { Role } from "../auth/models/Role";
-import { UserToken } from "../auth/models/UserToken";
-import Model from "../data/models/Model";
+import { AllPermissions, Permission } from "@gram/core/dist/auth/authorization";
+import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import Model from "@gram/core/dist/data/models/Model";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { sampleUser } from "./sampleUser";
 import { getMockedSystemById } from "./system";
-import { sampleReviewer, sampleUser } from "./sampleUser";
-import { Reviewer } from "../auth/models/Reviewer";
-import { RequestContext } from "../data/providers/RequestContext";
 
 export const genUser = (user?: Partial<UserToken>): UserToken => ({
   ...sampleUser,

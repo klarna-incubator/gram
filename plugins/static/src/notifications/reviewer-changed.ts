@@ -1,9 +1,9 @@
-import { NotificationTemplateKey } from "gram-api/src/data/notifications/NotificationInput";
-import { lookupReviewers } from "gram-api/src/data/reviews/ReviewerProvider";
+import { NotificationTemplateKey } from "@gram/core/dist/data/notifications/NotificationInput";
+import { lookupReviewers } from "@gram/core/dist/data/reviews/ReviewerProvider";
 import {
   EmailRecipient,
   PlaintextHandlebarsNotificationTemplate,
-} from "gram-api/src/notifications/NotificationTemplate";
+} from "@gram/core/dist/notifications/NotificationTemplate";
 import { generalReviewNotificationVariables } from "./util";
 
 const key: NotificationTemplateKey = "review-reviewer-changed";

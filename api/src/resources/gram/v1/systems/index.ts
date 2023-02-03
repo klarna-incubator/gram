@@ -4,7 +4,7 @@
 import list from "./list";
 import get from "./get";
 import permission from "./permissions";
-import { DataAccessLayer } from "../../../../data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 
 const systemsV1 = (dal: DataAccessLayer) => ({
   list: list(dal),

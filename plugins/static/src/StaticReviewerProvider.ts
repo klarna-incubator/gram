@@ -1,7 +1,7 @@
-import { Reviewer } from "gram-api/src/auth/models/Reviewer";
-import Model from "gram-api/src/data/models/Model";
-import { RequestContext } from "gram-api/src//data/providers/RequestContext";
-import { ReviewerProvider } from "gram-api/src//data/reviews/ReviewerProvider";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
+import Model from "@gram/core/dist/data/models/Model";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { ReviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 export const reviewers: Reviewer[] = [
   {

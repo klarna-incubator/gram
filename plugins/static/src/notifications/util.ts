@@ -1,8 +1,8 @@
-import { lookupUser } from "gram-api/src/auth/user";
-import { DataAccessLayer } from "gram-api/src/data/dal";
-import { Review } from "gram-api/src/data/reviews/Review";
-import { lookupReviewer } from "gram-api/src/data/reviews/ReviewerProvider";
-import { linkToModel } from "gram-api/src/util/links";
+import { lookupUser } from "@gram/core/dist/auth/user";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { Review } from "@gram/core/dist/data/reviews/Review";
+import { lookupReviewer } from "@gram/core/dist/data/reviews/ReviewerProvider";
+import { linkToModel } from "@gram/core/dist/util/links";
 
 export async function generalReviewNotificationVariables(
   dal: DataAccessLayer,

@@ -93,5 +93,4 @@ typings/
 *.swo
 *~
 
-config/development.json
-build/
+dist/

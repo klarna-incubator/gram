@@ -1,12 +1,12 @@
-import { getLogger } from "gram-api/src/logger";
+import { getLogger } from "@gram/core/dist/logger";
 import { App } from "octokit";
 import {
   SystemProperty,
   SystemPropertyValue,
-} from "gram-api/src/data/system-property/types";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+} from "@gram/core/dist/data/system-property/types";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 import { GithubSystemProvider } from "./GithubSystemProvider";
-import { SystemPropertyProvider } from "gram-api/src/data/system-property/SystemPropertyProvider";
+import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
 
 const log = getLogger("GithubSystemProvider");
 
@@ -160,6 +160,9 @@ export class GithubSystemPropertyProvider implements SystemPropertyProvider {
 
   async getOcto(ctx: RequestContext) {
     const token = ctx.currentRequest?.user.providerToken;
+    if (!token) {
+      throw new Error("no github token found in user session");
+    }
     return this.app.oauth.getUserOctokit({ token });
   }
 

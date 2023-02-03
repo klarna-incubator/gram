@@ -1,7 +1,7 @@
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import Model from "../../../../data/models/Model";
-import { ModelDataService } from "../../../../data/models/ModelDataService";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import Model from "@gram/core/dist/data/models/Model";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
 import { createTestApp } from "../../../../test-util/app";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";

@@ -1,4 +1,4 @@
-import { DataAccessLayer } from "../../../../data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { getProperties } from "./get";
 import { listProperties } from "./properties";
 

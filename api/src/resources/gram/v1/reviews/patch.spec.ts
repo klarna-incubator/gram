@@ -1,9 +1,9 @@
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { Role } from "../../../../auth/models/Role";
-import { DataAccessLayer } from "../../../../data/dal";
-import { Review, ReviewStatus } from "../../../../data/reviews/Review";
-import { _deleteAllTheThings } from "../../../../data/utils";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { genUser } from "../../../../test-util/authz";
 import { createSampleModel } from "../../../../test-util/model";

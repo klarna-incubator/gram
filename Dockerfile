@@ -1,31 +1,35 @@
-FROM node:16-alpine as builder
+# FROM node:16-alpine as builder
+
+# WORKDIR /home/gram
+
+# ADD app .
+
+# Build the react app
+FROM node:16-alpine
 
 WORKDIR /home/gram
 
-ADD app .
+USER root
 
-# Build the react app
+ADD package.json .
+ADD package-lock.json .
+ADD lerna.json .
+ADD tsconfig.json .
+ADD tsconfig.build.json .
+
+ADD api api
+ADD app app
+ADD core core
+ADD config config
+ADD plugins plugins
 
 # This value is not secret and accessible in the frontend. 
 # ENV REACT_APP_SENTRY_DSN=""
 RUN npm i --loglevel=warn --no-progress
 RUN npm run build
 
-FROM node:16-alpine
-
-WORKDIR /home/gram
-USER root
-
-ADD package.json .
-ADD package-lock.json .
-ADD api api
-ADD plugins plugins
-
-RUN npm i --loglevel=warn --no-progress -w api
-
-RUN npm -w api run build
-
-COPY --from=builder /home/gram/build ./frontend/
+# COPY --from=builder 
+RUN cp -r /home/gram/app/build ./frontend/
 
 # Remove dev dependencies (needed typescript and types to build)
 RUN npm prune --omit=dev
@@ -33,7 +37,7 @@ RUN npm prune --omit=dev
 # gram user needs write access to the assets folder in order to set up the symlinks
 # however when we use ADD all files are owned by root and not writeable by anyone but root, so we need to 
 # swap here briefly to root to fix the permissions.
-USER root 
+# USER root 
 
 RUN addgroup -S gram && adduser -S gram -G gram
 

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import { DataAccessLayer } from "../../../../data/dal";
-import { lookupUser } from "../../../../auth/user";
-import { validateUUID } from "../../../../util/uuid";
-import { lookupReviewer } from "../../../../data/reviews/ReviewerProvider";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { lookupUser } from "@gram/core/dist/auth/user";
+import { validateUUID } from "@gram/core/dist/util/uuid";
+import { lookupReviewer } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 /**
  * GET /api/v1/reviews/{modelId}

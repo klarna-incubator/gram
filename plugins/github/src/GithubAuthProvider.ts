@@ -1,12 +1,12 @@
 import { randomUUID } from "crypto";
 import { App } from "octokit";
-import { AuthProvider } from "gram-api/src/auth/AuthProvider";
-import { Role } from "gram-api/src/auth/models/Role";
-import { UserToken } from "gram-api/src/auth/models/UserToken";
+import { AuthProvider } from "@gram/core/dist/auth/AuthProvider";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 import config from "config";
 import { GithubUserProvider } from "./GithubUserProvider";
-import { User } from "gram-api/src/auth/models/User";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+import { User } from "@gram/core/dist/auth/models/User";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 export class GithubAuthProvider implements AuthProvider {
   admins: string[] = [];

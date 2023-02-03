@@ -1,7 +1,7 @@
-import { Reviewer } from "../auth/models/Reviewer";
-import Model from "../data/models/Model";
-import { RequestContext } from "../data/providers/RequestContext";
-import { ReviewerProvider } from "../data/reviews/ReviewerProvider";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
+import Model from "@gram/core/dist/data/models/Model";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { ReviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 import { sampleOtherTeam, sampleTeam } from "./sampleTeam";
 
 export const sampleReviewer: Reviewer = {

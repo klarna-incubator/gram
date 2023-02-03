@@ -1,13 +1,22 @@
 {
-  "name": "gram-plugin-static",
+  "name": "@gram/static",
+  "type": "module",
   "version": "1.0.0",
   "description": "Pack with static data providers",
-  "main": "src/index.ts",
-  "scripts": {},
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "gram-api": "^2.8.4"
+    "@gram/api": "^2.8.4"
   },
   "private": true
 }

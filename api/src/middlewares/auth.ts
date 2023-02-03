@@ -3,15 +3,16 @@
  * @exports auth
  */
 import { NextFunction, Request, Response } from "express";
-import * as jwt from "../auth/jwt";
-import { getLogger } from "../logger";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { getLogger } from "@gram/core/dist/logger";
 import { hasSentry } from "../util/sentry";
 import * as Sentry from "@sentry/node";
+import { GramRequest } from "@gram/core/dist/data/providers/RequestContext";
 
 const log = getLogger("authMw");
 
 export async function validateTokenMiddleware(
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) {
@@ -38,7 +39,7 @@ export async function validateTokenMiddleware(
 }
 
 export async function authRequiredMiddleware(
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) {

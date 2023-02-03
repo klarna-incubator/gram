@@ -1,0 +1,1 @@
+{"version":3,"file":"Mitigation.d.ts","sourceRoot":"","sources":["../../../src/data/mitigations/Mitigation.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,MAAM,CAAC,OAAO,OAAO,UAAU;IAKpB,QAAQ,EAAE,MAAM;IAChB,SAAS,EAAE,MAAM;IACjB,SAAS,EAAE,MAAM;IAN1B,SAAS,EAAE,MAAM,CAAC;IAClB,SAAS,EAAE,MAAM,CAAC;gBAGT,QAAQ,EAAE,MAAM,EAChB,SAAS,EAAE,MAAM,EACjB,SAAS,EAAE,MAAM;IAM1B,MAAM;;;;;;;CASP"}

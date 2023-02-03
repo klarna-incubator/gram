@@ -1,13 +1,22 @@
 {
-  "name": "gram-plugin-aws",
+  "name": "@gram/aws",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
   "version": "1.0.0",
   "description": "AWS icons for Gram",
-  "main": "src/index.ts",
-  "scripts": {},
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "gram-api": "^2.8.4"
+    "@gram/core": "^2.8.4",
+    "path": "^0.12.7"
   },
   "private": true
 }

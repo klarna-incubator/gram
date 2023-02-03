@@ -1,9 +1,9 @@
 import * as Sentry from "@sentry/node";
 import express from "express";
-import { DataAccessLayer } from "./data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { createHealthChecks } from "./healthchecks";
 import { metricsMiddleware } from "./metrics/metrics";
-import errorHandler from "./util/errorHandler";
+import errorHandler from "./middlewares/errorHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require("../package.json").version;

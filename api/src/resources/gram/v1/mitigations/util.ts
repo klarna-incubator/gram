@@ -1,6 +1,6 @@
-import { AuthzError } from "../../../../auth/AuthzError";
-import { DataAccessLayer } from "../../../../data/dal";
-import { NotFoundError } from "../../../../util/errors";
+import { AuthzError } from "@gram/core/dist/auth/AuthzError";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { NotFoundError } from "@gram/core/dist/util/errors";
 
 export async function ensureControlAndThreatPermission(
   dal: DataAccessLayer,

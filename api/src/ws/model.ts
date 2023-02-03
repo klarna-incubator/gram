@@ -1,10 +1,13 @@
 import WebSocket from "ws";
-import { getPermissionsForModel, Permission } from "../auth/authorization";
-import { UserToken } from "../auth/models/UserToken";
-import { DataAccessLayer } from "../data/dal";
-import Model from "../data/models/Model";
-import { getLogger } from "../logger";
-import * as jwt from "../auth/jwt";
+import {
+  getPermissionsForModel,
+  Permission,
+} from "@gram/core/dist/auth/authorization";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import Model from "@gram/core/dist/data/models/Model";
+import { getLogger } from "@gram/core/dist/logger";
+import * as jwt from "@gram/core/dist/auth/jwt";
 
 export class ModelWebsocketServer {
   constructor(model: Model, dal: DataAccessLayer) {

@@ -1,10 +1,10 @@
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { Role } from "../../../../auth/models/Role";
-import { DataAccessLayer } from "../../../../data/dal";
-import { createPostgresPool } from "../../../../data/postgres";
-import { Review, ReviewStatus } from "../../../../data/reviews/Review";
-import { _deleteAllTheThings } from "../../../../data/utils";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { genUser } from "../../../../test-util/authz";
 import { createSampleModel } from "../../../../test-util/model";
@@ -65,8 +65,6 @@ describe("Reviews.changeReviewer", () => {
       .set("Authorization", "bearer validToken")
       .send({ newReviewer: sampleReviewer.sub });
 
-    console.log(res.status);
-    console.log(res.body);
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();
   });

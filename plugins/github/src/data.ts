@@ -1,7 +1,7 @@
 import { createDb, migrate } from "postgres-migrations";
-import { createPostgresPool } from "../../../api/src/data/postgres";
-import { getLogger } from "../../../api/src/logger";
-import secrets from "../../../api/src/secrets";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import { getLogger } from "@gram/core/dist/logger";
+import secrets from "@gram/core/dist/secrets";
 
 export async function getDatabaseName() {
   const regularDatabase = (await secrets.get(

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import AuthProviderRegistry from "../../../../auth/AuthProviderRegistry";
+import AuthProviderRegistry from "@gram/core/dist/auth/AuthProviderRegistry";
 
 export default async function getAuthParams(req: Request, res: Response) {
   const params = await Promise.all(

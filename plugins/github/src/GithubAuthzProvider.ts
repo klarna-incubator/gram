@@ -1,11 +1,11 @@
-import { getLogger } from "gram-api/src/logger";
+import { getLogger } from "@gram/core/dist/logger";
 import { App } from "octokit";
-import { AllPermissions, Permission } from "gram-api/src/auth/authorization";
-import { AuthzProvider } from "gram-api/src/auth/AuthzProvider";
-import { UserToken } from "gram-api/src/auth/models/UserToken";
-import Model from "gram-api/src/data/models/Model";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
-import { NotFoundError } from "gram-api/src/util/errors";
+import { AllPermissions, Permission } from "@gram/core/dist/auth/authorization";
+import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import Model from "@gram/core/dist/data/models/Model";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { NotFoundError } from "@gram/core/dist/util/errors";
 
 const log = getLogger("GithubAuthzProvider");
 

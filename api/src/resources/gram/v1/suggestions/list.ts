@@ -4,9 +4,9 @@
  */
 
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import { DataAccessLayer } from "../../../../data/dal";
-import { validateUUID } from "../../../../util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { validateUUID } from "@gram/core/dist/util/uuid";
 
 export default function list(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

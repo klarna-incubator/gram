@@ -1,5 +1,5 @@
-import Model, { Component } from "gram-api/src/data/models/Model";
-import { SourceSuggestedThreat } from "gram-api/src/suggestions/models";
+import Model, { Component } from "@gram/core/dist/data/models/Model";
+import { SourceSuggestedThreat } from "@gram/core/dist/suggestions/models";
 import { ThreatLibThreatSuggestion } from "./types";
 
 const sqlInjection: ThreatLibThreatSuggestion = {

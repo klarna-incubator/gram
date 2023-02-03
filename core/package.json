@@ -1,0 +1,93 @@
+{
+  "name": "@gram/core",
+  "private": true,
+  "version": "2.8.4",
+  "description": "Core library for Gram backend stuff",
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json",
+    "lint": "prettier --check src/",
+    "lint-fix": "prettier -l src/ --write",
+    "test": "NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
+    "snyk": "snyk test",
+    "jest": "NODE_ENV=test jest --detectOpenHandles --no-cache",
+    "migrate-database": "ts-node src/data/migrate.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klarna/gram.git"
+  },
+  "keywords": [
+    "threat model",
+    "appsec"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/klarna/gram/issues"
+  },
+  "homepage": "https://github.com/klarna/gram#readme",
+  "engines": {
+    "node": "16"
+  },
+  "dependencies": {
+    "@sentry/integrations": "^7.6.0",
+    "@sentry/node": "^7.6.0",
+    "@sentry/tracing": "^7.6.0",
+    "aws-sdk": "^2.1080.0",
+    "basic-auth": "^2.0.1",
+    "config": "^3.3.8",
+    "cookie": "^0.4.1",
+    "cookie-parser": "^1.4.5",
+    "emailjs": "^3.7.0",
+    "express": "^4.17.1",
+    "express-async-error-wrapper": "^1.0.4",
+    "express-physical": "^1.0.1",
+    "express-prom-bundle": "^6.4.1",
+    "handlebars": "^4.7.7",
+    "helmet": "^6.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
+    "log4js": "^6.6.1",
+    "node-cron": "^3.0.1",
+    "node-fetch": "^2.6.7",
+    "pg": "^8.7.3",
+    "postgres-migrations": "^5.3.0",
+    "prom-client": "^14.0.1",
+    "proxy-agent": "^5.0.0",
+    "tslib": "^2.3.1",
+    "ws": "^7.4.6"
+  },
+  "devDependencies": {
+    "@types/basic-auth": "^1.1.3",
+    "@types/config": "0.0.36",
+    "@types/cookie": "^0.4.1",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^26.0.24",
+    "@types/jsonwebtoken": "^8.5.4",
+    "@types/lodash": "^4.14.177",
+    "@types/node": "^14.17.9",
+    "@types/node-cron": "^3.0.2",
+    "@types/node-fetch": "^2.5.12",
+    "@types/pg": "^8.6.5",
+    "@types/supertest": "^2.0.11",
+    "@types/ws": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "eslint": "^8.15.0",
+    "fast-safe-stringify": "^2.1.1",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.3.2",
+    "snyk": "^1.760.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^26.5.6",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "optionalDependencies": {
+    "dotenv": "^16.0.3"
+  }
+}

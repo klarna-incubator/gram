@@ -4,7 +4,7 @@
  */
 
 import { Request, Response } from "express";
-import { DataAccessLayer } from "../../../../data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 
 export function listSystemCompliance(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

@@ -6,7 +6,7 @@ import cancel from "./cancel";
 import decline from "./decline";
 import approve from "./approve";
 import requestMeeting from "./requestMeeting";
-import { DataAccessLayer } from "../../../../data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import reviewers from "./reviewers";
 import changeReviewer from "./changeReviewer";
 

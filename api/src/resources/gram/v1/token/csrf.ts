@@ -3,7 +3,7 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import * as jwt from "../../../../auth/jwt";
+import * as jwt from "@gram/core/dist/auth/jwt";
 import config from "config";
 
 const cookieOpts: any = config.get("cookie");

@@ -1,10 +1,10 @@
 import { randomUUID } from "crypto";
 import { Pool } from "pg";
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { DataAccessLayer } from "../../../../data/dal";
-import { systemProvider } from "../../../../data/systems/systems";
-import { _deleteAllTheThings } from "../../../../data/utils";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { systemProvider } from "@gram/core/dist/data/systems/systems";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
 import {

@@ -1,7 +1,7 @@
 import { App } from "octokit";
 import { join } from "path";
-import { Plugin, PluginRegistrator } from "gram-api/src/plugin";
-import secrets from "../../../api/src/secrets";
+import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
+import secrets from "@gram/core/dist/secrets";
 import { additionalMigrations } from "./data";
 import { GithubAuthProvider } from "./GithubAuthProvider";
 import { GithubAuthzProvider } from "./GithubAuthzProvider";

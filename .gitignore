@@ -1,3 +1,4 @@
 .vscode
 docker-compose.yml
 node_modules
+config/development.json

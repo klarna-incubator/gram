@@ -7,11 +7,11 @@
  */
 
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import { DataAccessLayer } from "../../../../data/dal";
-import { SuggestionStatus } from "../../../../data/suggestions/Suggestion";
-import { SuggestionID } from "../../../../suggestions/models";
-import { validateUUID } from "../../../../util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion";
+import { SuggestionID } from "@gram/core/dist/suggestions/models";
+import { validateUUID } from "@gram/core/dist/util/uuid";
 
 export default function reset(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

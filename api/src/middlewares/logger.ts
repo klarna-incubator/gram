@@ -3,10 +3,10 @@
  * @exports logger
  */
 
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import _ from "lodash";
 import { Logger } from "log4js";
-import { LogLine } from "../logger";
+import { LogLine } from "@gram/core/dist/logger";
 
 function applyFilters(
   obj: any,
@@ -51,7 +51,7 @@ function simplifiedLogline(
 function logger(opts: any) {
   const log = opts.logger;
 
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: any, res: Response, next: NextFunction) => {
     const method = req.method;
     const user = req.user
       ? _.pick(req.user, [

@@ -4,11 +4,11 @@
  */
 import { Request, Response } from "express";
 import { getLogger } from "log4js";
-import { Permission } from "../../../../auth/authorization";
-import Control from "../../../../data/controls/Control";
-import { DataAccessLayer } from "../../../../data/dal";
-import Mitigation from "../../../../data/mitigations/Mitigation";
-import { validateUUID } from "../../../../util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import Control from "@gram/core/dist/data/controls/Control";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
+import { validateUUID } from "@gram/core/dist/util/uuid";
 
 const log = getLogger("controls.create");
 
@@ -38,7 +38,7 @@ export function create(dal: DataAccessLayer) {
       await Promise.all(
         threatIds.map(async (threatId: any) => {
           if (validateUUID(threatId)) {
-            let newMitigation = new Mitigation(threatId, id, req.user.sub);
+            const newMitigation = new Mitigation(threatId, id, req.user.sub);
             dal.mitigationService.create(newMitigation);
           }
         })

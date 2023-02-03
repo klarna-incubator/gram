@@ -1,5 +1,5 @@
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import physical from "express-physical";
-import { DataAccessLayer } from "../data/dal";
 import {
   notificationsFailedCheck,
   notificationsStalledCheck,

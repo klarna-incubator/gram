@@ -1,4 +1,4 @@
-import { ModelDataService } from "../../../../data/models/ModelDataService";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
 import create from "./create";
 import _delete from "./delete";
 import get from "./get";

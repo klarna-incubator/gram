@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 import config from "config";
 import { Express } from "express";
-import { getLogger } from "../logger";
+import { getLogger } from "@gram/core/dist/logger";
 
 const log = getLogger("sentry");
 

@@ -1,12 +1,20 @@
 {
-  "name": "gram-plugin-svgporn",
+  "name": "@gram/svgporn",
   "version": "1.0.0",
   "description": "Taken from https://github.com/gilbarbara/logos",
-  "main": "src/index.ts",
-  "scripts": {},
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "gram-api": "^2.8.4"
+    "@gram/core": "^2.8.4"
   }
 }

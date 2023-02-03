@@ -1,6 +1,6 @@
 import request from "supertest";
 
-import * as jwt from "../../../../auth/jwt";
+import * as jwt from "@gram/core/dist/auth/jwt";
 import { createTestApp } from "../../../../test-util/app";
 import { sampleUser } from "../../../../test-util/sampleUser";
 

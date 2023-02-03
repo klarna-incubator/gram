@@ -16,9 +16,9 @@ import config from "config";
 import http from "http";
 import createApp from "./app";
 import { createControlApp } from "./controlApp";
-import { createPostgresPool } from "./data/postgres";
-import { getLogger } from "./logger";
-import { notificationSender } from "./notifications/sender";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import { getLogger } from "@gram/core/dist/logger";
+import { notificationSender } from "@gram/core/dist/notifications/sender";
 import { bootstrapPlugins } from "./bootstrap";
 import { attachWebsocketServer } from "./ws";
 

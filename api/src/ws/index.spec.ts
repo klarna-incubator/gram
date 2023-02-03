@@ -1,17 +1,17 @@
+import * as authorizationModule from "@gram/core/dist/auth/authorization";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import Model from "@gram/core/dist/data/models/Model";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
 import { randomUUID } from "crypto";
 import express from "express";
-import http, { IncomingMessage } from "http";
+import http from "http";
 import WebSocket from "ws";
 import * as ws from ".";
-import * as authorizationModule from "../auth/authorization";
-import { Permission } from "../auth/authorization";
-import { DataAccessLayer } from "../data/dal";
-import Model from "../data/models/Model";
-import { createPostgresPool } from "../data/postgres";
 import { genUser } from "../test-util/authz";
 import { sampleOwnedSystem } from "../test-util/sampleOwnedSystem";
 import { ModelWebsocketServer } from "./model";
-import * as jwt from "../auth/jwt";
 
 const receive = (client: WebSocket, t = 500) =>
   new Promise<any>((resolve, reject) => {
@@ -168,7 +168,8 @@ describe("websocket protocol", () => {
     );
     await connected(firstClient);
     firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
-    let received = await receive(firstClient);
+    // let received =
+    await receive(firstClient);
     // console.log(received);
     // expect(
     //   await new Promise((resolve, _) =>

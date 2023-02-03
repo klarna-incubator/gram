@@ -1,9 +1,9 @@
 import { randomUUID } from "crypto";
 import { Express } from "express";
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { DataAccessLayer } from "../../../../data/dal";
-import { Review, ReviewStatus } from "../../../../data/reviews/Review";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 import { createTestApp } from "../../../../test-util/app";
 import { genUser } from "../../../../test-util/authz";
 import { createSampleModel as genSampleModel } from "../../../../test-util/model";
@@ -45,6 +45,8 @@ describe("reviews.get", () => {
       .get("/api/v1/reviews/234")
       .set("Authorization", "bearer validToken");
 
+    console.log(res.status);
+    console.log(res.body);
     expect(res.status).toBe(400);
   });
 

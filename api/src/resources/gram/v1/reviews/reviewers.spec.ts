@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { DataAccessLayer } from "../../../../data/dal";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
 import { sampleReviewer, sampleUser } from "../../../../test-util/sampleUser";

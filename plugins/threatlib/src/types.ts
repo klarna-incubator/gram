@@ -1,4 +1,4 @@
-import Model, { Component } from "gram-api/src/data/models/Model";
+import Model, { Component } from "@gram/core/dist/data/models/Model";
 
 export type ThreatLibThreatSuggestion = {
   slug: string;

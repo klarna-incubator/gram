@@ -1,0 +1,1436 @@
+[
+    {
+        "id": "49efa71b-8484-4214-b23f-1f675ff37419",
+        "name": "AWS Sumerian",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_AR-VR/Arch_16/Arch_AWS-Sumerian_16.svg"
+    },
+    {
+        "id": "ab142238-46cf-4343-b2ee-732d57b5211a",
+        "name": "AWS Data Exchange",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_AWS-Data-Exchange_16.svg"
+    },
+    {
+        "id": "29f827b0-9a0f-4e2a-963c-85a4354cc0ed",
+        "name": "AWS Data Pipeline",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_AWS-Data-Pipeline_16.svg"
+    },
+    {
+        "id": "8ca7c157-05ac-46cc-9a3a-d2799016ded1",
+        "name": "AWS Glue",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_AWS-Glue_16.svg"
+    },
+    {
+        "id": "590780ca-6726-428e-b780-9434c6ed8439",
+        "name": "AWS Lake Formation",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_AWS-Lake-Formation_16.svg"
+    },
+    {
+        "id": "b5e22270-3c56-43bf-9ea2-6bfe4d8db2be",
+        "name": "Amazon Athena",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Athena_16.svg"
+    },
+    {
+        "id": "bd5bedd1-064f-4830-a3bf-c85f4dd1c5d2",
+        "name": "Amazon CloudSearch",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-CloudSearch_16.svg"
+    },
+    {
+        "id": "17e4f79d-09a2-4dba-85a6-6128721bab99",
+        "name": "Amazon EMR",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-EMR_16.svg"
+    },
+    {
+        "id": "5975ddb3-8d66-4710-9d72-b9ff09d637b9",
+        "name": "Amazon Elasticsearch Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Elasticsearch-Service_16.svg"
+    },
+    {
+        "id": "ca84aef4-f6f1-43a3-a411-6cf50ebae220",
+        "name": "Amazon Kinesis Data Analytics",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Kinesis-Data-Analytics_16.svg"
+    },
+    {
+        "id": "29faa0ac-65b1-480d-9777-a08566bae81e",
+        "name": "Amazon Kinesis Data Streams",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Kinesis-Data-Streams_16.svg"
+    },
+    {
+        "id": "bfbac5e0-8ba0-4f38-be36-7dbdbf517f06",
+        "name": "Amazon Kinesis Firehose",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Kinesis-Firehose_16.svg"
+    },
+    {
+        "id": "9b0a4569-fe5e-4b4a-b9c4-19a111d53dbc",
+        "name": "Amazon Kinesis Video Streams",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Kinesis-Video-Streams_16.svg"
+    },
+    {
+        "id": "055a0721-d47a-439c-8fbd-4e240ec488cb",
+        "name": "Amazon Kinesis",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Kinesis_16.svg"
+    },
+    {
+        "id": "cce9d0be-ea4a-4709-ab85-803a8d5a1410",
+        "name": "Amazon Managed Streaming for Kafka",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Managed-Streaming-for-Kafka_16.svg"
+    },
+    {
+        "id": "d181ce18-1dee-4eef-87be-d7110b09ee7c",
+        "name": "Amazon QuickSight",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-QuickSight_16.svg"
+    },
+    {
+        "id": "c44a228b-7ee3-428c-9738-5d3cfc9563cd",
+        "name": "Amazon Redshift",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Analytics/Arch_16/Arch_Amazon-Redshift_16.svg"
+    },
+    {
+        "id": "cd70522a-12a8-4ad7-9d5b-2fcfd39ee087",
+        "name": "AWS AppFlow",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_AWS-AppFlow_16.svg"
+    },
+    {
+        "id": "121cb10a-7fb6-4c20-8ffc-373234879532",
+        "name": "AWS AppSync",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_AWS-AppSync_16.svg"
+    },
+    {
+        "id": "7a82c1c2-a81d-4d44-8e81-f43d9e8c1279",
+        "name": "AWS Console Mobile Application ",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_AWS-Console-Mobile-Application _16.svg"
+    },
+    {
+        "id": "cd7a01ec-e75c-4825-bbf0-775e077d4d0d",
+        "name": "AWS Express Workflow",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_AWS-Express-Workflow_16.svg"
+    },
+    {
+        "id": "311dc306-4d27-4e87-9c38-e62b3c3d6e70",
+        "name": "AWS Simple Notification Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_AWS-Simple-Notification-Service_16.svg"
+    },
+    {
+        "id": "180cf426-23c9-420f-b8be-b9e18f60f242",
+        "name": "AWS Simple Queue Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_AWS-Simple-Queue-Service_16.svg"
+    },
+    {
+        "id": "33bda845-eae1-42e4-8ae9-20f0cf38653d",
+        "name": "AWS Step Functions",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_AWS-Step-Functions_16.svg"
+    },
+    {
+        "id": "6ab28049-8d3c-47c1-ba33-9a2cff6d6e13",
+        "name": "Amazon EventBridge",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_Amazon-EventBridge_16.svg"
+    },
+    {
+        "id": "3739c28e-cd6d-4647-ba2d-5568fae6036e",
+        "name": "Amazon MQ",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_App-Integration/Arch_16/Arch_Amazon-MQ_16.svg"
+    },
+    {
+        "id": "d17fa68d-485a-4a61-98ef-999a8b1d52fd",
+        "name": "Amazon Managed Blockchain",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Blockchain/16/Arch_Amazon-Managed-Blockchain_16.svg"
+    },
+    {
+        "id": "e83927e1-21d4-490d-91eb-3bcb660a060f",
+        "name": "Amazon Quantum Ledger Database",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Blockchain/16/Arch_Amazon-Quantum-Ledger-Database_16.svg"
+    },
+    {
+        "id": "6fb074ec-feaa-457e-90c4-203f600042ad",
+        "name": "Alexa For Business",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Business-Application/16/Arch_Alexa-For-Business_16.svg"
+    },
+    {
+        "id": "73209d60-1be3-4e42-9652-5b11a774d301",
+        "name": "Amazon Chime",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Business-Application/16/Arch_Amazon-Chime_16.svg"
+    },
+    {
+        "id": "64a1a76d-2263-4c77-b699-b071189afd9a",
+        "name": "Amazon WorkDocs",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Business-Application/16/Arch_Amazon-WorkDocs_16.svg"
+    },
+    {
+        "id": "3ccda278-b439-4591-bf8d-70b120588060",
+        "name": "Amazon WorkMail",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Business-Application/16/Arch_Amazon-WorkMail_16.svg"
+    },
+    {
+        "id": "1ff8647b-8cd8-4883-90a6-6c69ec52de1e",
+        "name": "AWS Batch",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Batch_16.svg"
+    },
+    {
+        "id": "c4421cc5-e2db-40d6-b4b5-b3f49fed1eee",
+        "name": "AWS Bottlerocket",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Bottlerocket_16.svg"
+    },
+    {
+        "id": "03ef7180-1863-43ce-9828-5bfb0ebda602",
+        "name": "AWS Compute Optimizer",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Compute-Optimizer_16.svg"
+    },
+    {
+        "id": "2ebcc734-dfe0-4826-b7de-4f86e8423384",
+        "name": "AWS EC2 Image Builder",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-EC2-Image-Builder_16.svg"
+    },
+    {
+        "id": "a3c532fc-35e4-41e1-8d39-8299806c9cd9",
+        "name": "AWS Elastic Beanstalk",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Elastic-Beanstalk_16.svg"
+    },
+    {
+        "id": "4919eae0-0fa6-49fd-a0c7-f50a8f99dbe2",
+        "name": "AWS Fargate",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Fargate_16.svg"
+    },
+    {
+        "id": "ef220954-5701-4a7c-8dae-416b8d5d8536",
+        "name": "AWS Lambda",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Lambda_16.svg"
+    },
+    {
+        "id": "3c4cabc3-15ad-461c-9119-7db3024ed8aa",
+        "name": "AWS Local Zones",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Local-Zones_16.svg"
+    },
+    {
+        "id": "9d9469a3-36eb-4e6e-b2aa-789fcaa8649e",
+        "name": "AWS Nitro Enclaves",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Nitro-Enclaves_16.svg"
+    },
+    {
+        "id": "e93a6633-5754-4c8b-b77f-639227000524",
+        "name": "AWS Outposts",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Outposts_16.svg"
+    },
+    {
+        "id": "631439d0-1186-4f6a-b0be-f79f8b6e6ddb",
+        "name": "AWS Parallel Cluster",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Parallel-Cluster_16.svg"
+    },
+    {
+        "id": "dfb8cda7-8289-4254-b872-cd0a99daa81b",
+        "name": "AWS Serverless Application Repository",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Serverless-Application-Repository_16.svg"
+    },
+    {
+        "id": "e985a784-5fa4-4cee-9860-aded4c6f777c",
+        "name": "AWS ThinkBox Deadline",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-ThinkBox-Deadline_16.svg"
+    },
+    {
+        "id": "1551738e-49c8-44a5-8305-0758cc89e124",
+        "name": "AWS ThinkBox Frost",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-ThinkBox-Frost_16.svg"
+    },
+    {
+        "id": "414c92c7-a962-4a0f-8b3c-4c6d6cc27bea",
+        "name": "AWS ThinkBox Krakatoa",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-ThinkBox-Krakatoa_16.svg"
+    },
+    {
+        "id": "86d8181f-bf35-4590-9f7a-ca29174313af",
+        "name": "AWS ThinkBox Sequoia",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-ThinkBox-Sequoia_16.svg"
+    },
+    {
+        "id": "d2e0c07c-f5c7-48c8-bf2e-5709a933a8bd",
+        "name": "AWS ThinkBox Stoke",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-ThinkBox-Stoke_16.svg"
+    },
+    {
+        "id": "9622402c-f1af-45bf-b7ee-dcb109672490",
+        "name": "AWS ThinkBox XMesh",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-ThinkBox-XMesh_16.svg"
+    },
+    {
+        "id": "fec83d42-f2f1-4067-819c-a60840f68190",
+        "name": "AWS Wavelength",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_AWS-Wavelength_16.svg"
+    },
+    {
+        "id": "a1fb9da4-441e-4d31-bc40-d0a7f0256b89",
+        "name": "Amazon EC2 Auto Scaling",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-EC2-Auto-Scaling_16.svg"
+    },
+    {
+        "id": "42266562-ceb4-444b-98d6-3d799fce9bc4",
+        "name": "Amazon EC2 M5n",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-EC2-M5n_16.svg"
+    },
+    {
+        "id": "b65f0d97-f6d6-45f7-b85a-98d78423e882",
+        "name": "Amazon EC2 R5n",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-EC2-R5n_16.svg"
+    },
+    {
+        "id": "892eb7eb-3ed7-452e-9d57-4dd06c25b65d",
+        "name": "Amazon EC2",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-EC2_16.svg"
+    },
+    {
+        "id": "ba22fed3-0568-402d-b9ab-8b61b7362752",
+        "name": "Amazon Elastic Container Kubernetes",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-Elastic-Container-Kubernetes_16.svg"
+    },
+    {
+        "id": "c81a0e05-5fab-47db-aba2-781f84b87b2e",
+        "name": "Amazon Elastic Container Registry",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-Elastic-Container-Registry_16.svg"
+    },
+    {
+        "id": "293ccdd6-13af-480c-a8f3-9e5d2b007676",
+        "name": "Amazon Elastic Container Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-Elastic-Container-Service_16.svg"
+    },
+    {
+        "id": "9e2ca67f-0e2e-4a38-85f6-ad78ed84e373",
+        "name": "Amazon Lightsail",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_Amazon-Lightsail_16.svg"
+    },
+    {
+        "id": "c683fa68-4e98-4fb9-96c3-5f641b673a22",
+        "name": "VMware Cloud on AWS",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Compute/16/Arch_VMware-Cloud-on-AWS_16.svg"
+    },
+    {
+        "id": "0be25cc4-ca2a-47a2-a4d3-0b6ac0f4433e",
+        "name": "AWS Fargate",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Containers/16/Arch_AWS-Fargate_16.svg"
+    },
+    {
+        "id": "902a25bf-9730-41c5-902d-95daba822c4a",
+        "name": "Amazon Elastic Container Kubernetes",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Containers/16/Arch_Amazon-Elastic-Container-Kubernetes_16.svg"
+    },
+    {
+        "id": "31614624-2a58-4db5-b0bb-bad4add542f9",
+        "name": "Amazon Elastic Container Registry",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Containers/16/Arch_Amazon-Elastic-Container-Registry_16.svg"
+    },
+    {
+        "id": "d62e68bd-d0bc-4d63-9b15-6b604ede3c87",
+        "name": "Amazon Elastic Container Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Containers/16/Arch_Amazon-Elastic-Container-Service_16.svg"
+    },
+    {
+        "id": "e9810346-2191-4c34-8511-a9e7b1d3fc1d",
+        "name": "AWS Budgets",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Cost-Management/16/Arch_AWS-Budgets_16.svg"
+    },
+    {
+        "id": "22d9b425-f729-4c2f-8872-5cef9ddf432e",
+        "name": "AWS Cost Explorer",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Cost-Management/16/Arch_AWS-Cost-Explorer_16.svg"
+    },
+    {
+        "id": "7813e69c-1564-40e3-8a26-ffd1045044fc",
+        "name": "AWS Cost and Usage Report",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Cost-Management/16/Arch_AWS-Cost-and-Usage-Report_16.svg"
+    },
+    {
+        "id": "98e1d567-dc87-48c7-bd93-453f2023f093",
+        "name": "Reserved Instance Reporting",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Cost-Management/16/Arch_Reserved-Instance-Reporting_16.svg"
+    },
+    {
+        "id": "c8dba521-9917-459e-aab4-7c828bd49f53",
+        "name": "Savings Plans",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Cost-Management/16/Arch_Savings-Plans_16.svg"
+    },
+    {
+        "id": "619a02d8-7173-4009-a4ac-30b83790f265",
+        "name": "AWS IQ",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enablement/16/Arch_AWS-IQ_16.svg"
+    },
+    {
+        "id": "8e65bc5b-c4f5-4a10-adb3-8ac45f9dbe94",
+        "name": "AWS Managed Services",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enablement/16/Arch_AWS-Managed-Services_16.svg"
+    },
+    {
+        "id": "d7dd8645-2415-4627-a8a5-476ef380b5ba",
+        "name": "AWS Professional Services",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enablement/16/Arch_AWS-Professional-Services_16.svg"
+    },
+    {
+        "id": "18221a6a-3558-49d5-94a4-432a0c150733",
+        "name": "AWS Support",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enablement/16/Arch_AWS-Support_16.svg"
+    },
+    {
+        "id": "69ae3990-a092-41a0-a3f4-1e91959cb645",
+        "name": "AWS Training Certification",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enablement/16/Arch_AWS-Training-Certification_16.svg"
+    },
+    {
+        "id": "ccb5303c-64e4-4fc5-aba2-6351939c88aa",
+        "name": "AWS Simple Email Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enagagement/16/Arch_AWS-Simple-Email-Service_16.svg"
+    },
+    {
+        "id": "49ef0671-3932-43b5-88fe-905d365ec7fa",
+        "name": "Amazon Connect",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enagagement/16/Arch_Amazon-Connect_16.svg"
+    },
+    {
+        "id": "90f646a3-2c42-4bf1-81b0-7dc34b9850ef",
+        "name": "Amazon Pinpoint",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Customer-Enagagement/16/Arch_Amazon-Pinpoint_16.svg"
+    },
+    {
+        "id": "7db8814f-7353-4ed6-ac1b-420e585457da",
+        "name": "AWS Database Migration",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_AWS-Database-Migration_16.svg"
+    },
+    {
+        "id": "3e0934ee-f81d-49e3-8df0-6b3852378213",
+        "name": "Amazon Aurora",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-Aurora_16.svg"
+    },
+    {
+        "id": "10db6b6b-d9b2-4421-a45f-0070590297c9",
+        "name": "Amazon DocumentDB",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-DocumentDB_16.svg"
+    },
+    {
+        "id": "85a3ba42-234d-4ba2-8979-c20998b52676",
+        "name": "Amazon DynamoDB",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-DynamoDB_16.svg"
+    },
+    {
+        "id": "43a73bc8-ddbf-413d-bfdf-9137be085150",
+        "name": "Amazon ElastiCache",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-ElastiCache_16.svg"
+    },
+    {
+        "id": "d5d3825f-b232-4664-a2ee-c06343309ac9",
+        "name": "Amazon Keyspaces",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-Keyspaces_16.svg"
+    },
+    {
+        "id": "b1cf316d-2ccd-4c0e-b248-f231f63973a9",
+        "name": "Amazon Neptune",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-Neptune_16.svg"
+    },
+    {
+        "id": "fdaa3b51-dea6-4048-8a1d-d7fc1b804700",
+        "name": "Amazon Quantum Ledger Database",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-Quantum-Ledger-Database_16.svg"
+    },
+    {
+        "id": "27fddde7-22d0-440b-9e40-b701de434097",
+        "name": "Amazon RDS for VMware",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-RDS-for-VMware_16.svg"
+    },
+    {
+        "id": "f313446f-d8b1-435d-b406-40f3b5d1b4ef",
+        "name": "Amazon RDS",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-RDS_16.svg"
+    },
+    {
+        "id": "3e364e10-afc1-4391-81d2-476b4dd7235e",
+        "name": "Amazon Redshift",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-Redshift_16.svg"
+    },
+    {
+        "id": "e71280b7-5af3-4184-a551-d334588982a6",
+        "name": "Amazon Timestream",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Database/16/Arch_Amazon-Timestream_16.svg"
+    },
+    {
+        "id": "97137523-898e-4793-be2b-15f0a876ea26",
+        "name": "AWS Cloud Development Kit",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-Cloud-Development-Kit_16.svg"
+    },
+    {
+        "id": "5137b07c-4ca1-41df-a603-bfd552f32359",
+        "name": "AWS Cloud9",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-Cloud9_16.svg"
+    },
+    {
+        "id": "d457c562-8139-41a4-bf8f-e6cc56cc4dcb",
+        "name": "AWS CodeArtifact",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-CodeArtifact_16.svg"
+    },
+    {
+        "id": "2e9d7544-103f-4743-be58-a51f450ae9f7",
+        "name": "AWS CodeCommit",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-CodeCommit_16.svg"
+    },
+    {
+        "id": "6b341c59-51ef-4ebd-b03b-55d62c2cce4b",
+        "name": "AWS CodeDeploy",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-CodeDeploy_16.svg"
+    },
+    {
+        "id": "239e2c75-bcc2-48df-ace0-aea4ea66b1f3",
+        "name": "AWS CodePipeline",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-CodePipeline_16.svg"
+    },
+    {
+        "id": "3e437fae-43dc-442a-adda-80d33e953e71",
+        "name": "AWS Command Line Interface",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-Command-Line-Interface_16.svg"
+    },
+    {
+        "id": "7c36e3a0-c855-4eab-ab2a-2125a4b7c654",
+        "name": "AWS Tools and SDK",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-Tools-and-SDK_16.svg"
+    },
+    {
+        "id": "2915820e-45d6-4225-9c96-bc8e5c5e6d29",
+        "name": "AWS X Ray",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_AWS-X-Ray_16.svg"
+    },
+    {
+        "id": "69c49f97-3423-49d8-85d8-99f12c023ba6",
+        "name": "Amazon CodeBuild",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_Amazon-CodeBuild_16.svg"
+    },
+    {
+        "id": "f20d61d1-c0b5-46ec-935b-97e4d5ef9423",
+        "name": "Amazon Codestar",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Developer- Tools/16/Arch_Amazon-Codestar_16.svg"
+    },
+    {
+        "id": "eeda72c9-b81e-4a31-920b-a7b2e0b38893",
+        "name": "AWS WorkLink",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_End-User-Computing/16/Arch_AWS-WorkLink_16.svg"
+    },
+    {
+        "id": "4271e988-ce9d-4e4d-9761-49ee342f7523",
+        "name": "AWS WorkSpaces",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_End-User-Computing/16/Arch_AWS-WorkSpaces_16.svg"
+    },
+    {
+        "id": "6e3d6e1b-7537-43fa-8184-e49312fa40de",
+        "name": "Amazon App Stream",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_End-User-Computing/16/Arch_Amazon-App-Stream_16.svg"
+    },
+    {
+        "id": "49886fe4-96fd-4e50-a382-31416f7ee1ed",
+        "name": "Amazon WorkDocs",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_End-User-Computing/16/Arch_Amazon-WorkDocs_16.svg"
+    },
+    {
+        "id": "b054e631-9cc0-45c7-919e-f21bd3c7f6be",
+        "name": "Amazon GameLift",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Game-Tech/16/Arch_Amazon-GameLift_16.svg"
+    },
+    {
+        "id": "770e9f6e-2d0e-4fee-b2aa-385a238149fb",
+        "name": "AWS IoT 1 Click",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-1-Click_16.svg"
+    },
+    {
+        "id": "dbac32ab-9f97-4596-aa37-31861a59add5",
+        "name": "AWS IoT Analytics",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Analytics_16.svg"
+    },
+    {
+        "id": "15315ad1-308f-429f-9303-cfbc2619c860",
+        "name": "AWS IoT Button",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Button_16.svg"
+    },
+    {
+        "id": "01dda17d-a56a-4b24-b299-b5da97951d13",
+        "name": "AWS IoT Core",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Core_16.svg"
+    },
+    {
+        "id": "7611f183-445d-47ed-b0a7-5b7a9e1c6865",
+        "name": "AWS IoT Device Defender",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Device-Defender_16.svg"
+    },
+    {
+        "id": "a12e540a-7eab-44cc-b5fd-915140e40c10",
+        "name": "AWS IoT Device Management",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Device-Management_16.svg"
+    },
+    {
+        "id": "1eedb2d5-a873-4814-94d3-ed68c53d7415",
+        "name": "AWS IoT Events",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Events_16.svg"
+    },
+    {
+        "id": "74de4da6-8de1-42c3-b9c7-9bfaad2b6d81",
+        "name": "AWS IoT Greengrass Core",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Greengrass-Core_16.svg"
+    },
+    {
+        "id": "912b5430-5be2-47ca-88ca-11a0126f2484",
+        "name": "AWS IoT SiteWise",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-SiteWise_16.svg"
+    },
+    {
+        "id": "e572b43d-ff21-48b8-b509-e3f72ba99e7d",
+        "name": "AWS IoT Things Graph",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_AWS-IoT-Things-Graph_16.svg"
+    },
+    {
+        "id": "a990b9a5-d8ee-466f-ac2b-d89054dec785",
+        "name": "Amazon FreeRTOS",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Internet-of-Things/16/Arch_Amazon-FreeRTOS_16.svg"
+    },
+    {
+        "id": "69449feb-23a0-4bbd-af08-613a021eb625",
+        "name": "AWS Apache MXNet",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-Apache-MXNet_16.svg"
+    },
+    {
+        "id": "2b097a39-6837-4bc8-90df-795643aa1673",
+        "name": "AWS Deep Composer",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-Deep-Composer_16.svg"
+    },
+    {
+        "id": "38bd92eb-1d06-4152-ade2-ca8572d5dd77",
+        "name": "AWS Deep Learning AMIs",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-Deep-Learning-AMIs_16.svg"
+    },
+    {
+        "id": "4c3b9756-accb-4aa5-80da-169f6ddd3ae5",
+        "name": "AWS Deep Learning Containers",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-Deep-Learning-Containers_16.svg"
+    },
+    {
+        "id": "43cd93de-06b3-48bd-8caf-1c596f014c52",
+        "name": "AWS Deep Lense",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-Deep-Lense_16.svg"
+    },
+    {
+        "id": "7760898e-80fb-4f86-961c-899d12022326",
+        "name": "AWS Deepracer",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-Deepracer_16.svg"
+    },
+    {
+        "id": "0f29ffa7-3608-42ac-bd09-f69397009276",
+        "name": "AWS SageMaker Ground Truth",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-SageMaker-Ground-Truth_16.svg"
+    },
+    {
+        "id": "04e212b5-8592-444b-b654-8d508fce5459",
+        "name": "AWS SageMaker",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-SageMaker_16.svg"
+    },
+    {
+        "id": "f05e69e6-36f3-4bfd-a661-728932c8a543",
+        "name": "AWS TensorFlow on AWS",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-TensorFlow-on-AWS_16.svg"
+    },
+    {
+        "id": "df51638d-9c53-49c1-96ab-3ae4299a24d0",
+        "name": "AWS Textract",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_AWS-Textract_16.svg"
+    },
+    {
+        "id": "10b47b87-03f9-410b-ab5c-971197baff0e",
+        "name": "Amazon Augmented AI A2I",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Augmented-AI-A2I_16.svg"
+    },
+    {
+        "id": "f6ed14e2-121a-4085-bcb4-72a1dde83164",
+        "name": "Amazon CodeGuru",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-CodeGuru_16.svg"
+    },
+    {
+        "id": "534b01a6-835d-4767-99c9-cb92580ba95e",
+        "name": "Amazon Comprehend",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Comprehend_16.svg"
+    },
+    {
+        "id": "959c675b-192e-411a-94bf-8af5b8eef1a1",
+        "name": "Amazon Elastic Inference",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Elastic-Inference_16.svg"
+    },
+    {
+        "id": "be99947f-7685-466d-aa58-a8f60dcb2985",
+        "name": "Amazon Forecast",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Forecast_16.svg"
+    },
+    {
+        "id": "b709346c-318b-496c-a16b-70dcf781fffc",
+        "name": "Amazon Fraud Detector",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Fraud-Detector_16.svg"
+    },
+    {
+        "id": "ee1667fe-7751-43ca-ac24-311cf5db8e7d",
+        "name": "Amazon Kendra",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Kendra_16.svg"
+    },
+    {
+        "id": "483b75ac-12a0-4012-b81b-8f6c77ce14fc",
+        "name": "Amazon Lex",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Lex_16.svg"
+    },
+    {
+        "id": "4989f70b-72b1-459e-93a4-baa681574d8e",
+        "name": "Amazon Neuron ML SDK",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Neuron-ML-SDK_16.svg"
+    },
+    {
+        "id": "e7e31c5a-594e-428b-a267-7e9de53e7a44",
+        "name": "Amazon Personalize",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Personalize_16.svg"
+    },
+    {
+        "id": "5836a27d-b6b7-4c20-9516-ab8a47b00e90",
+        "name": "Amazon Polly",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Polly_16.svg"
+    },
+    {
+        "id": "9cfc67f4-1d2b-4c53-b316-2c98d789dd14",
+        "name": "Amazon Rekognition",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Rekognition_16.svg"
+    },
+    {
+        "id": "b220745a-f2ba-4d34-be90-1a2f2b37a4cb",
+        "name": "Amazon Transcribe",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Transcribe_16.svg"
+    },
+    {
+        "id": "518b0177-8e68-46f4-ab40-af06142661a4",
+        "name": "Amazon Translate",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_Amazon-Translate_16.svg"
+    },
+    {
+        "id": "6ae4b035-fa01-48d4-b9d0-2769cc9476e0",
+        "name": "TorchServe",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Machine-Learning/16/Arch_TorchServe_16.svg"
+    },
+    {
+        "id": "9f05e65f-bfe2-4f0d-8b48-1fdf5aa70477",
+        "name": "AWS App Config",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-App-Config_16.svg"
+    },
+    {
+        "id": "b7f0049a-047f-436f-bb3a-af7014e91a48",
+        "name": "AWS App Wizard",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-App-Wizard_16.svg"
+    },
+    {
+        "id": "af11af2f-7edc-434d-acdf-1dd2a7c9a221",
+        "name": "AWS Auto Scaling",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Auto-Scaling_16.svg"
+    },
+    {
+        "id": "df7ba06f-a580-4fa0-8152-4bd542e25862",
+        "name": "AWS Backint Agent",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Backint-Agent_16.svg"
+    },
+    {
+        "id": "ea3bc7e8-a46d-46c3-b9f4-a369b2ce399b",
+        "name": "AWS Chatbot",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Chatbot_16.svg"
+    },
+    {
+        "id": "9247c5c7-b9ae-4195-af46-0e8c89c0b8c0",
+        "name": "AWS Cloud Trail",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Cloud-Trail_16.svg"
+    },
+    {
+        "id": "520fa9bc-ca5d-4eca-b8e4-acd5f049f61e",
+        "name": "AWS CloudFormation",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-CloudFormation_16.svg"
+    },
+    {
+        "id": "8cb5445d-a53e-4a22-836e-7cf86621b832",
+        "name": "AWS Command Line Interface",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Command-Line-Interface_16.svg"
+    },
+    {
+        "id": "9953471d-2712-43b9-8f2a-a786a4a25f42",
+        "name": "AWS Compute Optimizer",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Compute-Optimizer_16.svg"
+    },
+    {
+        "id": "cf7081a0-764d-4dea-8e11-a1b3cc957f62",
+        "name": "AWS Config",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Config_16.svg"
+    },
+    {
+        "id": "d4248bef-62f7-48b6-b34a-716a542dfe81",
+        "name": "AWS Control Tower",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Control-Tower_16.svg"
+    },
+    {
+        "id": "e8def680-a14f-44ac-bd6d-08ee11465bea",
+        "name": "AWS License Manager",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-License-Manager_16.svg"
+    },
+    {
+        "id": "7f5dfb05-44c9-4105-b4be-e50bcddc2ee7",
+        "name": "AWS Managed Services",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Managed-Services_16.svg"
+    },
+    {
+        "id": "3aca0b64-b261-426c-87d0-ba0acd5d4c94",
+        "name": "AWS Management Console",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Management-Console_16.svg"
+    },
+    {
+        "id": "3a304877-0da4-4fe2-a20f-2ddc8bf6b081",
+        "name": "AWS OpsWorks",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-OpsWorks_16.svg"
+    },
+    {
+        "id": "80d6c849-2df6-45fc-8d49-cf0beb4963a3",
+        "name": "AWS Organizations",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Organizations_16.svg"
+    },
+    {
+        "id": "d073a604-f0e0-411a-a8ca-db4502844cbb",
+        "name": "AWS Personal Health Dashboard",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Personal-Health-Dashboard_16.svg"
+    },
+    {
+        "id": "b967d1af-8e23-426c-bdd4-8c1b54198172",
+        "name": "AWS Service Catalog",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Service-Catalog_16.svg"
+    },
+    {
+        "id": "c0d9c5bc-04b7-4a71-bf14-38dc104b1607",
+        "name": "AWS Systems Manager",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Systems-Manager_16.svg"
+    },
+    {
+        "id": "1bdad209-bde3-45f9-ba0a-01c24a66a15c",
+        "name": "AWS Trusted Advisor",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Trusted-Advisor_16.svg"
+    },
+    {
+        "id": "cebf8089-27ae-4446-ad25-2b8c7126a440",
+        "name": "AWS Well Architect Tool",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_AWS-Well-Architect-Tool_16.svg"
+    },
+    {
+        "id": "b0f699e5-b219-437e-8c01-9d620987422b",
+        "name": "Amazon CloudWatch",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_Amazon-CloudWatch_16.svg"
+    },
+    {
+        "id": "162045a9-d949-42e0-b6ff-f4b3ddb0aeed",
+        "name": "Application Auto Scaling",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Management-Governance/16/Arch_Application-Auto-Scaling_16.svg"
+    },
+    {
+        "id": "c8125a43-c3c9-4bb0-a313-3167d1b228db",
+        "name": "AWS Elemental Appliances & Software",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-Appliances-&-Software_16.svg"
+    },
+    {
+        "id": "b2aebde6-17a5-45bc-a1ca-e23b482a1f2e",
+        "name": "AWS Elemental Link",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-Link_16.svg"
+    },
+    {
+        "id": "5bcaca33-c73d-4789-98e0-2f04e0710136",
+        "name": "AWS Elemental MediaConnect",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-MediaConnect_16.svg"
+    },
+    {
+        "id": "c9aac71a-e0a8-45e7-a622-2b24c6ce25d4",
+        "name": "AWS Elemental MediaConvert",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-MediaConvert_16.svg"
+    },
+    {
+        "id": "914af0fb-12e1-4501-90bc-7a7721003fef",
+        "name": "AWS Elemental MediaLive",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-MediaLive_16.svg"
+    },
+    {
+        "id": "7aaa0a51-41c9-41b6-af9a-5c4c6b0c3320",
+        "name": "AWS Elemental MediaPackage",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-MediaPackage_16.svg"
+    },
+    {
+        "id": "04fd4ecd-7e50-4001-ae8a-10d9b00c567e",
+        "name": "AWS Elemental MediaStore",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-MediaStore_16.svg"
+    },
+    {
+        "id": "04af4204-1ac9-48e3-a005-17e3b12c4b1a",
+        "name": "AWS Elemental MediaTailor",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_AWS-Elemental-MediaTailor_16.svg"
+    },
+    {
+        "id": "fcd55e8f-032e-4ed7-8070-b8afa01fd66b",
+        "name": "Amazon Elastic Transcoder",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_Amazon-Elastic-Transcoder_16.svg"
+    },
+    {
+        "id": "d1d5d4bf-d47b-400f-a048-3fb8bdc3cbc1",
+        "name": "Amazon Interactive Video",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_Amazon-Interactive-Video_16.svg"
+    },
+    {
+        "id": "811c00fb-1620-406d-8de3-3d6e99d89afa",
+        "name": "Amazon Kinesis Video Streams",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Media-Services/16/Arch_Amazon-Kinesis-Video-Streams_16.svg"
+    },
+    {
+        "id": "15130ade-28cb-45ca-8448-5f0e2ab5c0ba",
+        "name": "AWS Application Discovery Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Migration-Transfer/16/Arch_AWS-Application-Discovery-Service_16.svg"
+    },
+    {
+        "id": "34baa5f3-583f-4d7e-bc45-b602d6b411b0",
+        "name": "AWS CloudEndure Migration",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Migration-Transfer/16/Arch_AWS-CloudEndure-Migration_16.svg"
+    },
+    {
+        "id": "41bdd814-408e-4b7b-ac51-bbff6c1af222",
+        "name": "AWS Data Sync",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Migration-Transfer/16/Arch_AWS-Data-Sync_16.svg"
+    },
+    {
+        "id": "24b40c35-bfdd-4b4f-b1a8-33f6c7bc6faa",
+        "name": "AWS Database Migration",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Migration-Transfer/16/Arch_AWS-Database-Migration_16.svg"
+    },
+    {
+        "id": "08453551-4a5b-41fd-8aa1-4cfef9061722",
+        "name": "AWS Migration Hub",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Migration-Transfer/16/Arch_AWS-Migration-Hub_16.svg"
+    },
+    {
+        "id": "fbd3ca36-1b1d-4372-807a-d8225f7a9fb8",
+        "name": "AWS Server Migration Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Migration-Transfer/16/Arch_AWS-Server-Migration-Service_16.svg"
+    },
+    {
+        "id": "f3d4dc5a-50e0-45bb-92b8-c1970408a8af",
+        "name": "AWS Transfer Family",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Migration-Transfer/16/Arch_AWS-Transfer-Family_16.svg"
+    },
+    {
+        "id": "3cdf18cf-4200-4c75-9e2d-9028c8d0acab",
+        "name": "AWS Amplify Console",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Mobile/16/Arch_AWS-Amplify-Console_16.svg"
+    },
+    {
+        "id": "97a6af3e-1fba-4bca-bc0e-52506d1d3222",
+        "name": "AWS AppSync",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Mobile/16/Arch_AWS-AppSync_16.svg"
+    },
+    {
+        "id": "8ab2aac8-da66-4398-92e5-06892b8d1a53",
+        "name": "AWS Device Farm",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Mobile/16/Arch_AWS-Device-Farm_16.svg"
+    },
+    {
+        "id": "06acbe43-9746-4bca-9a15-268a624c287a",
+        "name": "Amazon Pinpoint Journey",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Mobile/16/Arch_Amazon-Pinpoint-Journey_16.svg"
+    },
+    {
+        "id": "d20390d6-f1b6-4f35-91b5-8848e2b720d5",
+        "name": "Amazon Pinpoint",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Mobile/16/Arch_Amazon-Pinpoint_16.svg"
+    },
+    {
+        "id": "c4eb0094-6651-4e99-9217-9212b3480608",
+        "name": "AWS App Mesh",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-App-Mesh_16.svg"
+    },
+    {
+        "id": "7075948f-83ae-4fd4-a02f-0c8ba389c0f0",
+        "name": "AWS CloudMap",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-CloudMap_16.svg"
+    },
+    {
+        "id": "ec453084-f097-4be9-870f-09d686c5dca3",
+        "name": "AWS Direct Connect",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-Direct-Connect_16.svg"
+    },
+    {
+        "id": "f73fa3c3-f2de-4ddd-ae8e-8639c5c5f61c",
+        "name": "AWS Global Accelerator",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-Global-Accelerator_16.svg"
+    },
+    {
+        "id": "59fa6f0e-0d59-4670-ba1f-245edbb3ef98",
+        "name": "AWS PrivateLink",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-PrivateLink_16.svg"
+    },
+    {
+        "id": "6e9fd293-26e4-4e27-a1ca-3eb2a01df67c",
+        "name": "AWS Site to Site VPN",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-Site-to-Site-VPN_16.svg"
+    },
+    {
+        "id": "adba5f80-d268-4456-8307-b90e97444c15",
+        "name": "AWS Transit Gateway",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-Transit-Gateway_16.svg"
+    },
+    {
+        "id": "81e94564-a83c-4874-8e9f-6b865e3fde17",
+        "name": "AWS VPN",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_AWS-VPN_16.svg"
+    },
+    {
+        "id": "f8c928f5-5241-47ef-af2a-afdd126e6010",
+        "name": "Amazon API Gateway",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_Amazon-API-Gateway_16.svg"
+    },
+    {
+        "id": "ab432e24-b86f-402f-8765-a4660f09e743",
+        "name": "Amazon Cloud Directory",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_Amazon-Cloud-Directory_16.svg"
+    },
+    {
+        "id": "8b3708ba-6dca-435d-a4d9-d5309ba0c394",
+        "name": "Amazon CloudFront",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_Amazon-CloudFront_16.svg"
+    },
+    {
+        "id": "869ec711-87b6-48f1-9f35-6ec411789675",
+        "name": "Amazon Route 53",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_Amazon-Route-53_16.svg"
+    },
+    {
+        "id": "32fad74a-fb17-4708-beed-beea6f1653a4",
+        "name": "Amazon Virtual Private Cloud",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_Amazon-Virtual-Private-Cloud_16.svg"
+    },
+    {
+        "id": "62585fbf-69b9-48d1-a104-8a7daaad885e",
+        "name": "Elastic Load Balancing",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Networking-Content/16/Arch_Elastic-Load-Balancing_16.svg"
+    },
+    {
+        "id": "2d12ae4f-c2e7-48dc-a9d3-8fb6cbf756db",
+        "name": "AWS Braket",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Quantum_Technologies/16/Arch_AWS-Braket_16.svg"
+    },
+    {
+        "id": "4f44836d-4098-417d-b6f9-e22bb62741b7",
+        "name": "AWS RoboMaker",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Robotics/16/Arch_AWS-RoboMaker_16.svg"
+    },
+    {
+        "id": "c0c63222-b852-4ba9-8be5-61e11166ce33",
+        "name": "AWS Ground Station",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Satellite/16/Arch_AWS-Ground-Station_16.svg"
+    },
+    {
+        "id": "0ee74fd8-eee6-4240-a452-c47969ee6677",
+        "name": "AWS Artifact",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Artifact_16.svg"
+    },
+    {
+        "id": "ff797f00-335d-476c-9ec1-36c9de67e79c",
+        "name": "AWS Certificate Manager",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Certificate-Manager_16.svg"
+    },
+    {
+        "id": "9825739a-b3f2-42d4-b901-7e787eea11c4",
+        "name": "AWS CloudHSM",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-CloudHSM_16.svg"
+    },
+    {
+        "id": "b8f88a84-54a5-4ca9-866f-25df8513d554",
+        "name": "AWS Directory Service",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Directory-Service_16.svg"
+    },
+    {
+        "id": "1a776634-f2f4-4e27-9e36-74577c47980b",
+        "name": "AWS Firewall Manager",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Firewall-Manager_16.svg"
+    },
+    {
+        "id": "5c49ceab-723b-4911-902d-78588bc3af4c",
+        "name": "AWS Identity and Access Management",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Identity-and-Access-Management_16.svg"
+    },
+    {
+        "id": "08740355-b6f0-4891-a794-f4770614c4d6",
+        "name": "AWS Key Management Services",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Key-Management-Services_16.svg"
+    },
+    {
+        "id": "c856a407-5043-4eae-b378-45b25b386c83",
+        "name": "AWS Resources Access Manager",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Resources-Access-Manager_16.svg"
+    },
+    {
+        "id": "764ac511-e39b-499b-a8ee-7cac43ac72dc",
+        "name": "AWS Secrets Manager",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Secrets-Manager_16.svg"
+    },
+    {
+        "id": "568a2416-4a79-4210-909b-104cf12de680",
+        "name": "AWS Security Hub",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Security-Hub_16.svg"
+    },
+    {
+        "id": "8774f5fe-dbb3-41f0-b69e-a8decd2b911d",
+        "name": "AWS Shield",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Shield_16.svg"
+    },
+    {
+        "id": "b52318d0-3532-482d-8fcc-7efa17cc9419",
+        "name": "AWS Single Sign On",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-Single-Sign-On_16.svg"
+    },
+    {
+        "id": "fec325c0-ff46-418d-a10e-5698348c7bcf",
+        "name": "AWS WAF",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_AWS-WAF_16.svg"
+    },
+    {
+        "id": "28af292f-495d-41d7-8034-80adc72853a8",
+        "name": "Amazon Cloud Directory",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_Amazon-Cloud-Directory_16.svg"
+    },
+    {
+        "id": "13d2da01-abf4-4c26-932b-87943b8a70f8",
+        "name": "Amazon Cognito",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_Amazon-Cognito_16.svg"
+    },
+    {
+        "id": "ad1ce442-9ec9-4665-90a4-ec65af4dc823",
+        "name": "Amazon Detective",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_Amazon-Detective_16.svg"
+    },
+    {
+        "id": "312e231b-1d64-4c54-955d-b5f3bdb33dc8",
+        "name": "Amazon GuardDuty",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_Amazon-GuardDuty_16.svg"
+    },
+    {
+        "id": "cea1ea66-1a87-47a4-831b-3962344ec51c",
+        "name": "Amazon Inspector",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_Amazon-Inspector_16.svg"
+    },
+    {
+        "id": "d8f4bc50-5341-4f11-8cd9-560a3c16a0f4",
+        "name": "Amazon Macie",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Security-Identity-Compliance/16/Arch_Amazon-Macie_16.svg"
+    },
+    {
+        "id": "88631a76-b51b-4c34-9f93-b2f438063407",
+        "name": "AWS Backup",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_AWS-Backup_16.svg"
+    },
+    {
+        "id": "506b85ec-5905-47c6-990c-c0b5bca67c7b",
+        "name": "AWS CloudEndure Disaster Recovery",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_AWS-CloudEndure-Disaster-Recovery_16.svg"
+    },
+    {
+        "id": "dc793f50-acdd-49d9-852b-5f33d45c0f22",
+        "name": "AWS Snowball Edge",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_AWS-Snowball-Edge_16.svg"
+    },
+    {
+        "id": "2c5499f9-56c3-424e-8152-26924a2361e8",
+        "name": "AWS Snowball",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_AWS-Snowball_16.svg"
+    },
+    {
+        "id": "73b1706e-3e08-4fd4-8755-ac2e8e8dd5cf",
+        "name": "AWS Snowcone",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_AWS-Snowcone_16.svg"
+    },
+    {
+        "id": "ce07c5e9-16e6-4421-9c0f-0230d4cec4d8",
+        "name": "AWS Snowmobile",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_AWS-Snowmobile_16.svg"
+    },
+    {
+        "id": "856b7e8f-cc2f-439b-9177-c20a4fb51060",
+        "name": "AWS Storage Gateway",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_AWS-Storage-Gateway_16.svg"
+    },
+    {
+        "id": "efbf3c1b-9cd5-4ede-9019-3308b058d473",
+        "name": "Amazon Elastic Block Store",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Amazon-Elastic-Block-Store_16.svg"
+    },
+    {
+        "id": "c4ae46d9-0a97-488c-a4ed-4183b78cb8c4",
+        "name": "Amazon Elastic File System",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Amazon-Elastic-File-System_16.svg"
+    },
+    {
+        "id": "e1e6af34-b7e5-4599-9aa7-b9745be51adf",
+        "name": "Amazon FSx For WFS",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Amazon-FSx-For-WFS_16.svg"
+    },
+    {
+        "id": "84e296f1-e5c4-444d-aef8-f38e3215ffa9",
+        "name": "Amazon FSx for Lustre",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Amazon-FSx-for-Lustre_16.svg"
+    },
+    {
+        "id": "25f77c6f-1a99-41e3-b81d-08c196a78a33",
+        "name": "Amazon FSx",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Amazon-FSx_16.svg"
+    },
+    {
+        "id": "3decc419-4571-4e8f-a8a7-4342e70b5457",
+        "name": "Amazon Glacier",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Amazon-Glacier_16.svg"
+    },
+    {
+        "id": "b40ebed3-46cd-41b7-a956-cfd23ce25a4e",
+        "name": "Amazon S3 Standard",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Amazon-S3-Standard_16.svg"
+    },
+    {
+        "id": "f30dd36a-f136-403a-9cb0-244ec379edc1",
+        "name": "Infrequent Access Storage Class",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Infrequent-Access-Storage-Class_16.svg"
+    },
+    {
+        "id": "04195ff4-7753-47eb-816e-fd98cd6e8de4",
+        "name": "Standard Storage Class",
+        "componentType": "any",
+        "icon": "/assets/aws/Arch_Storage/16/Arch_Standard-Storage-Class_16.svg"
+    }
+]

@@ -1,22 +1,23 @@
 {
-  "name": "gram-api",
+  "name": "@gram/api",
   "private": true,
   "version": "2.8.4",
   "description": "API for threat modelling",
   "scripts": {
-    "start": "NODE_ENV=development nodemon --files src/index.ts",
-    "build": "rm -rf build/* && tsc",
+    "start": "NODE_ENV=development nodemon --watch src --watch ../core/src --files src/index.ts",
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json",
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
     "debug": "NODE_ENV=development node --inspect=0.0.0.0 src/index.js",
-    "test": "NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
+    "test": "NODE_CONFIG_DIR=../config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
     "snyk": "snyk test",
     "jest": "NODE_ENV=test jest --detectOpenHandles --no-cache",
-    "migrate-database": "ts-node src/data/migrate.ts",
     "sender": "NODE_ENV=development ts-node src/notifications/sender.ts",
     "gh": "ts-node src/packs/demo/test.ts"
   },
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/klarna/gram.git"
@@ -34,6 +35,9 @@
     "node": "16"
   },
   "dependencies": {
+    "@gram/aws": "^1.0.0",
+    "@gram/core": "^2.8.4",
+    "@gram/svgporn": "^1.0.0",
     "@sentry/integrations": "^7.6.0",
     "@sentry/node": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
@@ -88,6 +92,7 @@
     "supertest": "^6.3.3",
     "ts-jest": "^26.5.6",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.2",
     "typescript": "^4.9.4"
   },
   "optionalDependencies": {

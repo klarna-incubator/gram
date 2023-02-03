@@ -3,12 +3,9 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import { DataAccessLayer } from "../../../../data/dal";
-import { Review, ReviewStatus } from "../../../../data/reviews/Review";
-import { getLogger } from "../../../../logger";
-
-const log = getLogger("reviews.create");
+import { Permission } from "@gram/core/dist/auth/authorization";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {

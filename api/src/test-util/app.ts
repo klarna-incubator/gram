@@ -1,6 +1,10 @@
 import createApp from "../app";
-import { createPostgresPool } from "../data/postgres";
-import { Plugin, PluginCompiler, PluginRegistrator } from "../plugin";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import {
+  Plugin,
+  PluginCompiler,
+  PluginRegistrator,
+} from "@gram/core/dist/plugin";
 import { testAuthzProvider } from "./authz";
 import {
   SampleEmailMeetingRequested,
@@ -10,7 +14,7 @@ import {
 import { testUserProvider } from "./sampleUser";
 import { testSystemProvider } from "./system";
 import classes from "./classes.json";
-import { ComponentClass } from "../data/component-classes";
+import { ComponentClass } from "@gram/core/dist/data/component-classes";
 import { testReviewerProvider } from "./sampleReviewer";
 
 const toComponentClass = (o: any): ComponentClass => {

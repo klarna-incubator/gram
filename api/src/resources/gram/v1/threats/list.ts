@@ -4,8 +4,8 @@
  */
 
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import { DataAccessLayer } from "../../../../data/dal";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 
 export function list(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

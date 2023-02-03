@@ -1,4 +1,4 @@
-import System from "../data/systems/System";
+import System from "@gram/core/dist/data/systems/System";
 import { sampleTeam } from "./sampleTeam";
 
 export const sampleOwnedSystem = new System(

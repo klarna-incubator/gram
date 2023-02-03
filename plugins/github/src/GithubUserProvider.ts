@@ -1,8 +1,8 @@
 import { App, Octokit } from "octokit";
-import { User } from "gram-api/src/auth/models/User";
-import { UserProvider } from "gram-api/src/auth/UserProvider";
-import { createPostgresPool } from "gram-api/src/data/postgres";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+import { User } from "@gram/core/dist/auth/models/User";
+import { UserProvider } from "@gram/core/dist/auth/UserProvider";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 import { getDatabaseName } from "./data";
 
 export class GithubUserProvider implements UserProvider {

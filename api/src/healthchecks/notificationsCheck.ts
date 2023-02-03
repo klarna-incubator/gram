@@ -1,13 +1,13 @@
 import physical from "express-physical";
-import { DataAccessLayer } from "../data/dal";
-import { getLogger } from "../logger";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { getLogger } from "@gram/core/dist/logger";
 
 const log = getLogger("notificationsCheck");
 
 export function notificationsFailedCheck(dal: DataAccessLayer) {
   return async (done: any) => {
     const check: any = {
-      name: "gram-api-notifications-failed",
+      name: "@gram/api-notifications-failed",
       actionable: true,
       healthy: true,
       dependentOn: "postgres",
@@ -36,7 +36,7 @@ export function notificationsFailedCheck(dal: DataAccessLayer) {
 export function notificationsStalledCheck(dal: DataAccessLayer) {
   return async (done: any) => {
     const check: any = {
-      name: "gram-api-notifications-stalled",
+      name: "@gram/api-notifications-stalled",
       actionable: true,
       healthy: true,
       dependentOn: "postgres",

@@ -1,6 +1,6 @@
 import request from "supertest";
-import * as jwt from "../../../../auth/jwt";
-import { DataAccessLayer } from "../../../../data/dal";
+import * as jwt from "@gram/core/dist/auth/jwt";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { createTestApp } from "../../../../test-util/app";
 import { createSampleModel } from "../../../../test-util/model";
 import { sampleAdmin, sampleUser } from "../../../../test-util/sampleUser";
@@ -55,7 +55,7 @@ describe("models.setTemplate", () => {
   });
 
   it("should return 400 on bad request", async () => {
-    let res = await request(app)
+    const res = await request(app)
       .patch(url)
       .set("Authorization", "bearer validToken")
       .send({ isTemplate: "hej" });

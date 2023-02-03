@@ -3,10 +3,11 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import Model from "../../../../data/models/Model";
-import { ModelDataService } from "../../../../data/models/ModelDataService";
-import { getLogger } from "../../../../logger";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import Model from "@gram/core/dist/data/models/Model";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
+import { getLogger } from "@gram/core/dist/logger";
+import { InvalidInputError } from "@gram/core/dist/util/errors";
 
 const log = getLogger("models.create");
 
@@ -25,7 +26,7 @@ export default (dataModels: ModelDataService) =>
     const model = new Model(finalSystemId, version, req.user.sub);
     await req.authz?.hasPermissionsForModel(model, Permission.Write);
 
-    let id = null;
+    let id: string | null = null;
     if (sourceModelId) {
       const srcModel = await dataModels.getById(sourceModelId);
       if (srcModel === null) {
@@ -38,6 +39,7 @@ export default (dataModels: ModelDataService) =>
       // Normal creation without any kind of import
       id = await dataModels.create(model);
     }
+    if (id === null) throw new Error("Copy of model failed");
     await dataModels.logAction(req.user.sub, id, "create");
     return res.json({ model: { id } });
   };

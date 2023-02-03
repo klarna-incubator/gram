@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Permission } from "../../../../auth/authorization";
-import { DataAccessLayer } from "../../../../data/dal";
+import { Permission } from "@gram/core/dist/auth/authorization";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { ensureControlAndThreatPermission } from "./util";
 
 export function _delete(dal: DataAccessLayer) {
