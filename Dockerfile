@@ -1,16 +1,4 @@
-# FROM node:16-alpine as builder
-
-# WORKDIR /home/gram
-
-# ADD app .
-
-# Build the react app
 FROM docker.artifactory.klarna.net/community-javascript/nodejs/nodejs-16-amazonlinux:20230116T1240
-
-# This value is not secret and accessible in the frontend. 
-# ENV REACT_APP_SENTRY_DSN=""
-RUN npm i --loglevel=warn --no-progress
-RUN npm run build
 
 WORKDIR /home/gram
 
@@ -33,7 +21,7 @@ ADD plugins plugins
 
 
 # This value is not secret and accessible in the frontend. 
-# ENV REACT_APP_SENTRY_DSN=""
+ENV REACT_APP_SENTRY_DSN="https://c469b8a74d3f4abe8aad090b51c7dc0e@o24547.ingest.sentry.io/6236788"
 RUN npm i --loglevel=warn --no-progress
 RUN npm run build
 
