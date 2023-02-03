@@ -2,7 +2,11 @@
   "name": "@gram/kubernetes",
   "version": "3.0.0",
   "description": "Kubernetes icons for Gram",
-  "main": "src/index.ts",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",

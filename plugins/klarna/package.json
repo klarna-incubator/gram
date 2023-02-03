@@ -2,7 +2,11 @@
   "name": "@gram/klarna",
   "version": "3.0.0",
   "description": "Custom Gram logic for Klarna",
-  "main": "src/index.ts",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",
