@@ -1,4 +1,4 @@
-import { PlaintextHandlebarsNotificationTemplate } from "gram-api/src/notifications/NotificationTemplate";
+import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate";
 import { OctaneSystemProvider } from "../system/OctaneSystemProvider";
 import { generalReviewNotificationVariables } from "./util";
 

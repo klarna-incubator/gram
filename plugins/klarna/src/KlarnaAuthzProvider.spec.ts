@@ -1,18 +1,18 @@
-import Model from "gram-api/src/data/models/Model";
-import { Review, ReviewStatus } from "gram-api/src/data/reviews/Review";
+import Model from "@gram/core/dist/data/models/Model";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 import { Pool } from "pg";
-import { systemProvider } from "gram-api/src/data/systems/systems";
-import { Permission, AllRoles } from "gram-api/src/auth/authorization";
-import { Role } from "gram-api/src/auth/models/Role";
-import { DataAccessLayer } from "gram-api/src/data/dal";
-import { createPostgresPool } from "gram-api/src/data/postgres";
+import { systemProvider } from "@gram/core/dist/data/systems/systems";
+import { Permission, AllRoles } from "@gram/core/dist/auth/authorization";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { createPostgresPool } from "@gram/core/dist/data/postgres";
 import { KlarnaAuthzProvider } from "./KlarnaAuthzProvider";
-import { sampleOwnedSystem } from "gram-api/src/test-util/sampleOwnedSystem";
+import { sampleOwnedSystem } from "@gram/core/dist/test-util/sampleOwnedSystem";
 import {
   OctaneSystem,
   OctaneSystemProvider,
 } from "./system/OctaneSystemProvider";
-import { genUser } from "gram-api/src/test-util/authz";
+import { genUser } from "@gram/core/dist/test-util/authz";
 
 const getSystem = jest.spyOn(systemProvider, "getSystem");
 

@@ -1,7 +1,7 @@
 import config from "config";
 import GoogleAuthProvider, { getRoles } from ".";
-import { Role } from "gram-api/src/auth/models/Role";
-import * as user from "gram-api/src/auth/user";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import * as user from "@gram/core/dist/auth/user";
 
 describe("auth.provider.google", () => {
   const lookupUser = jest.spyOn(user, "lookupUser");

@@ -1,7 +1,7 @@
-import { User } from "gram-api/src/auth/models/User";
-import { UserProvider } from "gram-api/src/auth/UserProvider";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
-import { getLogger } from "gram-api/src/logger";
+import { User } from "@gram/core/dist/auth/models/User";
+import { UserProvider } from "@gram/core/dist/auth/UserProvider";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { getLogger } from "@gram/core/dist/logger";
 import { getUser } from "./ldap/lookup";
 
 const log = getLogger("KlarnaUserProvider");

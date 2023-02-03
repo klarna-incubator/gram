@@ -1,13 +1,13 @@
-import { ComponentClass } from "gram-api/src//data/component-classes";
-import Model from "gram-api/src/data/models/Model";
+import { ComponentClass } from "@gram/core/dist//data/component-classes";
+import Model from "@gram/core/dist/data/models/Model";
 import {
   SourceSuggestedControl,
   SourceSuggestedThreat,
   SuggestionResult,
   SuggestionSource,
-} from "gram-api/src/suggestions/models";
+} from "@gram/core/dist/suggestions/models";
 import { fetchIndex, fetchTech, ThreatsaurusSuggestions } from "./client";
-import { Plugin, PluginRegistrator } from "gram-api/src/plugin";
+import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
 
 /**
  * Example implementation, will be replaced later with one that fetches from external data

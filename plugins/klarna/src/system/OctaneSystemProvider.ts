@@ -1,15 +1,15 @@
 import { readFileSync, writeFileSync } from "fs";
 import fetch from "node-fetch";
-import System from "gram-api/src/data/systems/System";
+import System from "@gram/core/dist/data/systems/System";
 import {
   SystemListFilter,
   SystemListInput,
   SystemListResult,
-} from "gram-api/src/data/systems/systems";
-import { getLogger } from "gram-api/src/logger";
-import { isDevelopment } from "gram-api/src/util/env";
-import { SystemProvider } from "gram-api/src/data/systems/SystemProvider";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+} from "@gram/core/dist/data/systems/systems";
+import { getLogger } from "@gram/core/dist/logger";
+import { isDevelopment } from "@gram/core/dist/util/env";
+import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 const log = getLogger("OktaneSystemProvider");
 

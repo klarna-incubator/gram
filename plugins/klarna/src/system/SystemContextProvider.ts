@@ -1,10 +1,10 @@
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
-import { SystemPropertyProvider } from "gram-api/src/data/system-property/SystemPropertyProvider";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
 import {
   SystemProperty,
   SystemPropertyValue,
-} from "gram-api/src/data/system-property/types";
-import { getLogger } from "gram-api/src/logger";
+} from "@gram/core/dist/data/system-property/types";
+import { getLogger } from "@gram/core/dist/logger";
 import { OctaneSystemProvider } from "./OctaneSystemProvider";
 
 const log = getLogger("system-context-provider");

@@ -1,4 +1,4 @@
-import { Role } from "gram-api/src/auth/models/Role";
+import { Role } from "@gram/core/dist/auth/models/Role";
 import LDAPAuthProvider from "./LDAPAuthProvider";
 import * as lookup from "./lookup";
 import { Request } from "express";

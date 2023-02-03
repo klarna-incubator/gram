@@ -1,11 +1,11 @@
-import { AllPermissions, Permission } from "gram-api/src/auth/authorization";
-import { AuthzProvider } from "gram-api/src/auth/AuthzProvider";
-import { Role } from "gram-api/src/auth/models/Role";
-import { UserToken } from "gram-api/src/auth/models/UserToken";
-import { DataAccessLayer } from "gram-api/src/data/dal";
-import Model from "gram-api/src/data/models/Model";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
-import { ReviewStatus } from "gram-api/src/data/reviews/Review";
+import { AllPermissions, Permission } from "@gram/core/dist/auth/authorization";
+import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import Model from "@gram/core/dist/data/models/Model";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 import { OctaneSystemProvider } from "./system/OctaneSystemProvider";
 
 export class KlarnaAuthzProvider implements AuthzProvider {

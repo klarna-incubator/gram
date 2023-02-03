@@ -1,4 +1,4 @@
-import { SystemListFilter } from "gram-api/src/data/systems/systems";
+import { SystemListFilter } from "@gram/core/dist/data/systems/systems";
 import { OctaneSystemProvider } from "./OctaneSystemProvider";
 
 /**

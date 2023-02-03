@@ -1,7 +1,7 @@
-import { getLogger } from "gram-api/src/logger";
-import { DataAccessLayer } from "gram-api/src/data/dal";
-import { ReviewStatus } from "gram-api/src/data/reviews/Review";
-import { convertToReview } from "gram-api/src/data/reviews/ReviewDataService";
+import { getLogger } from "@gram/core/dist/logger";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { ReviewStatus } from "@gram/core/dist/data/reviews/Review";
+import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService";
 import { fallbackReviewer } from "./KlarnaReviewerProvider";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;

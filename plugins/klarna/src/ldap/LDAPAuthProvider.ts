@@ -1,16 +1,16 @@
 import config from "config";
-import { Role } from "gram-api/src/auth/models/Role";
-import { UserToken } from "gram-api/src/auth/models/UserToken";
-import { AuthProvider } from "gram-api/src/auth/AuthProvider";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import { AuthProvider } from "@gram/core/dist/auth/AuthProvider";
 import basicAuth from "basic-auth";
 import {
   InvalidInputError,
   NotAuthenticatedError,
-} from "gram-api/src/util/errors";
-import { AuthzError } from "gram-api/src/auth/AuthzError";
-import { getLogger } from "gram-api/src/logger";
+} from "@gram/core/dist/util/errors";
+import { AuthzError } from "@gram/core/dist/auth/AuthzError";
+import { getLogger } from "@gram/core/dist/logger";
 import { getLDAPUserGroupsByDN, initLdapClient } from "./lookup";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 const log = getLogger("LDAPAuthProvider");
 

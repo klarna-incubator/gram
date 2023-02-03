@@ -1,11 +1,11 @@
 import ldap from "ldapjs";
 import config from "config";
-import { getLogger } from "gram-api/src/logger";
-import { User } from "gram-api/src/auth/models/User";
-import { Team } from "gram-api/src/auth/models/Team";
+import { getLogger } from "@gram/core/dist/logger";
+import { User } from "@gram/core/dist/auth/models/User";
+import { Team } from "@gram/core/dist/auth/models/Team";
 import { LDAPTeamSearchBase, LDAPUserSearchBase } from "./config";
-import Cache from "gram-api/src/util/cache";
-import secrets from "gram-api/src/secrets";
+import Cache from "@gram/core/dist/util/cache";
+import secrets from "@gram/core/dist/secrets";
 import { Client } from "ldapjs";
 
 const log = getLogger("ldapLookup");

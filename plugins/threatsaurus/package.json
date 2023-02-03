@@ -1,13 +1,17 @@
 {
-  "name": "gram-plugin-threatsaurus",
+  "name": "@gram/threatsaurus",
   "version": "3.0.0",
   "description": "Threatsaurus suggestions for Gram",
   "main": "src/index.ts",
-  "scripts": {},
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "gram-api": "^3.0.0"
+    "@gram/core": "^2.8.4"
   },
   "private": true
 }

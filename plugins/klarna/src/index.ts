@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { join } from "path";
-import { Plugin, PluginRegistrator } from "gram-api/src/plugin";
-import { ComponentClass } from "gram-api/src/data/component-classes";
+import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
+import { ComponentClass } from "@gram/core/dist/data/component-classes";
 import classes from "./classes.json";
 import GoogleAuthProvider from "./google";
 import { HSFContextProvider } from "./HSFContextProvider";
@@ -20,6 +20,7 @@ import { EmailReviewerChanged } from "./notifications/reviewer-changed";
 import { createRiskOnThreatModelApprove } from "./RiskManagement";
 import { OctaneSystemProvider } from "./system/OctaneSystemProvider";
 import { SystemContextProvider } from "./system/SystemContextProvider";
+import OktaAuthProvider from "./okta";
 
 const toComponentClass = (o: any): ComponentClass => {
   return {
@@ -56,6 +57,7 @@ export default class KlarnaPack implements Plugin {
     ]);
     reg.registerAuthProvider(new LDAPAuthProvider());
     reg.registerAuthProvider(new GoogleAuthProvider());
+    reg.registerAuthProvider(new OktaAuthProvider());
     reg.setAuthzProvider(new KlarnaAuthzProvider(reg.dal, octane));
     reg.setUserProvider(new KlarnaUserProvider());
 

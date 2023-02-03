@@ -1,6 +1,6 @@
 import { join } from "path";
-import { Plugin, PluginRegistrator } from "gram-api/src/plugin";
-import { isComponentClass } from "gram-api/src/data/component-classes";
+import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
+import { isComponentClass } from "@gram/core/dist/data/component-classes";
 import classes from "./classes.json";
 
 export default class KubernetesPack implements Plugin {

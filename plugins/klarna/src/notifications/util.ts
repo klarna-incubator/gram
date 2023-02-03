@@ -1,9 +1,9 @@
 import Handlebars from "handlebars";
-import { lookupUser } from "gram-api/src/auth/user";
-import { DataAccessLayer } from "gram-api/src/data/dal";
-import { Review } from "gram-api/src/data/reviews/Review";
-import { getLogger } from "gram-api/src/logger";
-import { linkToModel } from "gram-api/src/util/links";
+import { lookupUser } from "@gram/core/dist/auth/user";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { Review } from "@gram/core/dist/data/reviews/Review";
+import { getLogger } from "@gram/core/dist/logger";
+import { linkToModel } from "@gram/core/dist/util/links";
 import { getTeam } from "../ldap/lookup";
 import {
   OctaneSystem,

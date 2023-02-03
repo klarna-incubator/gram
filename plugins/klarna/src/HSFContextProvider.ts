@@ -6,14 +6,14 @@ import proxy from "proxy-agent";
 import { uniqueId } from "lodash";
 import readline from "readline";
 import { Readable } from "stream";
-import { getLogger } from "gram-api/src/logger";
-import { isDevelopment } from "gram-api/src/util/env";
-import { SystemPropertyProvider } from "gram-api/src/data/system-property/SystemPropertyProvider";
+import { getLogger } from "@gram/core/dist/logger";
+import { isDevelopment } from "@gram/core/dist/util/env";
+import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
 import {
   SystemProperty,
   SystemPropertyValue,
-} from "gram-api/src/data/system-property/types";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+} from "@gram/core/dist/data/system-property/types";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 const log = getLogger("HSFContextProvider");
 

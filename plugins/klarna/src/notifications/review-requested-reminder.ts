@@ -1,5 +1,5 @@
-import { NotificationTemplateKey } from "gram-api/src/data/notifications/NotificationInput";
-import { PlaintextHandlebarsNotificationTemplate } from "gram-api/src/notifications/NotificationTemplate";
+import { NotificationTemplateKey } from "@gram/core/dist/data/notifications/NotificationInput";
+import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate";
 import { fallbackReviewer } from "../KlarnaReviewerProvider";
 import { OctaneSystemProvider } from "../system/OctaneSystemProvider";
 import { CoolestTeam, generalReviewNotificationVariables } from "./util";

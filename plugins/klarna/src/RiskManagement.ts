@@ -1,14 +1,14 @@
 import config from "config";
 import JiraApi from "jira-client";
 import { getLogger } from "log4js";
-import Control from "gram-api/src/data/controls/Control";
-import { DataAccessLayer } from "gram-api/src/data/dal";
-import Mitigation from "gram-api/src/data/mitigations/Mitigation";
-import { Component } from "gram-api/src/data/models/Model";
-import { Review } from "gram-api/src/data/reviews/Review";
-import Threat from "gram-api/src/data/threats/Threat";
-import secrets from "gram-api/src/secrets";
-import { linkToModel } from "gram-api/src/util/links";
+import Control from "@gram/core/dist/data/controls/Control";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
+import { Component } from "@gram/core/dist/data/models/Model";
+import { Review } from "@gram/core/dist/data/reviews/Review";
+import Threat from "@gram/core/dist/data/threats/Threat";
+import secrets from "@gram/core/dist/secrets";
+import { linkToModel } from "@gram/core/dist/util/links";
 import {
   OctaneSystem,
   OctaneSystemProvider,

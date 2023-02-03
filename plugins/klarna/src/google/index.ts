@@ -3,21 +3,21 @@
  * @exports google
  */
 import config from "config";
-import { Role } from "gram-api/src/auth/models/Role";
-import { AuthProvider } from "gram-api/src/auth/AuthProvider";
-import { UserToken } from "gram-api/src/auth/models/UserToken";
-import { lookupUser } from "gram-api/src/auth/user";
-import { getLogger } from "gram-api/src/logger";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { AuthProvider } from "@gram/core/dist/auth/AuthProvider";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import { lookupUser } from "@gram/core/dist/auth/user";
+import { getLogger } from "@gram/core/dist/logger";
 import {
   InvalidInputError,
   NotAuthenticatedError,
-} from "gram-api/src/util/errors";
+} from "@gram/core/dist/util/errors";
 import { getLDAPUserGroups } from "../ldap/lookup";
-import { RequestContext } from "gram-api/src/data/providers/RequestContext";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 import { Client, Issuer, generators } from "openid-client";
 import { aes256gcm } from "./util";
-import secrets from "gram-api/src/secrets";
+import secrets from "@gram/core/dist/secrets";
 
 const log = getLogger("googleAuth");
 
