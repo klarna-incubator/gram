@@ -19,9 +19,7 @@
   },
   "private": true,
   "devDependencies": {
-    "@types/jest": "^29.2.6",
     "@types/jira-client": "^7.1.6",
-    "@types/ldapjs": "^2.2.5",
-    "ts-jest": "^29.0.5"
+    "@types/ldapjs": "^2.2.5"
   }
 }
