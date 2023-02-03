@@ -12,10 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@gram/core": "^2.8.4",
     "jira-client": "^8.2.2",
     "ldapjs": "^2.3.3",
     "openid-client": "^5.3.2",
-    "@gram/core": "^2.8.4"
+    "precond": "^0.2.3"
   },
   "private": true,
   "devDependencies": {
