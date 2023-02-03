@@ -82,7 +82,7 @@ export class PluginCompiler implements PluginRegistrator {
     // Hack: the path sent is from the compiled typescript, which does not copy
     // over the images into the same directory. This is not a good solution,
     // but should work until we move packs over to npm packages.
-    path = path.replace("build/", "");
+    path = path.replace("dist/", "");
     // TODO: should validate that name is only valid chars
     this.assetPaths.push({ name, path });
   }
