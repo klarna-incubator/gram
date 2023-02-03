@@ -1,1 +1,0 @@
-{"version":3,"file":"Reviewer.d.ts","sourceRoot":"","sources":["../../../src/auth/models/Reviewer.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,QAAQ,CAAC;AAE9B,MAAM,MAAM,QAAQ,GAAG,IAAI,GAAG;IAC5B,WAAW,EAAE,OAAO,CAAC;IACrB,YAAY,CAAC,EAAE,MAAM,CAAC;CACvB,CAAC"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"AuthzError.js","sourceRoot":"","sources":["../../src/auth/AuthzError.ts"],"names":[],"mappings":";;;AAAA,MAAa,UAAW,SAAQ,KAAK;IACnC,YAAY,MAAc;QACxB,KAAK,CAAC,MAAM,CAAC,CAAC;QAEd,gCAAgC;QAChC,MAAM,CAAC,cAAc,CAAC,IAAI,EAAE,UAAU,CAAC,SAAS,CAAC,CAAC;IACpD,CAAC;CACF;AAPD,gCAOC"}
