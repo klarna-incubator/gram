@@ -11,6 +11,8 @@ WORKDIR /home/gram
 
 USER root
 
+RUN mkdir assets
+
 ADD package.json .
 ADD package-lock.json .
 ADD lerna.json .
@@ -22,6 +24,8 @@ ADD app app
 ADD core core
 ADD config config
 ADD plugins plugins
+
+
 
 # This value is not secret and accessible in the frontend. 
 # ENV REACT_APP_SENTRY_DSN=""
@@ -41,7 +45,7 @@ RUN npm prune --omit=dev
 
 RUN addgroup -S gram && adduser -S gram -G gram
 
-RUN chown gram:gram api/assets
+RUN chown gram:gram assets
 
 # drop back to gram
 USER gram
