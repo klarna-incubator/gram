@@ -39,7 +39,7 @@ RUN npm prune --omit=dev
 # RUN addgroup -S gram && adduser -S gram -G gram
 
 RUN cp api/assets/* assets/
-RUN chown klarna:klarna api/assets
+RUN chown klarna:klarna assets
 
 # drop back to gram
 USER klarna
