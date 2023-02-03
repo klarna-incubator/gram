@@ -45,8 +45,6 @@ describe("reviews.get", () => {
       .get("/api/v1/reviews/234")
       .set("Authorization", "bearer validToken");
 
-    console.log(res.status);
-    console.log(res.body);
     expect(res.status).toBe(400);
   });
 

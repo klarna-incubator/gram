@@ -13,7 +13,6 @@ import config from "config";
 import { getLogger } from "../logger";
 import { InvalidSecretError, InvalidSecretProviderError } from "./errors";
 import { SecretProvider } from "./SecretProvider";
-import { SSMSecretProvider } from "./ssm";
 import { ConfigSecretProvider } from "./config";
 
 const log = getLogger("secrets");
@@ -24,7 +23,6 @@ class Secrets {
   providers: Map<string, SecretProvider> = new Map<string, SecretProvider>();
 
   constructor() {
-    this.addProvider(new SSMSecretProvider());
     this.addProvider(new ConfigSecretProvider());
   }
 

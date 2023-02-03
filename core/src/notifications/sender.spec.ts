@@ -1,4 +1,3 @@
-import { mocked } from "ts-jest/utils";
 import { DataAccessLayer } from "../data/dal";
 import { NotificationDataService } from "../data/notifications/NotificationDataService";
 import { NotificationInput } from "../data/notifications/NotificationInput";
@@ -9,7 +8,7 @@ import { notificationSender } from "./sender";
 import { TemplateHandler } from "./TemplateHandler";
 
 jest.mock("./email");
-const mockedSend = mocked(send, true);
+const mockedSend = jest.mocked(send);
 
 describe("notification sender", () => {
   let notificationService: NotificationDataService;
