@@ -1,14 +1,25 @@
 import helmet from "helmet";
 import config from "config";
 
-export function securityHeaders() {
-  const allowedImgs: string[] = [];
-  const c = config.get("allowedSrc.img");
-  if (typeof c === "string") {
-    allowedImgs.push(c);
-  } else if (Array.isArray(c)) {
-    allowedImgs.push(...c);
+function getConfigAsArray(key: string): string[] {
+  const values: string[] = [];
+  if (!config.has(key)) {
+    return values;
   }
+
+  const c = config.get(key);
+  if (typeof c === "string") {
+    values.push(c);
+  } else if (Array.isArray(c)) {
+    values.push(...c);
+  }
+
+  return values;
+}
+
+export function securityHeaders() {
+  const allowedImgs: string[] = getConfigAsArray("allowedSrc.img");
+  const allowedConnects: string[] = getConfigAsArray("allowedSrc.connect");
 
   return helmet({
     contentSecurityPolicy: {
@@ -16,6 +27,7 @@ export function securityHeaders() {
       directives: {
         "script-src": ["'self'"],
         // unsafe-inline is needed on style due to MUI using it... and adding a nonce/hash is complicated.
+        "connect-src": ["self", ...allowedConnects],
         "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
         "font-src": ["https://fonts.gstatic.com"],
         "img-src": ["'self'", ...allowedImgs],
