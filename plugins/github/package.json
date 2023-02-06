@@ -1,6 +1,5 @@
 {
   "name": "@gram/github",
-  "type": "module",
   "version": "1.0.0",
   "description": "To run this GitHub integration, you'll need to set up your own Github App.",
   "main": "dist/index",

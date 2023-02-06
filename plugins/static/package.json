@@ -1,6 +1,5 @@
 {
   "name": "@gram/static",
-  "type": "module",
   "version": "1.0.0",
   "description": "Pack with static data providers",
   "main": "dist/index",
