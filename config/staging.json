@@ -61,5 +61,13 @@
     "secure": true
   },
 
-  "sentryDSN": "https://7755cd2515424f6cbcef6a4d43e54fdb@o24547.ingest.sentry.io/6023867"
+  "sentryDSN": "https://7755cd2515424f6cbcef6a4d43e54fdb@o24547.ingest.sentry.io/6023867",
+
+  "allowedSrc": {
+    "img": ["https:"],
+    "connect": [
+      "https://o24547.ingest.sentry.io",
+      "https://gram-eu.staging.c2c.klarna.net"
+    ]
+  }
 }
