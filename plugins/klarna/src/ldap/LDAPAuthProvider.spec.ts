@@ -17,8 +17,8 @@ describe("auth.provider.ldap", () => {
   });
 
   describe("params", () => {
-    it("should return no params", async () => {
-      expect(await ldap.params()).toStrictEqual({});
+    it("should return almost no params", async () => {
+      expect(await ldap.params()).toStrictEqual({ hideOnFrontend: true });
     });
   });
 

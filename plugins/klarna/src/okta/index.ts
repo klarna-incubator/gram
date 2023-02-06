@@ -54,7 +54,6 @@ export default class OktaAuthProvider implements AuthProvider {
 
   constructor() {
     this.redirectUrl = `${origin}/login/callback/okta`;
-    console.log(this.redirectUrl);
     this.discover();
   }
 
@@ -83,7 +82,7 @@ export default class OktaAuthProvider implements AuthProvider {
   async params(ctx: RequestContext) {
     if (!this.client) {
       log.warn("OIDC client not ready yet");
-      return {};
+      return { hideOnFrontend: false };
     }
 
     const code_verifier = generators.codeVerifier();
@@ -116,6 +115,7 @@ export default class OktaAuthProvider implements AuthProvider {
 
     return {
       redirectUrl,
+      hideOnFrontend: false,
     };
   }
 

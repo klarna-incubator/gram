@@ -24,7 +24,7 @@ export default class LDAPAuthProvider implements AuthProvider {
   key = "ldap";
 
   async params() {
-    return {};
+    return { hideOnFrontend: true };
   }
 
   async getIdentity(ctx: RequestContext): Promise<UserToken> {
