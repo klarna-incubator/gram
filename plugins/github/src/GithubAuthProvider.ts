@@ -21,7 +21,11 @@ export class GithubAuthProvider implements AuthProvider {
       state: randomUUID(),
       redirectUrl: `${origin}/login/callback/github`,
     });
-    return { redirectUrl: url, icon: "/assets/github/github-icon.svg" };
+    return {
+      redirectUrl: url,
+      icon: "/assets/github/github-icon.svg",
+      hideOnFrontend: false,
+    };
   }
 
   async getIdentity(ctx: RequestContext): Promise<UserToken> {

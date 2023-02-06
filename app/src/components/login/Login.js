@@ -22,25 +22,27 @@ export function Login() {
       </Box>
       {isLoading && <Loading />}
       {isError && <p>Failed to load authentication params. Try reloading.</p>}
-      {authParams?.map((provider) => (
-        <Box key={`login-${provider.provider}`}>
-          <Button
-            href={provider.redirectUrl}
-            startIcon={
-              provider.icon && (
-                <img
-                  alt={`${provider.provider} icon`}
-                  width={32}
-                  src={provider.icon}
-                />
-              )
-            }
-            variant="outlined"
-          >
-            Login via {provider.provider}
-          </Button>
-        </Box>
-      ))}
+      {authParams
+        ?.filter((p) => !p.hideOnFrontend)
+        ?.map((provider) => (
+          <Box key={`login-${provider.provider}`}>
+            <Button
+              href={provider.redirectUrl}
+              startIcon={
+                provider.icon && (
+                  <img
+                    alt={`${provider.provider} icon`}
+                    width={32}
+                    src={provider.icon}
+                  />
+                )
+              }
+              variant="outlined"
+            >
+              Login via {provider.provider}
+            </Button>
+          </Box>
+        ))}
     </div>
   );
 }
