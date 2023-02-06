@@ -27,7 +27,7 @@ export function securityHeaders() {
       directives: {
         "script-src": ["'self'"],
         // unsafe-inline is needed on style due to MUI using it... and adding a nonce/hash is complicated.
-        "connect-src": ["self", ...allowedConnects],
+        "connect-src": ["'self'", ...allowedConnects],
         "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
         "font-src": ["https://fonts.gstatic.com"],
         "img-src": ["'self'", ...allowedImgs],
