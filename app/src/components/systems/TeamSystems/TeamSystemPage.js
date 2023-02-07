@@ -10,11 +10,11 @@ export function TeamSystemsPage() {
   const { teamId } = useParams("/team/:teamId");
   const { data: user } = useGetUserQuery();
 
-  let teams;
+  let teams = [];
   if (teamId) {
     teams = [teamId];
   } else {
-    teams = user.teams.map((t) => t.id);
+    teams = user?.teams.map((t) => t.id) || [];
   }
 
   useTitle("Team");
