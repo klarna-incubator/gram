@@ -7,8 +7,9 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { getAuthToken } from "./api/gram/util/authToken";
 import "./App.css";
 import { ModalManager } from "./components/elements/modal/ModalManager";
 import ErrorPage from "./components/error-page";
@@ -23,17 +24,23 @@ import System from "./components/system/System";
 import Search from "./components/systems/Search/Search";
 import { TeamSystemsPage } from "./components/systems/TeamSystems/TeamSystemPage";
 import UserModels from "./components/user-models/UserModels/UserModels";
+import { authActions } from "./redux/authSlice";
 
 function LoginRedirect() {
   const navigate = useNavigate();
   const authenticated = useSelector(({ auth }) => auth.authenticated);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const path = window.location.pathname + window.location.search;
-    if (!authenticated && !path.startsWith("/login")) {
+    const existingToken = getAuthToken();
+    if (!existingToken && !authenticated && !path.startsWith("/login")) {
       navigate(`/login?return=${encodeURIComponent(path)}`);
     }
-  }, [authenticated, navigate]);
+    if (existingToken && !authenticated) {
+      dispatch(authActions.authenticate());
+    }
+  }, [authenticated, dispatch, navigate]);
 
   return <></>;
 }

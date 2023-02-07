@@ -2,6 +2,7 @@ import jwt_decode from "jwt-decode";
 
 export function getAuthToken() {
   const authToken = localStorage.getItem("authToken");
+
   if (authToken) {
     // Client doesn't know secret, but can verify for expiry.
     try {
@@ -35,11 +36,6 @@ export function getAuthToken() {
   }
 
   return null;
-  // const response = await fetch(`/api/v1/auth/csrf`);
-  // const newCsrfToken = (await response.json()).token;
-  // jwt_decode(newCsrfToken); // validate that it's actually a jwt to avoid storing undefined.
-  // localStorage.setItem("csrf", newCsrfToken);
-  // return newCsrfToken;
 }
 
 export function setAuthToken(authToken) {

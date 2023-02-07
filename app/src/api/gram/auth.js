@@ -33,7 +33,10 @@ const authApi = api.injectEndpoints({
         url: `/auth/token`,
         method: "DELETE",
       }),
-      transformResponse: (response) => ({ authenticated: false }),
+      transformResponse: (response) => {
+        setAuthToken(null);
+        return { authenticated: false };
+      },
       invalidatesTags: ["User"],
     }),
   }),

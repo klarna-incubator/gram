@@ -1,4 +1,5 @@
 import { isRejectedWithValue } from "@reduxjs/toolkit";
+import { setAuthToken } from "../../api/gram/util/authToken";
 import { authActions } from "../authSlice";
 
 /**
@@ -9,6 +10,7 @@ export const unauthenticatedErrorHandler = (api) => (next) => (action) => {
     if (action.payload.originalStatus === 401) {
       console.log("Got 401 from API, meaning token is no longer valid");
       api.dispatch(authActions.unauthenticate());
+      setAuthToken(null);
     }
   }
 

@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import thunk from "redux-thunk";
 import { api } from "../api/gram/api";
-import board from "../reducers/board";
 import model from "../reducers/model";
 import { authReducer } from "./authSlice";
 import { unauthenticatedErrorHandler } from "./middleware/unauthenticatedMIddleware";
@@ -12,7 +11,6 @@ import webSocketReducer from "./webSocketSlice";
 
 export const store = configureStore({
   reducer: {
-    board,
     model,
     modal: modalReducer,
     auth: authReducer,
