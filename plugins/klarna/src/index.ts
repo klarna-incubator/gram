@@ -56,7 +56,7 @@ export default class KlarnaPack implements Plugin {
       EmailReviewRequestedReminder(octane),
     ]);
     reg.registerAuthProvider(new LDAPAuthProvider());
-    reg.registerAuthProvider(new GoogleAuthProvider());
+    // reg.registerAuthProvider(new GoogleAuthProvider());
     reg.registerAuthProvider(new OktaAuthProvider());
     reg.setAuthzProvider(new KlarnaAuthzProvider(reg.dal, octane));
     reg.setUserProvider(new KlarnaUserProvider());
