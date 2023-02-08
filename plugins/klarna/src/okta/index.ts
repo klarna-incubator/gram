@@ -58,7 +58,7 @@ export default class OktaAuthProvider implements AuthProvider {
   }
 
   async discover() {
-    const url = config.get("auth.providerOpts.okta.discoverUrl") as string;
+    const url = config.get("auth.providerOpts.oidc.discoverUrl") as string;
     this.issuer = await Issuer.discover(url);
     log.info(
       "Discovered issuer %s %O",
@@ -67,8 +67,8 @@ export default class OktaAuthProvider implements AuthProvider {
     );
 
     this.client = new this.issuer.Client({
-      client_id: config.get("auth.providerOpts.okta.clientId"),
-      client_secret: config.get("auth.providerOpts.okta.clientSecret"),
+      client_id: config.get("auth.providerOpts.oidc.clientId"),
+      client_secret: config.get("auth.providerOpts.oidc.clientSecret"),
       redirect_uris: [this.redirectUrl],
       response_types: ["code"],
       // id_token_signed_response_alg (default "RS256")
@@ -101,7 +101,7 @@ export default class OktaAuthProvider implements AuthProvider {
       state,
     });
 
-    const key = await secrets.get("auth.oidcSessionSecret");
+    const key = await secrets.get("auth.providerOpts.oidc.sessionSecret");
     ctx.currentRequest?.res?.cookie(
       "oidc-code",
       aes256gcm(key)
@@ -132,7 +132,7 @@ export default class OktaAuthProvider implements AuthProvider {
       throw new Error("Request is undefined or null");
     }
 
-    const key = await secrets.get("auth.oidcSessionSecret");
+    const key = await secrets.get("auth.providerOpts.oidc.sessionSecret");
     const [ct, iv, authTag] =
       ctx.currentRequest.cookies["oidc-code"].split(".");
     // make security parameters configurable, since different providers want different things.

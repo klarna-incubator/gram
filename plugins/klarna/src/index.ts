@@ -57,7 +57,7 @@ export default class KlarnaPack implements Plugin {
     ]);
     reg.registerAuthProvider(new LDAPAuthProvider());
     reg.registerAuthProvider(new GoogleAuthProvider());
-    // reg.registerAuthProvider(new OktaAuthProvider());
+    reg.registerAuthProvider(new OktaAuthProvider());
     reg.setAuthzProvider(new KlarnaAuthzProvider(reg.dal, octane));
     reg.setUserProvider(new KlarnaUserProvider());
 

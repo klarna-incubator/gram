@@ -27,7 +27,6 @@
   },
 
   "auth": {
-    "oidcSessionSecret": "AUTH_OIDC_SESSION_SECRET",
     "providerOpts": {
       "ldap": {
         "bindDN": "AUTH_LDAP_BIND_DN",
@@ -36,9 +35,10 @@
       "google": {
         "clientSecret": "AUTH_GOOGLE_CLIENT_SECRET"
       },
-      "okta": {
+      "oidc": {
         "clientId": "AUTH_OIDC_CLIENT_ID",
-        "clientSecret": "AUTH_OIDC_CLIENT_SECRET"
+        "clientSecret": "AUTH_OIDC_CLIENT_SECRET",
+        "sessionSecret": "AUTH_OIDC_SESSION_SECRET"
       }
     }
   },
