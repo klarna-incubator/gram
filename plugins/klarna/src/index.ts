@@ -3,7 +3,6 @@ import { join } from "path";
 import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
 import { ComponentClass } from "@gram/core/dist/data/component-classes";
 import classes from "./classes.json";
-import GoogleAuthProvider from "./google";
 import { HSFContextProvider } from "./HSFContextProvider";
 import { KlarnaAuthzProvider } from "./KlarnaAuthzProvider";
 import { KlarnaCronJob } from "./KlarnaCronJob";
@@ -56,7 +55,6 @@ export default class KlarnaPack implements Plugin {
       EmailReviewRequestedReminder(octane),
     ]);
     reg.registerAuthProvider(new LDAPAuthProvider());
-    // reg.registerAuthProvider(new GoogleAuthProvider());
     reg.registerAuthProvider(new OktaAuthProvider());
     reg.setAuthzProvider(new KlarnaAuthzProvider(reg.dal, octane));
     reg.setUserProvider(new KlarnaUserProvider());
