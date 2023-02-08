@@ -35,6 +35,10 @@
       },
       "google": {
         "clientSecret": "AUTH_GOOGLE_CLIENT_SECRET"
+      },
+      "okta": {
+        "clientId": "AUTH_OIDC_CLIENT_ID",
+        "clientSecret": "AUTH_OIDC_CLIENT_SECRET"
       }
     }
   },

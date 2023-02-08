@@ -91,8 +91,10 @@
       "AUTH_LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
       "JIRA_USER": { "secret": "/jira.user" },
       "JIRA_PASSWORD": { "secret": "/jira.password" },
+      "AUTH_GOOGLE_CLIENT_SECRET": { "secret": "/auth.google.client_secret" },
       "AUTH_OIDC_SESSION_SECRET": { "secret": "/auth.oidc_session_secret" },
-      "AUTH_GOOGLE_CLIENT_SECRET": { "secret": "/auth.google.client_secret" }
+      "AUTH_OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },
+      "AUTH_OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" }
     }
   }
 }
