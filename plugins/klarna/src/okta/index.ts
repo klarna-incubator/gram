@@ -12,6 +12,8 @@ import { getLDAPUserGroups } from "../ldap/lookup";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 import { Client, Issuer, generators } from "openid-client";
+import { HttpsProxyAgent } from "hpagent";
+import { custom } from "openid-client";
 import { aes256gcm } from "./util";
 import secrets from "@gram/core/dist/secrets";
 
@@ -54,6 +56,19 @@ export default class OktaAuthProvider implements AuthProvider {
 
   constructor() {
     this.redirectUrl = `${origin}/login/callback/okta`;
+
+    if (process.env.HTTPS_PROXY) {
+      const agent = new HttpsProxyAgent({
+        keepAlive: true,
+        keepAliveMsecs: 1000,
+        maxSockets: 256,
+        maxFreeSockets: 256,
+        scheduling: "lifo",
+        proxy: process.env.HTTPS_PROXY,
+      });
+      custom.setHttpOptionsDefaults({ agent });
+    }
+
     this.discover();
   }
 
