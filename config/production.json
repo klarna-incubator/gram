@@ -28,7 +28,7 @@
           "user": ["access.1288598.prod.users", "access.1288598.prod.sso-prod"]
         }
       },
-      "okta": {
+      "oidc": {
         "discoverUrl": "https://sso.klarna.net/"
       }
     }

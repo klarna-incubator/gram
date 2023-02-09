@@ -28,7 +28,7 @@
           "user": ["access.1288598.stag.users", "access.1288598.stag.sso-prod"]
         }
       },
-      "okta": {
+      "oidc": {
         "discoverUrl": "https://sso.nonprod.klarna.net/"
       }
     }
