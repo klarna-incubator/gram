@@ -29,7 +29,7 @@
         }
       },
       "oidc": {
-        "discoverUrl": "https://sso.nonprod.klarna.net/"
+        "discoverUrl": "https://sso.klarna.net/"
       }
     }
   },

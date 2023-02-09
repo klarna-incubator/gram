@@ -46,7 +46,6 @@
         { "destination": "www.googleapis.com", "ports": [443] },
         { "destination": "o24547.ingest.sentry.io", "ports": [443] },
         { "destination": "octane.klarna.net", "ports": [443] },
-        { "destination": "sso.nonprod.klarna.net", "ports": [443] },
         { "destination": "sso.klarna.net", "ports": [443] },
         { "destination": "klarna-dev-admin.oktapreview.com", "ports": [443] },
         {
