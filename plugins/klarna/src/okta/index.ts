@@ -160,7 +160,7 @@ export default class OktaAuthProvider implements AuthProvider {
       code_verifier,
       state,
     });
-    log.info(tokenSet);
+
     const payload = await this.client.userinfo(tokenSet.access_token as string);
 
     if (!payload) {
@@ -168,13 +168,21 @@ export default class OktaAuthProvider implements AuthProvider {
     }
 
     const email = payload.email;
-    log.info(payload);
     if (!payload.email_verified || !email || !email.endsWith("@klarna.com")) {
       log.warn(`Sign in was attempted with non-klarna email: ${email}`);
       throw new NotAuthenticatedError("only klarna employees allowed");
     }
 
-    const groups = await getLDAPUserGroups(email);
+    let groups: string[] = (payload.groups as string[]) || [];
+    if (!groups) {
+      log.warn(
+        "Groups not part of userinfo payload, resorting to LDAP lookup instead"
+      );
+      groups = await getLDAPUserGroups(email);
+    } else {
+      log.info("Got groups from Okta - no ldap needed 🎉");
+    }
+
     log.debug(
       "User ldap groups",
       groups.filter((g) => g.startsWith("access.1288598"))
