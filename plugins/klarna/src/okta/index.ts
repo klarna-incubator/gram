@@ -108,7 +108,7 @@ export default class OktaAuthProvider implements AuthProvider {
     const state = generators.state();
 
     const redirectUrl = this.client.authorizationUrl({
-      scope: "openid email profile",
+      scope: "openid email profile groups",
       // resource: origin,
       code_challenge,
       response_type: "code",
@@ -160,6 +160,7 @@ export default class OktaAuthProvider implements AuthProvider {
       code_verifier,
       state,
     });
+    log.info(tokenSet);
     const payload = await this.client.userinfo(tokenSet.access_token as string);
 
     if (!payload) {
@@ -167,6 +168,7 @@ export default class OktaAuthProvider implements AuthProvider {
     }
 
     const email = payload.email;
+    log.info(payload);
     if (!payload.email_verified || !email || !email.endsWith("@klarna.com")) {
       log.warn(`Sign in was attempted with non-klarna email: ${email}`);
       throw new NotAuthenticatedError("only klarna employees allowed");
