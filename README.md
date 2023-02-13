@@ -1,7 +1,5 @@
 # Gram
 
-For reference: https://github.com/NiGhTTraX/ts-monorepo/blob/master/packages/bar/package.json
-
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
 [![Developed at Klarna][klarna-image]][klarna-url]
