@@ -29,7 +29,29 @@ exports[`Navbar renders Navbar 1`] = `
           </a>
           <div
             class="MuiBox-root css-15zye3l"
-          />
+          >
+            <span
+              class="MuiBadge-root MuiBadge-root css-1c32n2y-MuiBadge-root"
+            >
+              <span
+                class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular MuiBadge-colorPrimary MuiBadge-badge css-ejll1l-MuiBadge-badge"
+              />
+            </span>
+            <span
+              class="MuiBadge-root MuiBadge-root css-1c32n2y-MuiBadge-root"
+            >
+              <span
+                class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular MuiBadge-colorPrimary MuiBadge-badge css-ejll1l-MuiBadge-badge"
+              />
+            </span>
+            <span
+              class="MuiBadge-root MuiBadge-root css-1c32n2y-MuiBadge-root"
+            >
+              <span
+                class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular MuiBadge-colorPrimary MuiBadge-badge MuiBadge-invisible css-157jg0j-MuiBadge-badge"
+              />
+            </span>
+          </div>
           <a
             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1cur2jf-MuiButtonBase-root-MuiButton-root"
             href="/login"
@@ -66,7 +88,29 @@ exports[`Navbar renders Navbar 1`] = `
         </a>
         <div
           class="MuiBox-root css-15zye3l"
-        />
+        >
+          <span
+            class="MuiBadge-root MuiBadge-root css-1c32n2y-MuiBadge-root"
+          >
+            <span
+              class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular MuiBadge-colorPrimary MuiBadge-badge css-ejll1l-MuiBadge-badge"
+            />
+          </span>
+          <span
+            class="MuiBadge-root MuiBadge-root css-1c32n2y-MuiBadge-root"
+          >
+            <span
+              class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular MuiBadge-colorPrimary MuiBadge-badge css-ejll1l-MuiBadge-badge"
+            />
+          </span>
+          <span
+            class="MuiBadge-root MuiBadge-root css-1c32n2y-MuiBadge-root"
+          >
+            <span
+              class="MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightCircular MuiBadge-overlapCircular MuiBadge-colorPrimary MuiBadge-badge MuiBadge-invisible css-157jg0j-MuiBadge-badge"
+            />
+          </span>
+        </div>
         <a
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1cur2jf-MuiButtonBase-root-MuiButton-root"
           href="/login"

@@ -1,6 +1,7 @@
 import {
   AppBar,
   Avatar,
+  Badge,
   Box,
   Button,
   IconButton,
@@ -14,6 +15,7 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetUserQuery, useLogoutMutation } from "../../api/gram/auth";
 import { useGetMenuQuery } from "../../api/gram/menu";
+import { useListReviewsQuery } from "../../api/gram/review";
 import { setAuthToken } from "../../api/gram/util/authToken";
 import { Banner } from "./Banner";
 import { Search } from "./Search";
@@ -24,13 +26,22 @@ export function Navbar() {
   const navigate = useNavigate();
   const { data: menu, isLoading } = useGetMenuQuery();
   const menuPages = isLoading || !menu ? [] : menu;
+  const { data: reviews, isSuccess } = useListReviewsQuery({
+    reviewedBy: user?.sub,
+    statuses: ["requested", "declined"],
+  });
 
   const pages = [
     { name: "Team", path: "/team" },
     { name: "My Models", path: "/models" },
     {
       name: "Reviews",
-      path: "/reviews?statuses=requested%2Cdeclined",
+      path: `/reviews?statuses=requested%2Cdeclined${
+        user?.roles.includes("reviewer")
+          ? "&reviewedBy=" + encodeURIComponent(user?.sub)
+          : ""
+      }`,
+      count: user?.sub && isSuccess ? reviews?.total : 0,
     },
     ...menuPages,
   ];
@@ -109,41 +120,43 @@ export function Navbar() {
             },
           }}
         >
-          {pages.map((page) =>
-            !page.path.startsWith("/") ? (
-              <Button
-                disableRipple
-                target="_blank"
-                // component={Link}
-                href={page.path}
-                key={page.name}
-                sx={{
-                  color: (theme) => theme.palette.text.primary,
-                }}
-              >
-                {page.name}
-              </Button>
-            ) : (
-              <Fragment key={page.name}>
-                {authenticated && user && (
-                  <Button
-                    disableRipple
-                    component={Link}
-                    to={page.path}
-                    key={page.name}
-                    sx={{
-                      color: (theme) =>
-                        window.location.pathname === page.path.split("?")[0]
-                          ? theme.palette.common.gramPink
-                          : theme.palette.text.primary,
-                    }}
-                  >
-                    {page.name}
-                  </Button>
-                )}
-              </Fragment>
-            )
-          )}
+          {pages.map((page) => (
+            <Badge badgeContent={page.count} color="primary" overlap="circular">
+              {!page.path.startsWith("/") ? (
+                <Button
+                  disableRipple
+                  target="_blank"
+                  // component={Link}
+                  href={page.path}
+                  key={page.name}
+                  sx={{
+                    color: (theme) => theme.palette.text.primary,
+                  }}
+                >
+                  {page.name}
+                </Button>
+              ) : (
+                <Fragment key={page.name}>
+                  {authenticated && user && (
+                    <Button
+                      disableRipple
+                      component={Link}
+                      to={page.path}
+                      key={page.name}
+                      sx={{
+                        color: (theme) =>
+                          window.location.pathname === page.path.split("?")[0]
+                            ? theme.palette.common.gramPink
+                            : theme.palette.text.primary,
+                      }}
+                    >
+                      {page.name}
+                    </Button>
+                  )}
+                </Fragment>
+              )}
+            </Badge>
+          ))}
         </Box>
         {authenticated && user ? (
           <Box sx={{ flexGrow: 0 }}>
@@ -178,7 +191,9 @@ export function Navbar() {
                     action.action();
                   }}
                 >
-                  <Typography textAlign="center">{action.name}</Typography>
+                  <Badge badgeContent={4} color="primary">
+                    <Typography textAlign="center">{action.name}</Typography>
+                  </Badge>
                 </MenuItem>
               ))}
             </Menu>
