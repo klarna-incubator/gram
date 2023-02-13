@@ -1,69 +1,6 @@
-# Gram API
+# Gram Core
 
-This package runs the API backend of the Gram application.
-
-## Setup
-
-Runs on the current stable version of node (v14.7.0).
-
-Install dependencies with:
-
-```
-npm i
-```
-
-Create a new file `config/development.json`, using the following as a template.
-
-```json
-{
-  "data": {
-    "_providers": {
-      "postgres": {
-        "host": "127.0.0.1",
-        "user": "gram",
-        "password": "somethingsecret",
-        "database": "gram",
-        "port": 5432
-      }
-    }
-  },
-
-  "jwt": {
-    "ttl": 86400,
-    "secret": {
-      "auth": "6bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f",
-      "csrf": "9c05a2fc393078b75a5819ad06cab73ce17ec262909c1be475bbb0cdcfac9b42"
-    }
-  },
-
-  "auth": {
-    "providerOpts": {}
-  },
-
-  "log": {
-    "layout": "coloured",
-    "level": "debug",
-    "auditHttp": {
-      "simplified": true
-    }
-  },
-
-  "notifications": {
-    "providers": {
-      "email": {
-        "user": "",
-        "host": "",
-        "port": 25,
-        "sender-name": "[Development] Gram - Secure Development"
-      }
-    }
-  },
-
-  "secrets": {
-    "provider": "config"
-  }
-}
-```
+This contains most of the serverside logic of the Gram application.
 
 ## Postgres Datastore
 
@@ -102,27 +39,11 @@ roll back in case of failure. They must follow the naming convention of `<sequen
 
 For staging and production, these should run automatically upon application start.
 
-## Running / Debugging
-
-Start the application with:
-
-```
-npm start
-```
-
-To debug the application with the chrome inspector:
-
-```
-npm run debug
-```
-
 ## Testing
 
-Run all tests, including dependency vulnerability check:
+Run all tests:
 
 ```
-docker-compose up -d
-NODE_ENV=test npm run migrate-database
 npm test
 ```
 
