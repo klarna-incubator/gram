@@ -12,7 +12,10 @@ import {
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useGetModelPermissionsQuery } from "../../../api/gram/model";
-import { useChangeReviewerMutation } from "../../../api/gram/review";
+import {
+  useChangeReviewerMutation,
+  useGetReviewQuery,
+} from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
 import { ReviewerDropdown } from "../../elements/ReviewerDropdown";
@@ -21,7 +24,8 @@ import { PERMISSIONS } from "../constants";
 export function ChangeReviewer({ modelId }) {
   const dispatch = useDispatch();
 
-  const [newReviewer, setNewReviewer] = useState(null);
+  const { data: review } = useGetReviewQuery({ modelId });
+  const [newReviewer, setNewReviewer] = useState(review?.reviewer.sub);
 
   const [
     changeReviewer,

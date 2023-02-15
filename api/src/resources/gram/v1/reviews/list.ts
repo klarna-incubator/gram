@@ -2,16 +2,13 @@
  * GET /api/v1/reviews
  * @exports {function} handler
  */
-import { Request, Response } from "express";
-import { merge } from "lodash";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { lookupUsers } from "@gram/core/dist/auth/user";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 import { validStatus } from "@gram/core/dist/data/reviews/ReviewDataService";
 import { SystemPropertyFilter } from "@gram/core/dist/data/system-property/types";
-import { getLogger } from "@gram/core/dist/logger";
-
-const log = getLogger("list.reviews");
+import { Request, Response } from "express";
+import { merge } from "lodash";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
@@ -24,8 +21,7 @@ export default (dal: DataAccessLayer) =>
             .map((s) => s as ReviewStatus)
         : [],
       properties: req.query["properties"]
-        ? req.query["properties"]
-            .toString()
+        ? decodeURIComponent(req.query["properties"].toString())
             .split(",")
             .map((filter) => filter.split(":"))
             .filter((parts) => parts.length === 2)

@@ -89,7 +89,9 @@ export function RequestReview({ modelId }) {
         {(isUninitialized || isLoading) && (
           <Button
             onClick={() => createReview({ modelId, reviewedBy })}
-            disabled={isLoading || permissionsIsLoading || !writeAllowed}
+            disabled={
+              isLoading || permissionsIsLoading || !writeAllowed || !reviewedBy
+            }
             variant="contained"
           >
             Request

@@ -96,11 +96,11 @@ export class ReviewDataService extends EventEmitter {
     page?: number,
     dateOrder?: "ASC" | "DESC"
   ): Promise<ReviewListResult> {
-    const params = [];
+    const params: string[] = [];
     let pi = 1;
     const statements = ["r.deleted_at IS NULL", "m.deleted_at IS NULL"];
 
-    let systems = new Set();
+    let systems = new Set<string>();
 
     if (filters.systemIds && filters.systemIds.length > 0) {
       filters.systemIds.map((sid) => systems.add(sid));
@@ -419,8 +419,8 @@ export class ReviewDataService extends EventEmitter {
       extras?: object;
     }
   ) {
-    const fieldStatements = [];
-    const params = [];
+    const fieldStatements: string[] = [];
+    const params: (string | null)[] = [];
 
     if (fields.status !== undefined) {
       params.push(fields.status);

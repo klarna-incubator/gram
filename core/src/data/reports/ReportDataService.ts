@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import { getLogger } from "../../logger";
 import { linkToModel } from "../../util/links";
 import { DataAccessLayer } from "../dal";
-import { SystemProperty } from "../system-property/types";
+import { SystemPropertyValue } from "../system-property/types";
 import { RequestContext } from "../providers/RequestContext";
 
 interface SystemCompliance {
@@ -15,7 +15,7 @@ interface SystemCompliance {
   PendingStatus: string;
   PendingModelCreatedAt: string;
   PendingModelUpdatedAt: string;
-  Properties: SystemProperty[];
+  Properties: SystemPropertyValue[];
 }
 
 interface SystemComplianceReport {

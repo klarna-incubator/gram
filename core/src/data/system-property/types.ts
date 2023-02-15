@@ -1,4 +1,6 @@
-export interface SystemPropertyValue extends SystemProperty {
+import { RequestContext } from "../providers/RequestContext";
+
+export interface SystemPropertyValue extends SystemPropertyBase {
   /**
    * The value of the item
    */
@@ -14,7 +16,7 @@ export interface SystemPropertyFilter {
   value: string;
 }
 
-export interface SystemProperty {
+interface SystemPropertyBase {
   /**
    * A unique ID for this item. A slug is recommended, i.e. aws-region
    */
@@ -27,8 +29,26 @@ export interface SystemProperty {
    * Description of the item, to explain what it means.
    */
   description?: string;
-  /**
-   * Batchable and filterable. These will be available when listing systems.
-   */
-  batchFilterable: boolean;
 }
+
+interface ReadOnlySystemProperty extends SystemPropertyBase {
+  type: "readonly";
+}
+
+interface ToggleSystemProperty extends SystemPropertyBase {
+  type: "toggle";
+}
+
+interface RadioSystemProperty extends SystemPropertyBase {
+  type: "radio";
+
+  /**
+   * Possible values to select from.
+   */
+  values: ((ctx: RequestContext) => Promise<string[]>) | string[];
+}
+
+export type SystemProperty =
+  | ReadOnlySystemProperty
+  | ToggleSystemProperty
+  | RadioSystemProperty;

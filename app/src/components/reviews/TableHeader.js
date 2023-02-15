@@ -16,7 +16,6 @@ export function TableHeader(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell />
         <TableCell>
           <Typography variant={variant}>Model</Typography>
         </TableCell>

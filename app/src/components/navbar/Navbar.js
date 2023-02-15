@@ -121,14 +121,17 @@ export function Navbar() {
           }}
         >
           {pages.map((page) => (
-            <Badge badgeContent={page.count} color="primary" overlap="circular">
+            <Badge
+              key={page.name}
+              badgeContent={page.count}
+              color="primary"
+              overlap="circular"
+            >
               {!page.path.startsWith("/") ? (
                 <Button
                   disableRipple
                   target="_blank"
-                  // component={Link}
                   href={page.path}
-                  key={page.name}
                   sx={{
                     color: (theme) => theme.palette.text.primary,
                   }}
@@ -136,7 +139,7 @@ export function Navbar() {
                   {page.name}
                 </Button>
               ) : (
-                <Fragment key={page.name}>
+                <Fragment>
                   {authenticated && user && (
                     <Button
                       disableRipple
@@ -191,9 +194,7 @@ export function Navbar() {
                     action.action();
                   }}
                 >
-                  <Badge badgeContent={4} color="primary">
-                    <Typography textAlign="center">{action.name}</Typography>
-                  </Badge>
+                  <Typography textAlign="center">{action.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>

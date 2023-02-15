@@ -50,8 +50,6 @@ export function Threat({
     threatsMap[threat.id]?.includes(c.id)
   );
 
-  console.log(threat.componentId, controls, linkedControls);
-
   //TODO clean this up, not the correct way to use useEffect imo
   useEffect(() => {
     if (title !== threat.title || description !== threat.description) {

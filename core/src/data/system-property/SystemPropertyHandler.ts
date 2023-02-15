@@ -30,8 +30,16 @@ export class SystemPropertyHandler {
     });
   }
 
-  getProperties(): SystemProperty[] {
-    return Array.from(this.properties.values());
+  async getProperties(ctx: RequestContext): Promise<SystemProperty[]> {
+    const properties = Array.from(this.properties.values());
+
+    for (let prop of properties) {
+      if (prop.type === "radio" && !Array.isArray(prop.values)) {
+        prop.values = await prop.values(ctx);
+      }
+    }
+
+    return properties;
   }
 
   /**
@@ -71,10 +79,17 @@ export class SystemPropertyHandler {
     ctx: RequestContext,
     filters: { propertyId: string; value: any }[]
   ) {
-    // Don't filter by properties that are not marked as batchFilterable.
-    filters = filters.filter(
-      (f) => this.properties.get(f.propertyId)?.batchFilterable
-    );
+    // Only filter properties that have a type.
+    filters = filters.filter((f) => {
+      const type = this.properties.get(f.propertyId)?.type;
+      if (type === "readonly") {
+        return false;
+      }
+      if (type === "toggle" && f.value === "false") {
+        return false;
+      }
+      return true;
+    });
 
     const results = await Promise.all(
       filters.map(async ({ propertyId, value }) => {
@@ -105,6 +120,7 @@ export class SystemPropertyHandler {
           new Set(curr?.filter((c) => idx < 1 || prev.has(c))),
         new Set<string>()
       );
+
     return Array.from(systems);
   }
 }

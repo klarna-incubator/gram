@@ -3,11 +3,13 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { SystemPropertyHandler } from "@gram/core/dist/data/system-property/SystemPropertyHandler";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { DataAccessLayer } from "@gram/core/dist/data/dal";
 
-export function listProperties(sysPropHandler: SystemPropertyHandler) {
+export function listProperties(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const properties = sysPropHandler.getProperties();
+    const ctx: RequestContext = { currentRequest: req };
+    const properties = await dal.sysPropHandler.getProperties(ctx);
     return res.json({ properties });
   };
 }

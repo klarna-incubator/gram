@@ -1,5 +1,13 @@
 import { CheckRounded } from "@mui/icons-material";
-import { Chip, Toolbar, Typography } from "@mui/material";
+import {
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { useGetSystemPropertyDefinitionsQuery } from "../../api/gram/system-properties";
 import { ReviewerDropdown } from "../elements/ReviewerDropdown";
@@ -70,17 +78,17 @@ export function TableToolbar(props) {
         >
           {systemProperties &&
             systemProperties
-              .filter((prop) => prop.batchFilterable)
+              .filter((prop) => prop.type === "toggle")
               .map((prop) => {
-                let selected = selectedProperties.find((s) => s === prop.id);
+                let selected = selectedProperties.find((s) => s.id === prop.id);
 
-                if (selected) {
+                if (selected?.value === "true") {
                   return (
                     <Chip
                       key={prop.id}
                       label={prop.label}
                       icon={<CheckRounded />}
-                      onClick={() => onPropertyFilterChange(prop, false)}
+                      onClick={() => onPropertyFilterChange(prop, "false")}
                     />
                   );
                 }
@@ -89,13 +97,41 @@ export function TableToolbar(props) {
                     key={prop.id}
                     label={prop.label}
                     variant={"outlined"}
-                    onClick={() => onPropertyFilterChange(prop, true)}
+                    onClick={() => onPropertyFilterChange(prop, "true")}
                   />
                 );
               })}
-        </Box>
 
-        <Typography variant={"b"}>Reviewer</Typography>
+          {systemProperties &&
+            systemProperties
+              .filter((prop) => prop.type === "radio")
+              .map((prop) => {
+                let selected = selectedProperties.find((s) => s.id === prop.id);
+
+                return (
+                  <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel>{prop.label}</InputLabel>
+                    <Select
+                      key={prop.id}
+                      label={prop.label}
+                      color={"primary"}
+                      size="small"
+                      variant="outlined"
+                      floatingLabelStyle={{ color: "#fff" }}
+                      onChange={(e) =>
+                        onPropertyFilterChange(prop, e.target.value)
+                      }
+                      value={selected?.value || -1}
+                    >
+                      <MenuItem value={-1}>Any</MenuItem>
+                      {prop.values.map((val) => (
+                        <MenuItem value={val}>{val}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                );
+              })}
+        </Box>
         <Box
           style={{
             display: "flex",

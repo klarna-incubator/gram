@@ -19,6 +19,7 @@ import { useTitle } from "../../hooks/useTitle";
 import { modalActions } from "../../redux/modalSlice";
 import { LoadingPage } from "../elements/loading/loading-page/LoadingPage";
 import { MODALS } from "../elements/modal/ModalManager";
+import { EmptyTableRow } from "./EmptyTableRow";
 import { TableHeader } from "./TableHeader";
 import { TablePaginationActions } from "./TablePaginationActions";
 import { TableRow } from "./TableRow";
@@ -48,23 +49,29 @@ export function Reviews() {
 
   const { selectedStatuses, selectedProperties, order, page, reviewedBy } = {
     selectedStatuses: searchParams.get("statuses")?.split(",") || [],
-    selectedProperties: searchParams.get("properties")?.split(",") || [],
+    selectedProperties:
+      searchParams
+        .get("properties")
+        ?.split(",")
+        .map((part) => decodeURIComponent(part))
+        .map((part) => {
+          const [id, value] = part.split(":");
+          return { id, value };
+        }) || [],
     order: searchParams.get("order") || "ASC",
     page: parseInt(searchParams.get("page")) || 1,
     reviewedBy: searchParams.get("reviewedBy") || "",
   };
-
-  // console.log({ selectedStatuses, selectedProperties, order, page });
 
   const { data: reviews, isFetching: reviewsIsFetching } = useListReviewsQuery({
     statuses: selectedStatuses,
     // Somewhat hacky, but API allows for filtering on value which we don't care about here currently.
     // We would need to add new UI to filter on e.g. text values or dropdowns. So we can can change
     // this here when needed.
-    properties: selectedProperties.map((p) => `${p}:true`),
+    properties: selectedProperties.map((p) => `${p.id}:${p.value}`),
     page,
     order,
-    reviewedBy: reviewedBy === "any" ? "" : reviewedBy,
+    reviewedBy: reviewedBy === "-1" ? "" : reviewedBy,
   });
 
   function handleChangePage(newPage) {
@@ -105,16 +112,18 @@ export function Reviews() {
     });
   }
 
-  function handlePropertyFilterChange(prop, mode) {
-    let selProps = selectedProperties.filter((selProp) => selProp !== prop.id);
+  function handlePropertyFilterChange(prop, value) {
+    let selProps = selectedProperties.filter(
+      (selProp) => selProp.id !== prop.id
+    );
 
-    if (mode === true) {
-      selProps.push(prop.id);
+    if (value !== -1) {
+      selProps.push({ id: prop.id, value });
     }
 
     setSearchParams({
       statuses: selectedStatuses.join(","),
-      properties: selProps.join(","),
+      properties: selProps.map((prop) => `${prop.id}:${prop.value}`).join(","),
       order,
       page,
       reviewedBy,
@@ -124,7 +133,9 @@ export function Reviews() {
   function handleReviewerSelected(value) {
     setSearchParams({
       statuses: selectedStatuses.join(","),
-      properties: selectedProperties.join(","),
+      properties: selectedProperties
+        .map((prop) => `${prop.id}:${prop.value}`)
+        .join(","),
       order,
       page,
       reviewedBy: value,
@@ -155,6 +166,7 @@ export function Reviews() {
             <Table size={"small"}>
               <TableHeader order={order} toggleOrder={handleToggleOrder} />
               <TableBody>
+                {reviews?.total === 0 && <EmptyTableRow />}
                 {reviews?.items.map((review) => (
                   <TableRow
                     key={review.modelId}

@@ -37,7 +37,7 @@ describe("SystemPropertyProvider implementation", () => {
         listSystemByPropertyValue: async (filters) => [],
         provideSystemProperties: async (systemObjectId, quick) => [
           {
-            batchFilterable: false,
+            type: "readonly",
             displayInList: false,
             id: "some-prop",
             label: "some property",
@@ -53,7 +53,7 @@ describe("SystemPropertyProvider implementation", () => {
       const items = await handler.contextualize({}, "some-system-id");
       const expected: any[] = [
         {
-          batchFilterable: false,
+          type: "readonly",
           displayInList: false,
           id: "some-prop",
           label: "some property",
@@ -77,17 +77,13 @@ describe("SystemPropertyProvider implementation", () => {
     it("should not crash if a provider crashes", async () => {
       const niceProvider: SystemPropertyProvider = {
         id: "nice",
-        definitions: [
-          { batchFilterable: true, id: "good-prop", label: "good-prop" },
-        ],
+        definitions: [{ type: "toggle", id: "good-prop", label: "good-prop" }],
         listSystemByPropertyValue: async (filters) => [],
         provideSystemProperties: async () => [],
       };
       const badProvider: SystemPropertyProvider = {
         id: "bad",
-        definitions: [
-          { batchFilterable: true, id: "bad-prop", label: "bad-prop" },
-        ],
+        definitions: [{ type: "toggle", id: "bad-prop", label: "bad-prop" }],
         listSystemByPropertyValue: async (filters) => {
           throw new Error("not good");
         },
@@ -111,9 +107,7 @@ describe("SystemPropertyProvider implementation", () => {
     it("should return systems", async () => {
       const niceProvider: SystemPropertyProvider = {
         id: "nice",
-        definitions: [
-          { batchFilterable: true, id: "good-prop", label: "good-prop" },
-        ],
+        definitions: [{ type: "toggle", id: "good-prop", label: "good-prop" }],
         listSystemByPropertyValue: async (filters) => [
           "some-system-id",
           "another-one",
