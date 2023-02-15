@@ -33,14 +33,7 @@ export class SystemContextProvider implements SystemPropertyProvider {
 
     log.debug(`Got system: ${JSON.stringify(system, null, 4)}`);
 
-    this.attachItem(
-      items,
-      system.team?.domain_name,
-      "domain",
-      "Domain",
-      true,
-      true
-    );
+    this.attachItem(items, system.team?.domain_name, "domain", "Domain", true);
     this.attachItem(
       items,
       system.audience_class,
@@ -80,49 +73,69 @@ export class SystemContextProvider implements SystemPropertyProvider {
 
     return items;
   }
-  listSystemByPropertyValue(
+
+  async listSystemByPropertyValue(
     ctx: RequestContext,
     propertyId: string,
     value: any
   ): Promise<string[]> {
-    throw new Error("Method not implemented.");
+    if (propertyId !== "domain") {
+      throw new Error("Method not implemented.");
+    }
+
+    return Array.from(
+      new Set<string>(
+        this.systemProvider.systems
+          .filter((sys) => sys.team.domain_name === value)
+          .map((sys) => sys.system_id)
+      )
+    );
   }
 
   definitions: SystemProperty[] = [
     {
       id: "domain",
       label: "Domain",
-      batchFilterable: false,
+      type: "radio",
+      values: async (ctx: RequestContext) => {
+        return Array.from(
+          new Set<string>(
+            this.systemProvider.systems
+              .map((sys) => sys.team.domain_name)
+              .filter((name) => name) as string[]
+          )
+        );
+      },
     },
     {
       id: "ngov-audience",
       label: "Audience Classification",
-      batchFilterable: false,
+      type: "readonly",
     },
     {
       id: "ngov-confidentiality",
       label: "Confidentiality Classification",
-      batchFilterable: false,
+      type: "readonly",
     },
     {
       id: "ngov-integrity",
       label: "Integrity Classification",
-      batchFilterable: false,
+      type: "readonly",
     },
     {
       id: "ngov-availability",
       label: "Availability Class",
-      batchFilterable: false,
+      type: "readonly",
     },
     {
       id: "ngov-business-critical",
       label: "Business Critical",
-      batchFilterable: false,
+      type: "readonly",
     },
     {
       id: "ngov-type-data-processed",
       label: "Type of Processed Data",
-      batchFilterable: false,
+      type: "readonly",
     },
   ];
 
@@ -131,7 +144,6 @@ export class SystemContextProvider implements SystemPropertyProvider {
     property: any,
     id: string,
     label: string,
-    batchFilterable = false,
     displayInList = false
   ) {
     if (property === undefined) return;
@@ -140,7 +152,6 @@ export class SystemContextProvider implements SystemPropertyProvider {
       id,
       label,
       value: property,
-      batchFilterable,
       displayInList,
     };
 

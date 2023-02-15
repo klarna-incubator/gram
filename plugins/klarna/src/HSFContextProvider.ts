@@ -99,6 +99,7 @@ export class HSFContextProvider implements SystemPropertyProvider {
     if (propertyId !== "hsf") {
       throw new Error("Method not implemented.");
     }
+
     return Array.from(this.hsfset);
   }
 
@@ -106,7 +107,7 @@ export class HSFContextProvider implements SystemPropertyProvider {
     {
       id: "hsf",
       label: "HSF - High Security Footprint",
-      batchFilterable: true,
+      type: "toggle",
     },
   ];
 
@@ -119,7 +120,6 @@ export class HSFContextProvider implements SystemPropertyProvider {
       id: "hsf",
       label: "HSF - High Security Footprint",
       value: this.hsfset.has(systemId).toString(),
-      batchFilterable: true,
       displayInList: this.hsfset.has(systemId),
     };
 
@@ -155,7 +155,10 @@ export class HSFContextProvider implements SystemPropertyProvider {
       } else {
         log.info("No s3 config found, loading mocked data for HSF systems");
         stream = fs.createReadStream(
-          __dirname + "/mock-data/hsf-systems-mocked.csv"
+          (__dirname + "/mock-data/hsf-systems-mocked.csv").replace(
+            "dist",
+            "src"
+          )
         );
       }
 
