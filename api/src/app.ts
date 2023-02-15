@@ -36,6 +36,7 @@ import tokenV1 from "./resources/gram/v1/token";
 import userV1 from "./resources/gram/v1/user";
 import errorHandler from "./middlewares/errorHandler";
 import { initSentry } from "./util/sentry";
+import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval";
 
 async function createApp(pool: Pool) {
   // Set up business logic handlers and services
@@ -242,6 +243,11 @@ async function createApp(pool: Pool) {
     "/admin/crash",
     authz.is(Role.Admin),
     errorWrap(crash)
+  );
+  authenticatedRoutes.post(
+    "/admin/retry_review_approval",
+    authz.is(Role.Admin),
+    errorWrap(retryReviewApproval(dal))
   );
 
   app.use("/api/v1", unauthenticatedRoutes);
