@@ -55,9 +55,11 @@ export class KlarnaAuthzProvider implements AuthzProvider {
       return AllPermissions;
     }
 
-    // Allow reviewers read and review access
+    // Allow reviewers read, review and write access
     if (user.roles.includes(Role.Reviewer)) {
-      [Permission.Read, Permission.Review].map((p) => perms.add(p));
+      [Permission.Read, Permission.Review, Permission.Write].map((p) =>
+        perms.add(p)
+      );
     }
 
     // Allow any logged in user read access, for transparency
@@ -85,7 +87,10 @@ export class KlarnaAuthzProvider implements AuthzProvider {
 
     // Check Reviewer
     if (user.roles.includes(Role.Reviewer)) {
-      [Permission.Read, Permission.Review].map((p) => perms.add(p));
+      // Allow reviewers to Read/Write
+      [Permission.Read, Permission.Review, Permission.Write].map((p) =>
+        perms.add(p)
+      );
     }
 
     if (
