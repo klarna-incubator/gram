@@ -19,7 +19,7 @@ import loggerMw from "./middlewares/logger";
 import { securityHeaders } from "./middlewares/securityHeaders";
 import { AssetDir } from "@gram/core/dist/plugin";
 import crash from "./resources/gram/v1/admin/crash";
-import dropRole from "./resources/gram/v1/admin/dropRole";
+import setRoles from "./resources/gram/v1/admin/setRole";
 import { getBanner } from "./resources/gram/v1/banners/get";
 import { searchClasses } from "./resources/gram/v1/component-classes/search";
 import controlsV1 from "./resources/gram/v1/controls";
@@ -234,10 +234,10 @@ async function createApp(pool: Pool) {
   );
 
   // Admin Routes
-  authenticatedRoutes.get(
-    "/admin/drop_role",
+  authenticatedRoutes.post(
+    "/admin/set-roles",
     authz.is(Role.Admin),
-    errorWrap(dropRole)
+    errorWrap(setRoles)
   );
   authenticatedRoutes.get(
     "/admin/crash",

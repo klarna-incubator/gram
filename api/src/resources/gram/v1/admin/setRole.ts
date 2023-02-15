@@ -20,16 +20,18 @@ import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 
 const log = getLogger("dropRole");
 
-export default async function dropRole(req: Request, res: Response) {
-  const { role } = req.query;
+export default async function setRoles(req: Request, res: Response) {
+  const { roles } = req.body;
   const user = req.user;
 
-  log.warn(`Role drop called by user ${user.sub}, requesting to drop ${role}`);
+  log.warn(
+    `Set role called by user ${user.sub}, requesting to set roles to ${roles}`
+  );
 
   try {
-    if (role) {
+    if (Array.isArray(roles)) {
       user.roles = user.roles.filter(
-        (r: Role) => !(role as string[]).includes(r)
+        (r: Role) => !(roles as string[]).includes(r)
       );
       const payload: UserToken = {
         roles: user.roles,
