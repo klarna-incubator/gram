@@ -150,7 +150,7 @@ export default class OktaAuthProvider implements AuthProvider {
     const key = await secrets.get("auth.providerOpts.oidc.sessionSecret");
     const [ct, iv, authTag] =
       ctx.currentRequest.cookies["oidc-code"].split(".");
-    // make security parameters configurable, since different providers want different things.
+    // TODO: make oidc security parameters configurable, since different providers want different things.
     const { code_verifier, state } = JSON.parse(
       aes256gcm(key).decrypt(ct, iv, authTag)
     );
@@ -174,7 +174,7 @@ export default class OktaAuthProvider implements AuthProvider {
     }
 
     let groups: string[] = (payload.groups as string[]) || [];
-    if (!groups) {
+    if (!groups || groups.length === 0) {
       log.warn(
         "Groups not part of userinfo payload, resorting to LDAP lookup instead"
       );
