@@ -19,7 +19,7 @@ import loggerMw from "./middlewares/logger";
 import { securityHeaders } from "./middlewares/securityHeaders";
 import { AssetDir } from "@gram/core/dist/plugin";
 import crash from "./resources/gram/v1/admin/crash";
-import setRoles from "./resources/gram/v1/admin/setRole";
+import setRoles from "./resources/gram/v1/admin/setRoles";
 import { getBanner } from "./resources/gram/v1/banners/get";
 import { searchClasses } from "./resources/gram/v1/component-classes/search";
 import controlsV1 from "./resources/gram/v1/controls";

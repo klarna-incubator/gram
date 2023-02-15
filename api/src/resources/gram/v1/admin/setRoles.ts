@@ -30,11 +30,8 @@ export default async function setRoles(req: Request, res: Response) {
 
   try {
     if (Array.isArray(roles)) {
-      user.roles = user.roles.filter(
-        (r: Role) => !(roles as string[]).includes(r)
-      );
       const payload: UserToken = {
-        roles: user.roles,
+        roles,
         sub: user.sub,
         teams: user.teams,
         name: user.name,
@@ -43,8 +40,9 @@ export default async function setRoles(req: Request, res: Response) {
         slackId: user.slackId,
       };
       const token = await jwt.generateToken(payload);
-      res.json({ token, new_roles: user.roles });
+      res.json({ token, new_roles: roles });
     } else {
+      res.sendStatus(400);
       res.json({ new_roles: user.roles });
     }
   } catch (error: any) {
