@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { getAuthToken } from "./api/gram/util/authToken";
 import "./App.css";
+import AdminPage from "./components/admin/AdminPage";
 import { ModalManager } from "./components/elements/modal/ModalManager";
 import ErrorPage from "./components/error-page";
 import Home from "./components/home/Home";
@@ -126,6 +127,7 @@ export default function App() {
                       <Route path=":id" element={<Model />} />
                     </Route>
                     <Route path="/reviews" element={<Reviews />} />
+                    <Route path="/admin" element={<AdminPage />} />
                   </>
                 )}
                 <Route component={() => <ErrorPage code={404} />} />
