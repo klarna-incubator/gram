@@ -229,7 +229,7 @@ describe("Authorization", () => {
       );
     });
 
-    it("should return read/review permissions for assigned reviewer", async () => {
+    it("should return read/review/write permissions for assigned reviewer", async () => {
       getMockReviewById.mockImplementation(async () => mockReview);
       const mockModel = new Model("123", "whatever", "root");
       mockModel.id = "this is not a real id";
@@ -247,6 +247,7 @@ describe("Authorization", () => {
         [
           Permission.Read,
           Permission.Review, // Note: no delete
+          Permission.Write,
         ].sort()
       );
     });
@@ -265,7 +266,9 @@ describe("Authorization", () => {
         })
       );
 
-      expect(permissions.sort()).toStrictEqual([Permission.Read].sort());
+      expect(permissions.sort()).toStrictEqual(
+        [Permission.Read, Permission.Write].sort()
+      );
     });
 
     it("should return read/write/delete permissions for owner team (systemid)", async () => {
