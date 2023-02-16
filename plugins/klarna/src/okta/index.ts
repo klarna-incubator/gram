@@ -37,10 +37,9 @@ export function getRoles(groups: Set<string>) {
   if (roleMap.get(Role.Reviewer)?.find((r) => groups.has(r))) {
     roles.push(Role.Reviewer);
   }
-  // if (roleMap.get(Role.User)?.find((r) => groups.has(r))) {
-  roles.push(Role.User); // For now, ensure all logged-in users get the User Role.
-  // Later this will be enforced through EAP.
-  // }
+
+  roles.push(Role.User); // Initial access is controlled by Okta/sso-prod groups
+
   log.debug("Assigned roles:", roles);
 
   return roles;
