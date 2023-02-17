@@ -114,7 +114,7 @@ export class SystemPropertyHandler {
     );
 
     const systems = results
-      .filter((result) => result)
+      .filter((result) => Array.isArray(result))
       .reduce(
         (prev, curr, idx) =>
           new Set(curr?.filter((c) => idx < 1 || prev.has(c))),

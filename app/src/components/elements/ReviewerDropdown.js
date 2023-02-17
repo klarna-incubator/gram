@@ -1,12 +1,22 @@
-import { Chip, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Autocomplete,
+  Chip,
+  createFilterOptions,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useReviewersQuery } from "../../api/gram/review";
 
 export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState([
+    { value, label: value, recommended: false },
+  ]);
   const first = options.length > 0 ? options[0].value : undefined;
 
-  const { data: reviewers } = useReviewersQuery({
+  const { data: reviewers, isLoading } = useReviewersQuery({
     modelId,
   });
 
@@ -18,10 +28,14 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
         label: r.name,
         recommended: r.recommended,
       }))
-      .sort((a, b) => b.recommended - a.recommended);
+      .sort(
+        (a, b) =>
+          // Randomize the order to get a bit more of a spread in reviewer assignment
+          b.recommended + Math.random() - (a.recommended + Math.random())
+      );
 
     if (anyOption) {
-      options = [{ value: -1, label: "Any", recommended: false }, ...options];
+      options = [{ value: "-1", label: "Any", recommended: false }, ...options];
     }
     setOptions(options);
   }, [reviewers, setOptions, anyOption]);
@@ -32,22 +46,38 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
     }
   }, [value, onChange, first]);
 
+  const filterOptions = createFilterOptions({
+    matchFrom: "any",
+    stringify: (option) => option.label,
+    limit: 100,
+  });
+
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel shrink={true}>Reviewer</InputLabel>
-      <Select
-        fullWidth
-        label="Reviewer"
-        size="small"
-        variant="outlined"
-        value={value}
-        onChange={(e) => {
-          onChange(e.target.value);
-        }}
-        notched={true}
-      >
-        {options.map((opt) => (
-          <MenuItem value={opt.value} key={opt.value}>
+    <Autocomplete
+      value={options.find((opt) => opt.value === value)}
+      disableClearable
+      filterOptions={filterOptions}
+      onChange={(e, newValue) => {
+        onChange(newValue.value);
+      }}
+      loading={isLoading}
+      getOptionLabel={(option) => option.label}
+      options={options}
+      renderInput={(params) => (
+        <FormControl sx={{ m: 1, minWidth: 250 }}>
+          <InputLabel shrink={true}>Reviewer</InputLabel>
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            notched={true}
+            {...params}
+          />
+        </FormControl>
+      )}
+      renderOption={(props, opt) => {
+        return (
+          <MenuItem {...props} value={opt.value} key={opt.value}>
             {opt.label}
             {"  "}
             {opt.recommended && (
@@ -58,8 +88,8 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
               />
             )}
           </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+        );
+      }}
+    />
   );
 }

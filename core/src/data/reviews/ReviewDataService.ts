@@ -121,6 +121,10 @@ export class ReviewDataService extends EventEmitter {
       );
     }
 
+    if ((filters.systemIds || filters.properties) && systems.size === 0) {
+      return { total: 0, items: [] };
+    }
+
     if (systems.size > 0) {
       statements.push(
         `m.system_id IN (${Array.from(systems)
