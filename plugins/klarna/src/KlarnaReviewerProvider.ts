@@ -203,6 +203,10 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     return reviewers;
   }
 
+  /**
+   * Automatically reassign threat models assigned to Secure Development within the team.
+   * @param modelId
+   */
   async onReviewUpdated(modelId: string) {
     const review = await this.dal.reviewService.getByModelId(modelId);
     if (review?.reviewedBy === fallbackReviewer.sub) {
