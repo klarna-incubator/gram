@@ -101,27 +101,34 @@ export class ReviewDataService extends EventEmitter {
     const statements = ["r.deleted_at IS NULL", "m.deleted_at IS NULL"];
 
     let systems = new Set<string>();
+    let hasSystemIdFilter = false;
 
-    if (filters.systemIds && filters.systemIds.length > 0) {
+    if (Array.isArray(filters.systemIds) && filters.systemIds.length > 0) {
+      hasSystemIdFilter = true;
       filters.systemIds.map((sid) => systems.add(sid));
     }
 
-    if (filters.properties && filters.properties.length > 0) {
+    let hasPropertiesFilter = false;
+    if (Array.isArray(filters.properties) && filters.properties.length > 0) {
+      // Would be nice to rewrite this entire function at some point...
+      hasPropertiesFilter =
+        this.dal.sysPropHandler.validateFilters(filters.properties).length > 0;
+
       // This might not scale well if filtering returns a lot of systems.
-      const systemsFromProperties = Array.from(
+      const systemIdsFromProperties = Array.from(
         await this.dal.sysPropHandler.listSystemsByFilters(
           ctx,
           filters.properties
         )
       );
       systems = new Set(
-        systemsFromProperties.filter(
+        systemIdsFromProperties.filter(
           (sid) => !filters.systemIds || systems.has(sid)
         )
       );
     }
 
-    if ((filters.systemIds || filters.properties) && systems.size === 0) {
+    if ((hasSystemIdFilter || hasPropertiesFilter) && systems.size === 0) {
       return { total: 0, items: [] };
     }
 

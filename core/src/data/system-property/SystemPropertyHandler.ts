@@ -71,17 +71,12 @@ export class SystemPropertyHandler {
     return items;
   }
 
-  /**
-   * List systems based on Properties and their values. To avoid expensive lookups, this will only
-   * work with system properties that are marked "batchFilterable"
-   */
-  async listSystemsByFilters(
-    ctx: RequestContext,
-    filters: { propertyId: string; value: any }[]
-  ) {
-    // Only filter properties that have a type.
-    filters = filters.filter((f) => {
+  validateFilters(filters: { propertyId: string; value: any }[]) {
+    return filters.filter((f) => {
       const type = this.properties.get(f.propertyId)?.type;
+      if (!type) {
+        return false;
+      }
       if (type === "readonly") {
         return false;
       }
@@ -90,6 +85,17 @@ export class SystemPropertyHandler {
       }
       return true;
     });
+  }
+
+  /**
+   * List systems based on Properties and their values.
+   */
+  async listSystemsByFilters(
+    ctx: RequestContext,
+    filters: { propertyId: string; value: any }[]
+  ) {
+    // Only filter properties that have a type.
+    filters = this.validateFilters(filters);
 
     const results = await Promise.all(
       filters.map(async ({ propertyId, value }) => {

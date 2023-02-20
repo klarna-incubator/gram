@@ -117,7 +117,6 @@ export function TableToolbar(props) {
                       color={"primary"}
                       size="small"
                       variant="outlined"
-                      floatingLabelStyle={{ color: "#fff" }}
                       onChange={(e) =>
                         onPropertyFilterChange(prop, e.target.value)
                       }

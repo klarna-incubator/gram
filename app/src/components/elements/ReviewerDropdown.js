@@ -66,13 +66,7 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
       renderInput={(params) => (
         <FormControl sx={{ m: 1, minWidth: 250 }}>
           <InputLabel shrink={true}>Reviewer</InputLabel>
-          <TextField
-            fullWidth
-            size="small"
-            variant="outlined"
-            notched={true}
-            {...params}
-          />
+          <TextField fullWidth size="small" variant="outlined" {...params} />
         </FormControl>
       )}
       renderOption={(props, opt) => {

@@ -49,15 +49,14 @@ export function Reviews() {
 
   const { selectedStatuses, selectedProperties, order, page, reviewedBy } = {
     selectedStatuses: searchParams.get("statuses")?.split(",") || [],
-    selectedProperties:
-      searchParams
-        .get("properties")
-        ?.split(",")
-        .map((part) => decodeURIComponent(part))
-        .map((part) => {
-          const [id, value] = part.split(":");
-          return { id, value };
-        }) || [],
+    selectedProperties: (searchParams.get("properties") || "")
+      .split(",")
+      .map((part) => decodeURIComponent(part))
+      .map((part) => {
+        const [id, value] = part.split(":");
+        return { id, value };
+      })
+      .filter((prop) => !!prop.id),
     order: searchParams.get("order") || "ASC",
     page: parseInt(searchParams.get("page")) || 1,
     reviewedBy: searchParams.get("reviewedBy") || "",
