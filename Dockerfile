@@ -1,4 +1,4 @@
-FROM docker.artifactory.klarna.net/community-javascript/nodejs/nodejs-16-amazonlinux:20230213T1201
+FROM docker.artifactory.klarna.net/community-javascript/nodejs/nodejs-16-amazonlinux:20230220T1227
 
 WORKDIR /home/gram
 
