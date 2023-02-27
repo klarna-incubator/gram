@@ -50,7 +50,7 @@ export function RequestReview({ modelId }) {
         {(isUninitialized || isLoading) && (
           <>
             <Typography>
-              Select who you would like to review your threat model
+              Select who you would like to review your threat model.
             </Typography>
             <ReviewerDropdown
               modelId={modelId}

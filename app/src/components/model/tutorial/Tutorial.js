@@ -419,8 +419,7 @@ const ReviewProcess = () => (
 const ReviewExplained = () => (
   <>
     <Typography>
-      When you request a review of your Model you need to select a reviewer,
-      either someone from Secure Development or a Security Champion.
+      When you request a review of your Model you need to select a reviewer.
     </Typography>
     <Typography>
       An email will be sent to the{" "}
