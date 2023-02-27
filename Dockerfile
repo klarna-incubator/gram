@@ -45,6 +45,8 @@ RUN npm prune --omit=dev
 
 RUN addgroup -S gram && adduser -S gram -G gram
 
+RUN cp api/assets/* assets/
+
 RUN chown gram:gram assets
 
 # drop back to gram
