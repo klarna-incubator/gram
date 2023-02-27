@@ -54,7 +54,7 @@ export async function createRiskOnThreatModelApprove(
     strictSSL: true,
   });
 
-  return async ({ review }: { review: Review }) => {
+  const onApproveListener = async ({ review }: { review: Review }) => {
     log.debug("createRiskOnThreatModelApprove", review);
 
     const url = linkToModel(review.modelId);
@@ -130,6 +130,21 @@ export async function createRiskOnThreatModelApprove(
       transition: { id: "201" },
     });
   };
+
+  /**
+   * Wrap in try/catch to prevent application from crashing if the creation fails.
+   * @param param0
+   * @returns
+   */
+  const wrapped = async ({ review }: { review: Review }) => {
+    try {
+      return await onApproveListener({ review });
+    } catch (ex) {
+      log.error(ex);
+    }
+  };
+
+  return wrapped;
 }
 
 async function fetchModel(dal: DataAccessLayer, modelId: string) {
