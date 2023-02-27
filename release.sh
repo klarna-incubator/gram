@@ -13,14 +13,9 @@ git checkout develop
 git pull
 git checkout -b release/$1
 
-cd app
 npm version $1
-cd ../api
-npm version $1
-cd ..
 
-git add app/package*.json
-git add api/package*.json
+git add package*.json
 git commit -m "Version $1"
 
 git tag -f $1
