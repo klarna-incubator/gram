@@ -1,4 +1,4 @@
-# Changelog
+# Changelog (TODO)
 
 All notable changes to this project will be documented in this file.
 
@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - yyyy-mm-dd
 
-## [0.0.2] - yyyy-mm-dd
+## [3.0.0] - yyyy-mm-dd
 
 ### Changed
 
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - To make it easier for users and contributors to see precisely what notable changes have been made between each release (or version) of the project.
 
 <!-- Markdown link dfn's -->
+
 [unreleased]: https://github.com/klarna-incubator/TODO/compare/v1.1.0...HEAD
 [0.0.2]: https://github.com/klarna-incubator/TODO/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/klarna-incubator/TODO/releases/tag/v0.0.1
