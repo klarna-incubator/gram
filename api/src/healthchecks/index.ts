@@ -1,9 +1,9 @@
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import physical from "express-physical";
-import {
-  notificationsFailedCheck,
-  notificationsStalledCheck,
-} from "./notificationsCheck";
+// import {
+//   notificationsFailedCheck,
+//   notificationsStalledCheck,
+// } from "./notificationsCheck";
 import {
   postgresAvailableConnectionsCheck,
   postgresSimpleQueryCheck,
@@ -16,6 +16,7 @@ export const createHealthChecks = (dal: DataAccessLayer) =>
     selfCheck,
     postgresSimpleQueryCheck(dal),
     postgresAvailableConnectionsCheck(dal),
-    notificationsFailedCheck(dal),
-    notificationsStalledCheck(dal),
+    // Disabled for now, since they are too noisy.
+    // notificationsFailedCheck(dal),
+    // notificationsStalledCheck(dal),
   ]);
