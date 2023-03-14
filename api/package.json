@@ -1,7 +1,7 @@
 {
   "name": "@gram/api",
   "private": true,
-  "version": "2.8.4",
+  "version": "3.0.3",
   "description": "API for threat modelling",
   "scripts": {
     "start": "NODE_ENV=development nodemon --watch src --watch ../core/src --files src/index.ts",
@@ -35,9 +35,9 @@
     "node": "16"
   },
   "dependencies": {
-    "@gram/aws": "^1.0.0",
-    "@gram/core": "^2.8.4",
-    "@gram/svgporn": "^1.0.0",
+    "@gram/aws": "^3.0.3",
+    "@gram/core": "^3.0.3",
+    "@gram/svgporn": "^3.0.3",
     "@sentry/integrations": "^7.6.0",
     "@sentry/node": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
