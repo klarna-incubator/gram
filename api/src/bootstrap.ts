@@ -11,7 +11,7 @@ import SVGPornPlugin from "@gram/svgporn"; // "@gram/svgpornm": "*" in package.j
 export async function bootstrapPlugins(app: Application, dal: DataAccessLayer) {
   const compiler = new PluginCompiler(dal, app);
   await Promise.all([
-    new AWSPlugin().bootstrap(compiler), 
+    new AWSPlugin().bootstrap(compiler),
     new SVGPornPlugin().bootstrap(compiler),
     // new GithubPlugin().bootstrap(compiler),
     // new StaticPlugin().bootstrap(compiler),
