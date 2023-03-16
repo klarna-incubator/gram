@@ -42,6 +42,10 @@ jobs:
         shell: bash
         run: NODE_ENV=test npm run migrate-database
 
+      - name: "Build"
+        shell: bash
+        run: npm run build
+
       - name: "Test"
         shell: bash
         run: npm test
@@ -49,11 +53,7 @@ jobs:
       - name: "Lint"
         shell: bash
         run: npm run lint
-
-      - name: "Build"
-        shell: bash
-        run: npm run build
-
+        
       - name: "Snyk"
         shell: bash
         run: npm run snyk
