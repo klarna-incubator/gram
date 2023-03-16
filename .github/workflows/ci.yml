@@ -40,7 +40,7 @@ jobs:
 
       - name: "Setup database"
         shell: bash
-        run: NODE_ENV=test npm run -w api migrate-database
+        run: NODE_ENV=test npm run migrate-database
 
       - name: "Test"
         shell: bash
