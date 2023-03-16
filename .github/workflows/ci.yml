@@ -8,9 +8,9 @@ on:
       - "ci"
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: api
+# defaults:
+#   run:
+#     working-directory: api
 
 jobs:
   ci:
