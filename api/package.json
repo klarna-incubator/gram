@@ -35,9 +35,9 @@
     "node": "16"
   },
   "dependencies": {
-    "@gram/aws": "^3.0.3",
-    "@gram/core": "^3.0.3",
-    "@gram/svgporn": "^3.0.3",
+    "@gram/aws": "*",
+    "@gram/core": "*",
+    "@gram/svgporn": "*",
     "@sentry/integrations": "^7.6.0",
     "@sentry/node": "^7.6.0",
     "@sentry/tracing": "^7.6.0",

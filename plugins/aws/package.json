@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^3.0.3",
+    "@gram/core": "*",
     "path": "^0.12.7"
   },
   "private": true

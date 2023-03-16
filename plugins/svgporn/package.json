@@ -15,6 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^3.0.3"
+    "@gram/core": "*"
   }
 }
