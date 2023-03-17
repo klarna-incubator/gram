@@ -84,5 +84,11 @@ export default class KlarnaPack implements Plugin {
       await cronJobs.sendRemindersForRequested();
       await cronJobs.reassignOverdueReviews();
     });
+
+    cron.schedule("12 * * * *", async () => {
+      // runs every hour on the 12th minute
+      await reviewerProvider.loadDSL();
+      await reviewerProvider.loadSecDev();
+    });
   }
 }

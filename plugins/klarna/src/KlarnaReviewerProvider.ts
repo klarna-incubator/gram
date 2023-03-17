@@ -44,6 +44,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
   secDevRoundRobinCounter = 0;
 
   private secdevMembers: Set<string> = new Set();
+  private dslMembers: Set<string> = new Set();
 
   constructor(
     private dal: DataAccessLayer,
@@ -51,18 +52,33 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     private hsf: HSFContextProvider
   ) {
     this.loadSecDev();
+    this.loadDSL();
   }
 
   async getFallbackReviewer(): Promise<Reviewer> {
     return fallbackReviewer;
   }
 
-  private async loadSecDev(): Promise<void> {
+  public async loadSecDev(): Promise<void> {
     const members = await listLDAPGroupMembers("access.secure-development");
+    if (!Array.isArray(members) || members.length == 0) {
+      log.warn("Got empty secdev group - going to skip this result..");
+      return;
+    }
     this.secdevMembers = new Set(members.map((u) => u.sub));
     log.info(
       `Loaded ${this.secdevMembers.size} secdev members to overload calendar with.`
     );
+  }
+
+  public async loadDSL(): Promise<void> {
+    const members = await listLDAPGroupMembers("domain.security.leads");
+    if (!Array.isArray(members) || members.length == 0) {
+      log.warn("Got empty dsl group - going to skip this result..");
+      return;
+    }
+    this.dslMembers = new Set(members.map((u) => u.sub));
+    log.info(`Loaded ${this.dslMembers.size} DSL members`);
   }
 
   private overrideCalendar(u: Reviewer): Reviewer {
@@ -164,19 +180,16 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
       false
     );
 
-    if (hsfProp[0].value === "false") {
-      // If the system is HSF, we only recommend SecDev. Otherwise we
-      // recommend based on the reviewer being in the same domain as
-      // the system.
-      const system = await this.systemProvider.getOctaneSystem(model.systemId);
-      const domain = system?.team?.domain;
+    // Recommend reviewer based on the reviewer being in the same domain as
+    // the system.
+    const system = await this.systemProvider.getOctaneSystem(model.systemId);
+    const domain = system?.team?.domain;
 
-      if (domain?.accountability_code !== undefined) {
-        const ldapDomain = await getDomain(domain.accountability_code);
-        // Create recommendation function based on system domain
-        recommend = (dn: string) =>
-          ldapDomain ? ldapDomain.memberCns.includes(dn) : false;
-      }
+    if (domain?.accountability_code !== undefined) {
+      const ldapDomain = await getDomain(domain.accountability_code);
+      // Create recommendation function based on system domain
+      recommend = (dn: string) =>
+        ldapDomain ? ldapDomain.memberCns.includes(dn) : false;
     }
 
     // Map recommendations based on DSLs / Sec Champions
@@ -184,7 +197,8 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     const reviewers: Reviewer[] = reviewersFromLdap
       .filter(
         // Only list SecDev as reviewers for HSF systems
-        (r) => !isHSF || this.secdevMembers.has(r.sub)
+        (r) =>
+          !isHSF || this.secdevMembers.has(r.sub) || this.dslMembers.has(r.sub)
       )
       .map((r) => ({
         ...r,
