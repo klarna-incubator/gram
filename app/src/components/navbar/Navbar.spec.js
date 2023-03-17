@@ -6,6 +6,11 @@ import { createMockStore } from "redux-test-utils";
 import { MockTheme } from "../../MockTheme";
 import { Navbar } from "./Navbar";
 
+jest.mock("../../api/gram/menu", () => ({
+  ...jest.requireActual("react-redux"),
+  useGetMenuQuery: jest.fn(() => ({isLoading: false, data: []}))
+}));
+
 const store = createMockStore({
   navbar: { troll: "no" },
   user: { picture: "", name: "testname" },
