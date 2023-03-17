@@ -21,7 +21,7 @@ export function TeamSystemsPageList({
   listHeight = "500px",
   width = "45%",
 }) {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   const opts = { filter: "team", teamId, pagesize, page };
   const { data, isLoading, isFetching } = useListSystemsQuery(opts);

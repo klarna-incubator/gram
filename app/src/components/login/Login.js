@@ -4,10 +4,15 @@ import { useSearchParams } from "react-router-dom";
 import { useGetAuthParamsQuery } from "../../api/gram/auth";
 import Loading from "../loading";
 import "./Login.css";
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 export function Login() {
-  const { data: authParams, isLoading, isError, isSuccess } = useGetAuthParamsQuery();
+  const {
+    data: authParams,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useGetAuthParamsQuery();
 
   const [searchParams] = useSearchParams();
 
@@ -17,11 +22,15 @@ export function Login() {
   }, [searchParams]);
 
   return (
-    <div id="login">      
-      <h2>Authentication required</h2>      
+    <div id="login">
+      <h2>Authentication required</h2>
       {isLoading && <Loading />}
       {isError && <p>Failed to load authentication params. Try reloading.</p>}
-      {isSuccess && authParams.length === 0 && <Typography><WarningAmberIcon /> No authentication methods configured.</Typography>}
+      {isSuccess && authParams.length === 0 && (
+        <Typography>
+          <WarningAmberIcon /> No authentication methods configured.
+        </Typography>
+      )}
       {authParams
         ?.filter((p) => !p.hideOnFrontend)
         ?.map((provider) => (
