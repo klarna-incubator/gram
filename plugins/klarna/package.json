@@ -11,21 +11,21 @@
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",
     "compile": "tsc -p tsconfig.build.json",
-    "test": "NODE_CONFIG_DIR=../../config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
+    "test": "NODE_CONFIG_DIR=../../config/ NODE_ENV=development jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^2.8.4",
+    "@gram/core": "*",
+    "@types/ldapjs": "^2.2.5",
     "hpagent": "^1.2.0",
     "jira-client": "^8.2.2",
-    "ldapjs": "^2.3.3",
+    "ldapjs": "^3.0.1",
     "openid-client": "^5.3.2",
     "precond": "^0.2.3"
   },
   "private": true,
   "devDependencies": {
-    "@types/jira-client": "^7.1.6",
-    "@types/ldapjs": "^2.2.5"
+    "@types/jira-client": "^7.1.6"
   }
 }

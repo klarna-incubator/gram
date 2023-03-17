@@ -1,41 +1,61 @@
-import { getLDAPUserGroups, listLDAPGroupMembers, LDAPCache } from "./lookup";
+import { getLDAPUserGroups, listLDAPGroupMembers, LDAPCache, initLdapClient } from "./lookup";
 
-describe("ldap lookup (integration tests)", () => {
+describe.skip("ldap lookup (integration tests)", () => {
   let cacheGet: any;
   beforeAll(async () => {
     cacheGet = jest.spyOn(LDAPCache, "get");
     cacheGet.mockImplementation(() => {
-      // console.log("Mocked cacheGet called");
+      console.log("Mocked cacheGet called");
       return null;
     });
   });
 
-  it.skip("should be ok with concurrent lookups", async () => {
+  it("should be ok with concurrent lookups", async () => {
     const user = "joakim.uddholm@klarna.com";
     const lookups = [
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
-      getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
+      async () => getLDAPUserGroups(user),
     ];
 
-    const result = await Promise.all(lookups);
+    const result = await Promise.all(lookups.map(l => l()));
+
+    console.log(result);
 
     result.forEach((row) => expect(row).toEqual(result[0]));
   });
 
-  it.skip("should be able to lookup all secdev members simultaneously", async () => {
+  it("should be able to lookup all secdev members simultaneously", async () => {
     const members = await listLDAPGroupMembers("access.secure-development");
     const secdevMembers = members.map((u) => u.sub);
     const lookups = secdevMembers.map(getLDAPUserGroups);
     const result = await Promise.all(lookups);
     result.forEach((row) => expect(row).toBeTruthy());
+  });
+
+  it("should be able to connect", async () => {
+    const ldap = initLdapClient();
+    (await ldap).destroy();
+  });
+
+  it("should be ok with lookups of non-existent users", async () => {
+    const user = "does.not.exist@klarna.com";
+    const lookups = [
+      async () => getLDAPUserGroups(user),
+    ];
+
+    const result = await Promise.all(lookups.map(l => l()));
+
+    console.log(result);
+
+    result.forEach((row) => expect(row).toEqual(result[0]));
   });
 
   afterAll(() => {

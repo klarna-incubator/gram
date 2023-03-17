@@ -58,7 +58,10 @@ export default class LDAPAuthProvider implements AuthProvider {
       ldap.bind(dn, pass, async (err, user) => {
         if (err) {
           log.error("Ldap authentication failed", err);
-          ldap.unbind();
+          
+          if (ldap.destroy) {
+            ldap.destroy();
+          }
           return reject(
             new NotAuthenticatedError(
               `authentication failed for ldap user ${name}`
@@ -76,7 +79,9 @@ export default class LDAPAuthProvider implements AuthProvider {
             )
           );
         }
-        ldap.unbind();
+        if (ldap.destroy) {
+          ldap.destroy();    
+        }    
         resolve({
           sub,
           name: user.displayName,
@@ -85,5 +90,7 @@ export default class LDAPAuthProvider implements AuthProvider {
         });
       });
     });
+
+    
   }
 }

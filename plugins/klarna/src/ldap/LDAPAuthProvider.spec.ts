@@ -1,7 +1,7 @@
 import { Role } from "@gram/core/dist/auth/models/Role";
 import LDAPAuthProvider from "./LDAPAuthProvider";
 import * as lookup from "./lookup";
-import { Request } from "express";
+import { GramRequest } from "@gram/core/dist/data/providers/RequestContext";
 
 jest.mock("./lookup");
 
@@ -33,8 +33,8 @@ describe("auth.provider.ldap", () => {
       await expect(
         ldap.getIdentity({
           currentRequest: {
-            headers: { authorization: "something" },
-          } as Request,
+            headers: { authorization: "something" },            
+          } as GramRequest,
         })
       ).rejects.toThrow(/Invalid.*/);
     });
@@ -54,7 +54,7 @@ describe("auth.provider.ldap", () => {
                 "username:badpasssword"
               ).toString("base64")}`,
             },
-          } as Request,
+          } as GramRequest,
         })
       ).rejects.toThrow(/Invalid system user .*/);
     });
@@ -74,7 +74,7 @@ describe("auth.provider.ldap", () => {
                 "sys.example:badpasssword"
               ).toString("base64")}`,
             },
-          } as Request,
+          } as GramRequest,
         })
       ).rejects.toThrow(/authentication failed .*/);
     });
@@ -101,7 +101,7 @@ describe("auth.provider.ldap", () => {
                 "sys.gram.mail:passsword"
               ).toString("base64")}`,
             },
-          } as Request,
+          } as GramRequest,
         })
       ).rejects.toThrow(/not member/);
     });
@@ -130,7 +130,7 @@ describe("auth.provider.ldap", () => {
               "sys.gram.mail:password"
             ).toString("base64")}`,
           },
-        } as Request,
+        } as GramRequest,
       });
 
       expect(identity.sub).toBe("sys.gram.mail");

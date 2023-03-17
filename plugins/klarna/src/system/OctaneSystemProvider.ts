@@ -248,7 +248,7 @@ export class OctaneSystemProvider implements SystemProvider {
         break;
     }
 
-    const index = (pagination.page - 1) * pagination.pageSize;
+    const index = pagination.page * pagination.pageSize;
     const endIndex = index + pagination.pageSize;
 
     return {
