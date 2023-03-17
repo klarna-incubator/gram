@@ -248,8 +248,11 @@ export class OctaneSystemProvider implements SystemProvider {
         break;
     }
 
+    const index = (pagination.page - 1) * pagination.pageSize;
+    const endIndex = index + pagination.pageSize;
+
     return {
-      systems: systems.map(
+      systems: systems.slice(index, endIndex).map(
         (system) =>
           new System(
             system.system_id,
