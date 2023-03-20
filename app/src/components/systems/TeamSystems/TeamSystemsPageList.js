@@ -17,7 +17,7 @@ import "../Systems.css";
 
 export function TeamSystemsPageList({
   teamId,
-  pagesize = 15,
+  pagesize = 10,
   listHeight = "500px",
   width = "45%",
 }) {
@@ -60,8 +60,10 @@ export function TeamSystemsPageList({
         {!isLoading && (
           <Pagination
             count={Math.ceil(data.total / data.pageSize)}
-            page={page}
-            onChange={(_, p) => setPage(p)}
+            page={
+              page + 1
+            } /* hack here to translate between APIs zero-pagination vs MUIs one-pagination */
+            onChange={(_, p) => setPage(p - 1)}
           />
         )}
       </CardActions>
