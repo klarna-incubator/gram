@@ -89,7 +89,7 @@ export async function getLDAPUserGroupsByDN(dn: string): Promise<string[]> {
     attributes: ["memberOfGroupId"],
   });
 
-  return object !== null ? (object.memberOfGroupId as string[]) : [];
+  return object !== null ? getAttributeAsArray(object, "memberOfGroupId") : [];
 }
 
 export async function getLDAPUserGroups(email: string): Promise<string[]> {
@@ -105,7 +105,7 @@ export async function getLDAPUserGroups(email: string): Promise<string[]> {
     attributes: ["dn", "memberOfGroupId"],
   });
 
-  return object !== null ? (object.memberOfGroupId as string[]) : [];
+  return object !== null ? getAttributeAsArray(object, "memberOfGroupId") : [];
 }
 
 export async function listLDAPGroupMembers(

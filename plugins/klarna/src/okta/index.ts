@@ -178,17 +178,14 @@ export default class OktaAuthProvider implements AuthProvider {
         "Groups not part of userinfo payload, resorting to LDAP lookup instead"
       );
       groups = await getLDAPUserGroups(email);
-      log.info(
-        "User ldap groups",
-        groups.filter((g) => g.startsWith("access.1288598"))
-      );
     } else {
       log.info("Got groups from Okta - no ldap needed 🎉");
-      log.info(
-        "User ldap groups",
-        groups.filter((g) => g.startsWith("access.1288598"))
-      );
     }
+
+    log.info(
+      "User ldap groups",
+      groups.filter((g) => g.startsWith("access.1288598"))
+    );
 
     const user = await lookupUser(ctx, email);
 
