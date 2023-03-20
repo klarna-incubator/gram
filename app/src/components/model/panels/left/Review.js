@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import {
   DescriptionRounded as DescriptionRoundedIcon,
   ThumbUpRounded as ThumbUpRoundedIcon,
@@ -29,6 +28,8 @@ import { modalActions } from "../../../../redux/modalSlice";
 import { MODALS } from "../../../elements/modal/ModalManager";
 import { PERMISSIONS } from "../../constants";
 import { useModelID } from "../../hooks/useModelID";
+import EmailIcon from "@mui/icons-material/Email";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const ReviewContent = (review) => {
   const { hasExpired, validUntil, aboutToExpire } = useReviewExpiration(
@@ -361,7 +362,7 @@ function UserChip({ user }) {
               color="inherit"
               size="small"
             >
-              <Icon icon="mdi:slack" />
+              <ChatIcon />
             </IconButton>
           )}
           {user?.mail && (
@@ -372,7 +373,7 @@ function UserChip({ user }) {
               color="inherit"
               size="small"
             >
-              <Icon icon="mdi:email" />
+              <EmailIcon />
             </IconButton>
           )}
         </>
