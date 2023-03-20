@@ -82,6 +82,10 @@
     {
       "name": "Docs",
       "path": "https://kep.klarna.net/docs/secure-development/threat_modeling/threat_modeling/"
+    },
+    {
+      "name": "Support",
+      "path": "https://klarna.slack.com/archives/C04RMEJ8VFD"
     }
   ]
 }
