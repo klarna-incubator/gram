@@ -45,6 +45,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
 
   private secdevMembers: Set<string> = new Set();
   private dslMembers: Set<string> = new Set();
+  private reviewers: LDAPUser[] = [];
 
   constructor(
     private dal: DataAccessLayer,
@@ -53,6 +54,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
   ) {
     this.loadSecDev();
     this.loadDSL();
+    this.loadReviewers();
   }
 
   async getFallbackReviewer(): Promise<Reviewer> {
@@ -121,7 +123,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     return reviewers;
   }
 
-  async getLdapReviewers(): Promise<LDAPUser[]> {
+  async loadReviewers(): Promise<void> {
     const reviewerGroups: string[] = config.get(
       "auth.providerOpts.ldap.roleMap.reviewer"
     );
@@ -135,7 +137,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     ).reduce((p, c) => c.concat(p), []);
 
     const unique = new Set();
-    reviewersFromLdap = reviewersFromLdap.filter((r) => {
+    const newReviewers = reviewersFromLdap.filter((r) => {
       if (unique.has(r.sub)) {
         return false;
       }
@@ -143,15 +145,15 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
       return true;
     });
 
-    log.info(`fetched ${reviewersFromLdap.length} reviewers from ldap`);
+    if (newReviewers.length > 0) {
+      this.reviewers = newReviewers;
+    }
 
-    return reviewersFromLdap;
+    log.info(`Loaded ${reviewersFromLdap.length} reviewers from ldap`);
   }
 
   async getReviewers(): Promise<Reviewer[]> {
-    const reviewersFromLdap = await this.getLdapReviewers();
-
-    const reviewers: Reviewer[] = reviewersFromLdap
+    const reviewers: Reviewer[] = this.reviewers
       .map((r) => ({
         ...r,
         recommended: false,
@@ -167,8 +169,6 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     ctx: RequestContext,
     model: Model
   ): Promise<Reviewer[]> {
-    const reviewersFromLdap = await this.getLdapReviewers();
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let recommend = (dn: string) => false;
 
@@ -193,7 +193,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
 
     // Map recommendations based on DSLs / Sec Champions
     const isHSF = hsfProp.length > 0 && hsfProp[0].value !== "false";
-    const reviewers: Reviewer[] = reviewersFromLdap
+    const reviewers: Reviewer[] = this.reviewers
       .filter(
         // Only list SecDev as reviewers for HSF systems
         (r) =>

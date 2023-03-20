@@ -211,10 +211,10 @@ export async function getDomain(
   return domain;
 }
 
-const THIRTY_MINS_MS = 30 * 60 * 1000;
+const TWENTY_MINS_MS = 20 * 60 * 1000;
 export const LDAPCache = new Cache<string, ldap.SearchEntryObject[]>(
   "LDAP-cache",
-  THIRTY_MINS_MS
+  TWENTY_MINS_MS
 );
 
 async function ldapQuery(
