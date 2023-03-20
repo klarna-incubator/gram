@@ -66,9 +66,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
       return;
     }
     this.secdevMembers = new Set(members.map((u) => u.sub));
-    log.info(
-      `Loaded ${this.secdevMembers.size} secdev members to overload calendar with.`
-    );
+    log.info(`Loaded ${this.secdevMembers.size} secdev members`);
   }
 
   public async loadDSL(): Promise<void> {
@@ -173,6 +171,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let recommend = (dn: string) => false;
+
     // Check if the system is HSF
     const hsfProp = await this.hsf.provideSystemProperties(
       ctx,
@@ -193,7 +192,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     }
 
     // Map recommendations based on DSLs / Sec Champions
-    const isHSF = hsfProp[0].value !== "false";
+    const isHSF = hsfProp.length > 0 && hsfProp[0].value !== "false";
     const reviewers: Reviewer[] = reviewersFromLdap
       .filter(
         // Only list SecDev as reviewers for HSF systems

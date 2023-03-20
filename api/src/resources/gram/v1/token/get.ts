@@ -5,6 +5,9 @@
 import { Request, Response } from "express";
 import AuthProviderRegistry from "@gram/core/dist/auth/AuthProviderRegistry";
 import * as jwt from "@gram/core/dist/auth/jwt";
+import { getLogger } from "log4js";
+
+const log = getLogger("getAuthToken");
 
 export default async function getAuthToken(req: Request, res: Response) {
   if (req.query.provider === undefined) return res.sendStatus(400);

@@ -55,7 +55,7 @@ async function connectLdapClient() {
 export async function testLdapClient() {
   // Checking that ldap works
   const user = await getUser("joakim.uddholm@klarna.com");
-  if (!user) {    
+  if (!user) {
     throw new Error(
       "LDAP failed to lookup sys.gram.ldap user, likely something is wrong with the LDAP setup"
     );
@@ -123,7 +123,7 @@ export async function listLDAPGroupMembers(
     dn: s.objectName,
     sub: getAttribute(s, "mail"),
     name: getAttribute(s, "displayName"),
-    teams: getAttributeAsArray(s, "klarnaAccountabilityOU")
+    teams: getAttributeAsArray(s, "klarnaAccountabilityOU"),
   }));
 }
 
@@ -174,11 +174,11 @@ export async function getUser(email: string): Promise<User | null> {
   const ldapUser = await ldapQueryOne(LDAPUserSearchBase, {
     scope: "sub",
     filter: `(mail=${email})`,
-    attributes: ["displayName", "mail", "klarnaAccountabilityOU",],
+    attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
   });
 
   if (ldapUser === null) return null;
-  
+
   const ldapTeams = getAttributeAsArray(ldapUser, "klarnaAccountabilityOU");
 
   const teams = await getTeamsByCN(ldapTeams);
@@ -221,14 +221,13 @@ async function ldapQuery(
   base: string,
   options: ldap.SearchOptions
 ): Promise<ldap.SearchEntryObject[] | null> {
-  
   const cacheKey = JSON.stringify({ base, options });
   if (LDAPCache.has(cacheKey)) {
     log.debug("Cache hit LDAP lookup for", cacheKey);
     return LDAPCache.get(cacheKey);
-  } 
-  
-  log.debug("Cache miss LDAP lookup for", cacheKey);  
+  }
+
+  log.debug("Cache miss LDAP lookup for", cacheKey);
 
   // any here as a temporary workaround until types are updated.
   const ldapClient: any = await connectLdapClient();
@@ -241,32 +240,23 @@ async function ldapQuery(
         if (err) {
           log.error("Error occured in search", err);
           reject(err);
-          return 
+          return;
         }
 
-        res.on("searchEntry", (entry: any) => {   
-          for (const element of entry.attributes.values()) {
-            log.debug("entry.attributes", element);
-          }
-
-          // log.debug("entry.attributes", entry.attributes.displayName);
+        res.on("searchEntry", (entry: any) => {
           if (entry.pojo) {
             objects.push(entry.pojo);
           } else {
-            log.warn(
-              "got non-truthy LDAP entry object",
-              cacheKey,
-              entry.pojo
-            );
+            log.warn("got non-truthy LDAP entry object", cacheKey, entry.pojo);
           }
         });
 
         res.on("error", (err: any) => {
           log.error("Error during LDAP query", err);
-          reject(err);          
+          reject(err);
         });
 
-        res.on("end", (result: any) => {          
+        res.on("end", (result: any) => {
           log.debug("ldap end");
           LDAPCache.set(cacheKey, objects);
           ldapClient.unbind();
@@ -279,7 +269,9 @@ async function ldapQuery(
   const result = await promise;
   ldapClient.destroy();
   if (result === null) {
-    throw new Error(`Got a null result from LDAP, meaning the promise was never resolved. Query: ${cacheKey}`);
+    throw new Error(
+      `Got a null result from LDAP, meaning the promise was never resolved. Query: ${cacheKey}`
+    );
   }
   if (result?.length === 0) {
     log.warn("received an empty result", cacheKey, result);
