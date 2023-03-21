@@ -353,7 +353,7 @@ describe("ReviewDataService implementation", () => {
       await data.create(review);
       expect(notificationQueue.mock.calls.length).toBe(1);
       const res = await data.cancel(modelId);
-      // expect(notificationQueue.mock.calls.length).toBe(2);
+      expect(notificationQueue.mock.calls.length).toBe(2);
       expect(res).toBeTruthy();
 
       const updatedReview = await data.getByModelId(modelId);
@@ -377,7 +377,7 @@ describe("ReviewDataService implementation", () => {
       await data.create(review);
       expect(notificationQueue.mock.calls.length).toBe(1);
       const res = await data.decline({}, review.modelId);
-      // expect(notificationQueue.mock.calls.length).toBe(2);
+      expect(notificationQueue.mock.calls.length).toBe(2);
       expect(res).toBeTruthy();
 
       const updatedReview = await data.getByModelId(review.modelId);

@@ -323,19 +323,47 @@ export class ReviewDataService extends EventEmitter {
   }
 
   async cancel(modelId: string) {
-    return await this.update(modelId, {
+    const review = await this.update(modelId, {
       status: ReviewStatus.Canceled,
       reviewedBy: null,
       requestedBy: null,
     });
+
+    if (!review) {
+      this.log.error(`No review exists for ${modelId}`);
+      return review;
+    }
+
+    await this.dal.notificationService.queue({
+      templateKey: "review-cancelled",
+      params: {
+        review,
+      },
+    });
+
+    return review;
   }
 
   async decline(ctx: RequestContext, modelId: string, note?: string) {
-    return await this.update(modelId, {
+    const review = await this.update(modelId, {
       status: ReviewStatus.Declined,
       reviewedBy: (await reviewerProvider.getFallbackReviewer(ctx)).sub,
       note: note,
     });
+
+    if (!review) {
+      this.log.error(`No review exists for ${modelId}`);
+      return review;
+    }
+
+    await this.dal.notificationService.queue({
+      templateKey: "review-declined",
+      params: {
+        review,
+      },
+    });
+
+    return review;
   }
 
   async approve(
