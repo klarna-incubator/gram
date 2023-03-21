@@ -48,7 +48,7 @@ export const EmailReviewDeclined = (systemProvider: OctaneSystemProvider) =>
         cc,
         recipients,
         ...variables,
-        previousReviewer,
+        previousReviewer: previous,
       };
     }
   );
