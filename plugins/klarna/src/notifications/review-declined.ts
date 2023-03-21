@@ -11,7 +11,7 @@ Hi {{requester.name}}!
 
 {{reviewer.name}} has declined your request to review the threat model of {{model.name}}. 
 
-It will be automatically re-assigned to the Secure Development team, however if you have a specific DSL or Security Champion 
+It has been automatically re-assigned to {{fallbackReviewer.name}}, however if you have a specific DSL or Security Champion 
 who you would like to review your model, feel free to assign it to them instead.
  `.trim();
 

@@ -9,6 +9,7 @@ import {
   OctaneSystem,
   OctaneSystemProvider,
 } from "../system/OctaneSystemProvider";
+import { reviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 const missingTeamEmailTemplate = Handlebars.compile(`
 --- 
@@ -54,7 +55,7 @@ export async function generalReviewNotificationVariables(
     system = await systemProvider.getOctaneSystem(model.systemId);
   }
 
-  const [owner, reviewer, requester] = await Promise.all([
+  const [owner, reviewer, requester, fallbackReviewer] = await Promise.all([
     // Lookup Model Owner
     (async () => {
       if (system?.team?.accountability_code) {
@@ -92,6 +93,7 @@ export async function generalReviewNotificationVariables(
         name: requester?.name || "Requester",
       };
     })(),
+    reviewerProvider.getFallbackReviewer({}),
   ]);
 
   const modelInfo = {
@@ -103,6 +105,7 @@ export async function generalReviewNotificationVariables(
     reviewer,
     requester,
     owner,
+    fallbackReviewer,
     model: modelInfo,
     missingTeamEmail: missingTeamEmail(owner, review),
     review: {
