@@ -12,7 +12,7 @@ export type NotificationTemplateKey =
   | "review-meeting-requested"
   | "review-meeting-requested-reminder"
   | "review-reviewer-changed"
-  | "review-cancelled"
+  | "review-canceled"
   | "review-declined";
 
 export type NotificationInput = {

@@ -335,7 +335,7 @@ export class ReviewDataService extends EventEmitter {
     }
 
     await this.dal.notificationService.queue({
-      templateKey: "review-cancelled",
+      templateKey: "review-canceled",
       params: {
         review,
       },
