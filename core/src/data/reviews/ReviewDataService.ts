@@ -345,6 +345,8 @@ export class ReviewDataService extends EventEmitter {
   }
 
   async decline(ctx: RequestContext, modelId: string, note?: string) {
+    const oldReview = await this.getByModelId(modelId);
+
     const review = await this.update(modelId, {
       status: ReviewStatus.Declined,
       reviewedBy: (await reviewerProvider.getFallbackReviewer(ctx)).sub,
@@ -360,6 +362,7 @@ export class ReviewDataService extends EventEmitter {
       templateKey: "review-declined",
       params: {
         review,
+        previousReviewer: oldReview?.reviewedBy,
       },
     });
 
