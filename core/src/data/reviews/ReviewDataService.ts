@@ -348,7 +348,7 @@ export class ReviewDataService extends EventEmitter {
     const oldReview = await this.getByModelId(modelId);
 
     const review = await this.update(modelId, {
-      status: ReviewStatus.Declined,
+      status: ReviewStatus.Requested, // TODO: handle ReviewStatus.Declined better. This assumes there is a fallback reviewer.
       reviewedBy: (await reviewerProvider.getFallbackReviewer(ctx)).sub,
       note: note,
     });
