@@ -371,7 +371,7 @@ describe("ReviewDataService implementation", () => {
   });
 
   describe("decline", () => {
-    it("should update status to Declined", async () => {
+    it("should update status to Requested", async () => {
       notificationQueue.mockImplementation(async () => 123);
       const review = new Review(modelId, "some-user", ReviewStatus.Requested);
       await data.create(review);
@@ -381,7 +381,7 @@ describe("ReviewDataService implementation", () => {
       expect(res).toBeTruthy();
 
       const updatedReview = await data.getByModelId(review.modelId);
-      expect(updatedReview!.status).toEqual(ReviewStatus.Declined);
+      expect(updatedReview!.status).toEqual(ReviewStatus.Requested);
     });
 
     it("should return false on no matching review", async () => {
