@@ -8,9 +8,9 @@ const subject = `{{model.name}} request for threat model review declined`;
 const template = `
 Hi {{requester.name}}!
 
-{{reviewer.name}} has declined your request to review for the threat model of {{model.name}}. 
+{{reviewer.name}} has declined your request to review the threat model of {{model.name}}. 
 
-You will need to find a different reviewer to complete the review.
+It has been automatically re-assigned to {{fallbackReviewer.name}}
  `.trim();
 
 export const EmailReviewDeclined = () =>

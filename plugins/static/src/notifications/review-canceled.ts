@@ -11,12 +11,12 @@ Hi {{reviewer.name}} and {{requester.name}}!
 This email is just to let you know the threat model review of {{model.name}} was canceled. This means
 that the requesting team no longer wants to have the threat model reviewed.
 
-If you want to re-open the review of the threat model, you can do simply re-request a review from the model's diagram: 
+If you want to re-open the review of the threat model, you can simply re-request a review from the model's diagram: 
 {{model.link}}
  
 `.trim();
 
-export const EmailReviewCancelled = () =>
+export const EmailReviewCanceled = () =>
   new PlaintextHandlebarsNotificationTemplate(
     key,
     subject,

@@ -3,6 +3,7 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { Review } from "@gram/core/dist/data/reviews/Review";
 import { lookupReviewer } from "@gram/core/dist/data/reviews/ReviewerProvider";
 import { linkToModel } from "@gram/core/dist/util/links";
+import { reviewerProvider } from "@gram/core/src/data/reviews/ReviewerProvider";
 
 export async function generalReviewNotificationVariables(
   dal: DataAccessLayer,
@@ -15,7 +16,7 @@ export async function generalReviewNotificationVariables(
     );
   }
 
-  const [reviewer, requester] = await Promise.all([
+  const [reviewer, requester, fallbackReviewer] = await Promise.all([
     // Lookup Reviewer
     (async () => {
       // Handle the special case where Secure Development team is assigned
@@ -33,6 +34,7 @@ export async function generalReviewNotificationVariables(
         name: requester?.name,
       };
     })(),
+    reviewerProvider.getFallbackReviewer({}),
   ]);
 
   const modelInfo = {
@@ -42,6 +44,7 @@ export async function generalReviewNotificationVariables(
 
   return {
     reviewer,
+    fallbackReviewer,
     requester,
     model: modelInfo,
     review: {

@@ -1,6 +1,6 @@
 import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
 import { EmailReviewApproved } from "./notifications/review-approved";
-import { EmailReviewCancelled } from "./notifications/review-canceled";
+import { EmailReviewCanceled } from "./notifications/review-canceled";
 import { EmailReviewDeclined } from "./notifications/review-declined";
 import { EmailReviewMeetingRequested } from "./notifications/review-meeting-requested";
 import { EmailReviewMeetingRequestedReminder } from "./notifications/review-meeting-requested-reminder";
@@ -20,7 +20,7 @@ export default class StaticPlugin implements Plugin {
       EmailReviewRequested(),
       EmailReviewerChanged(),
       EmailReviewRequestedReminder(),
-      EmailReviewCancelled(),
+      EmailReviewCanceled(),
       EmailReviewDeclined(),
     ]);
   }
