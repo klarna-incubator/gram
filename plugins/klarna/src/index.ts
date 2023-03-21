@@ -20,6 +20,8 @@ import { createRiskOnThreatModelApprove } from "./RiskManagement";
 import { OctaneSystemProvider } from "./system/OctaneSystemProvider";
 import { SystemContextProvider } from "./system/SystemContextProvider";
 import OktaAuthProvider from "./okta";
+import { EmailReviewCanceled } from "./notifications/review-canceled";
+import { EmailReviewDeclined } from "./notifications/review-declined";
 
 const toComponentClass = (o: any): ComponentClass => {
   return {
@@ -53,6 +55,8 @@ export default class KlarnaPack implements Plugin {
       EmailReviewRequested(octane),
       EmailReviewerChanged(octane),
       EmailReviewRequestedReminder(octane),
+      EmailReviewCanceled(octane),
+      EmailReviewDeclined(octane),
     ]);
     reg.registerAuthProvider(new LDAPAuthProvider());
     reg.registerAuthProvider(new OktaAuthProvider());
