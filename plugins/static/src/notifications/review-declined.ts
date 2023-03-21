@@ -42,7 +42,7 @@ export const EmailReviewDeclined = () =>
         cc,
         recipients,
         ...variables,
-        previousReviewer,
+        previousReviewer: previous,
       };
     }
   );
