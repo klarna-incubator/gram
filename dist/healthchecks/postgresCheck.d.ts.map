@@ -1,1 +1,0 @@
-{"version":3,"file":"postgresCheck.d.ts","sourceRoot":"","sources":["../../api/src/healthchecks/postgresCheck.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,eAAe,EAAE,MAAM,0BAA0B,CAAC;AAK3D,wBAAsB,wBAAwB,CAAC,GAAG,EAAE,eAAe,kBAC7C,GAAG,oBAqBxB;AAED,wBAAsB,iCAAiC,CAAC,GAAG,EAAE,eAAe,kBACtD,GAAG,oBAcxB"}
