@@ -1,7 +1,7 @@
 import config from "config";
 import { Role } from "@gram/core/dist/auth/models/Role";
 import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import { AuthProvider } from "@gram/core/dist/auth/AuthProvider";
+import { AuthProvider, LoginResult } from "@gram/core/dist/auth/AuthProvider";
 import basicAuth from "basic-auth";
 import {
   InvalidInputError,
@@ -27,7 +27,7 @@ export default class LDAPAuthProvider implements AuthProvider {
     return { hideOnFrontend: true };
   }
 
-  async getIdentity(ctx: RequestContext): Promise<UserToken> {
+  async getIdentity(ctx: RequestContext): Promise<LoginResult> {
     const authString =
       <string>ctx.currentRequest?.headers["authorization"] || "no-auth";
     if (!authString) throw new Error("missing authorization header");
@@ -58,7 +58,7 @@ export default class LDAPAuthProvider implements AuthProvider {
       ldap.bind(dn, pass, async (err, user) => {
         if (err) {
           log.error("Ldap authentication failed", err);
-          
+
           if (ldap.destroy) {
             ldap.destroy();
           }
@@ -73,24 +73,24 @@ export default class LDAPAuthProvider implements AuthProvider {
         const groups = await getLDAPUserGroupsByDN(dn);
 
         if (!groups.includes(requiredGroup)) {
-          return reject(
-            new AuthzError(
-              `authorization failed for ldap user ${name}. User not member of ${requiredGroup}`
-            )
-          );
+          return resolve({
+            status: "error",
+            message: `authorization failed for ldap user ${name}. User not member of ${requiredGroup}`,
+          });
         }
         if (ldap.destroy) {
-          ldap.destroy();    
-        }    
+          ldap.destroy();
+        }
         resolve({
-          sub,
-          name: user.displayName,
-          roles: [Role.User],
-          teams: [],
+          status: "ok",
+          token: {
+            sub,
+            name: user.displayName,
+            roles: [Role.User],
+            teams: [],
+          },
         });
       });
     });
-
-    
   }
 }

@@ -33,7 +33,7 @@ describe("auth.provider.ldap", () => {
       await expect(
         ldap.getIdentity({
           currentRequest: {
-            headers: { authorization: "something" },            
+            headers: { authorization: "something" },
           } as GramRequest,
         })
       ).rejects.toThrow(/Invalid.*/);
@@ -133,9 +133,12 @@ describe("auth.provider.ldap", () => {
         } as GramRequest,
       });
 
-      expect(identity.sub).toBe("sys.gram.mail");
-      expect(identity.name).toBe("sys.gram.mail System User");
-      expect(identity.roles).toStrictEqual([Role.User]);
+      expect(identity.status).toBe("ok");
+      if (identity.status === "ok") {
+        expect(identity.token.sub).toBe("sys.gram.mail");
+        expect(identity.token.name).toBe("sys.gram.mail System User");
+        expect(identity.token.roles).toStrictEqual([Role.User]);
+      }
     });
 
     afterAll(() => {

@@ -1,21 +1,16 @@
-import config from "config";
+import { AuthProvider, LoginResult } from "@gram/core/dist/auth/AuthProvider";
 import { Role } from "@gram/core/dist/auth/models/Role";
-import { AuthProvider } from "@gram/core/dist/auth/AuthProvider";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 import { lookupUser } from "@gram/core/dist/auth/user";
-import { getLogger } from "@gram/core/dist/logger";
-import {
-  InvalidInputError,
-  NotAuthenticatedError,
-} from "@gram/core/dist/util/errors";
-import { getLDAPUserGroups } from "../ldap/lookup";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { getLogger } from "@gram/core/dist/logger";
+import { InvalidInputError } from "@gram/core/dist/util/errors";
+import config from "config";
+import { getLDAPUserGroups } from "../ldap/lookup";
 
-import { Client, Issuer, generators } from "openid-client";
-import { HttpsProxyAgent } from "hpagent";
-import { custom } from "openid-client";
-import { aes256gcm } from "./util";
 import secrets from "@gram/core/dist/secrets";
+import { HttpsProxyAgent } from "hpagent";
+import { Client, custom, generators, Issuer } from "openid-client";
+import { aes256gcm } from "./util";
 
 const log = getLogger("oktaAuth");
 
@@ -85,9 +80,7 @@ export default class OktaAuthProvider implements AuthProvider {
       client_secret: config.get("auth.providerOpts.oidc.clientSecret"),
       redirect_uris: [this.redirectUrl],
       response_types: ["code"],
-      // id_token_signed_response_alg (default "RS256")
-      // token_endpoint_auth_method (default "client_secret_basic")
-    }); // => Client
+    });
   }
 
   /**
@@ -136,7 +129,7 @@ export default class OktaAuthProvider implements AuthProvider {
   /**
    * @param {object} headers
    */
-  async getIdentity(ctx: RequestContext): Promise<UserToken> {
+  async getIdentity(ctx: RequestContext): Promise<LoginResult> {
     if (!this.client) {
       log.warn("OIDC client not ready yet");
       throw new InvalidInputError("OIDC client not ready yet");
@@ -155,21 +148,52 @@ export default class OktaAuthProvider implements AuthProvider {
     );
 
     const params = this.client.callbackParams(ctx.currentRequest);
-    const tokenSet = await this.client.callback(this.redirectUrl, params, {
-      code_verifier,
-      state,
-    });
+    let tokenSet: any;
+
+    try {
+      tokenSet = await this.client.callback(this.redirectUrl, params, {
+        code_verifier,
+        state,
+      });
+    } catch (error: any) {
+      let message = error.toString();
+      if (error?.error === "invalid_grant") {
+        message = "Login link expired. Try again.";
+      }
+      return {
+        status: "error",
+        message,
+      };
+    }
 
     const payload = await this.client.userinfo(tokenSet.access_token as string);
 
     if (!payload) {
-      throw new NotAuthenticatedError("verification of token failed");
+      let message = `Okta error occured: ${decodeURIComponent(
+        (ctx.currentRequest.query["error_description"] || "")?.toString()
+      )}`;
+
+      if (
+        ctx.currentRequest.query["error_description"] ===
+        "User+is+not+assigned+to+the+client+application."
+      ) {
+        message =
+          "You are missing the required access group for Gram. See https://kep.klarna.net/docs/secure-development/threat_modeling/gram/#getting-access-to-gram";
+      }
+
+      return {
+        status: "error",
+        message,
+      };
     }
 
     const email = payload.email;
     if (!payload.email_verified || !email || !email.endsWith("@klarna.com")) {
       log.warn(`Sign in was attempted with non-klarna email: ${email}`);
-      throw new NotAuthenticatedError("only klarna employees allowed");
+      return {
+        status: "error",
+        message: `only klarna employees allowed`,
+      };
     }
 
     let groups: string[] = (payload.groups as string[]) || [];
@@ -190,17 +214,39 @@ export default class OktaAuthProvider implements AuthProvider {
     const user = await lookupUser(ctx, email);
 
     if (!user || user.teams === null || user.teams.length === 0) {
-      throw new NotAuthenticatedError(`no such user found for ${email}`);
+      return {
+        status: "error",
+        message: `LDAP lookup failed - no such user found for ${email}. Try again later.`,
+      };
+    }
+
+    if (!groups || groups.length === 0) {
+      return {
+        status: "error",
+        message: `LDAP lookup failed - group lookup for ${email} returned an empty result. Likely an LDAP issue. Try again later?`,
+      };
+    }
+
+    const roles = getRoles(new Set(groups));
+
+    if (!groups || groups.length === 0) {
+      return {
+        status: "error",
+        message: `Login was successful, but no gram access groups have been assigned, so your user has no roles. Ping @joakim.uddholm if this happens, because it shouldn't :)`,
+      };
     }
 
     return {
-      sub: email,
-      name: payload.name,
-      picture: payload.picture,
-      provider: "okta",
-      roles: getRoles(new Set(groups)),
-      teams: user.teams,
-      slackId: user.slackId,
+      status: "ok",
+      token: {
+        sub: email,
+        name: payload.name,
+        picture: payload.picture,
+        provider: "okta",
+        roles,
+        teams: user.teams,
+        slackId: user.slackId,
+      },
     };
   }
 }
