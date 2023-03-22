@@ -1,7 +1,6 @@
 export enum ReviewStatus {
   Requested = "requested",
   Approved = "approved",
-  Declined = "declined",
   Canceled = "canceled",
   MeetingRequested = "meeting-requested",
 }

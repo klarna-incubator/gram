@@ -28,7 +28,6 @@ import { TableToolbar } from "./TableToolbar";
 export const reviewStatuses = [
   { value: "requested", label: "Requested" },
   { value: "approved", label: "Approved" },
-  { value: "declined", label: "Declined" },
   { value: "canceled", label: "Canceled" },
   { value: "meeting-requested", label: "Meeting Requested" },
 ];

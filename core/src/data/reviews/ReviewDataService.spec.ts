@@ -238,7 +238,7 @@ describe("ReviewDataService implementation", () => {
       const review2 = new Review(
         await createSampleModel(dal),
         "some-user",
-        ReviewStatus.Declined,
+        ReviewStatus.Canceled,
         "some-reviewer"
       );
       review2.note = "Another good review";
@@ -253,7 +253,7 @@ describe("ReviewDataService implementation", () => {
       review3.note = "Another review";
       await data.create(review3);
 
-      const statuses = [ReviewStatus.Requested, ReviewStatus.Declined];
+      const statuses = [ReviewStatus.Requested, ReviewStatus.Canceled];
       const result = await data.list(
         {},
         {
@@ -283,7 +283,7 @@ describe("ReviewDataService implementation", () => {
       const review2 = new Review(
         await createSampleModel(dal),
         "some-user",
-        ReviewStatus.Declined,
+        ReviewStatus.Canceled,
         "some-reviewer"
       );
       review2.note = "Another good review";
@@ -298,7 +298,7 @@ describe("ReviewDataService implementation", () => {
       review3.note = "Another review";
       await data.create(review3);
 
-      const statuses = [ReviewStatus.Approved, ReviewStatus.Declined];
+      const statuses = [ReviewStatus.Approved, ReviewStatus.Canceled];
       const result = await data.list(
         {},
         {

@@ -36,7 +36,7 @@ export function Navbar() {
     { name: "My Models", path: "/models" },
     {
       name: "Reviews",
-      path: `/reviews?statuses=requested%2Cdeclined${
+      path: `/reviews?statuses=requested${
         user?.roles.includes("reviewer")
           ? "&reviewedBy=" + encodeURIComponent(user?.sub)
           : ""
