@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useGetGramTokenMutation } from "../../api/gram/auth";
 import Loading from "../loading";
@@ -10,6 +10,7 @@ export function LoginCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [getGramToken, auth] = useGetGramTokenMutation();
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const params = {};
@@ -22,9 +23,12 @@ export function LoginCallback() {
 
     (async () => {
       const auth = await getGramToken({ provider, params });
+
       if (auth?.data?.authenticated) {
         const returnPath = localStorage.getItem("returnPath");
         navigate(returnPath?.startsWith("/") ? returnPath : "/");
+      } else {
+        setError(auth?.error?.data?.message);
       }
     })();
   }, [provider, searchParams, getGramToken, navigate]);
@@ -33,7 +37,7 @@ export function LoginCallback() {
     <div id="login">
       <Box>
         {auth.isError ? (
-          <p>An error occured while authenticating.</p>
+          <p>An error occured while authenticating: {error}</p>
         ) : (
           <p>Authenticating...</p>
         )}

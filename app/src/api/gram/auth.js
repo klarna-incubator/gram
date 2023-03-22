@@ -21,9 +21,11 @@ const authApi = api.injectEndpoints({
         },
       }),
       transformResponse: (response) => {
-        setAuthToken(response.token);
+        if (response.status === "ok") {
+          setAuthToken(response.token);
+        }
         return {
-          authenticated: true,
+          authenticated: response.status === "ok",
         };
       },
       invalidatesTags: ["User"],
