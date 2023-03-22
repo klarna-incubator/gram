@@ -66,17 +66,19 @@ describe("auth.provider.ldap", () => {
         unbind: () => null,
       }));
 
-      await expect(
-        ldap.getIdentity({
-          currentRequest: {
-            headers: {
-              authorization: `Basic ${Buffer.from(
-                "sys.example:badpasssword"
-              ).toString("base64")}`,
-            },
-          } as GramRequest,
-        })
-      ).rejects.toThrow(/authentication failed .*/);
+      const result = await ldap.getIdentity({
+        currentRequest: {
+          headers: {
+            authorization: `Basic ${Buffer.from(
+              "sys.gram.mail:badpasssword"
+            ).toString("base64")}`,
+          },
+        } as GramRequest,
+      });
+      expect(result.status).toBe("error");
+      if (result.status === "error") {
+        expect(result.message).toContain("Bind failed");
+      }
     });
 
     it("should throw error if not in the correct group", async () => {
@@ -93,17 +95,19 @@ describe("auth.provider.ldap", () => {
         "sys.active.system.users",
       ]);
 
-      await expect(
-        ldap.getIdentity({
-          currentRequest: {
-            headers: {
-              authorization: `Basic ${Buffer.from(
-                "sys.gram.mail:passsword"
-              ).toString("base64")}`,
-            },
-          } as GramRequest,
-        })
-      ).rejects.toThrow(/not member/);
+      const result = await ldap.getIdentity({
+        currentRequest: {
+          headers: {
+            authorization: `Basic ${Buffer.from(
+              "sys.gram.mail:passsword"
+            ).toString("base64")}`,
+          },
+        } as GramRequest,
+      });
+      expect(result.status).toBe("error");
+      if (result.status === "error") {
+        expect(result.message).toContain("not member");
+      }
     });
 
     it("should return proper payload on successful verification", async () => {
@@ -123,7 +127,7 @@ describe("auth.provider.ldap", () => {
         "access.1288598.stag.system-api-access",
       ]);
 
-      const identity = await ldap.getIdentity({
+      const result = await ldap.getIdentity({
         currentRequest: {
           headers: {
             authorization: `Basic ${Buffer.from(
@@ -133,11 +137,11 @@ describe("auth.provider.ldap", () => {
         } as GramRequest,
       });
 
-      expect(identity.status).toBe("ok");
-      if (identity.status === "ok") {
-        expect(identity.token.sub).toBe("sys.gram.mail");
-        expect(identity.token.name).toBe("sys.gram.mail System User");
-        expect(identity.token.roles).toStrictEqual([Role.User]);
+      expect(result.status).toBe("ok");
+      if (result.status === "ok") {
+        expect(result.token.sub).toBe("sys.gram.mail");
+        expect(result.token.name).toBe("sys.gram.mail System User");
+        expect(result.token.roles).toStrictEqual([Role.User]);
       }
     });
 

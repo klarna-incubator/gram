@@ -62,11 +62,10 @@ export default class LDAPAuthProvider implements AuthProvider {
           if (ldap.destroy) {
             ldap.destroy();
           }
-          return reject(
-            new NotAuthenticatedError(
-              `authentication failed for ldap user ${name}`
-            )
-          );
+          return resolve({
+            status: "error",
+            message: `authentication failed for ldap user ${name}. Bind failed.`,
+          });
         }
 
         const sub = name;
