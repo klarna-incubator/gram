@@ -20,8 +20,7 @@ export default async function getAuthToken(req: Request, res: Response) {
   });
 
   if (result?.status != "ok") {
-    res.sendStatus(400);
-    return res.json(result);
+    return res.status(400).json(result);
   }
 
   const token = await jwt.generateToken(result.token);
