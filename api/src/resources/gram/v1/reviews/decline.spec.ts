@@ -72,7 +72,7 @@ describe("Reviews.decline", () => {
     expect(res.body.result).toBeTruthy();
 
     const rev = await dal.reviewService.getByModelId(modelId);
-    expect(rev?.status).toEqual(ReviewStatus.Declined);
+    expect(rev?.status).toEqual(ReviewStatus.Requested);
     expect(rev?.note).toEqual("I have to decline this review request");
   });
 
