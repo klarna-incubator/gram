@@ -1,36 +1,37 @@
-import { MoreVertRounded, OpenInBrowserRounded } from "@mui/icons-material";
 import {
+  Button,
+  ButtonGroup,
   Chip,
-  IconButton,
   Link,
   TableCell,
   TableRow as MuiTableRow,
   Typography,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import { useGetUserQuery } from "../../api/gram/auth";
 import { useChangeReviewerMutation } from "../../api/gram/review";
+import { modalActions } from "../../redux/modalSlice";
 import { DateLabel } from "../elements/DateLabel";
+import { MODALS } from "../elements/modal/ModalManager";
 import { ReviewerDropdown } from "../elements/ReviewerDropdown";
+import { reviewStatuses } from "./reviewStatuses";
 import { SystemName } from "./SystemName";
 
 export function TableRow(props) {
-  const {
-    review,
-    isAdmin,
-    userEmail,
-    setOptionsEl,
-    setOptionsReview,
-    reviewStatuses,
-  } = props;
+  const { review } = props;
+
+  const { data: user } = useGetUserQuery();
+  const isAdmin = user?.roles?.includes("admin");
+  const userEmail = user?.sub;
 
   // const [expand, setExpand] = useState(false);
   const [changeReviewer] = useChangeReviewerMutation();
-
-  const columnWidth = `20%`;
+  const dispatch = useDispatch();
 
   return (
     <MuiTableRow>
-      <TableCell width={columnWidth}>
+      <TableCell>
         <Link component={RouterLink} to={`/model/${review.modelId}`}>
           {review.model.systemId !== "00000000-0000-0000-0000-000000000000" ? (
             <div>
@@ -57,14 +58,14 @@ export function TableRow(props) {
             <Chip label={prop.label} />
           ))}
       </TableCell>
-      <TableCell width={columnWidth}>
+      <TableCell>
         {reviewStatuses.find((status) => status.value === review.status).label}
       </TableCell>
-      <TableCell width={columnWidth}>
+      <TableCell>
         <DateLabel ts={review.updatedAt} detailed />
       </TableCell>
       {isAdmin ? (
-        <TableCell width={columnWidth}>
+        <TableCell>
           <ReviewerDropdown
             modelId={review.modelId}
             value={review.reviewedBy}
@@ -74,31 +75,47 @@ export function TableRow(props) {
           />
         </TableCell>
       ) : (
-        <TableCell width={columnWidth}>{review.reviewedBy}</TableCell>
+        <TableCell>{review.reviewedBy}</TableCell>
       )}
-      <TableCell width={"80px"} align={"right"}>
-        <IconButton component={RouterLink} to={`/model/${review.modelId}`}>
-          <OpenInBrowserRounded />
-        </IconButton>
 
-        <IconButton
-          onClick={(e) => {
-            setOptionsEl(e.currentTarget);
-            setOptionsReview(review);
-          }}
-          disabled={
-            !(
-              (review.reviewedBy === userEmail &&
-                (review.status === "requested" ||
-                  review.status === "meeting-requested")) ||
-              ((isAdmin || review.requestedBy === userEmail) &&
-                review.status !== "approved" &&
-                review.status !== "canceled")
-            )
-          }
+      <TableCell align="right">
+        <ButtonGroup
+          variant="outlined"
+          aria-label="outlined primary button group"
         >
-          <MoreVertRounded />
-        </IconButton>
+          {review.reviewedBy === userEmail &&
+            (review.status === "requested" ||
+              review.status === "meeting-requested") && (
+              <Button
+                onClick={() => {
+                  dispatch(
+                    modalActions.open({
+                      type: MODALS.DeclineReview.name,
+                      props: { modelId: review.modelId },
+                    })
+                  );
+                }}
+              >
+                Decline
+              </Button>
+            )}
+          {(isAdmin || review.requestedBy === userEmail) &&
+            review.status !== "approved" &&
+            review.status !== "canceled" && (
+              <Button
+                onClick={() => {
+                  dispatch(
+                    modalActions.open({
+                      type: MODALS.CancelReview.name,
+                      props: { modelId: review.modelId },
+                    })
+                  );
+                }}
+              >
+                Cancel
+              </Button>
+            )}
+        </ButtonGroup>
       </TableCell>
     </MuiTableRow>
   );

@@ -11,7 +11,7 @@ import {
 import { Box } from "@mui/system";
 import { useGetSystemPropertyDefinitionsQuery } from "../../api/gram/system-properties";
 import { ReviewerDropdown } from "../elements/ReviewerDropdown";
-import { reviewStatuses } from "./Reviews";
+import { reviewStatuses } from "./reviewStatuses";
 
 export function TableToolbar(props) {
   const {

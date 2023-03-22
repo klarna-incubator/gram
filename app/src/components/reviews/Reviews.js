@@ -1,7 +1,5 @@
 import {
   Grid,
-  Menu,
-  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -10,38 +8,19 @@ import {
   TablePagination,
   TableRow as MuiTableRow,
 } from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { useGetUserQuery } from "../../api/gram/auth";
 import { useListReviewsQuery } from "../../api/gram/review";
 import { useTitle } from "../../hooks/useTitle";
-import { modalActions } from "../../redux/modalSlice";
 import { LoadingPage } from "../elements/loading/loading-page/LoadingPage";
-import { MODALS } from "../elements/modal/ModalManager";
 import { EmptyTableRow } from "./EmptyTableRow";
 import { TableHeader } from "./TableHeader";
 import { TablePaginationActions } from "./TablePaginationActions";
 import { TableRow } from "./TableRow";
 import { TableToolbar } from "./TableToolbar";
 
-export const reviewStatuses = [
-  { value: "requested", label: "Requested" },
-  { value: "approved", label: "Approved" },
-  { value: "canceled", label: "Canceled" },
-  { value: "meeting-requested", label: "Meeting Requested" },
-];
-
 export function Reviews() {
   useTitle("Reviews");
 
-  const dispatch = useDispatch();
-  const { data: user } = useGetUserQuery();
-  const userIsAdmin = user?.roles?.includes("admin");
-  const userEmail = user?.sub;
-
-  const [optionsEl, setOptionsEl] = useState(null);
-  const [optionsReview, setOptionsReview] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const rowsPerPage = 10;
@@ -156,7 +135,6 @@ export function Reviews() {
             onStatusFilterChange={handleStatusFilterChange}
             onPropertyFilterChange={handlePropertyFilterChange}
             onReviewerSelected={handleReviewerSelected}
-            reviewStatuses={reviewStatuses}
             reviewedBy={reviewedBy}
           />
           <LoadingPage isLoading={reviewsIsFetching} />
@@ -166,60 +144,8 @@ export function Reviews() {
               <TableBody>
                 {reviews?.total === 0 && <EmptyTableRow />}
                 {reviews?.items.map((review) => (
-                  <TableRow
-                    key={review.modelId}
-                    review={review}
-                    isAdmin={userIsAdmin}
-                    userEmail={userEmail}
-                    setOptionsEl={setOptionsEl}
-                    setOptionsReview={setOptionsReview}
-                    reviewStatuses={reviewStatuses}
-                  />
+                  <TableRow key={review.modelId} review={review} />
                 ))}
-                <Menu
-                  anchorEl={optionsEl}
-                  open={Boolean(optionsEl)}
-                  onClose={() => {
-                    setOptionsEl(null);
-                  }}
-                >
-                  {optionsReview?.reviewedBy === userEmail &&
-                    (optionsReview?.status === "requested" ||
-                      optionsReview?.status === "meeting-requested") && (
-                      <MenuItem
-                        key={"decline"}
-                        onClick={() => {
-                          setOptionsEl(null);
-                          dispatch(
-                            modalActions.open({
-                              type: MODALS.DeclineReview.name,
-                              props: { modelId: optionsReview?.modelId },
-                            })
-                          );
-                        }}
-                      >
-                        Decline review
-                      </MenuItem>
-                    )}
-                  {(userIsAdmin || optionsReview?.requestedBy === userEmail) &&
-                    optionsReview?.status !== "approved" &&
-                    optionsReview?.status !== "canceled" && (
-                      <MenuItem
-                        key={"cancel"}
-                        onClick={() => {
-                          setOptionsEl(null);
-                          dispatch(
-                            modalActions.open({
-                              type: MODALS.CancelReview.name,
-                              props: { modelId: optionsReview?.modelId },
-                            })
-                          );
-                        }}
-                      >
-                        Cancel review
-                      </MenuItem>
-                    )}
-                </Menu>
               </TableBody>
               <TableFooter>
                 <MuiTableRow style={{ borderBottom: "none" }}>

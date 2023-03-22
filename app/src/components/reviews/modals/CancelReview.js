@@ -52,12 +52,14 @@ export function CancelReview(props) {
         </Box>
       </DialogTitle>
       <LoadingPage isLoading={isLoading} />
-      <DialogContent sx={{ paddingTop: "0" }}>
+      <DialogContent sx={{ paddingTop: "0", marginBottom: "50px" }}>
         {(isUninitialized || isLoading) && (
           <>
             <DialogContentText>
-              Are you sure you want to cancel this review?
+              Are you sure you want to cancel this review? This means it will no
+              longer be marked for review.
             </DialogContentText>
+            <br />
             <DialogContentText>
               Once a review has been canceled, the owners of the threat model
               can re-request a review again if needed.
