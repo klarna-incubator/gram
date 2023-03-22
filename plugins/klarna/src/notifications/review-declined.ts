@@ -32,7 +32,10 @@ export const EmailReviewDeclined = (systemProvider: OctaneSystemProvider) =>
       );
       const recipients: EmailRecipient[] = [variables.requester];
       const cc: EmailRecipient[] = [variables.reviewer];
-      const previousReviewerLookup = await lookupReviewers(previousReviewer);
+      const previousReviewerLookup = await lookupReviewers(
+        {},
+        previousReviewer
+      );
       const previous: EmailRecipient = {
         name: "unknown",
       };
