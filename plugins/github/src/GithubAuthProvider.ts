@@ -1,12 +1,11 @@
-import { randomUUID } from "crypto";
-import { App } from "octokit";
-import { AuthProvider } from "@gram/core/dist/auth/AuthProvider";
+import { AuthProvider, LoginResult } from "@gram/core/dist/auth/AuthProvider";
 import { Role } from "@gram/core/dist/auth/models/Role";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import config from "config";
-import { GithubUserProvider } from "./GithubUserProvider";
 import { User } from "@gram/core/dist/auth/models/User";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import config from "config";
+import { randomUUID } from "crypto";
+import { App } from "octokit";
+import { GithubUserProvider } from "./GithubUserProvider";
 
 export class GithubAuthProvider implements AuthProvider {
   admins: string[] = [];
@@ -28,7 +27,7 @@ export class GithubAuthProvider implements AuthProvider {
     };
   }
 
-  async getIdentity(ctx: RequestContext): Promise<UserToken> {
+  async getIdentity(ctx: RequestContext): Promise<LoginResult> {
     const code = ctx.currentRequest?.query.code?.toString();
     const state = ctx.currentRequest?.query.state?.toString();
 
@@ -83,13 +82,16 @@ export class GithubAuthProvider implements AuthProvider {
     await this.userProvider.insert(user);
 
     return {
-      roles: this.admins.includes(login)
-        ? [Role.User, Role.Admin]
-        : [Role.User],
-      provider: this.key,
-      picture: avatarUrl,
-      providerToken: token,
-      ...user,
+      status: "ok",
+      token: {
+        roles: this.admins.includes(login)
+          ? [Role.User, Role.Admin]
+          : [Role.User],
+        provider: this.key,
+        picture: avatarUrl,
+        providerToken: token,
+        ...user,
+      },
     };
   }
   key: string = "github";

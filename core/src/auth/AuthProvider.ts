@@ -22,6 +22,19 @@ export type AuthProviderParams = {
   [key: string]: any;
 };
 
+export type LoginResult =
+  | {
+      status: "ok";
+      token: UserToken;
+    }
+  | {
+      status: "error";
+      /**
+       * Message displayed to user to explain why the login failed (e.g. in case of missing permissions)
+       */
+      message: string;
+    };
+
 export interface AuthProvider extends Provider {
   /**
    * Provide whichever parameters the frontend needs to perform the authentication process.
@@ -31,5 +44,5 @@ export interface AuthProvider extends Provider {
    *
    * @param headers
    */
-  getIdentity(ctx: RequestContext): Promise<UserToken>;
+  getIdentity(ctx: RequestContext): Promise<LoginResult>;
 }

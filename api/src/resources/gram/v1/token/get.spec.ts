@@ -18,7 +18,10 @@ describe("token.get", () => {
   });
 
   beforeEach(() => {
-    getIdentity.mockImplementation(async () => sampleUser);
+    getIdentity.mockImplementation(async () => ({
+      status: "ok",
+      token: sampleUser,
+    }));
   });
 
   it("should return 400 on request without provider query", async () => {

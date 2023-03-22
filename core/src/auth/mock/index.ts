@@ -1,7 +1,6 @@
-import { UserToken } from "../models/UserToken";
-import { AuthProvider } from "../AuthProvider";
-import { Role } from "../models/Role";
 import { RequestContext } from "../../data/providers/RequestContext";
+import { AuthProvider, LoginResult } from "../AuthProvider";
+import { Role } from "../models/Role";
 
 export default class MockAuthProvider implements AuthProvider {
   key = "mock";
@@ -11,11 +10,14 @@ export default class MockAuthProvider implements AuthProvider {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getIdentity(ctx: RequestContext): Promise<UserToken> {
+  async getIdentity(ctx: RequestContext): Promise<LoginResult> {
     return {
-      sub: "payload",
-      roles: [Role.User],
-      teams: [{ name: "mocked team", id: "41" }],
+      status: "ok",
+      token: {
+        sub: "payload",
+        roles: [Role.User],
+        teams: [{ name: "mocked team", id: "41" }],
+      },
     };
   }
 }
