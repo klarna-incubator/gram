@@ -325,8 +325,6 @@ export class ReviewDataService extends EventEmitter {
   async cancel(modelId: string) {
     const review = await this.update(modelId, {
       status: ReviewStatus.Canceled,
-      reviewedBy: null,
-      requestedBy: null,
     });
 
     if (!review) {
