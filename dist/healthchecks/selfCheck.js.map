@@ -1,1 +1,0 @@
-{"version":3,"file":"selfCheck.js","sourceRoot":"","sources":["../../api/src/healthchecks/selfCheck.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;AAAA,wEAAwC;AAExC,SAAsB,SAAS,CAAC,IAAS;;QACvC,IAAI,CACF,0BAAQ,CAAC,QAAQ,CAAC;YAChB,IAAI,EAAE,gBAAgB;YACtB,UAAU,EAAE,IAAI;YAChB,OAAO,EAAE,IAAI;YACb,IAAI,EAAE,0BAAQ,CAAC,IAAI,CAAC,IAAI;SACzB,CAAC,CACH,CAAC;IACJ,CAAC;CAAA;AATD,8BASC"}

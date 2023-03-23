@@ -1,1 +1,0 @@
-{"version":3,"file":"notificationsCheck.d.ts","sourceRoot":"","sources":["../../api/src/healthchecks/notificationsCheck.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,eAAe,EAAE,MAAM,0BAA0B,CAAC;AAK3D,wBAAgB,wBAAwB,CAAC,GAAG,EAAE,eAAe,UACvC,GAAG,mBA0BxB;AAED,wBAAgB,yBAAyB,CAAC,GAAG,EAAE,eAAe,UACxC,GAAG,mBA0BxB"}

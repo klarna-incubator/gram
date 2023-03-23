@@ -1,1 +1,0 @@
-{"version":3,"file":"get.js","sourceRoot":"","sources":["../../../../../api/src/resources/gram/v1/banners/get.ts"],"names":[],"mappings":";;;;;;;;;;;;AAGO,MAAM,SAAS,GACpB,CAAC,GAAoB,EAAE,EAAE,CAAC,CAAO,GAAY,EAAE,GAAa,EAAE,EAAE;IAC9D,GAAG,CAAC,IAAI,CAAC,EAAE,OAAO,EAAE,MAAM,GAAG,CAAC,aAAa,CAAC,WAAW,EAAE,EAAE,CAAC,CAAC;AAC/D,CAAC,CAAA,CAAC;AAHS,QAAA,SAAS,aAGlB"}

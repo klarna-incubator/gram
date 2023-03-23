@@ -1,1 +1,0 @@
-{"version":3,"file":"requestMeeting.d.ts","sourceRoot":"","sources":["../../../../../api/src/resources/gram/v1/reviews/requestMeeting.ts"],"names":[],"mappings":"AAAA;;;GAGG;AACH,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAE5C,OAAO,EAAE,eAAe,EAAE,MAAM,0BAA0B,CAAC;8BAEtC,eAAe,WACtB,OAAO,OAAO,QAAQ;AADpC,wBAYI"}
