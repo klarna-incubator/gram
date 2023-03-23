@@ -70,24 +70,11 @@ const ReviewContent = (review) => {
       components: [],
       color: hasExpired ? "error" : aboutToExpire ? "warning" : "success",
     },
-    declined: {
-      title: "Threat model under review",
-      description: "",
-      buttons: [
-        EditNoteButton,
-        ApproveButton,
-        RequestMeetingButton,
-        ReassignReviewButton,
-        CancelReviewButton,
-      ],
-      components: [ReviewRequestedBy, ReviewReviewedBy],
-      color: "error",
-    },
     canceled: {
       title: "Threat model not reviewed",
       description: 'Press the "Request Review" button below to get started!',
       buttons: [RequestReviewButton],
-      components: [ReviewRequestedBy, ReviewReviewedBy],
+      components: [],
       color: "error",
     },
     "meeting-requested": {
