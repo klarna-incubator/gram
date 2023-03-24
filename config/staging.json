@@ -24,7 +24,7 @@
         "requiredGroup": "access.1288598.stag.system-api-access",
         "roleMap": {
           "admin": ["access.1288598.stag.admins", "domain.security.leads"],
-          "reviewer": ["access.1288598.stag.reviewers"],
+          "reviewer": ["access.1288598.stag.reviewers", "security-champions"],
           "user": ["access.1288598.stag.users", "access.1288598.stag.sso-prod"]
         }
       },

@@ -24,7 +24,7 @@
         "requiredGroup": "access.1288598.prod.system-api-access",
         "roleMap": {
           "admin": ["access.1288598.prod.admins", "domain.security.leads"],
-          "reviewer": ["access.1288598.prod.reviewers"],
+          "reviewer": ["access.1288598.prod.reviewers", "security-champions"],
           "user": ["access.1288598.prod.users", "access.1288598.prod.sso-prod"]
         }
       },

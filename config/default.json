@@ -28,7 +28,8 @@
           "admin": ["access.1288598.stag.admins", "domain.security.leads"],
           "reviewer": [
             "access.1288598.stag.reviewers",
-            "access.secure-development"
+            "access.secure-development",
+            "security-champions"
           ],
           "user": ["access.1288598.stag.users", "access.1288598.stag.sso-prod"]
         }
