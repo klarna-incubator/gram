@@ -50,6 +50,7 @@ export default function Home() {
                 <TeamSystemsPageList
                   key={team.id}
                   teamId={team.id}
+                  teamName={team.name}
                   width={"100%"}
                   listHeight={user.teams.length > 1 ? "350px" : "852px"}
                 />
