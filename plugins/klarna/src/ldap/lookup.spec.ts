@@ -1,4 +1,10 @@
-import { getLDAPUserGroups, listLDAPGroupMembers, LDAPCache, initLdapClient } from "./lookup";
+import {
+  getLDAPUserGroups,
+  listLDAPGroupMembers,
+  LDAPCache,
+  initLdapClient,
+  getUser,
+} from "./lookup";
 
 describe.skip("ldap lookup (integration tests)", () => {
   let cacheGet: any;
@@ -25,7 +31,7 @@ describe.skip("ldap lookup (integration tests)", () => {
       async () => getLDAPUserGroups(user),
     ];
 
-    const result = await Promise.all(lookups.map(l => l()));
+    const result = await Promise.all(lookups.map((l) => l()));
 
     console.log(result);
 
@@ -47,15 +53,15 @@ describe.skip("ldap lookup (integration tests)", () => {
 
   it("should be ok with lookups of non-existent users", async () => {
     const user = "does.not.exist@klarna.com";
-    const lookups = [
-      async () => getLDAPUserGroups(user),
-    ];
+    const lookups = [async () => getLDAPUserGroups(user)];
 
-    const result = await Promise.all(lookups.map(l => l()));
-
-    console.log(result);
-
+    const result = await Promise.all(lookups.map((l) => l()));
     result.forEach((row) => expect(row).toEqual(result[0]));
+  });
+
+  it("should be ok with punit.gupta", async () => {
+    const user = "punit.gupta@klarna.com";
+    await getUser(user);
   });
 
   afterAll(() => {

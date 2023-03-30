@@ -76,11 +76,20 @@ export type LDAPDomain = {
 };
 
 function getAttribute(ldapObj: any, name: string) {
-  return ldapObj.attributes.find((a: any) => a.type === name).values[0];
+  const attribute = ldapObj.attributes.find((a: any) => a.type === name);
+
+  if (attribute && attribute.values && attribute.values.length > 0) {
+    return attribute.values[0];
+  }
+  return null;
 }
 
 function getAttributeAsArray(ldapObj: any, name: string) {
-  return ldapObj.attributes.find((a: any) => a.type === name).values;
+  const attribute = ldapObj.attributes.find((a: any) => a.type === name);
+  if (attribute && attribute.values) {
+    return attribute.values;
+  }
+  return [];
 }
 
 export async function getLDAPUserGroupsByDN(dn: string): Promise<string[]> {
@@ -147,6 +156,11 @@ export async function getTeamByQuery(
     name: getAttribute(object, "displayName"),
   };
 
+  // Some klarnaAccountabiltiyOUs return empty attributes here.
+  if (team.id === null || team.name === null) {
+    return null;
+  }
+
   return team;
 }
 
@@ -180,7 +194,6 @@ export async function getUser(email: string): Promise<User | null> {
   if (ldapUser === null) return null;
 
   const ldapTeams = getAttributeAsArray(ldapUser, "klarnaAccountabilityOU");
-
   const teams = await getTeamsByCN(ldapTeams);
 
   const user: User = {
