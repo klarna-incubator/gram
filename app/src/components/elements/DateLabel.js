@@ -5,10 +5,9 @@ export function DateLabel({ ts, detailed }) {
     return <span>...</span>;
   }
   const dateTime = new Date(ts);
-  const dateOnly = dateTime.toLocaleDateString();
-  const full = `${dateOnly} ${dateTime.toLocaleTimeString()}`;
+  const full = dateTime.toISOString();
   if (detailed) {
     return <span>{full}</span>;
   }
-  return <span title={full}>{dateOnly}</span>;
+  return <span title={full}>{full.substring(0, 10)}</span>;
 }
