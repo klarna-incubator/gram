@@ -94,6 +94,10 @@ async function createApp(pool: Pool) {
     "/systems/:id/permissions",
     errorWrap(systems.permission)
   );
+  authenticatedRoutes.get(
+    "/systems/:id/compliance",
+    errorWrap(systems.compliance)
+  );
 
   // Models
   const models = modelsV1(dal.modelService);
