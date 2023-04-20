@@ -93,6 +93,11 @@ export async function createRiskOnThreatModelApprove(
         };
       });
 
+    if (complementedThreats.length === 0) {
+      log.info("No threats marked as action items - skipping the risk ticket.");
+      return;
+    }
+
     const system = await systemProvider.getOctaneSystem(systemId);
 
     if (!system) {

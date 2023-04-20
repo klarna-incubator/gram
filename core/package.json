@@ -1,7 +1,7 @@
 {
   "name": "@gram/core",
   "private": true,
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Core library for Gram backend stuff",
   "scripts": {
     "build": "npm run clean && npm run compile",
