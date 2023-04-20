@@ -1,12 +1,13 @@
 {
   "name": "@gram/svgporn",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Taken from https://github.com/gilbarbara/logos",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
     "dist"
   ],
+  "private": true,
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",
@@ -15,6 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^3.1.0"
+    "@gram/core": "^3.1.1"
   }
 }
