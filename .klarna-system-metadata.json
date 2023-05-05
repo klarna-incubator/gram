@@ -15,11 +15,6 @@
       "sla_impact": "IMMEDIATE"
     },
     {
-      "system_id": "gsuite",
-      "sla_impact": "IMMEDIATE",
-      "description": "Used for authenticating users"
-    },
-    {
       "system_id": "smtp",
       "sla_impact": "NO_IMPACT",
       "description": "Used for sending email notifications"
