@@ -86,6 +86,7 @@
       "EMAIL_HOST": { "secret": "/notifications.providers.email.host" },
       "EMAIL_PORT": { "secret": "/notifications.providers.email.port" },
       "EMAIL_USER": { "secret": "/notifications.providers.email.user" },
+      "EMAIL_PASSWORD": { "secret": "/notifications.providers.email.password" },
       "AUTH_LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
       "AUTH_LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
       "JIRA_USER": { "secret": "/jira.user" },
