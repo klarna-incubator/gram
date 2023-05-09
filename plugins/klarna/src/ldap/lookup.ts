@@ -102,6 +102,10 @@ export async function getLDAPUserGroupsByDN(dn: string): Promise<string[]> {
 }
 
 export async function getLDAPUserGroups(email: string): Promise<string[]> {
+  if (email === "root") {
+    return [];
+  }
+
   const idx = email.indexOf("@klarna.com");
   if (idx < 0) {
     return [];
@@ -185,6 +189,15 @@ export async function getTeam(klarnaProjectCode: string): Promise<Team | null> {
 }
 
 export async function getUser(email: string): Promise<User | null> {
+  if (email === "root") {
+    return {
+      sub: "root",
+      mail: "root",
+      name: "root",
+      teams: [],
+    };
+  }
+
   const ldapUser = await ldapQueryOne(LDAPUserSearchBase, {
     scope: "sub",
     filter: `(mail=${email})`,
