@@ -78,7 +78,6 @@ async function createApp(pool: Pool) {
   unauthenticatedRoutes.get("/banners", errorWrap(getBanner(dal)));
   unauthenticatedRoutes.get("/menu", errorWrap(getMenu));
   unauthenticatedRoutes.get("/auth/token", errorWrap(tokenV1.get));
-  unauthenticatedRoutes.get("/auth/csrf", errorWrap(tokenV1.csrf));
   unauthenticatedRoutes.get("/auth/params", errorWrap(tokenV1.params));
   unauthenticatedRoutes.delete("/auth/token", errorWrap(tokenV1.delete));
 

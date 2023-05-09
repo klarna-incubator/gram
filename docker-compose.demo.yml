@@ -19,7 +19,6 @@ services:
       POSTGRES_PORT: 5432
       SERVICE_STAGE: default # i.e. prod/staging for non-demo purposes
       AUTH_SECRET: <some long secret used to sign auth tokens>
-      CSRF_SECRET: <similar but for csrf>
       GITHUB_APPID: <> # TODO: find a good way to have these optional/dynamic secrets.
       GITHUB_CLIENTID: <>
       GITHUB_CLIENTSECRET: <>

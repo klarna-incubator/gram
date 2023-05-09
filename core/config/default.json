@@ -10,8 +10,7 @@
   "jwt": {
     "ttl": 86400,
     "secret": {
-      "auth": "NOT BASE64. SHOULD CRASH. SORRY. DONT USE DEFAULT VALUES <3",
-      "csrf": "NOT BASE64. SHOULD CRASH. SORRY. DONT USE DEFAULT VALUES <3"
+      "auth": "NOT BASE64. SHOULD CRASH. SORRY. DONT USE DEFAULT VALUES <3"
     }
   },
 
@@ -46,8 +45,8 @@
 
   "menu": [
     {
-      "name": "Github",      
-      "path": "https://github.com/klarna-incubator/gram"    
+      "name": "Github",
+      "path": "https://github.com/klarna-incubator/gram"
     }
   ]
 }
