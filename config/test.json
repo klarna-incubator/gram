@@ -11,8 +11,7 @@
   "jwt": {
     "ttl": 86400,
     "secret": {
-      "auth": "9d50b76032b147ea74596f68b4657e80e38f52fc6226b2f3a1479f58fdac8683",
-      "csrf": "9c05a2fc393078b75a5819ad06cab73ce17ec262909c1be475bbb0cdcfac9b43"
+      "auth": "9d50b76032b147ea74596f68b4657e80e38f52fc6226b2f3a1479f58fdac8683"
     }
   },
 

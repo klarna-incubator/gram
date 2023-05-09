@@ -5,7 +5,7 @@
   "files": [
     "dist"
   ],
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "AWS icons for Gram",
   "scripts": {
     "build": "npm run clean && npm run compile",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^3.1.1",
+    "@gram/core": "^3.1.2",
     "path": "^0.12.7"
   },
   "private": true
