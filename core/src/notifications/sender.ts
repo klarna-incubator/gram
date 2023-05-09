@@ -43,7 +43,7 @@ export async function notificationSender(
         result.success = await send(client, templateHandler, notification);
       } catch (err: any) {
         log.error(
-          `Failed to send notification ${notification.id}: ${err}\n${err.stack}`
+          `Failed to send notification ${notification.id}: SMTP Error Code: ${err?.code}. See https://github.com/eleith/emailjs/blob/main/smtp/error.ts`
         );
         result.success = false;
       }
