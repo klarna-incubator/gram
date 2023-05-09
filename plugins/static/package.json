@@ -1,6 +1,6 @@
 {
   "name": "@gram/static",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Pack with static data providers",
   "main": "dist/index",
   "types": "dist/index",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^3.1.1"
+    "@gram/core": "^3.1.2"
   },
   "private": true
 }
