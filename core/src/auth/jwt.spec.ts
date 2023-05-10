@@ -50,8 +50,15 @@ describe("JWT wrapper for authentication", () => {
     });
 
     it("should verify valid token with purpose", async () => {
-      const token = await jwt.generateToken(payload, 5000, "csrf");
-      const tokenPayload = await jwt.validateToken(token, "csrf");
+      const token = await jwt.generateToken(
+        payload,
+        5000,
+        "sample-other-purpose"
+      );
+      const tokenPayload = await jwt.validateToken(
+        token,
+        "sample-other-purpose"
+      );
       expect(payload.sub).toEqual(tokenPayload.sub);
     });
 
@@ -73,9 +80,9 @@ describe("JWT wrapper for authentication", () => {
 
     it("should reject JWT for different purpose", async () => {
       const token = await jwt.generateToken(payload, 5000, "auth");
-      expect(() => jwt.validateToken(token, "csrf")).rejects.toThrow(
-        JsonWebTokenError
-      );
+      expect(() =>
+        jwt.validateToken(token, "sample-other-purpose")
+      ).rejects.toThrow(JsonWebTokenError);
     });
   });
 });

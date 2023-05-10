@@ -72,7 +72,6 @@ describe("models.get", () => {
         sub: "test@abc.xyz",
         roles: [], // No role
         teams: [{ name: "test team", id: "24" }],
-        csrfToken: "whatever",
       };
     });
 

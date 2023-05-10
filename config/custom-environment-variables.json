@@ -21,8 +21,7 @@
 
   "jwt": {
     "secret": {
-      "auth": "AUTH_SECRET",
-      "csrf": "CSRF_SECRET"
+      "auth": "AUTH_SECRET"
     }
   },
 
