@@ -147,6 +147,9 @@ export default class OktaAuthProvider implements AuthProvider {
       aes256gcm(key).decrypt(ct, iv, authTag)
     );
 
+    // Clear cookie after use
+    ctx.currentRequest?.res?.clearCookie("oidc-code");
+
     const params = this.client.callbackParams(ctx.currentRequest);
     let tokenSet: any;
 
