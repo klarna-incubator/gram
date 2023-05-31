@@ -114,7 +114,7 @@ export async function getLDAPUserGroups(email: string): Promise<string[]> {
 
   const object = await ldapQueryOne(LDAPUserSearchBase, {
     scope: "sub",
-    filter: `(uid=${uid})`,
+    filter: `(&(uid=${uid})(kreditorEnabledUser=TRUE))`,
     attributes: ["dn", "memberOfGroupId"],
   });
 
@@ -126,7 +126,7 @@ export async function listLDAPGroupMembers(
 ): Promise<LDAPUser[]> {
   const objects = await ldapQuery(LDAPUserSearchBase, {
     scope: "sub",
-    filter: `(memberOfGroupId=${groupId})`,
+    filter: `(&(memberOfGroupId=${groupId})(kreditorEnabledUser=TRUE))`,
     attributes: ["displayName", "mail", "klarnaAccountabilityOU", "dn"],
   });
 
@@ -200,7 +200,7 @@ export async function getUser(email: string): Promise<User | null> {
 
   const ldapUser = await ldapQueryOne(LDAPUserSearchBase, {
     scope: "sub",
-    filter: `(mail=${email})`,
+    filter: `(&(mail=${email})(kreditorEnabledUser=TRUE))`,
     attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
   });
 
@@ -292,17 +292,21 @@ async function ldapQuery(
     }
   );
 
-  const result = await promise;
-  ldapClient.destroy();
-  if (result === null) {
-    throw new Error(
-      `Got a null result from LDAP, meaning the promise was never resolved. Query: ${cacheKey}`
-    );
+  try {
+    const result = await promise;
+
+    if (result === null) {
+      throw new Error(
+        `Got a null result from LDAP, meaning the promise was never resolved. Query: ${cacheKey}`
+      );
+    }
+    if (result?.length === 0) {
+      log.warn("received an empty result", cacheKey, result);
+    }
+    return result;
+  } finally {
+    ldapClient.destroy();
   }
-  if (result?.length === 0) {
-    log.warn("received an empty result", cacheKey, result);
-  }
-  return result;
 }
 
 async function ldapQueryOne(
