@@ -44,6 +44,7 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
   secDevRoundRobinCounter = 0;
 
   private secdevMembers: Set<string> = new Set();
+  private secdevReviewers: LDAPUser[] = [];
   private dslMembers: Set<string> = new Set();
   private reviewers: LDAPUser[] = [];
 
@@ -52,8 +53,6 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     private systemProvider: OctaneSystemProvider,
     private hsf: HSFContextProvider
   ) {
-    this.loadSecDev();
-    this.loadDSL();
     this.loadReviewers();
   }
 
@@ -124,6 +123,9 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
   }
 
   async loadReviewers(): Promise<void> {
+    await this.loadSecDev();
+    await this.loadDSL();
+
     const reviewerGroups: string[] = config.get(
       "auth.providerOpts.ldap.roleMap.reviewer"
     );
@@ -137,16 +139,22 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     ).reduce((p, c) => c.concat(p), []);
 
     const unique = new Set();
-    const newReviewers = reviewersFromLdap.filter((r) => {
-      if (unique.has(r.sub)) {
-        return false;
-      }
-      unique.add(r.sub);
-      return true;
-    });
+    const newReviewers = reviewersFromLdap
+      .filter((r) => {
+        if (unique.has(r.sub)) {
+          return false;
+        }
+        unique.add(r.sub);
+        return true;
+      })
+      // Add special case for Lucas Berner as he is in SecDev but should not be assigned reviews.
+      .filter((r) => r.sub !== "lucas.berner@klarna.com");
 
     if (newReviewers.length > 0) {
       this.reviewers = newReviewers;
+      this.secdevReviewers = newReviewers.filter((r) =>
+        this.secdevMembers.has(r.sub)
+      );
     }
 
     log.info(`Loaded ${reviewersFromLdap.length} reviewers from ldap`);
@@ -195,10 +203,11 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     const isHSF = hsfProp.length > 0 && hsfProp[0].value !== "false";
     const reviewers: Reviewer[] = this.reviewers
       .filter(
-        // Only list SecDev as reviewers for HSF systems
+        // Only list SecDev / DSL as reviewers for HSF systems
         (r) =>
           !isHSF || this.secdevMembers.has(r.sub) || this.dslMembers.has(r.sub)
       )
+
       .map((r) => ({
         ...r,
         recommended: recommend(r.dn),
@@ -223,14 +232,14 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
   async onReviewUpdated(modelId: string) {
     const review = await this.dal.reviewService.getByModelId(modelId);
     if (review?.reviewedBy === fallbackReviewer.sub) {
-      const asArray = Array.from(this.secdevMembers);
-      const unlucky = asArray[this.secDevRoundRobinCounter];
-      this.secDevRoundRobinCounter =
-        (this.secDevRoundRobinCounter + 1) % asArray.length;
+      const unlucky =
+        this.secdevReviewers[
+          this.secDevRoundRobinCounter++ % this.secdevReviewers.length
+        ];
       log.info(
         `Review for ${modelId} was assigned to ${fallbackReviewer.sub}. Assigning instead to ${unlucky}`
       );
-      await this.dal.reviewService.changeReviewer(modelId, unlucky);
+      await this.dal.reviewService.changeReviewer(modelId, unlucky.sub);
     }
   }
 }
