@@ -1,4 +1,3 @@
-import ldap from "ldapjs";
 import config from "config";
 import { getLogger } from "@gram/core/dist/logger";
 import { User } from "@gram/core/dist/auth/models/User";
@@ -6,50 +5,33 @@ import { Team } from "@gram/core/dist/auth/models/Team";
 import { LDAPTeamSearchBase, LDAPUserSearchBase } from "./config";
 import Cache from "@gram/core/dist/util/cache";
 import secrets from "@gram/core/dist/secrets";
-import { Client } from "ldapjs";
+import { Client, Entry, SearchOptions, SearchResult } from "ldapts";
 
 const log = getLogger("ldapLookup");
 
 export async function initLdapClient() {
-  const ldapClient = ldap.createClient({
-    url: [config.get("auth.providerOpts.ldap.url")],
-    reconnect: true,
+  const client = new Client({
+    url: config.get("auth.providerOpts.ldap.url"),
     timeout: 30000,
     connectTimeout: 30000,
-    log: log,
+    tlsOptions: {
+      minVersion: "TLSv1.2",
+    },
+    strictDN: true,
   });
 
-  ldapClient.on("error", (err) => {
-    log.error("ldap error", err);
-  });
-
-  ldapClient.on("connectError", (err) => {
-    log.error("ldap connectError", err);
-  });
-
-  return ldapClient;
+  return client;
 }
 
-async function connectLdapClient() {
+export async function connectLdapClient() {
+  const client = await initLdapClient();
   const bindDN = await secrets.get("auth.providerOpts.ldap.bindDN");
   const bindCredentials = await secrets.get(
     "auth.providerOpts.ldap.bindCredentials"
   );
 
-  const ldapClient = await initLdapClient();
-
-  return new Promise<Client>((resolve, reject) =>
-    ldapClient.bind(bindDN, bindCredentials, (err) => {
-      if (err) {
-        log.error("Encountered error while binding", err);
-        return reject(err);
-      }
-
-      log.debug("Bind was successful");
-
-      resolve(ldapClient);
-    })
-  );
+  await client.bind(bindDN, bindCredentials);
+  return client;
 }
 
 export async function testLdapClient() {
@@ -75,21 +57,19 @@ export type LDAPDomain = {
   memberCns: string[];
 };
 
-function getAttribute(ldapObj: any, name: string) {
-  const attribute = ldapObj.attributes.find((a: any) => a.type === name);
-
-  if (attribute && attribute.values && attribute.values.length > 0) {
-    return attribute.values[0];
-  }
-  return null;
+function getAttribute(ldapObj: Entry, name: string) {
+  return ldapObj[name] ? ldapObj[name].toString() : "";
 }
 
-function getAttributeAsArray(ldapObj: any, name: string) {
-  const attribute = ldapObj.attributes.find((a: any) => a.type === name);
-  if (attribute && attribute.values) {
-    return attribute.values;
+function getAttributeAsArray(ldapObj: Entry, name: string) {
+  const attr = ldapObj[name];
+  if (typeof attr == "string") {
+    return [attr];
   }
-  return [];
+  if (attr instanceof Buffer) {
+    return [attr.toString()];
+  }
+  return attr ? attr.map((a: Buffer | string) => a.toString()) : [];
 }
 
 export async function getLDAPUserGroupsByDN(dn: string): Promise<string[]> {
@@ -98,7 +78,12 @@ export async function getLDAPUserGroupsByDN(dn: string): Promise<string[]> {
     attributes: ["memberOfGroupId"],
   });
 
-  return object !== null ? getAttributeAsArray(object, "memberOfGroupId") : [];
+  if (!object) {
+    return [];
+  }
+
+  const arr = getAttributeAsArray(object, "memberOfGroupId");
+  return arr.map((a) => a.toString());
 }
 
 export async function getLDAPUserGroups(email: string): Promise<string[]> {
@@ -118,22 +103,27 @@ export async function getLDAPUserGroups(email: string): Promise<string[]> {
     attributes: ["dn", "memberOfGroupId"],
   });
 
-  return object !== null ? getAttributeAsArray(object, "memberOfGroupId") : [];
+  if (!object) {
+    return [];
+  }
+
+  const arr = getAttributeAsArray(object, "memberOfGroupId");
+  return arr.map((a) => a.toString());
 }
 
 export async function listLDAPGroupMembers(
   groupId: string
 ): Promise<LDAPUser[]> {
-  const objects = await ldapQuery(LDAPUserSearchBase, {
+  const result = await ldapQuery(LDAPUserSearchBase, {
     scope: "sub",
     filter: `(&(memberOfGroupId=${groupId})(kreditorEnabledUser=TRUE))`,
     attributes: ["displayName", "mail", "klarnaAccountabilityOU", "dn"],
   });
 
-  if (objects === null) return [];
+  if (result === null) return [];
 
-  return objects.map((s: any) => ({
-    dn: s.objectName,
+  return result.searchEntries.map((s: Entry) => ({
+    dn: s.dn,
     sub: getAttribute(s, "mail"),
     name: getAttribute(s, "displayName"),
     teams: getAttributeAsArray(s, "klarnaAccountabilityOU"),
@@ -149,7 +139,7 @@ export async function getTeamsByCN(cns: string[]): Promise<Team[]> {
 
 export async function getTeamByQuery(
   base: string,
-  options: ldap.SearchOptions
+  options: SearchOptions
 ): Promise<Team | null> {
   const object = await ldapQueryOne(base, options);
 
@@ -238,92 +228,45 @@ export async function getDomain(
 }
 
 const TWENTY_MINS_MS = 20 * 60 * 1000;
-export const LDAPCache = new Cache<string, ldap.SearchEntryObject[]>(
+export const LDAPCache = new Cache<string, SearchResult>(
   "LDAP-cache",
   TWENTY_MINS_MS
 );
 
 async function ldapQuery(
   base: string,
-  options: ldap.SearchOptions
-): Promise<ldap.SearchEntryObject[] | null> {
+  options: SearchOptions
+): Promise<SearchResult> {
   const cacheKey = JSON.stringify({ base, options });
   if (LDAPCache.has(cacheKey)) {
     log.debug("Cache hit LDAP lookup for", cacheKey);
-    return LDAPCache.get(cacheKey);
+    return LDAPCache.get(cacheKey) as SearchResult;
   }
 
   log.debug("Cache miss LDAP lookup for", cacheKey);
 
   // any here as a temporary workaround until types are updated.
-  const ldapClient: any = await connectLdapClient();
-
-  const promise = new Promise<ldap.SearchEntryObject[] | null>(
-    (resolve, reject) => {
-      const objects: ldap.SearchEntryObject[] = [];
-
-      ldapClient.search(base, options, (err: any, res: any) => {
-        if (err) {
-          log.error("Error occured in search", err);
-          reject(err);
-          return;
-        }
-
-        res.on("searchEntry", (entry: any) => {
-          if (entry.pojo) {
-            objects.push(entry.pojo);
-          } else {
-            log.warn("got non-truthy LDAP entry object", cacheKey, entry.pojo);
-          }
-        });
-
-        res.on("error", (err: any) => {
-          log.error("Error during LDAP query", err);
-          reject(err);
-        });
-
-        res.on("end", (result: any) => {
-          log.debug("ldap end");
-          LDAPCache.set(cacheKey, objects);
-          ldapClient.unbind();
-          resolve(objects);
-        });
-      });
-    }
-  );
-
-  try {
-    const result = await promise;
-
-    if (result === null) {
-      throw new Error(
-        `Got a null result from LDAP, meaning the promise was never resolved. Query: ${cacheKey}`
-      );
-    }
-    if (result?.length === 0) {
-      log.warn("received an empty result", cacheKey, result);
-    }
-    return result;
-  } finally {
-    ldapClient.destroy();
-  }
+  const ldapClient: Client = await connectLdapClient();
+  const results = await ldapClient.search(base, options);
+  await ldapClient.unbind();
+  return results;
 }
 
 async function ldapQueryOne(
   base: string,
-  options: ldap.SearchOptions
-): Promise<ldap.SearchEntryObject | null> {
+  options: SearchOptions
+): Promise<Entry | null> {
   const objects = await ldapQuery(base, options);
 
-  if (objects === null || objects.length === 0) {
+  if (objects.searchEntries.length === 0) {
     return null;
   }
 
-  if (objects.length > 1) {
+  if (objects.searchEntries.length > 1) {
     log.warn(
       `Lookup of ldap objects returned more than one item. The first result will be used`
     );
   }
 
-  return objects[0];
+  return objects.searchEntries[0];
 }

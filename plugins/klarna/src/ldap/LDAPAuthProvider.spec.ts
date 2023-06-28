@@ -41,8 +41,9 @@ describe("auth.provider.ldap", () => {
 
     it("should throw error if username not in system user format", async () => {
       initLdapClient.mockImplementation(() => ({
-        bind: (user: any, pass: any, cb: any) =>
-          cb(new Error("bad credentials or smth"), null),
+        bind: async (user: any, pass: any) => {
+          throw new Error("bad credentials or smth");
+        },
         unbind: () => null,
       }));
 
@@ -61,8 +62,9 @@ describe("auth.provider.ldap", () => {
 
     it("should throw error if wrong credentials", async () => {
       initLdapClient.mockImplementation(() => ({
-        bind: (user: any, pass: any, cb: any) =>
-          cb(new Error("bad credentials or smth"), null),
+        bind: async (user: any, pass: any) => {
+          throw new Error("bad credentials or smth");
+        },
         unbind: () => null,
       }));
 
@@ -83,11 +85,7 @@ describe("auth.provider.ldap", () => {
 
     it("should throw error if not in the correct group", async () => {
       initLdapClient.mockImplementation(() => ({
-        bind: (user: any, pass: any, cb: any) =>
-          cb(null, {
-            dn: "uid=sys.gram.mail,ou=People,dc=internal,dc=machines",
-            uid: "some number",
-          }),
+        bind: (user: any, pass: any) => true,
         unbind: () => null,
       }));
 
@@ -112,12 +110,11 @@ describe("auth.provider.ldap", () => {
 
     it("should return proper payload on successful verification", async () => {
       initLdapClient.mockImplementation(() => ({
-        bind: (user: any, pass: any, cb: any) =>
-          cb(null, {
-            dn: "uid=sys.gram.mail,ou=People,dc=internal,dc=machines",
-            displayName: "sys.gram.mail System User",
-            uid: "sys.gram.mail",
-          }),
+        bind: async (user: any, pass: any) => ({
+          dn: "uid=sys.gram.mail,ou=People,dc=internal,dc=machines",
+          displayName: "sys.gram.mail",
+          uid: "sys.gram.mail",
+        }),
         unbind: () => null,
       }));
 
@@ -140,7 +137,7 @@ describe("auth.provider.ldap", () => {
       expect(result.status).toBe("ok");
       if (result.status === "ok") {
         expect(result.token.sub).toBe("sys.gram.mail");
-        expect(result.token.name).toBe("sys.gram.mail System User");
+        expect(result.token.name).toBe("sys.gram.mail");
         expect(result.token.roles).toStrictEqual([Role.User]);
       }
     });
