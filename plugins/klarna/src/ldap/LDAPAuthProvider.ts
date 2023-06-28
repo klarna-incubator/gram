@@ -54,7 +54,7 @@ export default class LDAPAuthProvider implements AuthProvider {
 
       return {
         status: "error",
-        message: `authentication failed for ldap user ${name}. Bind failed. ${err}. ${err.message}`,
+        message: `authentication failed for ldap user ${name}. Bind failed.`,
       };
     } finally {
       ldap.unbind();
