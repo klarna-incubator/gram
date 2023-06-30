@@ -4,6 +4,7 @@ import {
   LDAPCache,
   initLdapClient,
   getUser,
+  connectLdapClient,
 } from "./lookup";
 
 describe.skip("ldap lookup (integration tests)", () => {
@@ -47,8 +48,7 @@ describe.skip("ldap lookup (integration tests)", () => {
   });
 
   it("should be able to connect", async () => {
-    const ldap = initLdapClient();
-    (await ldap).destroy();
+    await connectLdapClient();
   });
 
   it("should be ok with lookups of non-existent users", async () => {

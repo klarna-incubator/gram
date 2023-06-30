@@ -1,16 +1,14 @@
-import config from "config";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 import { AuthProvider, LoginResult } from "@gram/core/dist/auth/AuthProvider";
-import basicAuth from "basic-auth";
+import { Role } from "@gram/core/dist/auth/models/Role";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { getLogger } from "@gram/core/dist/logger";
 import {
   InvalidInputError,
   NotAuthenticatedError,
 } from "@gram/core/dist/util/errors";
-import { AuthzError } from "@gram/core/dist/auth/AuthzError";
-import { getLogger } from "@gram/core/dist/logger";
+import basicAuth from "basic-auth";
+import config from "config";
 import { getLDAPUserGroupsByDN, initLdapClient } from "./lookup";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 const log = getLogger("LDAPAuthProvider");
 
@@ -48,48 +46,38 @@ export default class LDAPAuthProvider implements AuthProvider {
 
     const ldap = await initLdapClient();
 
-    return new Promise((resolve, reject) => {
-      if (!ldap) {
-        reject(new Error("LDAP client not initialized yet!"));
-        return;
-      }
+    const dn = `uid=${name},ou=People,dc=internal,dc=machines`;
+    try {
+      await ldap.bind(dn, pass);
+    } catch (err) {
+      log.error("Ldap authentication failed", err);
 
-      const dn = `uid=${name},ou=People,dc=internal,dc=machines`;
-      ldap.bind(dn, pass, async (err, user) => {
-        if (err) {
-          log.error("Ldap authentication failed", err);
+      return {
+        status: "error",
+        message: `authentication failed for ldap user ${name}. Bind failed.`,
+      };
+    } finally {
+      ldap.unbind();
+    }
 
-          if (ldap.destroy) {
-            ldap.destroy();
-          }
-          return resolve({
-            status: "error",
-            message: `authentication failed for ldap user ${name}. Bind failed.`,
-          });
-        }
+    const sub = name;
+    const groups = await getLDAPUserGroupsByDN(dn);
 
-        const sub = name;
-        const groups = await getLDAPUserGroupsByDN(dn);
+    if (!groups.includes(requiredGroup)) {
+      return {
+        status: "error",
+        message: `authorization failed for ldap user ${name}. User not member of ${requiredGroup}`,
+      };
+    }
 
-        if (!groups.includes(requiredGroup)) {
-          return resolve({
-            status: "error",
-            message: `authorization failed for ldap user ${name}. User not member of ${requiredGroup}`,
-          });
-        }
-        if (ldap.destroy) {
-          ldap.destroy();
-        }
-        resolve({
-          status: "ok",
-          token: {
-            sub,
-            name: user.displayName,
-            roles: [Role.User],
-            teams: [],
-          },
-        });
-      });
-    });
+    return {
+      status: "ok",
+      token: {
+        sub,
+        name: sub,
+        roles: [Role.User],
+        teams: [],
+      },
+    };
   }
 }

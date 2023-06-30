@@ -17,10 +17,9 @@
   "license": "ISC",
   "dependencies": {
     "@gram/core": "*",
-    "@types/ldapjs": "^2.2.5",
     "hpagent": "^1.2.0",
     "jira-client": "^8.2.2",
-    "ldapjs": "^3.0.1",
+    "ldapts": "^4.2.6",
     "openid-client": "^5.3.2",
     "precond": "^0.2.3"
   },
