@@ -32,8 +32,8 @@ export function Navbar() {
   });
 
   const pages = [
-    { name: "Team", path: "/team" },
-    { name: "My Models", path: "/models" },
+    { name: "Team", path: "/team", requiresAuth: true },
+    { name: "My Models", path: "/models", requiresAuth: true },
     {
       name: "Reviews",
       path: `/reviews?statuses=requested${
@@ -42,6 +42,7 @@ export function Navbar() {
           : ""
       }`,
       count: user?.sub && isSuccess ? reviews?.total : 0,
+      requiresAuth: true,
     },
     ...menuPages,
   ];
@@ -120,46 +121,49 @@ export function Navbar() {
             },
           }}
         >
-          {pages.map((page) => (
-            <Badge
-              key={page.name}
-              badgeContent={page.count}
-              color="primary"
-              overlap="circular"
-            >
-              {!page.path.startsWith("/") ? (
-                <Button
-                  disableRipple
-                  target="_blank"
-                  href={page.path}
-                  sx={{
-                    color: (theme) => theme.palette.text.primary,
-                  }}
-                >
-                  {page.name}
-                </Button>
-              ) : (
-                <Fragment>
-                  {authenticated && user && (
-                    <Button
-                      disableRipple
-                      component={Link}
-                      to={page.path}
-                      key={page.name}
-                      sx={{
-                        color: (theme) =>
-                          window.location.pathname === page.path.split("?")[0]
-                            ? theme.palette.common.gramPink
-                            : theme.palette.text.primary,
-                      }}
-                    >
-                      {page.name}
-                    </Button>
-                  )}
-                </Fragment>
-              )}
-            </Badge>
-          ))}
+          {pages
+            .filter((p) => !p.requiresAuth || (p.requiresAuth && authenticated))
+            .map((page) => (
+              <Badge
+                key={page.name}
+                badgeContent={page.count}
+                color="primary"
+                overlap="circular"
+              >
+                {!page.path.startsWith("/") ? (
+                  <Button
+                    type="submit"
+                    disableRipple
+                    target="_blank"
+                    href={page.path}
+                    sx={{
+                      color: (theme) => theme.palette.text.primary,
+                    }}
+                  >
+                    {page.name}
+                  </Button>
+                ) : (
+                  <Fragment>
+                    {authenticated && user && (
+                      <Button
+                        disableRipple
+                        component={Link}
+                        to={page.path}
+                        key={page.name}
+                        sx={{
+                          color: (theme) =>
+                            window.location.pathname === page.path.split("?")[0]
+                              ? theme.palette.common.gramPink
+                              : theme.palette.text.primary,
+                        }}
+                      >
+                        {page.name}
+                      </Button>
+                    )}
+                  </Fragment>
+                )}
+              </Badge>
+            ))}
         </Box>
         {authenticated && user ? (
           <Box sx={{ flexGrow: 0 }}>
