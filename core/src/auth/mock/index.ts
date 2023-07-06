@@ -6,7 +6,9 @@ export default class MockAuthProvider implements AuthProvider {
   key = "mock";
 
   async params(ctx: RequestContext) {
-    return {};
+    return {
+      key: this.key,
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

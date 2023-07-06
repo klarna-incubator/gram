@@ -1,0 +1,22 @@
+{
+  "name": "@gram/magiclink",
+  "version": "3.1.2",
+  "description": "Pack with local auth provider",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^3.1.2",
+    "pg": "^8.11.0"
+  },
+  "private": true
+}

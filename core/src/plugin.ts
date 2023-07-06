@@ -19,6 +19,8 @@ import {
 } from "./data/reviews/ReviewerProvider";
 import { SystemPropertyProvider } from "./data/system-property/SystemPropertyProvider";
 import { Application } from "express";
+import { getPool, migratePlugin } from "./plugins/data";
+import { Pool } from "pg";
 
 export interface PluginRegistrator {
   // Expose DataAccessLayer to packs in case they need to query the database.
@@ -41,6 +43,10 @@ export interface PluginRegistrator {
   setSystemProvider(systemProvider: SystemProvider): void;
   setUserProvider(userProvider: UserProvider): void;
   setReviewerProvider(reviewerProvider: ReviewerProvider): void;
+
+  // Data related stuff for plugins that need to create their own database tables
+  getPluginDbPool(pluginDbSuffix: string): Promise<Pool>;
+  migrate(pluginDbSuffix: string, migrationsFolder: string): Promise<void>;
 }
 
 export interface Plugin {
@@ -65,6 +71,17 @@ export class PluginCompiler implements PluginRegistrator {
   constructor(public dal: DataAccessLayer, public app: Application) {
     this.assetPaths = [];
     this.log = getLogger("PackCompiler");
+  }
+
+  async getPluginDbPool(pluginDbSuffix: string): Promise<Pool> {
+    return getPool(pluginDbSuffix);
+  }
+
+  async migrate(
+    pluginDbSuffix: string,
+    migrationsFolder: string
+  ): Promise<void> {
+    return migratePlugin(pluginDbSuffix, migrationsFolder);
   }
 
   /**

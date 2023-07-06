@@ -22,7 +22,10 @@ export function LoginCallback() {
     }
 
     (async () => {
-      const auth = await getGramToken({ provider, params });
+      const auth = await getGramToken({
+        provider,
+        params,
+      });
 
       if (auth?.data?.authenticated) {
         const returnPath = localStorage.getItem("returnPath");

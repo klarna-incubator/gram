@@ -15,9 +15,12 @@ const authApi = api.injectEndpoints({
     getGramToken: build.mutation({
       query: ({ provider, params }) => ({
         url: `/auth/token`,
+        method: "POST",
         params: {
-          ...params,
           provider,
+        },
+        body: {
+          ...params,
         },
       }),
       transformResponse: (response) => {
@@ -25,7 +28,9 @@ const authApi = api.injectEndpoints({
           setAuthToken(response.token);
         }
         return {
+          status: response.status,
           authenticated: response.status === "ok",
+          message: response.message,
         };
       },
       invalidatesTags: ["User"],

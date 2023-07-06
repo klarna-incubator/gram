@@ -15,3 +15,16 @@ export function linkToModel(modelId: string) {
     return `${trimEndSlash(origins)}/model/${modelId}`;
   }
 }
+
+export function linkTo(path: string) {
+  const origins: string | string[] = config.get("origin");
+  if (!origins || (Array.isArray(origins) && origins.length === 0)) {
+    throw new Error("Couldn't find cors origin for generating model link");
+  }
+  const pathOhneSlash = path.startsWith("/") ? path.substring(1) : path;
+  if (Array.isArray(origins)) {
+    return `${trimEndSlash(origins[0])}/${pathOhneSlash}`;
+  } else {
+    return `${trimEndSlash(origins)}/${pathOhneSlash}`;
+  }
+}

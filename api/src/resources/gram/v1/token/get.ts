@@ -7,7 +7,12 @@ import AuthProviderRegistry from "@gram/core/dist/auth/AuthProviderRegistry";
 import * as jwt from "@gram/core/dist/auth/jwt";
 
 export default async function getAuthToken(req: Request, res: Response) {
-  if (req.query.provider === undefined) return res.sendStatus(400);
+  if (
+    !req.query.provider ||
+    AuthProviderRegistry.has(req.query.provider as string) === false
+  ) {
+    return res.sendStatus(400);
+  }
 
   const provider = req.query.provider as string;
 
@@ -19,10 +24,13 @@ export default async function getAuthToken(req: Request, res: Response) {
     currentRequest: req,
   });
 
-  if (result?.status != "ok") {
-    return res.status(400).json(result);
+  if (result?.status === "ok") {
+    const token = await jwt.generateToken(result.token);
+    return res.json({ status: "ok", token });
   }
 
-  const token = await jwt.generateToken(result.token);
-  res.json({ status: "ok", token });
+  if (!result || result?.status === "error") {
+    res.status(400);
+  }
+  return res.json(result);
 }
