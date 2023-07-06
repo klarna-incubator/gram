@@ -75,7 +75,7 @@ export class MagicLinkAuthProvider implements AuthProvider {
       await this.createToken(email);
       return {
         status: "info",
-        message: "Check your email for a magic link",
+        message: "Check your inbox for an email containing a sign-in link",
       };
     }
 
