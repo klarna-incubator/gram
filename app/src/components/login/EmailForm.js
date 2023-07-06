@@ -14,13 +14,15 @@ export function EmailForm() {
   const [submitted, setSubmitted] = useState(false);
   const [getGramToken, auth] = useGetGramTokenMutation();
 
-  const submit = async () => {
+  const submit = async (e) => {
+    e.preventDefault();
     if (email.length === 0) return;
     await getGramToken({
       provider: "magic-link",
       params: { email },
     });
     setSubmitted(true);
+    return false;
   };
 
   return (
