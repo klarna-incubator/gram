@@ -40,7 +40,9 @@ export function EmailForm() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Button variant="contained">Send link</Button>
+                    <Button type="submit" variant="contained">
+                      Send link
+                    </Button>
                   </InputAdornment>
                 ),
               }}
