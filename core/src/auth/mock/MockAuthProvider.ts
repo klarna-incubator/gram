@@ -1,8 +1,8 @@
 import { RequestContext } from "../../data/providers/RequestContext";
-import { AuthProvider, LoginResult } from "../AuthProvider";
+import { IdentityProvider, LoginResult } from "../IdentityProvider";
 import { Role } from "../models/Role";
 
-export default class MockAuthProvider implements AuthProvider {
+export default class MockAuthProvider implements IdentityProvider {
   key = "mock";
 
   async params(ctx: RequestContext) {
@@ -15,10 +15,10 @@ export default class MockAuthProvider implements AuthProvider {
   async getIdentity(ctx: RequestContext): Promise<LoginResult> {
     return {
       status: "ok",
-      token: {
+      identity: {
         sub: "payload",
-        roles: [Role.User],
-        teams: [{ name: "mocked team", id: "41" }],
+        // roles: [Role.User],
+        // teams: [{ name: "mocked team", id: "41" }],
       },
     };
   }

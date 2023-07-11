@@ -1,4 +1,8 @@
-import { AuthProvider, LoginResult } from "@gram/core/dist/auth/AuthProvider";
+import {
+  IdentityProvider,
+  IdentityProviderParams,
+  LoginResult,
+} from "@gram/core/dist/auth/IdentityProvider";
 import { Role } from "@gram/core/dist/auth/models/Role";
 import { User } from "@gram/core/dist/auth/models/User";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
@@ -7,23 +11,27 @@ import { randomUUID } from "crypto";
 import { App } from "octokit";
 import { GithubUserProvider } from "./GithubUserProvider";
 
-export class GithubAuthProvider implements AuthProvider {
+export class GithubIdentityProvider implements IdentityProvider {
   admins: string[] = [];
 
   constructor(private app: App, private userProvider: GithubUserProvider) {
     this.admins = config.has("admins") ? config.get("admins") : [];
   }
 
-  async params(ctx: RequestContext) {
+  async params(ctx: RequestContext): Promise<IdentityProviderParams> {
     const origin = config.get("origin");
     const { url } = this.app!.oauth.getWebFlowAuthorizationUrl({
       state: randomUUID(),
       redirectUrl: `${origin}/login/callback/github`,
     });
     return {
-      redirectUrl: url,
-      icon: "/assets/github/github-icon.svg",
-      hideOnFrontend: false,
+      key: "github",
+      form: {
+        type: "redirect",
+        httpMethod: "GET",
+        redirectUrl: url,
+        icon: "/assets/github/github-icon.svg",
+      },
     };
   }
 
@@ -83,14 +91,15 @@ export class GithubAuthProvider implements AuthProvider {
 
     return {
       status: "ok",
-      token: {
-        roles: this.admins.includes(login)
-          ? [Role.User, Role.Admin]
-          : [Role.User],
-        provider: this.key,
-        picture: avatarUrl,
-        providerToken: token,
-        ...user,
+      identity: {
+        sub: login,
+        // roles: this.admins.includes(login)
+        //   ? [Role.User, Role.Admin]
+        //   : [Role.User],
+        // provider: this.key,
+        // picture: avatarUrl,
+        // providerToken: token,
+        // ...user,
       },
     };
   }

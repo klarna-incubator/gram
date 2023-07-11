@@ -5,7 +5,6 @@
 
 import { Request, Response } from "express";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { reviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
@@ -13,7 +12,7 @@ export default (dal: DataAccessLayer) =>
     const ctx = { currentRequest: req };
 
     if (!modelId) {
-      const reviewers = await reviewerProvider.getReviewers(ctx);
+      const reviewers = await dal.reviewerHandler.getReviewers(ctx);
       return res.json({ reviewers });
     } else {
       const model = await dal.modelService.getById(modelId as string);
@@ -22,7 +21,10 @@ export default (dal: DataAccessLayer) =>
         return res.status(404);
       }
 
-      const reviewers = await reviewerProvider.getReviewersForModel(ctx, model);
+      const reviewers = await dal.reviewerHandler.getReviewersForModel(
+        ctx,
+        model
+      );
 
       return res.json({ reviewers });
     }

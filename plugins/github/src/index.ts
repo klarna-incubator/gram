@@ -3,7 +3,7 @@ import { join } from "path";
 import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
 import secrets from "@gram/core/dist/secrets";
 import { additionalMigrations } from "./data";
-import { GithubAuthProvider } from "./GithubAuthProvider";
+import { GithubIdentityProvider } from "./GithubIdentityProvider";
 import { GithubAuthzProvider } from "./GithubAuthzProvider";
 import { GithubSystemPropertyProvider } from "./GithubSystemPropertyProvider";
 import { GithubSystemProvider } from "./GithubSystemProvider";
@@ -34,7 +34,7 @@ export default class GithubPlugin implements Plugin {
     );
     reg.setAuthzProvider(new GithubAuthzProvider(app));
     reg.setUserProvider(userProvider);
-    reg.registerAuthProvider(new GithubAuthProvider(app, userProvider));
+    reg.registerIdentityProvider(new GithubIdentityProvider(app, userProvider));
     reg.registerAssets("github", join(__dirname, "assets"));
   }
 }

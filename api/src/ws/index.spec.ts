@@ -9,7 +9,7 @@ import express from "express";
 import http from "http";
 import WebSocket from "ws";
 import * as ws from ".";
-import { genUser } from "../test-util/authz";
+import { genUser } from "@gram/core/dist/test-util/authz";
 import { sampleOwnedSystem } from "../test-util/sampleOwnedSystem";
 import { ModelWebsocketServer } from "./model";
 

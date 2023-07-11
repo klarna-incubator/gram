@@ -6,7 +6,6 @@ import { _deleteAllTheThings } from "../utils";
 import { Review, ReviewStatus } from "./Review";
 import { ReviewDataService } from "./ReviewDataService";
 import { createSampleModel } from "../../test-util/model";
-import { setReviewerProvider } from "./ReviewerProvider";
 import { testReviewerProvider } from "../../test-util/sampleReviewer";
 
 describe("ReviewDataService implementation", () => {
@@ -22,7 +21,7 @@ describe("ReviewDataService implementation", () => {
     data = new ReviewDataService(pool, dal);
     notificationQueue = jest.spyOn(dal.notificationService, "queue");
     await _deleteAllTheThings(pool);
-    setReviewerProvider(testReviewerProvider);
+    dal.reviewerHandler.setReviewerProvider(testReviewerProvider);
   });
 
   beforeEach(async () => {

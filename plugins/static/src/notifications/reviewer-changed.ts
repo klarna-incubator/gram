@@ -1,5 +1,4 @@
 import { NotificationTemplateKey } from "@gram/core/dist/data/notifications/NotificationInput";
-import { lookupReviewers } from "@gram/core/dist/data/reviews/ReviewerProvider";
 import {
   EmailRecipient,
   PlaintextHandlebarsNotificationTemplate,
@@ -28,16 +27,16 @@ export const EmailReviewerChanged = () =>
       const variables = await generalReviewNotificationVariables(dal, review);
       const recipients: EmailRecipient[] = [variables.reviewer];
       const cc = [variables.requester];
-      const previousReviewerLookup = await lookupReviewers(
+      const previousReviewerLookup = await dal.reviewerHandler.lookupReviewer(
         {},
         previousReviewer
       );
       const previous: EmailRecipient = {
         name: "unknown",
       };
-      if (previousReviewerLookup && previousReviewerLookup.length > 0) {
-        previous.name = previousReviewerLookup[0].name;
-        previous.email = previousReviewerLookup[0].mail;
+      if (previousReviewerLookup) {
+        previous.name = previousReviewerLookup.name;
+        previous.email = previousReviewerLookup.mail;
 
         if (previous.email) {
           recipients.push(previous);

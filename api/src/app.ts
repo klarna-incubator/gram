@@ -77,10 +77,12 @@ async function createApp(pool: Pool) {
   const unauthenticatedRoutes = express.Router();
   unauthenticatedRoutes.get("/banners", errorWrap(getBanner(dal)));
   unauthenticatedRoutes.get("/menu", errorWrap(getMenu));
-  unauthenticatedRoutes.get("/auth/token", errorWrap(tokenV1.get));
-  unauthenticatedRoutes.post("/auth/token", errorWrap(tokenV1.get));
-  unauthenticatedRoutes.get("/auth/params", errorWrap(tokenV1.params));
-  unauthenticatedRoutes.delete("/auth/token", errorWrap(tokenV1.delete));
+
+  const tokenRoutes = tokenV1(dal);
+  unauthenticatedRoutes.get("/auth/token", errorWrap(tokenRoutes.get));
+  unauthenticatedRoutes.post("/auth/token", errorWrap(tokenRoutes.get));
+  unauthenticatedRoutes.get("/auth/params", errorWrap(tokenRoutes.params));
+  unauthenticatedRoutes.delete("/auth/token", errorWrap(tokenRoutes.delete));
 
   // Authenticated routes
   const authenticatedRoutes = express.Router();

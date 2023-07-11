@@ -1,0 +1,34 @@
+import { RequestContext } from "../data/providers/RequestContext";
+import { User } from "./models/User";
+import { UserProvider } from "./UserProvider";
+
+class DefaultUserProvider implements UserProvider {
+  key = "default";
+  lookup(ctx: RequestContext, userIds: string[]): Promise<User[]> {
+    throw new Error(
+      "Method not implemented. A UserProvider implementation is missing."
+    );
+  }
+}
+
+export class UserHandler {
+  constructor() {}
+
+  userProvider: UserProvider = new DefaultUserProvider();
+
+  setUserProvider(userProvider: UserProvider): void {
+    this.userProvider = userProvider;
+  }
+
+  async lookup(ctx: RequestContext, userIds: string[]): Promise<User[]> {
+    return this.userProvider.lookup(ctx, userIds);
+  }
+
+  async lookupUser(ctx: RequestContext, userId: string): Promise<User | null> {
+    const users = await this.lookup(ctx, [userId]);
+    if (!users || users.length === 0) {
+      return null;
+    }
+    return users[0];
+  }
+}

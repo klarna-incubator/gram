@@ -5,7 +5,6 @@
 import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { reviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
@@ -14,7 +13,7 @@ export default (dal: DataAccessLayer) =>
 
     if (
       !newReviewer ||
-      (await reviewerProvider.lookup({ currentRequest: req }, [newReviewer]))
+      (await dal.reviewerHandler.lookup({ currentRequest: req }, [newReviewer]))
         .length === 0
     ) {
       return res.sendStatus(400);

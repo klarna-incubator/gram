@@ -1,43 +1,48 @@
-import { AllPermissions, Permission } from "@gram/core/dist/auth/authorization";
-import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import Model from "@gram/core/dist/data/models/Model";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { sampleUser } from "./sampleUser";
-import { getMockedSystemById } from "./system";
+import { DataAccessLayer } from "../data/dal";
+import Model from "../data/models/Model";
+import { RequestContext } from "../data/providers/RequestContext";
+import { systemProvider } from "../data/systems/systems";
+import { AuthzProvider } from "./AuthzProvider";
+import { AllPermissions, Permission } from "./authorization";
+import { Role } from "./models/Role";
+import { UserToken } from "./models/UserToken";
 
-export const genUser = (user?: Partial<UserToken>): UserToken => ({
-  ...sampleUser,
-  ...user,
-});
-
-// Maybe this should be the default?
-class TestAuthzProvider implements AuthzProvider {
+export class DefaultAuthzProvider implements AuthzProvider {
   async getPermissionsForSystem(
     ctx: RequestContext,
     systemId: string,
     user: UserToken
   ): Promise<Permission[]> {
     if (user.roles.length === 0) return [];
+
+    /**
+     * Admins have full permission
+     */
     if (user.roles.find((r) => r === Role.Admin)) return AllPermissions;
 
     const permissions: Permission[] = [];
 
+    /**
+     * Reviewers may review any model
+     */
     if (user.roles.find((r) => r === Role.Reviewer)) {
       permissions.push(Permission.Read, Permission.Review);
     }
 
+    /**
+     * Regular users may read any model
+     */
     if (user.roles.find((r) => r === Role.User)) {
       permissions.push(Permission.Read);
     }
 
-    const system = await getMockedSystemById(systemId);
+    /**
+     * System owners, determined by team, may modify the model
+     */
+    const system = await systemProvider.getSystem(ctx, systemId);
     if (user.teams.find((t) => system?.owners?.find((o) => o.id === t.id))) {
       permissions.push(Permission.Write, Permission.Delete);
     }
-
-    // console.log(permissions);
 
     return permissions;
   }
@@ -72,11 +77,12 @@ class TestAuthzProvider implements AuthzProvider {
       permissions.push(Permission.Read, Permission.Write, Permission.Delete);
     }
 
-    // console.log(permissions);
-
     return permissions;
   }
-  key = "test";
-}
 
-export const testAuthzProvider = new TestAuthzProvider();
+  async getRolesForUser(sub: string): Promise<Role[]> {
+    return [Role.User];
+  }
+
+  key = "default";
+}

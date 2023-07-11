@@ -5,7 +5,6 @@ import {
   PluginCompiler,
   PluginRegistrator,
 } from "@gram/core/dist/plugin";
-import { testAuthzProvider } from "./authz";
 import {
   SampleEmailMeetingRequested,
   SampleEmailReviewApproved,
@@ -28,7 +27,6 @@ const toComponentClass = (o: any): ComponentClass => {
 
 class TestPack implements Plugin {
   async bootstrap(reg: PluginRegistrator): Promise<void> {
-    reg.setAuthzProvider(testAuthzProvider);
     reg.setSystemProvider(testSystemProvider);
     reg.registerNotificationTemplates([
       SampleEmailReviewApproved,

@@ -8,10 +8,12 @@ import { EmailReviewRequested } from "./notifications/review-requested";
 import { EmailReviewRequestedReminder } from "./notifications/review-requested-reminder";
 import { EmailReviewerChanged } from "./notifications/reviewer-changed";
 import { StaticReviewerProvider } from "./StaticReviewerProvider";
+import { StaticUserProvider } from "./StaticUserProvider";
 
 export default class StaticPlugin implements Plugin {
   async bootstrap(reg: PluginRegistrator): Promise<void> {
     reg.setReviewerProvider(new StaticReviewerProvider());
+    reg.setUserProvider(new StaticUserProvider());
 
     reg.registerNotificationTemplates([
       EmailReviewApproved(),

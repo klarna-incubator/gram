@@ -3,6 +3,7 @@ import { RequestContext } from "../data/providers/RequestContext";
 import { Provider } from "../data/providers/Provider";
 import { Permission } from "./authorization";
 import { UserToken } from "./models/UserToken";
+import { Role } from "./models/Role";
 
 /**
  * The AuthzProvider provides authorizations. It is the central point
@@ -19,4 +20,5 @@ export interface AuthzProvider extends Provider {
     model: Model,
     user: UserToken
   ): Promise<Permission[]>;
+  getRolesForUser(sub: string): Promise<Role[]>;
 }

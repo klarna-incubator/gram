@@ -11,14 +11,22 @@ import { ReviewDataService } from "./reviews/ReviewDataService";
 import { SuggestionDataService } from "./suggestions/SuggestionDataService";
 import { ThreatDataService } from "./threats/ThreatDataService";
 import { ReportDataService } from "./reports/ReportDataService";
-import { GramConnectionPool } from "./postgres";
 import { BannerDataService } from "./banners/BannerDataService";
+import { UserHandler } from "../auth/UserHandler";
+import { AuthzProvider } from "../auth/AuthzProvider";
+import { authzProvider } from "../auth/authorization";
+import { systemProvider } from "./systems/systems";
+import { SystemProvider } from "./systems/SystemProvider";
+import { ReviewerHandler } from "./reviews/ReviewerHandler";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
  */
 export class DataAccessLayer {
+  // Database Connection Pool for direct access to postgres
   pool: Pool;
+
+  // DataServices - specific logic to handle database interactions
   modelService: ModelDataService;
   controlService: ControlDataService;
   threatService: ThreatDataService;
@@ -26,18 +34,32 @@ export class DataAccessLayer {
   notificationService: NotificationDataService;
   reviewService: ReviewDataService;
   suggestionService: SuggestionDataService;
+  reportService: ReportDataService;
+  bannerService: BannerDataService;
+
+  // Non-Database related handlers
   sysPropHandler: SystemPropertyHandler;
   ccHandler: ComponentClassHandler;
   templateHandler: TemplateHandler;
   suggestionEngine: SuggestionEngine;
-  reportService: ReportDataService;
-  bannerService: BannerDataService;
+  userHandler: UserHandler;
+  reviewerHandler: ReviewerHandler;
+
+  get authzProvider(): AuthzProvider {
+    return authzProvider;
+  }
+
+  get systemProvider(): SystemProvider {
+    return systemProvider;
+  }
 
   constructor(pool: Pool) {
     this.pool = pool;
     this.sysPropHandler = new SystemPropertyHandler();
     this.ccHandler = new ComponentClassHandler();
     this.templateHandler = new TemplateHandler();
+    this.userHandler = new UserHandler();
+    this.reviewerHandler = new ReviewerHandler();
 
     // Initialize Data Services
     this.modelService = new ModelDataService(pool, this);

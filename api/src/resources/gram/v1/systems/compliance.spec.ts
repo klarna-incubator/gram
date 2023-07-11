@@ -4,7 +4,7 @@ import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 // import { createSampleModel } from "api/src/test-util/model";
 import request from "supertest";
 import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "../../../../test-util/authz";
+import { genUser } from "@gram/core/dist/test-util/authz";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleUser } from "../../../../test-util/sampleUser";
 import { createSampleModel } from "../../../../test-util/model";

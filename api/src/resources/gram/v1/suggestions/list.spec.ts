@@ -5,7 +5,7 @@ import { createPostgresPool } from "@gram/core/dist/data/postgres";
 import { systemProvider } from "@gram/core/dist/data/systems/systems";
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
 import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "../../../../test-util/authz";
+import { genUser } from "@gram/core/dist/test-util/authz";
 import { createSampleModel } from "../../../../test-util/model";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
 import { sampleUser } from "../../../../test-util/sampleUser";

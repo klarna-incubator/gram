@@ -1,5 +1,5 @@
-import AuthProviderRegistry from "@gram/core/dist/auth/AuthProviderRegistry";
-import MockAuthProvider from "@gram/core/dist/auth/mock";
+import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry";
+import MockAuthProvider from "@gram/core/dist/auth/mock/MockAuthProvider";
 import { createPostgresPool } from "@gram/core/dist/data/postgres";
 import request from "supertest";
 import { createTestApp } from "../../../../test-util/app";
@@ -13,14 +13,14 @@ describe("token.get", () => {
   beforeAll(async () => {
     const pool = await createPostgresPool();
     ({ app } = await createTestApp());
-    AuthProviderRegistry.clear();
-    AuthProviderRegistry.set(dummyAuth.key, dummyAuth);
+    IdentityProviderRegistry.clear();
+    IdentityProviderRegistry.set(dummyAuth.key, dummyAuth);
   });
 
   beforeEach(() => {
     getIdentity.mockImplementation(async () => ({
       status: "ok",
-      token: sampleUser,
+      identity: sampleUser,
     }));
   });
 

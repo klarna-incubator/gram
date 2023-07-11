@@ -30,6 +30,13 @@ class TestReviewerProvider implements ReviewerProvider {
       .filter((u) => u) as Reviewer[];
   }
 
+  async lookupReviewer(
+    ctx: RequestContext,
+    userId: string
+  ): Promise<Reviewer | null> {
+    return (await this.lookup(ctx, [userId]))[0];
+  }
+
   async getReviewersForModel(
     ctx: RequestContext,
     model: Model

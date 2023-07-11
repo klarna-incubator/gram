@@ -1,15 +1,9 @@
 import { RequestContext } from "../data/providers/RequestContext";
 import { Provider } from "../data/providers/Provider";
-import { UserToken } from "./models/UserToken";
+import { Identity } from "./models/Identity";
 
-export enum AuthProviderFormType {
-  redirect = "redirect",
-  email = "email",
-  // emailAndPassword = "emailAndPassword",
-}
-
-export type AuthProviderForm = {
-  type: AuthProviderFormType;
+export type IdentityProviderForm = {
+  type: "redirect" | "email";
   httpMethod: "GET" | "POST";
   /**
    * Could replace FormType here with a more generic "fields" array, but that would require a lot of changes to the
@@ -26,7 +20,7 @@ export type AuthProviderForm = {
   icon?: string;
 };
 
-export type AuthProviderParams = {
+export type IdentityProviderParams = {
   /**
    * Unique key to identify the auth provider by programmatically.
    */
@@ -41,7 +35,7 @@ export type AuthProviderParams = {
   /**
    * Type of auth provider. If undefined, the frontend will not display the auth provider.
    */
-  form?: AuthProviderForm;
+  form?: IdentityProviderForm;
 
   [key: string]: any;
 };
@@ -49,7 +43,7 @@ export type AuthProviderParams = {
 export type LoginResult =
   | {
       status: "ok";
-      token: UserToken;
+      identity: Identity;
     }
   | {
       status: "error";
@@ -67,11 +61,11 @@ export type LoginResult =
       message: string;
     };
 
-export interface AuthProvider extends Provider {
+export interface IdentityProvider extends Provider {
   /**
    * Provide whichever parameters the frontend needs to perform the authentication process.
    */
-  params(ctx: RequestContext): Promise<AuthProviderParams>;
+  params(ctx: RequestContext): Promise<IdentityProviderParams>;
 
   /**
    * Method to handle the form submission (if there is one)

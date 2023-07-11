@@ -1,11 +1,9 @@
 import {
-  AuthProvider,
-  AuthProviderFormType,
-  AuthProviderParams,
+  IdentityProvider,
+  IdentityProviderParams,
   LoginResult,
-} from "@gram/core/dist/auth/AuthProvider";
+} from "@gram/core/dist/auth/IdentityProvider";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { lookupUser } from "@gram/core/dist/auth/user";
 import { linkTo } from "@gram/core/dist/util/links";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 import { Pool } from "pg";
@@ -14,7 +12,7 @@ import { randomUUID } from "crypto";
 
 const log = getLogger("magiclink");
 
-export class MagicLinkAuthProvider implements AuthProvider {
+export class MagicLinkIdentityProvider implements IdentityProvider {
   key: string = "magic-link";
 
   dal: DataAccessLayer;
@@ -25,11 +23,11 @@ export class MagicLinkAuthProvider implements AuthProvider {
     this.pool = dbPool;
   }
 
-  async params(ctx: RequestContext): Promise<AuthProviderParams> {
+  async params(ctx: RequestContext): Promise<IdentityProviderParams> {
     return {
       key: this.key,
       form: {
-        type: AuthProviderFormType.email,
+        type: "email",
         httpMethod: "POST",
       },
     };
@@ -96,15 +94,15 @@ export class MagicLinkAuthProvider implements AuthProvider {
       await this.pool.query(query, [token]);
 
       const sub = result.rows[0].sub;
-      const user = await lookupUser(ctx, sub);
+      // const user = await lookupUser(ctx, sub);
 
       return {
         status: "ok",
-        token: {
+        identity: {
           sub,
-          roles: [],
-          teams: [],
-          ...user,
+          // roles: [],
+          // teams: [],
+          // ...user,
         },
       };
     }

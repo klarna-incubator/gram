@@ -5,7 +5,7 @@ import * as jwt from "@gram/core/dist/auth/jwt";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "../../../../test-util/authz";
+import { genUser } from "@gram/core/dist/test-util/authz";
 import { createSampleModel as genSampleModel } from "../../../../test-util/model";
 import { sampleUser } from "../../../../test-util/sampleUser";
 

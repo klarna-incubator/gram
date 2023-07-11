@@ -6,17 +6,13 @@ import { getLogger } from "./logger";
 import { NotificationTemplate } from "./notifications/NotificationTemplate";
 import { SuggestionSource } from "./suggestions/models";
 import { AuthzProvider } from "./auth/AuthzProvider";
-import { AuthProvider } from "./auth/AuthProvider";
-import AuthProviderRegistry from "./auth/AuthProviderRegistry";
+import { IdentityProvider } from "./auth/IdentityProvider";
+import IdentityProviderRegistry from "./auth/IdentityProviderRegistry";
 import { setAuthorizationProvider as setAuthzProvider } from "./auth/authorization";
 import { setSystemProvider } from "./data/systems/systems";
 import { SystemProvider } from "./data/systems/SystemProvider";
 import { UserProvider } from "./auth/UserProvider";
-import { setUserProvider } from "./auth/user";
-import {
-  ReviewerProvider,
-  setReviewerProvider,
-} from "./data/reviews/ReviewerProvider";
+import { ReviewerProvider } from "./data/reviews/ReviewerProvider";
 import { SystemPropertyProvider } from "./data/system-property/SystemPropertyProvider";
 import { Application } from "express";
 import { getPool, migratePlugin } from "./plugins/data";
@@ -28,6 +24,13 @@ export interface PluginRegistrator {
   // Exposed Express app for plugins to be able to attach new routes etc.
   app: Application;
 
+  /**
+   * registerAssets allows packs to provide static content (e.g. images) that
+   * will be hosted by the gram app under the asset route. Paths registered this
+   * way will be hosted as: http(s)://<domain>/assets/<name>/
+   * @param name alias or identifier for your pack
+   * @param path absolute path of directory to symlink to
+   */
   registerAssets(name: string, path: string): void;
   /**
    * TODO: clean up by Abstracting "Something"Provider, same pattern everywhere here:
@@ -38,14 +41,23 @@ export interface PluginRegistrator {
   registerComponentClasses(classes: ComponentClass[]): void;
   registerNotificationTemplates(templates: NotificationTemplate[]): void;
   registerSuggestionSource(source: SuggestionSource): void;
-  registerAuthProvider(authProvider: AuthProvider): void;
+  registerIdentityProvider(identityProvider: IdentityProvider): void;
   setAuthzProvider(authzProvider: AuthzProvider): void;
   setSystemProvider(systemProvider: SystemProvider): void;
   setUserProvider(userProvider: UserProvider): void;
   setReviewerProvider(reviewerProvider: ReviewerProvider): void;
 
-  // Data related stuff for plugins that need to create their own database tables
+  /**
+   * Returns pool for unique database created for plugin. This will be connected to a separate schema name based on the pluginDbSuffix.
+   * @param pluginDbSuffix
+   */
+  //
   getPluginDbPool(pluginDbSuffix: string): Promise<Pool>;
+  /**
+   * Perform database migrations on the plugin schema using migration scripts found in the migrationsFolder.
+   * @param pluginDbSuffix
+   * @param migrationsFolder
+   */
   migrate(pluginDbSuffix: string, migrationsFolder: string): Promise<void>;
 }
 
@@ -84,13 +96,6 @@ export class PluginCompiler implements PluginRegistrator {
     return migratePlugin(pluginDbSuffix, migrationsFolder);
   }
 
-  /**
-   * registerAssets allows packs to provide static content (e.g. images) that
-   * will be hosted by the gram app under the asset route. Paths registered this
-   * way will be hosted as: http(s)://<domain>/assets/<name>/
-   * @param name alias or identifier for your pack
-   * @param path absolute path of directory to symlink to
-   */
   registerAssets(name: string, path: string): void {
     if (!isAbsolute(path)) throw new Error("Pack asset path must be absolute.");
     if (this.assetPaths.find((a) => a.name === name)) {
@@ -133,9 +138,9 @@ export class PluginCompiler implements PluginRegistrator {
     this.dal.suggestionEngine.register(source);
   }
 
-  registerAuthProvider(authProvider: AuthProvider) {
+  registerIdentityProvider(authProvider: IdentityProvider) {
     this.log.info(`Registered Auth Provider: ${authProvider.key}`);
-    AuthProviderRegistry.set(authProvider.key, authProvider);
+    IdentityProviderRegistry.set(authProvider.key, authProvider);
   }
 
   setAuthzProvider(authzProvider: AuthzProvider) {
@@ -150,12 +155,12 @@ export class PluginCompiler implements PluginRegistrator {
 
   setUserProvider(userProvider: UserProvider) {
     this.log.info(`Set User Provider: ${userProvider.key}`);
-    setUserProvider(userProvider);
+    this.dal.userHandler.setUserProvider(userProvider);
   }
 
   setReviewerProvider(reviewerProvider: ReviewerProvider): void {
     this.log.info(`Set Reviewer Provider: ${reviewerProvider.key}`);
-    setReviewerProvider(reviewerProvider);
+    this.dal.reviewerHandler.setReviewerProvider(reviewerProvider);
   }
 
   compileAssets() {

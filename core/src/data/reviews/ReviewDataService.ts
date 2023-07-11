@@ -8,7 +8,6 @@ import {
   SystemPropertyValue,
 } from "../system-property/types";
 import { Review, ReviewStatus } from "./Review";
-import { reviewerProvider } from "./ReviewerProvider";
 import { ReviewSystemCompliance } from "./ReviewSystemCompliance";
 
 export function convertToReview(row: any): Review {
@@ -345,9 +344,10 @@ export class ReviewDataService extends EventEmitter {
   async decline(ctx: RequestContext, modelId: string, note?: string) {
     const oldReview = await this.getByModelId(modelId);
 
+    const fallback = await this.dal.reviewerHandler.getFallbackReviewer(ctx);
     const review = await this.update(modelId, {
       status: ReviewStatus.Requested, // TODO: handle ReviewStatus.Declined better. This assumes there is a fallback reviewer.
-      reviewedBy: (await reviewerProvider.getFallbackReviewer(ctx)).sub,
+      reviewedBy: fallback?.sub,
       note: note,
     });
 
