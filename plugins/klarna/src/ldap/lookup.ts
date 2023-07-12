@@ -134,7 +134,7 @@ export async function getTeamsByCN(cns: string[]): Promise<Team[]> {
   const teams = await Promise.all(
     cns.filter((cn) => cn).map(async (cn) => getTeamByCN(cn))
   );
-  return teams.filter((t) => t) as Team[];
+  return teams.filter((t) => t && t.id) as Team[];
 }
 
 export async function getTeamByQuery(
