@@ -18,6 +18,7 @@ import { authzProvider } from "../auth/authorization";
 import { systemProvider } from "./systems/systems";
 import { SystemProvider } from "./systems/SystemProvider";
 import { ReviewerHandler } from "./reviews/ReviewerHandler";
+import { createPostgresPool, getDatabaseName } from "./postgres";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
@@ -51,6 +52,11 @@ export class DataAccessLayer {
 
   get systemProvider(): SystemProvider {
     return systemProvider;
+  }
+
+  async pluginPool(pluginSuffix: string): Promise<Pool> {
+    const databaseName = await getDatabaseName(pluginSuffix);
+    return createPostgresPool({ database: databaseName });
   }
 
   constructor(pool: Pool) {

@@ -2,27 +2,60 @@ import { readdirSync, symlinkSync, unlinkSync } from "fs";
 import { isAbsolute, join } from "path";
 import { ComponentClass } from "./data/component-classes";
 import { DataAccessLayer } from "./data/dal";
-import { getLogger } from "./logger";
+import { getLogger } from "log4js";
 import { NotificationTemplate } from "./notifications/NotificationTemplate";
 import { SuggestionSource } from "./suggestions/models";
 import { AuthzProvider } from "./auth/AuthzProvider";
 import { IdentityProvider } from "./auth/IdentityProvider";
 import IdentityProviderRegistry from "./auth/IdentityProviderRegistry";
-import { setAuthorizationProvider as setAuthzProvider } from "./auth/authorization";
+import { setAuthorizationProvider } from "./auth/authorization";
 import { setSystemProvider } from "./data/systems/systems";
 import { SystemProvider } from "./data/systems/SystemProvider";
 import { UserProvider } from "./auth/UserProvider";
 import { ReviewerProvider } from "./data/reviews/ReviewerProvider";
 import { SystemPropertyProvider } from "./data/system-property/SystemPropertyProvider";
-import { Application } from "express";
 import { getPool, migratePlugin } from "./plugins/data";
 import { Pool } from "pg";
 
-export interface PluginRegistrator {
-  // Expose DataAccessLayer to packs in case they need to query the database.
-  dal: DataAccessLayer;
-  // Exposed Express app for plugins to be able to attach new routes etc.
-  app: Application;
+/* Could create a temporary directory instead */
+export const AssetDir = "assets";
+
+export const StaticAssets = [
+  "placeholder.svg",
+  "almost-secure.svg",
+  "secure.svg",
+  "vulnerable.svg",
+  "unknown.svg",
+];
+
+export class Bootstrapper {
+  assetPaths: { name: string; path: string }[];
+  log: any;
+
+  constructor(public dal: DataAccessLayer) {
+    this.assetPaths = [];
+    this.log = getLogger("PackCompiler");
+  }
+
+  /**
+   * Returns pool for unique database created for plugin. This will be connected to a separate schema name based on the pluginDbSuffix.
+   * @param pluginDbSuffix
+   */
+  async getPluginDbPool(pluginDbSuffix: string): Promise<Pool> {
+    return getPool(pluginDbSuffix);
+  }
+
+  /**
+   * Perform database migrations on the plugin schema using migration scripts found in the migrationsFolder.
+   * @param pluginDbSuffix
+   * @param migrationsFolder
+   */
+  async migrate(
+    pluginDbSuffix: string,
+    migrationsFolder: string
+  ): Promise<void> {
+    return migratePlugin(pluginDbSuffix, migrationsFolder);
+  }
 
   /**
    * registerAssets allows packs to provide static content (e.g. images) that
@@ -31,83 +64,19 @@ export interface PluginRegistrator {
    * @param name alias or identifier for your pack
    * @param path absolute path of directory to symlink to
    */
-  registerAssets(name: string, path: string): void;
-  /**
-   * TODO: clean up by Abstracting "Something"Provider, same pattern everywhere here:
-   */
-  registerSystemPropertyProvider(
-    systemPropertyProvider: SystemPropertyProvider
-  ): void;
-  registerComponentClasses(classes: ComponentClass[]): void;
-  registerNotificationTemplates(templates: NotificationTemplate[]): void;
-  registerSuggestionSource(source: SuggestionSource): void;
-  registerIdentityProvider(identityProvider: IdentityProvider): void;
-  setAuthzProvider(authzProvider: AuthzProvider): void;
-  setSystemProvider(systemProvider: SystemProvider): void;
-  setUserProvider(userProvider: UserProvider): void;
-  setReviewerProvider(reviewerProvider: ReviewerProvider): void;
-
-  /**
-   * Returns pool for unique database created for plugin. This will be connected to a separate schema name based on the pluginDbSuffix.
-   * @param pluginDbSuffix
-   */
-  //
-  getPluginDbPool(pluginDbSuffix: string): Promise<Pool>;
-  /**
-   * Perform database migrations on the plugin schema using migration scripts found in the migrationsFolder.
-   * @param pluginDbSuffix
-   * @param migrationsFolder
-   */
-  migrate(pluginDbSuffix: string, migrationsFolder: string): Promise<void>;
-}
-
-export interface Plugin {
-  bootstrap(reg: PluginRegistrator): Promise<void>;
-}
-
-/* Could create a temporary directory instead */
-export const AssetDir = "assets";
-
-const StaticAssets = [
-  "placeholder.svg",
-  "almost-secure.svg",
-  "secure.svg",
-  "vulnerable.svg",
-  "unknown.svg",
-];
-
-export class PluginCompiler implements PluginRegistrator {
-  assetPaths: { name: string; path: string }[];
-  log: any;
-
-  constructor(public dal: DataAccessLayer, public app: Application) {
-    this.assetPaths = [];
-    this.log = getLogger("PackCompiler");
-  }
-
-  async getPluginDbPool(pluginDbSuffix: string): Promise<Pool> {
-    return getPool(pluginDbSuffix);
-  }
-
-  async migrate(
-    pluginDbSuffix: string,
-    migrationsFolder: string
-  ): Promise<void> {
-    return migratePlugin(pluginDbSuffix, migrationsFolder);
-  }
-
-  registerAssets(name: string, path: string): void {
-    if (!isAbsolute(path)) throw new Error("Pack asset path must be absolute.");
+  registerAssets(name: string, folderPath: string): void {
+    if (!isAbsolute(folderPath))
+      throw new Error("Pack asset path must be absolute.");
     if (this.assetPaths.find((a) => a.name === name)) {
       throw new Error("alias already registered");
     }
     // Hack: the path sent is from the compiled typescript, which does not copy
     // over the images into the same directory. This is not a good solution,
     // but should work until we move packs over to npm packages.
-    path = path.replace("dist/", "src/");
+    folderPath = folderPath.replace("dist/", "src/");
     // TODO: should validate that name is only valid chars
-    this.assetPaths.push({ name, path });
-    this.log.info(`Registered Assets ${name} @ ${path}`);
+    this.assetPaths.push({ name, path: folderPath });
+    this.log.info(`Registered Assets ${name} @ ${folderPath}`);
   }
 
   registerSystemPropertyProvider(
@@ -123,7 +92,7 @@ export class PluginCompiler implements PluginRegistrator {
 
   registerComponentClasses(classes: ComponentClass[]): void {
     classes.forEach((cl) => this.dal.ccHandler.add(cl));
-    this.log.info(`Registered component classes`);
+    this.log.info(`Registered ${classes.length} component classes`);
   }
 
   registerNotificationTemplates(templates: NotificationTemplate[]): void {
@@ -143,9 +112,9 @@ export class PluginCompiler implements PluginRegistrator {
     IdentityProviderRegistry.set(authProvider.key, authProvider);
   }
 
-  setAuthzProvider(authzProvider: AuthzProvider) {
+  setAuthorizationProvider(authzProvider: AuthzProvider) {
     this.log.info(`Set Authz Provider: ${authzProvider.key}`);
-    setAuthzProvider(authzProvider);
+    setAuthorizationProvider(authzProvider);
   }
 
   setSystemProvider(systemProvider: SystemProvider) {

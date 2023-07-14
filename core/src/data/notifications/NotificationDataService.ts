@@ -1,6 +1,6 @@
 import { Notification, NotificationStatus } from "./Notification";
 import { Pool } from "pg";
-import { getLogger } from "../../logger";
+import { getLogger } from "log4js";
 import { DataAccessLayer } from "../dal";
 import { NotificationInput } from "./NotificationInput";
 

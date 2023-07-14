@@ -7,10 +7,10 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { linkTo } from "@gram/core/dist/util/links";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 import { Pool } from "pg";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { randomUUID } from "crypto";
 
-const log = getLogger("magiclink");
+const log = getLogger("MagicLinkIdentityProvider");
 
 export class MagicLinkIdentityProvider implements IdentityProvider {
   key: string = "magic-link";
@@ -18,9 +18,9 @@ export class MagicLinkIdentityProvider implements IdentityProvider {
   dal: DataAccessLayer;
   pool: Pool;
 
-  constructor(dal: DataAccessLayer, dbPool: Pool) {
+  constructor(dal: DataAccessLayer, pluginPool: Pool) {
     this.dal = dal;
-    this.pool = dbPool;
+    this.pool = pluginPool;
   }
 
   async params(ctx: RequestContext): Promise<IdentityProviderParams> {
@@ -69,6 +69,7 @@ export class MagicLinkIdentityProvider implements IdentityProvider {
       };
     }
 
+    // Got an email in the body, so it's requesting a new link. Probably.
     if (email) {
       await this.createToken(email);
       return {
@@ -94,15 +95,11 @@ export class MagicLinkIdentityProvider implements IdentityProvider {
       await this.pool.query(query, [token]);
 
       const sub = result.rows[0].sub;
-      // const user = await lookupUser(ctx, sub);
 
       return {
         status: "ok",
         identity: {
           sub,
-          // roles: [],
-          // teams: [],
-          // ...user,
         },
       };
     }

@@ -14,7 +14,7 @@ You or somone else is requesting to access your account via sign-in link. To acc
 Please keep this link confidential and avoid sharing it with others. It is exclusively meant for your personal use.
 `.trim();
 
-export const EmailMagicLink = () =>
+export const MagicLinkEmail = () =>
   new PlaintextHandlebarsNotificationTemplate(
     key,
     subject,

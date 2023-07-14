@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/node";
 import { SeverityLevel } from "@sentry/node";
-import config from "config";
+import { config } from "../config";
 import { AppenderFunction, AppenderModule, Level, levels } from "log4js";
 
 function log4jLevelToSentrySeverity(level: Level): SeverityLevel {
@@ -20,7 +20,7 @@ function log4jLevelToSentrySeverity(level: Level): SeverityLevel {
   }
 }
 function sentryAppender(): AppenderFunction {
-  if (!config.has("sentryDSN")) {
+  if (!config.sentryDSN) {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
   }

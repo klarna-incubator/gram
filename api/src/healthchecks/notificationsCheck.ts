@@ -1,6 +1,6 @@
 import physical from "express-physical";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 
 const log = getLogger("notificationsCheck");
 

@@ -15,7 +15,7 @@
 import { Request, Response } from "express";
 import { Role } from "@gram/core/dist/auth/models/Role";
 import * as jwt from "@gram/core/dist/auth/jwt";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 
 const log = getLogger("dropRole");

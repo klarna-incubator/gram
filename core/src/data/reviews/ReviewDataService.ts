@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { Pool } from "pg";
-import { getLogger } from "../../logger";
+import { getLogger } from "log4js";
 import { DataAccessLayer } from "../dal";
 import { RequestContext } from "../providers/RequestContext";
 import {

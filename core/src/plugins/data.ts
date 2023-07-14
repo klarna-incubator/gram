@@ -1,13 +1,11 @@
 import { Pool } from "pg";
 import { createDb, migrate } from "postgres-migrations";
 import { createPostgresPool } from "../data/postgres";
-import { getLogger } from "../logger";
-import secrets from "../secrets";
+import { getLogger } from "log4js";
+import { config } from "../config";
 
-export async function getDatabaseName(suffix: string) {
-  const regularDatabase = (await secrets.get(
-    "data._providers.postgres.database"
-  )) as string;
+async function getDatabaseName(suffix: string) {
+  const regularDatabase = (await config.postgres.database.getValue()) as string;
   const databaseName = regularDatabase + "-" + suffix;
   return databaseName;
 }
@@ -23,7 +21,7 @@ export async function migratePlugin(
   const log = getLogger("migrate-" + pluginSuffix);
 
   const databaseName = await getDatabaseName(pluginSuffix);
-  const host = (await secrets.get("data._providers.postgres.host")) as string;
+  const host = (await config.postgres.host.getValue()) as string;
 
   log.info(
     `Starting migration for ${process.env.NODE_ENV} (${host} - ${databaseName})`

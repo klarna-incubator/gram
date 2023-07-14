@@ -6,23 +6,22 @@ import {
 import { Role } from "@gram/core/dist/auth/models/Role";
 import { User } from "@gram/core/dist/auth/models/User";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import config from "config";
 import { randomUUID } from "crypto";
 import { App } from "octokit";
 import { GithubUserProvider } from "./GithubUserProvider";
+import { config } from "@gram/core/dist/config";
 
 export class GithubIdentityProvider implements IdentityProvider {
   admins: string[] = [];
 
   constructor(private app: App, private userProvider: GithubUserProvider) {
-    this.admins = config.has("admins") ? config.get("admins") : [];
+    this.admins = [];
   }
 
   async params(ctx: RequestContext): Promise<IdentityProviderParams> {
-    const origin = config.get("origin");
     const { url } = this.app!.oauth.getWebFlowAuthorizationUrl({
       state: randomUUID(),
-      redirectUrl: `${origin}/login/callback/github`,
+      redirectUrl: `${config.origin}/login/callback/github`,
     });
     return {
       key: "github",

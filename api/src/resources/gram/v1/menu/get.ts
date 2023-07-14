@@ -1,7 +1,6 @@
-import config from "config";
 import { Request, Response } from "express";
+import { config } from "@gram/core/dist/config";
 
 export const getMenu = async (req: Request, res: Response) => {
-  const menu = config.has("menu") ? config.get("menu") : [];
-  res.json({ menu });
+  res.json({ menu: config.menu });
 };

@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization";
 import Model from "@gram/core/dist/data/models/Model";
 import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { InvalidInputError } from "@gram/core/dist/util/errors";
 
 const log = getLogger("models.create");

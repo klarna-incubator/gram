@@ -10,7 +10,8 @@
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",
-    "compile": "tsc -p tsconfig.build.json"
+    "compile": "tsc -p tsconfig.build.json",
+    "migrate-database": "ts-node src/migrate.ts"
   },
   "author": "",
   "license": "ISC",

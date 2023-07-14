@@ -6,7 +6,7 @@ import {
 import { UserToken } from "@gram/core/dist/auth/models/UserToken";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import Model from "@gram/core/dist/data/models/Model";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import * as jwt from "@gram/core/dist/auth/jwt";
 
 export class ModelWebsocketServer {

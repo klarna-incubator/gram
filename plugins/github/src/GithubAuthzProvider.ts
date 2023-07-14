@@ -1,4 +1,4 @@
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { App } from "octokit";
 import { AllPermissions, Permission } from "@gram/core/dist/auth/authorization";
 import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";

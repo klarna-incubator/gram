@@ -1,5 +1,5 @@
 import { DataAccessLayer } from "../data/dal";
-import { getLogger } from "../logger";
+import { getLogger } from "log4js";
 import {
   EngineSuggestedResult,
   SourceSuggestedControl,

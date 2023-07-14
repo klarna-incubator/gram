@@ -1,11 +1,11 @@
-import config from "config";
+import { config } from "../config";
 
 function trimEndSlash(s: string) {
   return s.endsWith("/") ? s.substr(0, s.length - 1) : s;
 }
 
 export function linkToModel(modelId: string) {
-  const origins: string | string[] = config.get("origin");
+  const origins: string | string[] = config.origin;
   if (!origins || (Array.isArray(origins) && origins.length === 0)) {
     throw new Error("Couldn't find cors origin for generating model link");
   }
@@ -17,7 +17,7 @@ export function linkToModel(modelId: string) {
 }
 
 export function linkTo(path: string) {
-  const origins: string | string[] = config.get("origin");
+  const origins: string | string[] = config.origin;
   if (!origins || (Array.isArray(origins) && origins.length === 0)) {
     throw new Error("Couldn't find cors origin for generating model link");
   }

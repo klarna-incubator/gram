@@ -52,8 +52,8 @@
 
   "menu": [
     {
-      "name": "Github",      
-      "path": "https://github.com/klarna-incubator/gram"    
+      "name": "Github",
+      "path": "https://github.com/klarna-incubator/gram"
     }
   ]
 }

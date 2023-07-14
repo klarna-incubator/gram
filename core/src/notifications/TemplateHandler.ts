@@ -1,5 +1,5 @@
 import { NotificationTemplateKey } from "../data/notifications/NotificationInput";
-import { getLogger } from "../logger";
+import { getLogger } from "log4js";
 import {
   NotificationTemplate,
   NotificationVariables,

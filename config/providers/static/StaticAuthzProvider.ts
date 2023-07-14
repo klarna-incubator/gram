@@ -1,5 +1,4 @@
 import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
-import { UserProvider } from "@gram/core/dist/auth/UserProvider";
 import { Permission } from "@gram/core/dist/auth/authorization";
 import { Role } from "@gram/core/dist/auth/models/Role";
 import { User } from "@gram/core/dist/auth/models/User";

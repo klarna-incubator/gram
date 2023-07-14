@@ -49,19 +49,6 @@ describe("JWT wrapper for authentication", () => {
       expect(payload.sub).toEqual(tokenPayload.sub);
     });
 
-    it("should verify valid token with purpose", async () => {
-      const token = await jwt.generateToken(
-        payload,
-        5000,
-        "sample-other-purpose"
-      );
-      const tokenPayload = await jwt.validateToken(
-        token,
-        "sample-other-purpose"
-      );
-      expect(payload.sub).toEqual(tokenPayload.sub);
-    });
-
     it("should reject invalid token", async () => {
       expect(() => jwt.validateToken("invalid_token")).rejects.toThrow(
         JsonWebTokenError
@@ -76,13 +63,6 @@ describe("JWT wrapper for authentication", () => {
     it("should reject unsecure JWT", async () => {
       const token = "eyJhbGciOiJub25lIn0.eyJzb21lIjoidGVzdCJ9.";
       expect(() => jwt.validateToken(token)).rejects.toThrow(JsonWebTokenError);
-    });
-
-    it("should reject JWT for different purpose", async () => {
-      const token = await jwt.generateToken(payload, 5000, "auth");
-      expect(() =>
-        jwt.validateToken(token, "sample-other-purpose")
-      ).rejects.toThrow(JsonWebTokenError);
     });
   });
 });

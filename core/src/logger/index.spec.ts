@@ -6,7 +6,7 @@ configGet.mockImplementation((key) => {
   if (key === "log.level") return "DEBUG";
 });
 
-import { getLogger } from "./index";
+import { getLogger } from "log4js";
 
 describe("log4js logger implementation", () => {
   /**

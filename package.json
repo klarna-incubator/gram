@@ -3,16 +3,15 @@
   "description": "",
   "scripts": {
     "test": "lerna run test",
-    "build": "lerna run clean && lerna run build --scope=@gram/api --scope=@gram/app --include-filtered-dependencies",
+    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build ",
     "build-all": "lerna run build",
     "snyk": "lerna run snyk",
     "lint": "lerna run lint",
     "clean": "lerna run clean",
     "lint-fix": "lerna run lint-fix",
     "start-frontend": "npm run -w app start",
-    "start-backend": "NODE_CONFIG_DIR=../config/ npm run -w api start",
-    "docker-start": "NODE_CONFIG_DIR=./config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE node core/dist/data/migrate.js && NODE_CONFIG_DIR=./config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/dist/index.js",
-    "migrate-database": "NODE_CONFIG_DIR=../config/ lerna run migrate-database"
+    "start-backend": "npm run -w api start",
+    "docker-start": "NODE_ENV=$SERVICE_STAGE node core/dist/data/migrate.js && NODE_CONFIG_DIR=./config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -28,11 +27,13 @@
     "app",
     "api",
     "core",
+    "config",
     "plugins/*"
   ],
   "private": true,
   "devDependencies": {
     "@types/jest": "^29.4.0",
+    "@types/node": "^20.4.2",
     "conventional-changelog-cli": "^2.2.2",
     "jest": "^29.4.1",
     "jest-mock": "^29.4.1",
@@ -40,5 +41,8 @@
     "rimraf": "^4.1.2",
     "ts-jest": "^29.0.5",
     "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "log4js": "^6.9.1"
   }
 }

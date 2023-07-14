@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import { EventEmitter } from "stream";
-import { getLogger } from "../../logger";
+import { getLogger } from "log4js";
 import Mitigation from "./Mitigation";
 
 function convertToMitigation(row: any) {

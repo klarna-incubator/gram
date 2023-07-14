@@ -1,50 +1,41 @@
-import config from "config";
 import jsonwebtoken, {
   JsonWebTokenError,
   SignOptions,
   VerifyOptions,
 } from "jsonwebtoken";
-import secrets from "../secrets";
 import { UserToken } from "./models/UserToken";
+import { config } from "../config";
 
 const globalOpts: VerifyOptions & SignOptions = {
   algorithm: "HS512",
 };
 
-const secretMap = new Map<string, string>();
-async function getSecret(purpose: string): Promise<string> {
-  let secret = secretMap.get(purpose);
-  if (!secret) {
-    secret = await secrets.get(`jwt.secret.${purpose}`);
-    if (!secret || secret.length < 64) {
+let cachedSecret: string | undefined = "";
+async function getSecret(): Promise<string> {
+  if (!cachedSecret) {
+    cachedSecret = await config.jwt.secret.auth.getValue();
+    if (!cachedSecret || cachedSecret.length < 64) {
       // byte == 2 chars
       throw new Error(
-        `Secret length should not be less than 256 bits of security (32 bytes => expecting a 64 character long hexadecimal string, but was ${secret.length} long)`
+        `Secret length should not be less than 256 bits of security (32 bytes => expecting a 64 character long hexadecimal string, but was ${
+          (cachedSecret || "").length
+        } long)`
       );
     }
-    secretMap.set(purpose, secret);
   }
-  return secret;
-}
-
-export async function generateAuthToken(payload: UserToken) {
-  return generateToken(payload, config.get("jwt.ttl"), "auth");
-}
-export async function validateAuthToken(token: string) {
-  return validateToken(token, "auth");
+  return cachedSecret;
 }
 
 export async function generateToken(
   payload: object,
-  ttl: number = config.get("jwt.ttl") as number,
-  purpose = "auth"
+  ttl: number = config.jwt.ttl
 ) {
   const requiredClaims = {
     iss: "gram",
   };
 
   const finalClaims = { ...payload, ...requiredClaims };
-  const secret = await getSecret(purpose);
+  const secret = await getSecret();
   const token = jsonwebtoken.sign(finalClaims, secret, {
     expiresIn: ttl,
     ...globalOpts,
@@ -52,11 +43,8 @@ export async function generateToken(
   return token;
 }
 
-export async function validateToken(
-  token: string,
-  purpose = "auth"
-): Promise<UserToken> {
-  const secret = await getSecret(purpose);
+export async function validateToken(token: string): Promise<UserToken> {
+  const secret = await getSecret();
   const result = jsonwebtoken.verify(token, secret, globalOpts);
   if (typeof result === "string") {
     // For some reason jsonwebtoken can return a string when verifying, which we dont want.
