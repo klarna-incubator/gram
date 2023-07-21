@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/node";
-import cookieParser from "cookie-parser";
 import express from "express";
 import errorWrap from "express-async-error-wrapper";
 import path from "path";
@@ -50,7 +49,6 @@ export async function createApp(dal: DataAccessLayer) {
   // JSON middleware to automatically parse incoming requests
   app.use(express.json());
   app.use(securityHeaders());
-  app.use(cookieParser());
 
   const loggerMwOpts = {
     logger: getLogger("auditHttp"),

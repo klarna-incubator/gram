@@ -1,4 +1,4 @@
-import { createDb, migrate } from "postgres-migrations";
+import { createDb, migrate as postgresMigrate } from "postgres-migrations";
 import {
   createPostgresPool,
   getDatabaseName,
@@ -27,7 +27,7 @@ export class Migration {
     await createDb(databaseName, { client: pool._pool });
     log.info("Created DB (if not exist): " + databaseName);
 
-    const migs = await migrate({ client: pool._pool }, this.folderPath);
+    const migs = await postgresMigrate({ client: pool._pool }, this.folderPath);
     migs.forEach((mig) => {
       log.info(`Ran migration: ${mig.name}`);
     });
@@ -42,3 +42,11 @@ export const coreMigration = new Migration(
     : __dirname + "/migrations",
   ""
 );
+
+export async function migrate() {
+  // Perform migrations
+  const migrations = [coreMigration, ...(config.additionalMigrations || [])];
+  for (const mig of migrations) {
+    await mig.migrate();
+  }
+}

@@ -48,25 +48,26 @@ const ErroringSuggestionSource: SuggestionSource = {
 describe("SuggestionEngine", () => {
   let pool: Pool;
   let dal: DataAccessLayer;
+  let modelId: string;
+  let engine: SuggestionEngine;
 
   beforeAll(async () => {
     pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
-    dal.suggestionEngine.sources = []; // Disable the builtin engine
+    engine = new SuggestionEngine(dal, true);
   });
 
   beforeEach(async () => {
-    dal.suggestionEngine.sources = []; // Disable the builtin engine
+    engine.sources = []; // Disable the builtin engine
+    modelId = await createSampleModel(dal);
   });
 
-  afterEach(async () => {
-    dal.suggestionEngine.sources = []; // Disable the builtin engine
+  afterAll(async () => {
+    await pool.end();
   });
 
   it("should handle suggestionsource errors gracefully", async () => {
-    const engine = new SuggestionEngine(dal);
     engine.register(ErroringSuggestionSource);
-    const modelId = await createSampleModel(dal);
     await engine.work(modelId);
   });
 
@@ -75,22 +76,17 @@ describe("SuggestionEngine", () => {
   //   it("should delete suggestions if components are deleted", () => {});
 
   it("should return empty by default", async () => {
-    const engine = new SuggestionEngine(dal);
-    const modelId = await createSampleModel(dal);
     const result = await engine.suggest(modelId);
     expect(result.length).toBe(0);
   });
 
   it("should return empty by default if model doesnt exist", async () => {
-    const engine = new SuggestionEngine(dal);
     const result = await engine.suggest(randomUUID());
     expect(result.length).toBe(0);
   });
 
   it("should return empty SuggestionResult by default if source does not have any suggestions", async () => {
-    const engine = new SuggestionEngine(dal);
     engine.register(EmptySuggestionSource);
-    const modelId = await createSampleModel(dal);
     const result = await engine.suggest(modelId);
     expect(result.length).toBe(1);
     const awaited = await Promise.all(result);
@@ -99,9 +95,7 @@ describe("SuggestionEngine", () => {
   });
 
   it("should be able to use a single source", async () => {
-    const engine = new SuggestionEngine(dal);
     engine.register(SampleSuggestionSource("sample"));
-    const modelId = await createSampleModel(dal);
     const result = await (await engine.suggest(modelId))[0];
     expect(result.controls.map((r) => ({ ...r, id: undefined }))).toEqual([
       { ...suggestedControl, id: undefined },
@@ -109,9 +103,7 @@ describe("SuggestionEngine", () => {
   });
 
   it("should insert suggested threats", async () => {
-    const engine = new SuggestionEngine(dal);
     engine.register(SampleSuggestionSource("sample", [suggestedThreat], []));
-    const modelId = await createSampleModel(dal);
     const result = await (await engine.suggest(modelId))[0];
     expect(result.controls).toHaveLength(0);
     expect(result.threats.map((r) => ({ ...r, id: undefined }))).toEqual([
@@ -120,9 +112,7 @@ describe("SuggestionEngine", () => {
   });
 
   it("should insert suggested controls", async () => {
-    const engine = new SuggestionEngine(dal);
     engine.register(SampleSuggestionSource("sample"));
-    const modelId = await createSampleModel(dal);
     const result = await (await engine.suggest(modelId))[0];
     expect(result.controls.map((r) => ({ ...r, id: undefined }))).toEqual([
       { ...suggestedControl, id: undefined },
@@ -131,10 +121,8 @@ describe("SuggestionEngine", () => {
   });
 
   it("should combine results for multiple sources", async () => {
-    const engine = new SuggestionEngine(dal);
     engine.register(SampleSuggestionSource("sample1"));
     engine.register(SampleSuggestionSource("sample2"));
-    const modelId = await createSampleModel(dal);
     const result = await engine.suggest(modelId);
 
     expect(result.length).toEqual(2);

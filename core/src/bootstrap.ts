@@ -2,18 +2,14 @@ import { config } from "./config";
 import { DataAccessLayer } from "./data/dal";
 import { createPostgresPool } from "./data/postgres";
 import { Bootstrapper } from "./Bootstrapper";
-import { coreMigration } from "./data/Migration";
+import { migrate } from "./data/Migration";
 
 export async function bootstrap(): Promise<DataAccessLayer> {
   const pool = await createPostgresPool();
   const dal = new DataAccessLayer(pool);
   const bt = new Bootstrapper(dal);
 
-  // Perform migrations
-  const migrations = [coreMigration, ...(config.additionalMigrations || [])];
-  for (const mig of migrations) {
-    await mig.migrate();
-  }
+  await migrate();
 
   const providers = await config.bootstrapProviders(dal);
 

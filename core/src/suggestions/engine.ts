@@ -19,17 +19,19 @@ export class SuggestionEngine {
   // One timeout per ModelID: should be threadsafe because node runs singlethreaded ;))
   delayer = new Map<string, NodeJS.Timeout>();
 
-  constructor(private dal: DataAccessLayer) {
-    dal.modelService.on("updated-for", ({ modelId }) => {
-      this.log.debug(`model ${modelId} was updated via api`);
-      // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
-      const timeout = this.delayer.get(modelId);
-      if (timeout) clearTimeout(timeout);
-      this.delayer.set(
-        modelId,
-        setTimeout(() => this.work(modelId), SUGGESTION_DELAY)
-      );
-    });
+  constructor(private dal: DataAccessLayer, noListen: boolean = false) {
+    if (!noListen) {
+      dal.modelService.on("updated-for", ({ modelId }) => {
+        this.log.debug(`model ${modelId} was updated via api`);
+        // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
+        const timeout = this.delayer.get(modelId);
+        if (timeout) clearTimeout(timeout);
+        this.delayer.set(
+          modelId,
+          setTimeout(() => this.work(modelId), SUGGESTION_DELAY)
+        );
+      });
+    }
   }
 
   register(source: SuggestionSource) {

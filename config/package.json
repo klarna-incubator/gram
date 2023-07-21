@@ -9,12 +9,7 @@
     "compile": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
     "lint-fix": "prettier -l . --write",
-    "debug": "NODE_ENV=development node --inspect=0.0.0.0 src/index.js",
-    "test": "NODE_CONFIG_DIR=../config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
-    "snyk": "snyk test",
-    "jest": "NODE_ENV=test jest --detectOpenHandles --no-cache",
-    "sender": "NODE_ENV=development ts-node src/notifications/sender.ts",
-    "gh": "ts-node src/packs/demo/test.ts"
+    "snyk": "snyk test"
   },
   "main": "dist/index.js",
   "repository": {
@@ -43,8 +38,5 @@
   "devDependencies": {
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2"
-  },
-  "optionalDependencies": {
-    "dotenv": "^16.0.3"
   }
 }

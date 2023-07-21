@@ -2,7 +2,7 @@ import { RequestContext } from "../data/providers/RequestContext";
 import { User } from "./models/User";
 import { UserProvider } from "./UserProvider";
 
-class DefaultUserProvider implements UserProvider {
+export class DummyUserProvider implements UserProvider {
   key = "default";
   lookup(ctx: RequestContext, userIds: string[]): Promise<User[]> {
     throw new Error(
@@ -14,7 +14,7 @@ class DefaultUserProvider implements UserProvider {
 export class UserHandler {
   constructor() {}
 
-  userProvider: UserProvider = new DefaultUserProvider();
+  userProvider: UserProvider = new DummyUserProvider();
 
   setUserProvider(userProvider: UserProvider): void {
     this.userProvider = userProvider;

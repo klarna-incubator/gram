@@ -1,4 +1,3 @@
-import cookieParser from "cookie-parser";
 import express from "express";
 import request from "supertest";
 import * as jwt from "@gram/core/dist/auth/jwt";
@@ -7,7 +6,6 @@ import { sampleUser } from "../test-util/sampleUser";
 import { authRequiredMiddleware, validateTokenMiddleware } from "./auth";
 
 const app = express();
-app.use(cookieParser());
 app.use(validateTokenMiddleware);
 app.get("/unprotected", (req, res) => res.end());
 app.get("/protected", authRequiredMiddleware, (req, res) => res.end());

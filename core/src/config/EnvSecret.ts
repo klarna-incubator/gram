@@ -1,4 +1,4 @@
-import type { Secret } from "@gram/core/dist/config/Secret";
+import type { Secret } from "./Secret";
 
 export class EnvSecret implements Secret {
   constructor(public key: string) {}

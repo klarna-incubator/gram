@@ -1,8 +1,8 @@
-import config from "config";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { Role } from "./models/Role";
 import * as jwt from "./jwt";
 import { UserToken } from "./models/UserToken";
+import { config } from "../config";
 
 const payload: UserToken = {
   name: "user name",
@@ -38,7 +38,7 @@ describe("JWT wrapper for authentication", () => {
       const payloadStr = Buffer.from(parts[1], "base64");
       const tokenPayload = JSON.parse(payloadStr.toString());
 
-      expect(now - tokenPayload.exp).toBeLessThanOrEqual(config.get("jwt.ttl"));
+      expect(now - tokenPayload.exp).toBeLessThanOrEqual(config.jwt.ttl);
     });
   });
 

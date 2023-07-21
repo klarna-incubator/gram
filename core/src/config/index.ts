@@ -3,6 +3,7 @@ import { GramConfiguration } from "./GramConfiguration";
 import { configurationMap } from "./configMap";
 
 const log = getLogger("config");
+
 export function loadConfig() {
   let env = process.env.NODE_ENV;
 

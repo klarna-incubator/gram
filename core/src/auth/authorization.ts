@@ -5,6 +5,7 @@ import { NotFoundError } from "../util/errors";
 import { AuthzError } from "./AuthzError";
 import { AuthzProvider } from "./AuthzProvider";
 import { DefaultAuthzProvider } from "./DefaultAuthzProvider";
+import { DummyAuthzProvider } from "./DummyAuthzProvider";
 import { Role } from "./models/Role";
 import { UserToken } from "./models/UserToken";
 
@@ -24,34 +25,7 @@ export const AllPermissions = [
   Permission.Review,
 ];
 
-// /**
-//  * Default authorization provider, for now just throws errors.
-//  * Implementing orgs should add their own rules here.
-//  */
-// class DefaultAuthzProvider implements AuthzProvider {
-//   key = "default";
-//   err = "Method not implemented.";
-
-//   getPermissionsForSystem(
-//     ctx: RequestContext,
-//     systemId: string,
-//     user: UserToken
-//   ): Promise<Permission[]> {
-//     throw new Error(this.err);
-//   }
-//   getPermissionsForStandaloneModel(
-//     ctx: RequestContext,
-//     model: Model,
-//     user: UserToken
-//   ): Promise<Permission[]> {
-//     throw new Error(this.err);
-//   }
-//   getRolesForUser(sub: string): Promise<Role[]> {
-//     throw new Error(this.err);
-//   }
-// }
-
-export let authzProvider: AuthzProvider = new DefaultAuthzProvider();
+export let authzProvider: AuthzProvider = new DummyAuthzProvider();
 export function setAuthorizationProvider(newAuthzProvider: AuthzProvider) {
   authzProvider = newAuthzProvider;
 }

@@ -3,7 +3,7 @@ import Model from "../models/Model";
 import { RequestContext } from "../providers/RequestContext";
 import { ReviewerProvider } from "./ReviewerProvider";
 
-class DefaultReviewerProvider implements ReviewerProvider {
+export class DummyReviewerProvider implements ReviewerProvider {
   key = "default";
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   lookup(ctx: RequestContext, _userIds: string[]): Promise<Reviewer[]> {
@@ -29,7 +29,7 @@ class DefaultReviewerProvider implements ReviewerProvider {
 export class ReviewerHandler {
   constructor() {}
 
-  reviewerProvider: ReviewerProvider = new DefaultReviewerProvider();
+  reviewerProvider: ReviewerProvider = new DummyReviewerProvider();
 
   setReviewerProvider(newReviewerProvider: ReviewerProvider) {
     this.reviewerProvider = newReviewerProvider;

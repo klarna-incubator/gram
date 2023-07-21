@@ -3,7 +3,7 @@ import type {
   Providers,
 } from "@gram/core/dist/config/GramConfiguration";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { EnvSecret } from "./util/EnvSecret";
+import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
 import { AWSAssets, AWSComponentClasses } from "@gram/aws";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatLibSuggestionProvider } from "@gram/threatlib";
@@ -23,7 +23,7 @@ import { EmailReviewRequestedReminder } from "./notifications/EmailReviewRequest
 import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider";
 import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider";
 import { StaticUserProvider } from "./providers/static/StaticUserProvider";
-import { DummySystemProvider } from "./providers/dummy/DummySystemProvider";
+import { DummySystemProvider } from "@gram/core/dist/data/systems/DummySystemProvider";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,

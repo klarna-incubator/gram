@@ -7,12 +7,6 @@ import { config } from "../config";
 
 const log = getLogger("email");
 
-const senderName = config.notifications.providers.email.senderName || "Gram";
-
-// Allow overriding recipient email for debug purposes.
-const overrideMail =
-  config.notifications.providers.email.overrideRecipient || false;
-
 /**
  * Sanitizes recipient names by removing special email characters.
  *
@@ -36,6 +30,12 @@ export async function send(
     notification.templateKey,
     notification.variables
   );
+
+  const senderName = config.notifications.providers.email.senderName || "Gram";
+
+  // Allow overriding recipient email for debug purposes.
+  const overrideMail =
+    config.notifications.providers.email.overrideRecipient || false;
 
   const msg: Message = new Message({
     text: content.body,

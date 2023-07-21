@@ -1,4 +1,4 @@
-import type { Secret } from "@gram/core/dist/config/Secret";
+import type { Secret } from "./Secret";
 import { getLogger } from "log4js";
 
 const log = getLogger("ExposedSecret");

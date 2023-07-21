@@ -1,7 +1,6 @@
-import type { GramConfiguration } from "../core/dist/config/GramConfiguration";
+import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
+import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret";
 import { defaultConfig } from "./default";
-import { EnvSecret } from "./util/EnvSecret";
-import { ExposedSecret } from "./util/ExposedNonProdSecret";
 
 export const developmentConfig: GramConfiguration = {
   ...defaultConfig,
@@ -9,7 +8,9 @@ export const developmentConfig: GramConfiguration = {
   jwt: {
     ttl: 86400,
     secret: {
-      auth: new EnvSecret("AUTH_SECRET"),
+      auth: new ExposedSecret(
+        "6bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f"
+      ),
     },
   },
 
