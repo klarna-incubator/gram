@@ -25,7 +25,7 @@ export function ChangeReviewer({ modelId }) {
   const dispatch = useDispatch();
 
   const { data: review } = useGetReviewQuery({ modelId });
-  const [newReviewer, setNewReviewer] = useState(review?.reviewer.sub);
+  const [newReviewer, setNewReviewer] = useState(review?.reviewer?.sub);
 
   const [
     changeReviewer,
