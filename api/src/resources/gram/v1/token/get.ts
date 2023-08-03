@@ -39,9 +39,13 @@ export const getAuthToken =
         identity.identity.sub
       );
       if (!user) {
-        throw new Error(
+        log.warn(
           `Login successful but no user found for ${identity.identity.sub}`
         );
+        return res.status(403).json({
+          status: "error",
+          message: `No user found for ${identity.identity.sub}`,
+        });
       }
 
       const roles = await dal.authzProvider.getRolesForUser(
