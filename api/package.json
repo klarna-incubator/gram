@@ -11,11 +11,10 @@
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
     "debug": "NODE_ENV=development node --inspect=0.0.0.0 src/index.js",
-    "test": "NODE_CONFIG_DIR=../config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
+    "test": "NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
     "snyk": "snyk test",
     "jest": "NODE_ENV=test jest --detectOpenHandles --no-cache",
-    "sender": "NODE_ENV=development ts-node src/notifications/sender.ts",
-    "gh": "ts-node src/packs/demo/test.ts"
+    "sender": "NODE_ENV=development ts-node src/notifications/sender.ts"
   },
   "main": "dist/index.js",
   "repository": {
@@ -40,7 +39,6 @@
     "@sentry/integrations": "^7.6.0",
     "@sentry/node": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
-    "emailjs": "^3.7.0",
     "express": "^4.17.1",
     "express-async-error-wrapper": "^1.0.4",
     "express-physical": "^2.0.0",
@@ -50,7 +48,6 @@
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "log4js": "^6.6.1",
-    "node-fetch": "^2.6.7",
     "tslib": "^2.3.1",
     "ws": "^7.4.6"
   },
@@ -60,7 +57,6 @@
     "@types/lodash": "^4.14.177",
     "@types/node": "^14.17.9",
     "@types/node-cron": "^3.0.2",
-    "@types/node-fetch": "^2.5.12",
     "@types/supertest": "^2.0.11",
     "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "^5.25.0",

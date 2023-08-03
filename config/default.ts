@@ -1,29 +1,32 @@
+import { AWSAssets, AWSComponentClasses } from "@gram/aws";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
+import { User } from "@gram/core/dist/auth/models/User";
+import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
 import type {
   GramConfiguration,
   Providers,
 } from "@gram/core/dist/config/GramConfiguration";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
-import { AWSAssets, AWSComponentClasses } from "@gram/aws";
-import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
-import { ThreatLibSuggestionProvider } from "@gram/threatlib";
+import System from "@gram/core/dist/data/systems/System";
 import {
   MagicLinkEmail,
   MagicLinkIdentityProvider,
   MagicLinkMigrations,
 } from "@gram/magiclink";
+import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
+import { ThreatLibSuggestionProvider } from "@gram/threatlib";
 import { EmailReviewApproved } from "./notifications/EmailReviewApproved";
 import { EmailReviewCanceled } from "./notifications/EmailReviewCanceled";
 import { EmailReviewDeclined } from "./notifications/EmailReviewDeclined";
-import { EmailReviewerChanged } from "./notifications/EmailReviewerChanged";
 import { EmailReviewMeetingRequested } from "./notifications/EmailReviewMeetingRequested";
 import { EmailReviewMeetingRequestedReminder } from "./notifications/EmailReviewMeetingRequestedReminder";
 import { EmailReviewRequested } from "./notifications/EmailReviewRequested";
 import { EmailReviewRequestedReminder } from "./notifications/EmailReviewRequestedReminder";
-import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider";
+import { EmailReviewerChanged } from "./notifications/EmailReviewerChanged";
 import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider";
+import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider";
+import { StaticSystemProvider } from "./providers/static/StaticSystemProvider";
 import { StaticUserProvider } from "./providers/static/StaticUserProvider";
-import { DummySystemProvider } from "@gram/core/dist/data/systems/DummySystemProvider";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -92,6 +95,49 @@ export const defaultConfig: GramConfiguration = {
     const pluginPool = await dal.pluginPool("magic-link");
     const magicLink = new MagicLinkIdentityProvider(dal, pluginPool);
 
+    const sampleUsers: User[] = [
+      {
+        name: "Sample User",
+        sub: "sample-user@localhost", // Must be the same as sub provided by IdentityProvider for authz to work
+        mail: "sample-user@localhost",
+        teams: [],
+      },
+    ];
+
+    const sampleReviewers: Reviewer[] = [
+      {
+        name: "Sample User",
+        recommended: false,
+        sub: "sample-user@localhost", // Must be the same as sub provided by AuthProvider for authz to work
+        mail: "sample-user@localhost",
+        teams: [],
+      },
+      {
+        name: "Security Team",
+        recommended: true,
+        sub: "security-team@localhost",
+        mail: "security-team@localhost",
+        teams: [],
+      },
+    ];
+
+    const sampleSystems: System[] = [
+      new System(
+        "web",
+        "Website",
+        "Website",
+        [],
+        "The main website of the org"
+      ),
+      new System(
+        "order-api",
+        "Order API",
+        "Order API",
+        [],
+        "Backend API for receiving orders"
+      ),
+    ];
+
     return {
       assetFolders: [AWSAssets, SVGPornAssets],
       componentClasses: [...AWSComponentClasses, ...SVGPornComponentClasses],
@@ -107,10 +153,17 @@ export const defaultConfig: GramConfiguration = {
         EmailReviewRequested(),
         EmailReviewRequestedReminder(),
       ],
-      reviewerProvider: new StaticReviewerProvider(),
-      authzProvider: new StaticAuthzProvider(),
-      userProvider: new StaticUserProvider(),
-      systemProvider: new DummySystemProvider(),
+      reviewerProvider: new StaticReviewerProvider(
+        sampleReviewers,
+        sampleReviewers[1]
+      ),
+      authzProvider: new StaticAuthzProvider(
+        sampleUsers.map((u) => u.sub),
+        sampleUsers.map((u) => u.sub),
+        sampleUsers.map((u) => u.sub)
+      ),
+      userProvider: new StaticUserProvider(sampleUsers),
+      systemProvider: new StaticSystemProvider(sampleSystems),
       suggestionSources: [new ThreatLibSuggestionProvider()],
     };
   },

@@ -5,7 +5,7 @@
  */
 
 import { randomUUID } from "crypto";
-import EventEmitter from "events";
+import { EventEmitter } from "node:events";
 import { Pool } from "pg";
 import { getLogger } from "log4js";
 import { DataAccessLayer } from "../dal";

@@ -23,7 +23,6 @@ import { createControlApp } from "./controlApp";
 import { bootstrap } from "@gram/core/dist/bootstrap";
 import { getLogger } from "log4js";
 import { notificationSender } from "@gram/core/dist/notifications/sender";
-// import { bootstrapPlugins } from "./bootstrap";
 import { attachWebsocketServer } from "./ws";
 import { config } from "@gram/core/dist/config";
 

@@ -1,37 +1,29 @@
-import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
-import { Permission } from "@gram/core/dist/auth/authorization";
+import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider";
 import { Role } from "@gram/core/dist/auth/models/Role";
-import { User } from "@gram/core/dist/auth/models/User";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import Model from "@gram/core/dist/data/models/Model";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
-export const users: User[] = [
-  {
-    name: "Joakim Uddholm",
-    sub: "tethik@gmail.com", // Must be the same as sub provided by AuthProvider for authz to work
-    mail: "tethik@gmail.com",
-    teams: [],
-  },
-];
-
-export class StaticAuthzProvider implements AuthzProvider {
-  getPermissionsForSystem(
-    ctx: RequestContext,
-    systemId: string,
-    user: UserToken
-  ): Promise<Permission[]> {
-    throw new Error("Method not implemented.");
-  }
-  getPermissionsForStandaloneModel(
-    ctx: RequestContext,
-    model: Model,
-    user: UserToken
-  ): Promise<Permission[]> {
-    throw new Error("Method not implemented.");
-  }
-  getRolesForUser(sub: string): Promise<Role[]> {
-    throw new Error("Method not implemented.");
-  }
+export class StaticAuthzProvider extends DefaultAuthzProvider {
   key: string = "static";
+  constructor(
+    public users: string[],
+    public reviewers: string[],
+    public admins: string[]
+  ) {
+    super();
+  }
+
+  async getRolesForUser(sub: string): Promise<Role[]> {
+    const roles: Role[] = [];
+
+    if (this.admins.includes(sub)) {
+      roles.push(Role.Admin);
+    }
+    if (this.reviewers.includes(sub)) {
+      roles.push(Role.Reviewer);
+    }
+    if (this.users.includes(sub)) {
+      roles.push(Role.User);
+    }
+
+    return roles;
+  }
 }

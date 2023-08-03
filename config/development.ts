@@ -50,11 +50,4 @@ export const developmentConfig: GramConfiguration = {
       simplified: true,
     },
   },
-
-  // bootstrapProviders: function (
-  //   dal: DataAccessLayer,
-  //   app: Application
-  // ): Promise<Providers> {
-  //   throw new Error("Function not implemented.");
-  // },
 };

@@ -5,11 +5,14 @@
 
   "compilerOptions": {
     // "baseUrl": ".",
-    // "paths": {
-    //   "@gram/core/dist/*": ["./core/src/*"],
-    //   "@gram/*/dist": ["./plugins/*/src"]
-    // },
+    "paths": {
+      "@gram/core/dist/*": ["./core/src/*"],
+      "@gram/config/dist/*": ["./config/*"],
+      "@gram/api/dist/*": ["./api/src/*"],
+      "@gram/*/dist": ["./plugins/*/src"]
+    },
     "noEmit": true,
-    "types": ["jest"]
+    "types": ["jest"],
+    "esModuleInterop": true
   }
 }
