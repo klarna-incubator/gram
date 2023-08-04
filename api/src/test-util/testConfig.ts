@@ -9,7 +9,7 @@ import type { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { testReviewerProvider } from "./sampleReviewer";
 import { testUserProvider } from "./sampleUser";
 import { testSystemProvider } from "./system";
-import { ComponentClass } from "core/dist/data/component-classes";
+import { ComponentClass } from "@gram/core/dist/data/component-classes";
 import classes from "./classes.json";
 
 export const testConfig: GramConfiguration = {
