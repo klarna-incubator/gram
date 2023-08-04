@@ -5,6 +5,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.0.0](https://github.com/klarna-incubator/gram/compare/v3.1.2...v4.0.0) (2023-08-04)
 
+### Breaking
+The way plugins and configuration received a major rewrite.
 
 ### Bug Fixes
 
