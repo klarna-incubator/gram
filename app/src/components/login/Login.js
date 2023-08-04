@@ -36,12 +36,12 @@ export function Login() {
       )}
       {form === null &&
         authParams
-          ?.filter((p) => !p.hideOnFrontend)
+          ?.filter((p) => !p.hideOnFrontend || !p.form)
           ?.map((provider) => (
             <Box key={`login-${provider.provider}`}>
               <Button
-                onClick={() => setForm(provider.form.type)}
-                href={provider.form.redirectUrl}
+                onClick={() => setForm(provider.form?.type)}
+                href={provider.form?.redirectUrl}
                 startIcon={
                   provider.icon && (
                     <img
