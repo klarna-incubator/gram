@@ -110,6 +110,7 @@ export const defaultConfig: GramConfiguration = {
         recommended: false,
         sub: "sample-user@localhost", // Must be the same as sub provided by AuthProvider for authz to work
         mail: "sample-user@localhost",
+        slackUrl: "",
         teams: [],
       },
       {
@@ -117,6 +118,7 @@ export const defaultConfig: GramConfiguration = {
         recommended: true,
         sub: "security-team@localhost",
         mail: "security-team@localhost",
+        slackUrl: "",
         teams: [],
       },
     ];
