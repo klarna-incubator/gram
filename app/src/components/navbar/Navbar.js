@@ -32,7 +32,12 @@ export function Navbar() {
   });
 
   const pages = [
-    { name: "Team", path: "/team", requiresAuth: true },
+    {
+      name: "Team",
+      path: "/team",
+      requiresAuth: true,
+      visible: user?.teams?.length > 0,
+    },
     { name: "My Models", path: "/models", requiresAuth: true },
     {
       name: "Reviews",
@@ -122,7 +127,11 @@ export function Navbar() {
           }}
         >
           {pages
-            .filter((p) => !p.requiresAuth || (p.requiresAuth && authenticated))
+            .filter(
+              (p) =>
+                p.visible !== false &&
+                (!p.requiresAuth || (p.requiresAuth && authenticated))
+            )
             .map((page) => (
               <Badge
                 key={page.name}

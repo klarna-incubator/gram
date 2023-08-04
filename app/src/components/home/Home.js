@@ -38,25 +38,27 @@ export default function Home() {
             pending={isLoading}
           />
         </div>
-        <div className="column">
-          <h2>Team Systems</h2>
-          <div className="spacer"></div>
-          <p className="dimmed">
-            Systems owned by the accountable teams you're in
-          </p>
-          <div className="teams">
-            {user?.teams &&
-              user.teams.map((team) => (
-                <TeamSystemsPageList
-                  key={team.id}
-                  teamId={team.id}
-                  teamName={team.name}
-                  width={"100%"}
-                  listHeight={user.teams.length > 1 ? "350px" : "852px"}
-                />
-              ))}
+        {user?.teams?.length > 0 && (
+          <div className="column">
+            <h2>Team Systems</h2>
+            <div className="spacer"></div>
+            <p className="dimmed">
+              Systems owned by the accountable teams you're in
+            </p>
+            <div className="teams">
+              {user?.teams &&
+                user.teams.map((team) => (
+                  <TeamSystemsPageList
+                    key={team.id}
+                    teamId={team.id}
+                    teamName={team.name}
+                    width={"100%"}
+                    listHeight={user.teams.length > 1 ? "350px" : "852px"}
+                  />
+                ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
