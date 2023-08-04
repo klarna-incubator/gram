@@ -22,7 +22,6 @@ export interface Suggestion {
 
   /**
    * Description that summarizes the control. Link to documentation if more than a few sentences is needed.
-   * TODO: add reference link to model?
    */
   description: string;
 }

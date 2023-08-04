@@ -34,11 +34,17 @@ export class StaticSystemProvider implements SystemProvider {
       total: 0,
     };
 
-    console.log(input, pagination);
-
+    // Very inefficient filters - If you have a lot of systems, use an index.
     switch (input.filter) {
-      // TODO: Filters by team
+      // Filters by team
       case SystemListFilter.Team:
+        result.systems = this.systems
+          .filter((s) => s.owners.map((o) => o.id).includes(input.opts.teamId))
+          .slice(
+            pagination.page * pagination.pageSize,
+            (pagination.page + 1) * pagination.pageSize
+          );
+        result.total = result.systems.length;
         break;
 
       // Filters by a list of system ids
@@ -49,7 +55,7 @@ export class StaticSystemProvider implements SystemProvider {
         result.total = result.systems.length;
         break;
 
-      // Filter by system name - very inefficient. If you have a lot of systems, use an index.
+      // Filter by system name
       case SystemListFilter.Search:
         const searchText = input.opts.search.toLowerCase();
         result.systems = this.systems

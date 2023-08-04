@@ -67,7 +67,6 @@ export const webSocketMiddleware =
 function connect(dispatch, modelId) {
   if (socket) socket.close();
 
-  //TODO get websocket host / configurable
   socket = new WebSocket(
     `${document.location.protocol === "http:" ? "ws" : "wss"}://${
       document.location.host === "localhost:4726" &&

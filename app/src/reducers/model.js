@@ -38,7 +38,7 @@ const initialState = {
   deleted: false,
   remote: false,
   componentForm: initialFormState,
-  rightPanelCollapsed: false, // TODO: move to board.
+  rightPanelCollapsed: false,
   leftPanelCollapsed: false,
   cursorType: CURSOR_POINTER,
 };

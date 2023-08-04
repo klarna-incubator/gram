@@ -74,7 +74,6 @@ export class Bootstrapper {
     // over the images into the same directory. This is not a good solution,
     // but should work until we move packs over to npm packages.
     folderPath = folderPath.replace("dist/", "src/");
-    // TODO: should validate that name is only valid chars
     this.assetPaths.push({ name, path: folderPath });
     this.log.info(`Registered Assets ${name} @ ${folderPath}`);
   }
