@@ -1,6 +1,6 @@
 {
   "name": "@gram/threatlib",
-  "version": "3.1.2",
+  "version": "4.0.0",
   "description": "",
   "main": "dist/index",
   "types": "dist/index",
@@ -16,6 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^3.1.2"
+    "@gram/core": "^4.0.0"
   }
 }

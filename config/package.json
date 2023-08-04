@@ -1,7 +1,7 @@
 {
   "name": "@gram/config",
   "private": true,
-  "version": "3.1.2",
+  "version": "4.0.0",
   "description": "Gram Configuration",
   "scripts": {
     "build": "npm run compile",
@@ -29,11 +29,11 @@
     "node": "16"
   },
   "dependencies": {
-    "@gram/aws": "^3.1.2",
-    "@gram/core": "^3.1.2",
-    "@gram/magiclink": "^3.1.2",
-    "@gram/svgporn": "^3.1.2",
-    "@gram/threatlib": "^3.1.2"
+    "@gram/aws": "^4.0.0",
+    "@gram/core": "^4.0.0",
+    "@gram/magiclink": "^4.0.0",
+    "@gram/svgporn": "^4.0.0",
+    "@gram/threatlib": "^4.0.0"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
