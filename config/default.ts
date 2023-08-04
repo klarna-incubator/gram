@@ -15,14 +15,7 @@ import {
 } from "@gram/magiclink";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatLibSuggestionProvider } from "@gram/threatlib";
-import { EmailReviewApproved } from "./notifications/EmailReviewApproved";
-import { EmailReviewCanceled } from "./notifications/EmailReviewCanceled";
-import { EmailReviewDeclined } from "./notifications/EmailReviewDeclined";
-import { EmailReviewMeetingRequested } from "./notifications/EmailReviewMeetingRequested";
-import { EmailReviewMeetingRequestedReminder } from "./notifications/EmailReviewMeetingRequestedReminder";
-import { EmailReviewRequested } from "./notifications/EmailReviewRequested";
-import { EmailReviewRequestedReminder } from "./notifications/EmailReviewRequestedReminder";
-import { EmailReviewerChanged } from "./notifications/EmailReviewerChanged";
+import defaultNotifications from "./notifications";
 import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider";
 import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider";
 import { StaticSystemProvider } from "./providers/static/StaticSystemProvider";
@@ -142,17 +135,7 @@ export const defaultConfig: GramConfiguration = {
       assetFolders: [AWSAssets, SVGPornAssets],
       componentClasses: [...AWSComponentClasses, ...SVGPornComponentClasses],
       identityProviders: [magicLink],
-      notificationTemplates: [
-        MagicLinkEmail(),
-        EmailReviewApproved(),
-        EmailReviewCanceled(),
-        EmailReviewDeclined(),
-        EmailReviewerChanged(),
-        EmailReviewMeetingRequested(),
-        EmailReviewMeetingRequestedReminder(),
-        EmailReviewRequested(),
-        EmailReviewRequestedReminder(),
-      ],
+      notificationTemplates: [MagicLinkEmail(), ...defaultNotifications],
       reviewerProvider: new StaticReviewerProvider(
         sampleReviewers,
         sampleReviewers[1]
