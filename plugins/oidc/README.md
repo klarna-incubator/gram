@@ -4,7 +4,37 @@ Pack with OIDC provider, i.e. SSO login via a third party OIDC compatible provid
 
 ## Configuration
 
-## At your OIDC provider
+Add the @gram/oidc package to your config.
+
+```sh
+npm -w config i @gram/oidc
+```
+
+Then modify your configuration by adding the OIDCIdentityProvider.
+
+```ts
+import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
+import { OIDCIdentityProvider } from "@gram/oidc";
+
+
+// ...
+bootstrapProviders: async function () {
+    const oidc = new OIDCIdentityProvider(
+    "https://<discover url>/",
+    new EnvSecret("OIDC_CLIENT_ID"),
+    new EnvSecret("OIDC_CLIENT_SECRET"),
+    new EnvSecret("OIDC_SESSION_SECRET"),
+    "email"
+    );
+
+    return {
+        // ...
+        identityProviders: [oidc],
+    }
+}
+```
+
+### At your OIDC provider
 
 Gram uses the `/login/callback/oidc` for the Sign-in redirect URIs. Most likely you will need to allow this at your OIDC provider.
 
