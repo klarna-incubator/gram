@@ -115,5 +115,10 @@ export interface GramConfiguration {
    */
   additionalMigrations?: Migration[];
 
+  /**
+   * In case outgoing HTTP/HTTPS connections have to go through a proxy.
+   */
+  httpsProxy?: string;
+
   bootstrapProviders(dal: DataAccessLayer): Promise<Providers>;
 }

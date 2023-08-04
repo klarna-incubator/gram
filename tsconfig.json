@@ -9,7 +9,7 @@
       "@gram/core/dist/*": ["./core/src/*"],
       "@gram/config/dist/*": ["./config/*"],
       "@gram/api/dist/*": ["./api/src/*"],
-      "@gram/*/dist": ["./plugins/*/src"]
+      "@gram/*": ["./plugins/*/src"]
     },
     "noEmit": true,
     "types": ["jest"],

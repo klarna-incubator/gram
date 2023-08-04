@@ -35,6 +35,7 @@ import errorHandler from "./middlewares/errorHandler";
 import { initSentry } from "./util/sentry";
 import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval";
 import { config } from "@gram/core/dist/config";
+import cookieParser from "cookie-parser";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -48,6 +49,7 @@ export async function createApp(dal: DataAccessLayer) {
 
   // JSON middleware to automatically parse incoming requests
   app.use(express.json());
+  app.use(cookieParser());
   app.use(securityHeaders());
 
   const loggerMwOpts = {
