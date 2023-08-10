@@ -1,0 +1,26 @@
+{
+  "name": "@gram/ldap",
+  "version": "4.0.0",
+  "description": "Plugin with ldap related providers",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^4.0.0",
+    "basic-auth": "^2.0.1",
+    "ldapts": "^4.2.6"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/basic-auth": "^1.1.3"
+  }
+}
