@@ -6,5 +6,5 @@ import { testConfig } from "./src/test-util/testConfig";
 export default async function setup() {
   registerConfiguration("test", testConfig);
   loadConfig();
-  migrate();
+  await migrate();
 }
