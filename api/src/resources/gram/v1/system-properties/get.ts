@@ -22,6 +22,10 @@ export function getProperties(
 
     await req.authz.hasPermissionsForModel(model, Permission.Read);
 
+    if (model.systemId === null) {
+      return res.json({ properties: [] });
+    }
+
     const properties = await sysPropHandler.contextualize(
       { currentRequest: req },
       model.systemId

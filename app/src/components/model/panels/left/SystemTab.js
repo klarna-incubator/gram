@@ -29,9 +29,6 @@ export function SystemTab() {
   const { data: modelData } = useGetModelQuery(modelId);
   const { systemId } = modelData;
 
-  const hasSystem =
-    systemId && systemId !== "00000000-0000-0000-0000-000000000000";
-
   const { data: system } = useGetSystemQuery({ systemId });
 
   // Grab version from local state. This syncs differently than RTK API for ... reasons.
@@ -59,7 +56,7 @@ export function SystemTab() {
 
   useTitle(
     `Model: ${
-      hasSystem && system && system.displayName
+      !!systemId && system && system.displayName
         ? `${system.displayName} - ${version}`
         : version || ""
     }`

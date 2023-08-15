@@ -33,7 +33,7 @@ export function TableRow(props) {
     <MuiTableRow>
       <TableCell>
         <Link component={RouterLink} to={`/model/${review.modelId}`}>
-          {review.model.systemId !== "00000000-0000-0000-0000-000000000000" ? (
+          {review.model.systemId ? (
             <div>
               <Typography>
                 {review.model.systemId && (

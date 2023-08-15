@@ -51,10 +51,7 @@ export class DefaultAuthzProvider implements AuthzProvider {
     model: Model,
     user: UserToken
   ): Promise<Permission[]> {
-    if (
-      model.systemId &&
-      model.systemId != "00000000-0000-0000-0000-000000000000"
-    ) {
+    if (model.systemId) {
       return this.getPermissionsForSystem(ctx, model.systemId, user);
     }
 

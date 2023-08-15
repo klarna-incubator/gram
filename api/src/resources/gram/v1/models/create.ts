@@ -6,10 +6,6 @@ import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization";
 import Model from "@gram/core/dist/data/models/Model";
 import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
-import { getLogger } from "log4js";
-import { InvalidInputError } from "@gram/core/dist/util/errors";
-
-const log = getLogger("models.create");
 
 export default (dataModels: ModelDataService) =>
   async (req: Request, res: Response) => {
@@ -19,11 +15,7 @@ export default (dataModels: ModelDataService) =>
 
     if (!version || version === "") return res.sendStatus(400);
 
-    const finalSystemId = systemId
-      ? systemId
-      : "00000000-0000-0000-0000-000000000000";
-
-    const model = new Model(finalSystemId, version, req.user.sub);
+    const model = new Model(systemId, version, req.user.sub);
     await req.authz?.hasPermissionsForModel(model, Permission.Write);
 
     let id: string | null = null;

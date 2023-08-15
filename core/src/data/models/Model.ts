@@ -129,7 +129,7 @@ export default class Model {
   isTemplate?: boolean;
 
   constructor(
-    public systemId: string,
+    public systemId: string | null,
     public version: string,
     public createdBy: string
   ) {
