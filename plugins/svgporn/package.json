@@ -1,6 +1,6 @@
 {
   "name": "@gram/svgporn",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Taken from https://github.com/gilbarbara/logos",
   "main": "dist/index",
   "types": "dist/index",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.0.0"
+    "@gram/core": "^4.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.4.2"
