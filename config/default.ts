@@ -90,20 +90,31 @@ export const defaultConfig: GramConfiguration = {
 
     const sampleUsers: User[] = [
       {
-        name: "Sample User",
-        sub: "sample-user@localhost", // Must be the same as sub provided by IdentityProvider for authz to work
-        mail: "sample-user@localhost",
+        name: "User",
+        sub: "user@localhost", // Must be the same as sub provided by IdentityProvider for authz to work
+        mail: "user@localhost",
+        teams: [],
+      },
+      {
+        name: "Reviewer",
+        sub: "reviewer@localhost",
+        mail: "reviewer@localhost",
+        teams: [],
+      },
+      {
+        name: "Admin",
+        sub: "admin@localhost",
+        mail: "admin@localhost",
         teams: [],
       },
     ];
 
     const sampleReviewers: Reviewer[] = [
       {
-        name: "Sample User",
+        name: "Reviewer",
+        sub: "reviewer@localhost",
+        mail: "reviewer@localhost",
         recommended: false,
-        sub: "sample-user@localhost", // Must be the same as sub provided by AuthProvider for authz to work
-        mail: "sample-user@localhost",
-        slackUrl: "",
       },
       {
         name: "Security Team",
@@ -141,9 +152,9 @@ export const defaultConfig: GramConfiguration = {
         sampleReviewers[1]
       ),
       authzProvider: new StaticAuthzProvider(
-        sampleUsers.map((u) => u.sub),
-        sampleUsers.map((u) => u.sub),
-        sampleUsers.map((u) => u.sub)
+        [sampleUsers[0].sub],
+        [sampleUsers[1].sub],
+        [sampleUsers[2].sub]
       ),
       userProvider: new StaticUserProvider(sampleUsers),
       systemProvider: new StaticSystemProvider(sampleSystems),

@@ -1,11 +1,10 @@
-import { createDb, migrate as postgresMigrate } from "postgres-migrations";
-import {
-  createPostgresPool,
-  getDatabaseName,
-  GramConnectionPool,
-} from "./postgres";
 import { getLogger } from "log4js";
+import {
+  MigrateDBConfig,
+  migrate as postgresMigrate,
+} from "postgres-migrations";
 import { config } from "../config";
+import { getDatabaseName } from "./postgres";
 
 const log = getLogger("Migration");
 
@@ -20,14 +19,16 @@ export class Migration {
       `Starting migration for ${process.env.NODE_ENV} (${host} - ${databaseName})`
     );
 
-    const pool = new GramConnectionPool(
-      await createPostgresPool({ database: databaseName })
-    );
+    const migrationConfig: MigrateDBConfig = {
+      database: databaseName,
+      port: parseInt((await config.postgres.port.getValue()) || "5432"),
+      host: (await config.postgres.host.getValue()) as string,
+      user: (await config.postgres.user.getValue()) as string,
+      password: (await config.postgres.password.getValue()) as string,
+      ensureDatabaseExists: true,
+    };
 
-    await createDb(databaseName, { client: pool._pool });
-    log.info("Created DB (if not exist): " + databaseName);
-
-    const migs = await postgresMigrate({ client: pool._pool }, this.folderPath);
+    const migs = await postgresMigrate(migrationConfig, this.folderPath);
     migs.forEach((mig) => {
       log.info(`Ran migration: ${mig.name}`);
     });
