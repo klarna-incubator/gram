@@ -58,7 +58,7 @@ export const defaultConfig: GramConfiguration = {
     level: "info",
     auditHttp: {
       excludeKeys: {
-        header: ["authorization", "x-google-id-token", "cookie"],
+        header: ["authorization", "cookie"],
         body: ["token"],
       },
       includeKeys: {

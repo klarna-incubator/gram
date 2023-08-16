@@ -6,88 +6,49 @@
 
 Gram is Klarna's own threat model diagramming tool. It's pretty cool.
 
-## Usage example
-
-TODO :)
-
-<!-- A few motivating and useful examples of how your project can be used. Spice this up with code blocks and potentially more screenshots.
-
-_For more examples and usage, please refer to the [Docs](TODO)._ -->
-
 ## Repository Layout 🗺️
 
 - `app/` contains the frontend react application
-- `core/` contains the nodejs backend library; most data related logic lies here
-- `api/` contains the nodejs backend API
+- `core/` contains the backend library; most data related logic lies here
+- `config/` contains the configuration.
+- `api/` contains the backend web API
 - `plugins/` contains backend plugins, which when installed into api allows for customization
 
-## Development setup 💻
+## Development Setup 💻
+
+These are the minimal steps for starting the project locally:
 
 1. Install the dependencies with `npm i`
 
-2. `npm run build` to build the api and any installed plugins
+2. Start the test and development databases via docker compose `docker compose up -d`
 
-3. Create a new file `config/development.json`, using the following as a template.
+3. `npm run build` to build the api and any installed plugins
 
-```json
-{
-  "data": {
-    "_providers": {
-      "postgres": {
-        "host": "127.0.0.1",
-        "user": "gram",
-        "password": "somethingsecret",
-        "database": "gram",
-        "port": 5432
-      }
-    }
-  },
+4. `npm run dev` to start the backend API and react app frontend.
 
-  "jwt": {
-    "ttl": 86400,
-    "secret": {
-      "auth": "6bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f"
-    }
-  },
+5. Login using `user@localhost` as the email - check the application logs for the login link.
 
-  "auth": {
-    "providerOpts": {}
-  },
+## Deploying
 
-  "log": {
-    "layout": "coloured",
-    "level": "debug",
-    "auditHttp": {
-      "simplified": true
-    }
-  },
+Gram is designed to run as a single docker container with a postgres database provided beside it. Typically the postgres database would be hosted on something like AWS RDS.
 
-  "notifications": {
-    "providers": {
-      "email": {
-        "user": "",
-        "host": "",
-        "port": 25,
-        "sender-name": "[Development] Gram - Secure Development"
-      }
-    }
-  },
+The recommended setup is to run Gram as a fork of this repository. That way you can add specific logic for your own organization, as
+you will likely want to integrate your own specific data providers.
 
-  "secrets": {
-    "provider": "config"
-  }
-}
-```
+See [config/README.md](config/README.md) for more specific details on how to configure.
 
-4. Start the test and development databases via docker compose `docker compose up -d`
+### Disclaimers ⚠️
 
-5. Run the database migrations via `NODE_ENV=development npm run migrate-database`
+- Setting up will require that you are comfortable programming a bit in typescript (since the configuration is written that way) and that
+  you know how to deploy a docker image.
 
-   - (For running the tests you'll want to also migrate the test environment `NODE_ENV=test npm run migrate-database`)
+- As maintainers of this project, we will only offer limited support and are generally prioritizing features that serve our own implementation for Klarna. Forking is welcome and encouraged.
 
-6. `npm run start-backend` to start the backend API
+- There are some scalability issues to be aware of - currently we only run this as a single container as the websocket server used for the
+  realtime diagram sharing only runs on the same express server. For Klarna's setup this has worked fine since we don't have that many concurrent users,
+  but it will eventually hit a bottleneck and means the application can't be scaled horizontally. This is solveable but it's not anything we're prioritizing until it actually becomes a problem.
 
-7. `npm run start-frontend` to start the react app frontend.
+- This webapp was built with the premise that it would run on an internal-only, closed network and be accessible to all engineers. It will not withstand DoS or necessarily guarantee confidentiality.
 
 ## How to contribute
 
@@ -99,14 +60,14 @@ See our [changelog](CHANGELOG.md).
 
 ## License
 
-Copyright © 2022 Klarna Bank AB
+Copyright © 2023 Klarna Bank AB
 
 For license details, see the [LICENSE](LICENSE) file in the root of this project.
 
 <!-- Markdown link & img dfn's -->
 
-[ci-image]: https://img.shields.io/badge/build-passing-brightgreen?style=flat-square
-[ci-url]: https://github.com/klarna-incubator/TODO
+[ci-image]: https://github.com/klarna-incubator/gram/actions/workflows/ci.yml/badge.svg?branch=master
+[ci-url]: https://github.com/klarna-incubator/gram/actions?query=branch%3Amaster
 [license-image]: https://img.shields.io/badge/license-Apache%202-blue?style=flat-square
 [license-url]: http://www.apache.org/licenses/LICENSE-2.0
 [klarna-image]: https://img.shields.io/badge/%20-Developed%20at%20Klarna-black?style=flat-square&labelColor=ffb3c7&logo=klarna&logoColor=black
