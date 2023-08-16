@@ -1,6 +1,6 @@
 {
   "name": "@gram/ldap",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Plugin with ldap related providers",
   "main": "dist/index",
   "types": "dist/index",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.0.1",
+    "@gram/core": "^4.0.2",
     "basic-auth": "^2.0.1",
     "ldapts": "^4.2.6"
   },
