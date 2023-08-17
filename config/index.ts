@@ -4,5 +4,7 @@ import { developmentConfig } from "./development";
 
 export function initConfig() {
   registerConfiguration("development", developmentConfig);
+  //   registerConfiguration("staging", stagingConfig);
+  //   registerConfiguration("production", productionConfig);
   loadConfig();
 }

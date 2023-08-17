@@ -1,13 +1,25 @@
-# README
+# Config
 
-This package contains the configuration for the Gram application.
+This package contains the configuration of the Gram application.
 
-## Environments
+The default setup comes with three preconfigured environments:
+
+- [development.ts](development.ts)
+- [staging.ts](staging.ts) (_Not enabled_)
+- [production.ts](production.ts) (_Not enabled_)
+
+To reduce repetition, configuration shared between the environments is defined here in
+the [default.ts](default.ts) file.
+
+## Adding a new environment
 
 The main entry point for the configuration is the [index.ts](index.ts) file.
-This is where the different environment configurations are registered.
+This is where the different environment configurations are registered. To add a new environment,
+include it here via `registerConfiguration`.
 
 ```ts
+import { developmentConfig } from "./development";
+
 export function initConfig() {
   registerConfiguration("development", developmentConfig);
   //   registerConfiguration("staging", stagingConfig);
@@ -32,5 +44,5 @@ There are two built-in classes for constructing secrets:
 
 - **EnvSecret** - Grabs a Secret value from a specified environment variable. **Recommended**
   - Example: `password: new EnvSecret("POSTGRES_PASSWORD")`
-- **ExposedSecret** - Should not be used in a real deployment environment.
+- **ExposedSecret** - Takes a raw string value as the secret value. Should not be used in a real deployment environment.
   - Example: `password: new ExposedSecret("somethingsecret")`
