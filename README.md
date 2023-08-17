@@ -6,6 +6,8 @@
 
 Gram is Klarna's own threat model diagramming tool. It's pretty cool.
 
+![Screenshot](screenshot.png)
+
 ## Repository Layout 🗺️
 
 - `app/` contains the frontend react application
