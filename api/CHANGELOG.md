@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.3](https://github.com/klarna/gram/compare/v4.0.2...v4.0.3) (2023-08-18)
+
+
+### Bug Fixes
+
+* Component vulnerable/secure indicators should now work in firefox. ([8f6d441](https://github.com/klarna/gram/commit/8f6d441bfdc85fa78ca11815805f3da65f88ad03)), closes [#5](https://github.com/klarna/gram/issues/5)
+
+
+
+
+
 ## [4.0.2](https://github.com/klarna/gram/compare/v4.0.1...v4.0.2) (2023-08-16)
 
 **Note:** Version bump only for package @gram/api
