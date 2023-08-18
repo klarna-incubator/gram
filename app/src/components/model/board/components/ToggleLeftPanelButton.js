@@ -19,6 +19,7 @@ export const ToggleLeftPanelButton = () => {
     position: "relative",
     right: "-40px",
     width: "40px",
+    height: "48px",
     backgroundColor: "#272727",
     display: "block",
     float: "right",
