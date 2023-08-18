@@ -146,7 +146,7 @@ export function SystemTab() {
           </CardContent>
         </Card>
         <Review />
-        <SystemProperties modelId={modelId} />
+        {systemId && <SystemProperties modelId={modelId} />}
       </Box>
     </Box>
   );
