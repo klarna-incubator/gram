@@ -8,6 +8,7 @@ export const COMPONENT_TYPE = {
   PROCESS: "proc",
   DATA_STORE: "ds",
   DATA_FLOW: "df",
+  TRUST_BOUNDARY: "tb",
 };
 
 export const DIALOG = {

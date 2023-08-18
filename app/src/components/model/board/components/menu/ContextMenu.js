@@ -71,6 +71,14 @@ export const ContextMenu = React.memo(
             >
               <ListItemText>Add Data store</ListItemText>
             </MenuItem>
+            <MenuItem
+              key={"add_tb"}
+              onClick={() => {
+                onAddComponent("Trust Boundary", COMPONENT_TYPE.TRUST_BOUNDARY);
+              }}
+            >
+              <ListItemText>Add Trust Boundary</ListItemText>
+            </MenuItem>
           </MenuList>
         </Paper>
       </ContextMenuWrapper>

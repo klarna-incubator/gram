@@ -49,6 +49,7 @@ import { DataStore } from "./shapes/DataStore";
 import { ExternalEntity } from "./shapes/ExternalEntity";
 import { Process } from "./shapes/Process";
 import { getAbsolutePosition } from "./util";
+import { TrustBoundary } from "./shapes/TrustBoundary";
 
 export default function Board() {
   const dispatch = useDispatch();
@@ -142,6 +143,7 @@ export default function Board() {
     ee: ExternalEntity,
     proc: Process,
     ds: DataStore,
+    tb: TrustBoundary,
   };
 
   // Resize functionality
