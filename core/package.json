@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/klarna/gram#readme",
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "dependencies": {
     "@sentry/integrations": "^7.6.0",
