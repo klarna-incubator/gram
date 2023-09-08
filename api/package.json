@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/klarna/gram#readme",
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "dependencies": {
     "@gram/aws": "*",
