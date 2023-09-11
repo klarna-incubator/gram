@@ -4,7 +4,7 @@
 [![License][license-image]][license-url]
 [![Developed at Klarna][klarna-image]][klarna-url]
 
-Gram is Klarna's own threat model diagramming tool developed internally by Klarna's Secure Development team. It is a webapp for engineers to collaboratively create threat models for their systems, providing a easy-to-understand way to document a system as a dataflow diagram with threats/controls attached.
+Gram is Klarna's own [threat model][owasp-tm] diagramming tool developed internally by Klarna's Secure Development team. It is a webapp for engineers to collaboratively create threat models for their systems, providing a easy-to-understand way to document a system as a dataflow diagram with threats/controls attached.
 
 ![Screenshot](screenshot.png)
 
@@ -57,7 +57,7 @@ All configuration exists in the `config/` package. See [config/README.md](config
 
 See our guide on [contributing](CONTRIBUTING.md).
 
-## Release History ⚖️
+## Release History 📜
 
 See our [changelog](CHANGELOG.md).
 
@@ -78,3 +78,4 @@ For license details, see the [LICENSE](LICENSE) file in the root of this project
 [license-url]: http://www.apache.org/licenses/LICENSE-2.0
 [klarna-image]: https://img.shields.io/badge/%20-Developed%20at%20Klarna-black?style=flat-square&labelColor=ffb3c7&logo=klarna&logoColor=black
 [klarna-url]: https://klarna.github.io
+[owasp-tm]: https://owasp.org/www-community/Threat_Modeling
