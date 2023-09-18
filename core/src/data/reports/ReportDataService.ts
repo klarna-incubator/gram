@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { getLogger } from "../../logger";
+import { getLogger } from "log4js";
 import { linkToModel } from "../../util/links";
 import { DataAccessLayer } from "../dal";
 import { SystemPropertyValue } from "../system-property/types";
@@ -60,7 +60,7 @@ export class ReportDataService {
             WHERE r2.status IN ('requested', 'meeting-requested') AND r2.deleted_at IS NULL AND m2.deleted_at IS NULL
             ORDER BY m2.system_id, r2.created_at DESC
         ) pending_models on pending_models.system_id = m.system_id
-        WHERE m.system_id IS NOT NULL and m.system_id != '00000000-0000-0000-0000-000000000000'
+        WHERE m.system_id IS NOT NULL
         ORDER BY m.system_id DESC
         ${
           pagesize && pagesize > 0

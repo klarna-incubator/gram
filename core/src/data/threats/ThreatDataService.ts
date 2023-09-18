@@ -6,7 +6,7 @@
 
 import { EventEmitter } from "events";
 import { Pool } from "pg";
-import { getLogger } from "../../logger";
+import { getLogger } from "log4js";
 import { SuggestionID } from "../../suggestions/models";
 import { DataAccessLayer } from "../dal";
 import { SuggestionStatus } from "../suggestions/Suggestion";

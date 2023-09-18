@@ -1,4 +1,3 @@
-import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
 import Model from "@gram/core/dist/data/models/Model";
 import {
   SuggestionResult,
@@ -7,7 +6,7 @@ import {
 import { mapControls } from "./controls";
 import { mapThreats } from "./threats";
 
-class ThreatLibSuggestionProvider implements SuggestionSource {
+export class ThreatLibSuggestionProvider implements SuggestionSource {
   slug: string = "threatlib";
   name: string = "threatlib";
   async suggest(model: Model): Promise<SuggestionResult> {
@@ -21,11 +20,5 @@ class ThreatLibSuggestionProvider implements SuggestionSource {
     };
 
     return result;
-  }
-}
-
-export default class ThreatLibPlugin implements Plugin {
-  async bootstrap(reg: PluginRegistrator) {
-    reg.registerSuggestionSource(new ThreatLibSuggestionProvider());
   }
 }

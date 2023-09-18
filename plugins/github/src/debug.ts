@@ -1,22 +1,21 @@
 import { App, Octokit } from "octokit";
-import secrets from "@gram/core/dist/secrets";
 import * as dotenv from "dotenv";
 import { createAppAuth } from "@octokit/auth-app";
 dotenv.config();
 
 async function main() {
-  const appId = await secrets.get("auth.providerOpts.github.appId");
-  const clientId = await secrets.get("auth.providerOpts.github.clientId");
-  const clientSecret = await secrets.get(
-    "auth.providerOpts.github.clientSecret"
-  );
-  const privateKey = await secrets.get("auth.providerOpts.github.privateKey");
+  // const appId = await secrets.get("auth.providerOpts.github.appId");
+  // const clientId = await secrets.get("auth.providerOpts.github.clientId");
+  // const clientSecret = await secrets.get(
+  //   "auth.providerOpts.github.clientSecret"
+  // );
+  // const privateKey = await secrets.get("auth.providerOpts.github.privateKey");
 
-  const app = new App({
-    appId,
-    privateKey,
-    oauth: { clientId, clientSecret },
-  });
+  // const app = new App({
+  //   appId,
+  //   privateKey,
+  //   oauth: { clientId, clientSecret },
+  // });
 
   // const token = process.env.GITHUB_TOKEN;
   // if (!token) {

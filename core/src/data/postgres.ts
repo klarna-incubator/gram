@@ -1,8 +1,7 @@
-import fs from "fs";
 import { Pool, PoolClient, PoolConfig } from "pg";
-import { getLogger } from "../logger";
-import secrets from "../secrets";
 import metricsClient from "prom-client";
+import { getLogger } from "log4js";
+import { config } from "../config";
 
 const log = getLogger("postgres");
 
@@ -86,6 +85,13 @@ function initPostgresMetrics(pool: Pool) {
   });
 }
 
+export async function getDatabaseName(suffix: string) {
+  const regularDatabase = (await config.postgres.database.getValue()) as string;
+  const databaseName =
+    suffix.length === 0 ? regularDatabase : regularDatabase + "-" + suffix;
+  return databaseName;
+}
+
 export async function createPostgresPool(passedOpts?: PoolConfig) {
   const defaultOpts: PoolConfig = {
     max: 100,
@@ -95,21 +101,14 @@ export async function createPostgresPool(passedOpts?: PoolConfig) {
         : 5000,
   };
 
-  defaultOpts.host = await secrets.get("data._providers.postgres.host");
-  defaultOpts.user = await secrets.get("data._providers.postgres.user");
-  defaultOpts.password = await secrets.get("data._providers.postgres.password");
-  defaultOpts.database = await secrets.get("data._providers.postgres.database");
+  defaultOpts.host = await config.postgres.host.getValue();
+  defaultOpts.user = await config.postgres.user.getValue();
+  defaultOpts.password = await config.postgres.password.getValue();
+  defaultOpts.database = await config.postgres.database.getValue();
   defaultOpts.port = parseInt(
-    await secrets.get("data._providers.postgres.port")
+    (await config.postgres.port.getValue()) || "5432"
   );
-
-  // Enable SSL except in development and test environment
-  //TODO: should be configuration...
-  defaultOpts.ssl = !["development", "test", "demo"].includes(
-    process.env.NODE_ENV!
-  );
-
-  log.debug(`Postgres TLS/SSL: ${defaultOpts.ssl}`);
+  defaultOpts.ssl = config.postgres.ssl;
 
   //TODO: should be configuration...
   // if (defaultOpts.ssl) {
@@ -128,7 +127,9 @@ export async function createPostgresPool(passedOpts?: PoolConfig) {
 
   /**
    * Just in case the pool errors, and recommended by pg docs.
-   * "It is important you add an event listener to the pool to catch errors. Just like other event emitters, if a pool emits an error event and no listeners are added node will emit an uncaught error and potentially exit."
+   * "It is important you add an event listener to the pool to catch errors. Just like other event emitters,
+   *  if a pool emits an error event and no listeners are added node will emit an uncaught error and potentially
+   *  exit."
    */
   pool.on("error", (err) => {
     log.error("Pool error", err);
@@ -137,6 +138,7 @@ export async function createPostgresPool(passedOpts?: PoolConfig) {
   // TODO: will refactor DAL and more to use this wrapper class.
   // return new GramConnectionPool(pool);
 
+  // TODO: figure out metrics for multiple pools...
   initPostgresMetrics(pool);
 
   return pool;

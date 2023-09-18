@@ -58,24 +58,6 @@ exports[`Home renders Home 1`] = `
               </div>
             </div>
           </div>
-          <div
-            class="column"
-          >
-            <h2>
-              Team Systems
-            </h2>
-            <div
-              class="spacer"
-            />
-            <p
-              class="dimmed"
-            >
-              Systems owned by the accountable teams you're in
-            </p>
-            <div
-              class="teams"
-            />
-          </div>
         </div>
       </div>
     </div>
@@ -133,24 +115,6 @@ exports[`Home renders Home 1`] = `
               </ul>
             </div>
           </div>
-        </div>
-        <div
-          class="column"
-        >
-          <h2>
-            Team Systems
-          </h2>
-          <div
-            class="spacer"
-          />
-          <p
-            class="dimmed"
-          >
-            Systems owned by the accountable teams you're in
-          </p>
-          <div
-            class="teams"
-          />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { NotificationTemplateKey } from "../data/notifications/NotificationInput";
-import { getLogger } from "../logger";
+import { getLogger } from "log4js";
 import {
   NotificationTemplate,
   NotificationVariables,
@@ -13,7 +13,6 @@ export class TemplateHandler {
 
   register(template: NotificationTemplate) {
     this.templates.set(template.key, template);
-    log.info(`Registered notification template: ${template.key}`);
   }
 
   render(key: NotificationTemplateKey, variables: NotificationVariables) {

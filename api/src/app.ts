@@ -1,13 +1,10 @@
 import * as Sentry from "@sentry/node";
-import config from "config";
-import cookieParser from "cookie-parser";
 import express from "express";
 import errorWrap from "express-async-error-wrapper";
 import path from "path";
-import { Pool } from "pg";
 import { Role } from "@gram/core/dist/auth/models/Role";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { metricsMiddleware } from "./metrics/metrics";
 import {
   authRequiredMiddleware,
@@ -17,7 +14,7 @@ import { AuthzMiddleware } from "./middlewares/authz";
 import cacheMw from "./middlewares/cache";
 import loggerMw from "./middlewares/logger";
 import { securityHeaders } from "./middlewares/securityHeaders";
-import { AssetDir } from "@gram/core/dist/plugin";
+import { AssetDir } from "@gram/core/dist/Bootstrapper";
 import crash from "./resources/gram/v1/admin/crash";
 import setRoles from "./resources/gram/v1/admin/setRoles";
 import { getBanner } from "./resources/gram/v1/banners/get";
@@ -37,11 +34,10 @@ import userV1 from "./resources/gram/v1/user";
 import errorHandler from "./middlewares/errorHandler";
 import { initSentry } from "./util/sentry";
 import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval";
+import { config } from "@gram/core/dist/config";
+import cookieParser from "cookie-parser";
 
-async function createApp(pool: Pool) {
-  // Set up business logic handlers and services
-  const dal = new DataAccessLayer(pool);
-
+export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
   const app = express();
 
@@ -53,13 +49,12 @@ async function createApp(pool: Pool) {
 
   // JSON middleware to automatically parse incoming requests
   app.use(express.json());
-  app.use(securityHeaders());
   app.use(cookieParser());
+  app.use(securityHeaders());
 
-  const auditHttpLogOptions: object = config.get("log.auditHttp");
   const loggerMwOpts = {
     logger: getLogger("auditHttp"),
-    ...auditHttpLogOptions,
+    ...config.log.auditHttp,
   };
 
   const authz = AuthzMiddleware({ dal });
@@ -77,9 +72,12 @@ async function createApp(pool: Pool) {
   const unauthenticatedRoutes = express.Router();
   unauthenticatedRoutes.get("/banners", errorWrap(getBanner(dal)));
   unauthenticatedRoutes.get("/menu", errorWrap(getMenu));
-  unauthenticatedRoutes.get("/auth/token", errorWrap(tokenV1.get));
-  unauthenticatedRoutes.get("/auth/params", errorWrap(tokenV1.params));
-  unauthenticatedRoutes.delete("/auth/token", errorWrap(tokenV1.delete));
+
+  const tokenRoutes = tokenV1(dal);
+  unauthenticatedRoutes.get("/auth/token", errorWrap(tokenRoutes.get));
+  unauthenticatedRoutes.post("/auth/token", errorWrap(tokenRoutes.get));
+  unauthenticatedRoutes.get("/auth/params", errorWrap(tokenRoutes.params));
+  unauthenticatedRoutes.delete("/auth/token", errorWrap(tokenRoutes.delete));
 
   // Authenticated routes
   const authenticatedRoutes = express.Router();
@@ -275,10 +273,5 @@ async function createApp(pool: Pool) {
   app.use(errorHandler);
 
   // Return dal here for help injecting mocks into testing later. Not the best solution but should work.
-  return {
-    app,
-    dal,
-  };
+  return app;
 }
-
-export default createApp;

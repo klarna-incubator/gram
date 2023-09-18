@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { lookupUser } from "@gram/core/dist/auth/user";
 import { validateUUID } from "@gram/core/dist/util/uuid";
-import { lookupReviewer } from "@gram/core/dist/data/reviews/ReviewerProvider";
 
 /**
  * GET /api/v1/reviews/{modelId}
@@ -26,11 +24,11 @@ export default (dal: DataAccessLayer) =>
     if (!review) {
       return res.sendStatus(404);
     }
-    const requester = await lookupUser(
+    const requester = await dal.userHandler.lookupUser(
       { currentRequest: req },
       review.requestedBy
     );
-    const reviewer = await lookupReviewer(
+    const reviewer = await dal.reviewerHandler.lookupReviewer(
       { currentRequest: req },
       review.reviewedBy
     );

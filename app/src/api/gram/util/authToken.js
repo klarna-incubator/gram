@@ -31,7 +31,7 @@ export function getAuthToken() {
         console.info("authToken token has expired");
       }
     } catch (e) {
-      console.error("login token failed to parse as jwt", e);
+      console.info("login token failed to parse as jwt", e);
     }
   }
 

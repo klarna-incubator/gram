@@ -5,7 +5,7 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
 import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "../../../../test-util/authz";
+import { genUser } from "@gram/core/dist/test-util/authz";
 import { createSampleModel } from "../../../../test-util/model";
 import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
 

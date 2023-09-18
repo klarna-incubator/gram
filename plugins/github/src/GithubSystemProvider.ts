@@ -1,4 +1,4 @@
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { App } from "octokit";
 import { SystemProperty } from "@gram/core/dist/data/system-property/types";
 import System from "@gram/core/dist/data/systems/System";

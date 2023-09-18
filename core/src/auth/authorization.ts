@@ -4,7 +4,8 @@ import { RequestContext } from "../data/providers/RequestContext";
 import { NotFoundError } from "../util/errors";
 import { AuthzError } from "./AuthzError";
 import { AuthzProvider } from "./AuthzProvider";
-import { Reviewer } from "./models/Reviewer";
+import { DefaultAuthzProvider } from "./DefaultAuthzProvider";
+import { DummyAuthzProvider } from "./DummyAuthzProvider";
 import { Role } from "./models/Role";
 import { UserToken } from "./models/UserToken";
 
@@ -24,41 +25,13 @@ export const AllPermissions = [
   Permission.Review,
 ];
 
-export interface Identity {
-  id: string;
-}
-
-/**
- * Default authorization provider, for now just throws errors.
- * Implementing orgs should add their own rules here.
- */
-class DefaultAuthzProvider implements AuthzProvider {
-  key = "default";
-  err = "Method not implemented.";
-
-  getPermissionsForSystem(
-    ctx: RequestContext,
-    systemId: string,
-    user: UserToken
-  ): Promise<Permission[]> {
-    throw new Error(this.err);
-  }
-  getPermissionsForStandaloneModel(
-    ctx: RequestContext,
-    model: Model,
-    user: UserToken
-  ): Promise<Permission[]> {
-    throw new Error(this.err);
-  }
-}
-
-export let authzProvider: AuthzProvider = new DefaultAuthzProvider();
+export let authzProvider: AuthzProvider = new DummyAuthzProvider();
 export function setAuthorizationProvider(newAuthzProvider: AuthzProvider) {
   authzProvider = newAuthzProvider;
 }
 
 /**
- * Get a user's permissions for a system. Performs a lookup against Jira, so use sparingly.
+ * Get a user's permissions for a system.
  *
  * @param systemId
  * @param userTeams

@@ -1,6 +1,8 @@
-import { User } from "./User";
-
-export type Reviewer = User & {
+export type Reviewer = {
+  sub: string;
+  name: string;
+  mail: string;
   recommended: boolean;
+  slackUrl?: string;
   calendarLink?: string;
 };

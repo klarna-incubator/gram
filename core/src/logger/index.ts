@@ -4,11 +4,9 @@
  * @exports logger
  */
 
-import config from "config";
 import log4js from "log4js";
-
-// TODO pass via configuration/plugin
 import { sentryLog4jsAppender } from "./sentryLog4jsAppender";
+import { config } from "../config";
 
 export type LogLine = {
   type?: "log" | "reqres" | "data" | "metric";
@@ -20,69 +18,68 @@ export type LogLine = {
   payload: any;
 };
 
-log4js.addLayout("json", (_config) => (logEvent) => {
-  const logLine: LogLine = {
-    type: "log",
-    timestamp: logEvent.startTime.toISOString(),
-    level: logEvent.level.levelStr,
-    message: "",
-    correlation_id: "",
-    meta: {},
-    payload: {},
-  };
+export function configureLogging() {
+  log4js.addLayout("json", (_config) => (logEvent) => {
+    const logLine: LogLine = {
+      type: "log",
+      timestamp: logEvent.startTime.toISOString(),
+      level: logEvent.level.levelStr,
+      message: "",
+      correlation_id: "",
+      meta: {},
+      payload: {},
+    };
 
-  const events = logEvent.data.map((event) => {
-    const line = { ...logLine };
-    if (typeof event === "string") {
-      line.message = event;
+    const events = logEvent.data.map((event) => {
+      const line = { ...logLine };
+      if (typeof event === "string") {
+        line.message = event;
+        return line;
+      }
+
+      if (event) {
+        if (event.payload) {
+          line.payload = event.payload;
+        }
+
+        if (event.meta) {
+          line.meta = event.meta;
+        }
+
+        if (event.correlation_id) {
+          line.correlation_id = event.correlation_id;
+        }
+
+        // Serialize errors, otherwise JSON.stringify on Error returns {}
+        if (event.message && event.stack) {
+          line.message = event.message;
+          line.payload.stack = event.stack;
+        }
+      }
+
       return line;
-    }
+    });
 
-    if (event) {
-      if (event.payload) {
-        line.payload = event.payload;
-      }
-
-      if (event.meta) {
-        line.meta = event.meta;
-      }
-
-      if (event.correlation_id) {
-        line.correlation_id = event.correlation_id;
-      }
-
-      // Serialize errors, otherwise JSON.stringify on Error returns {}
-      if (event.message && event.stack) {
-        line.message = event.message;
-        line.payload.stack = event.stack;
-      }
-    }
-
-    return line;
+    return events.map((event) => JSON.stringify(event)).join("");
   });
 
-  // logEvent.level = levels.getLevel(logEvent.level.levelStr, levels.WARN);
-  // logEvent.context;
-
-  return events.map((event) => JSON.stringify(event)).join("");
-});
-
-log4js.configure({
-  appenders: {
-    console: {
-      type: "console",
-      layout: { type: config.get("log.layout") },
+  const log4jconfig: log4js.Configuration = {
+    appenders: {
+      console: {
+        type: "console",
+        layout: { type: config.log.layout },
+      },
+      sentry: {
+        type: sentryLog4jsAppender, // This defaults to an empty appender if sentryDSN is not provided.
+      },
     },
-    sentry: {
-      type: sentryLog4jsAppender,
+    categories: {
+      default: {
+        appenders: ["console", "sentry"],
+        level: config.log.level,
+      },
     },
-  },
-  categories: {
-    default: {
-      appenders: ["console", "sentry"],
-      level: config.get("log.level") as string,
-    },
-  },
-});
+  };
 
-export const getLogger = log4js.getLogger;
+  log4js.configure(log4jconfig);
+}
