@@ -5,17 +5,17 @@ import { CoolestTeam, generalReviewNotificationVariables } from "./util";
 
 const key = "review-meeting-requested-reminder";
 
-const subject = `Reminder to schedule threat model for {{model.name}}`;
+const subject = `Reminder to schedule threat model meeting for {{model.name}}`;
 
-// Can try to update this template later to automagically create the construction method by using a Template literal
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
 const template = `
 Hi {{owner.name}}{{#if ownerIsNotRequester}} and {{requester.name}}{{/if}}!  
+
 {{#if missingTeamEmail}}{{missingTeamEmail}}{{/if}}
 
-We would like to remind you that you still have to schedule a threat model for {{model.name}} and it has been more than 60 days since the meeting was requested ({{review.meetingRequestedAt}}).
-To get approval, please schedule a review session using the link below. 
-Please use the cancel review option on the left side panel if you want to cancel the review.
+We would like to remind you that you still have to schedule a threat model meeting for {{model.name}} and 
+it has been more than 60 days since the meeting was requested ({{review.meetingRequestedAt}}). 
+
+If you no longer need the review, please use the cancel review option on the left side panel.
 
 You can access and review the threat model here: {{model.link}}
 
