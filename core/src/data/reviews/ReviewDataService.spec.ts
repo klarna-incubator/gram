@@ -74,6 +74,17 @@ describe("ReviewDataService implementation", () => {
     });
   });
 
+  describe("create", () => {
+    it("should set requested_at", async () => {
+      const review = new Review(modelId, "some-user", ReviewStatus.Requested);
+      review.note = "Good review";
+      await data.create(review);
+
+      const fetched = await data.getByModelId(modelId);
+      expect(fetched?.requestedAt).toBeTruthy();
+    });
+  });
+
   describe("getByModelId", () => {
     it("should return valid review associated to a model", async () => {
       const review = new Review(modelId, "some-user", ReviewStatus.Requested);

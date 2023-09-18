@@ -291,8 +291,8 @@ export class ReviewDataService extends EventEmitter {
    */
   async create(review: Review) {
     const query = `
-     INSERT INTO reviews (model_id, requested_by, reviewed_by, status, note)
-     VALUES ($1::uuid, $2::varchar, $3::varchar, $4::varchar, $5::varchar)
+     INSERT INTO reviews (model_id, requested_by, reviewed_by, status, note, requested_at)
+     VALUES ($1::uuid, $2::varchar, $3::varchar, $4::varchar, $5::varchar, now())
      ON CONFLICT (model_id) DO 
         UPDATE SET requested_by = $2::varchar, reviewed_by = $3::varchar, status = $4::varchar, note = $5::varchar, 
         requested_at = now(), meeting_requested_at = null, meeting_requested_reminder_sent_count = 0, requested_reminder_sent_count = 0;
@@ -469,7 +469,10 @@ export class ReviewDataService extends EventEmitter {
         fieldStatements.push(`approved_at = now()`);
       } else if (fields.status === ReviewStatus.MeetingRequested) {
         fieldStatements.push(`meeting_requested_at = now()`);
-      } else if (fields.status === ReviewStatus.Canceled) {
+      } else if (
+        fields.status === ReviewStatus.Canceled ||
+        fields.status === ReviewStatus.Requested
+      ) {
         fieldStatements.push(`requested_at = now()`);
       }
     }
