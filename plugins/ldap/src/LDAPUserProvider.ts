@@ -5,6 +5,7 @@ import { Entry } from "ldapts";
 import { getLogger } from "log4js";
 import { LDAPClientSettings } from "./LDAPClientSettings";
 import { connectLdapClient, ldapQueryOne } from "./lookup";
+import { escapeFilterValue } from "./util";
 
 export interface LDAPUserProviderSettings {
   ldapSettings: LDAPClientSettings;
@@ -29,10 +30,11 @@ export class LDAPUserProvider implements UserProvider {
 
   async getUser(email: string): Promise<User | null> {
     const ldap = await connectLdapClient(this.settings.ldapSettings);
+    const escapedEmail = escapeFilterValue(email);
 
     const ldapUser = await ldapQueryOne(ldap, this.settings.searchBase, {
       scope: "sub",
-      filter: this.settings.searchFilter(email),
+      filter: this.settings.searchFilter(escapedEmail),
       attributes: this.settings.attributes,
     });
 
