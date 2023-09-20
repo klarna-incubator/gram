@@ -32,7 +32,8 @@
     "@gram/core": "^4.0.2",
     "@gram/magiclink": "^4.0.2",
     "@gram/svgporn": "^4.0.2",
-    "@gram/threatlib": "^4.0.2"
+    "@gram/threatlib": "^4.0.2",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
