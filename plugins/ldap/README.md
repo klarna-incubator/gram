@@ -5,6 +5,7 @@ Plugin for different providers using LDAP. Warning: these may require some extra
 - **LDAPBasicAuthIdentityProvider** - Adds a new identity provider which gets credentials from basic auth and attempts to do an LDAP bind.
 - **LDAPGroupBasedAuthzProvider** - Performs lookups on logged in users and maps roles via groups.
 - **LDAPUserProvider** - Uses LDAP to provide information on users.
+- **LDAPGroupBasedReviewerProvider** - Provides reviewers based on one or more groups
 
 ## Configuration
 
