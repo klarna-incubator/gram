@@ -3,7 +3,6 @@ import Model from "@gram/core/dist/data/models/Model";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 import { ReviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
 import { Entry } from "ldapts";
-import { getLogger } from "log4js";
 import { LDAPClientSettings } from "./LDAPClientSettings";
 import { connectLdapClient, ldapQuery, ldapQueryOne } from "./lookup";
 import { escapeFilterValue } from "./util";
