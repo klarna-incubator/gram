@@ -3,7 +3,7 @@
   "description": "",
   "scripts": {
     "test": "lerna run test",
-    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build ",
+    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build",
     "build-all": "lerna run build",
     "dev": "lerna run start --parallel",
     "snyk": "lerna run snyk",

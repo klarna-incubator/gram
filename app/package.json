@@ -4,7 +4,7 @@
   "version": "4.0.3",
   "private": true,
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "dependencies": {
     "@emotion/react": "^11.4.1",

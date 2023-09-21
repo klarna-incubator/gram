@@ -4,17 +4,16 @@
   "version": "4.0.3",
   "description": "API for threat modelling",
   "scripts": {
-    "start": "NODE_ENV=development nodemon --watch src --watch ../core/src --files src/index.ts",
-    "build": "npm run compile",
+    "oldstart": "NODE_ENV=development nodemon --watch src --watch ../core/src --files src/index.ts",
+    "start": "NODE_ENV=development ts-node --files src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
     "clean": "rimraf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
-    "debug": "NODE_ENV=development node --inspect=0.0.0.0 src/index.js",
+    "debug": "NODE_ENV=development node --loader ts-node/esm --inspect=127.0.0.1 src/index.js",
     "test": "NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
     "snyk": "snyk test",
-    "jest": "NODE_ENV=test jest --detectOpenHandles --no-cache",
-    "sender": "NODE_ENV=development ts-node src/notifications/sender.ts"
+    "jest": "NODE_ENV=test jest --detectOpenHandles --no-cache"
   },
   "main": "dist/index.js",
   "repository": {
@@ -31,7 +30,7 @@
   },
   "homepage": "https://github.com/klarna/gram#readme",
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "dependencies": {
     "@gram/config": "^4.0.3",
@@ -64,7 +63,6 @@
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "eslint": "^8.15.0",
-    "nodemon": "^2.0.20",
     "prettier": "^2.3.2",
     "snyk": "^1.760.0",
     "supertest": "^6.3.3",
