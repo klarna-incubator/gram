@@ -42,7 +42,7 @@ export class ReviewerHandler {
    * @param userIds list of userIDs
    */
   async lookup(ctx: RequestContext, userIds: string[]): Promise<Reviewer[]> {
-    return this.reviewerProvider.lookup(ctx, userIds);
+    return await this.reviewerProvider.lookup(ctx, userIds);
   }
 
   /**
@@ -84,7 +84,7 @@ export class ReviewerHandler {
    * Return a fallback reviewer, used for e.g. reassignment.
    * @param ctx
    */
-  getFallbackReviewer(ctx: RequestContext): Promise<Reviewer> {
+  getFallbackReviewer(ctx: RequestContext): Promise<Reviewer | null> {
     return this.reviewerProvider.getFallbackReviewer(ctx);
   }
 }

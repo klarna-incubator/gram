@@ -10,11 +10,13 @@ export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const { modelId } = req.params;
     const { newReviewer } = req.body;
+    const ctx = { currentRequest: req };
 
     if (
       !newReviewer ||
-      (await dal.reviewerHandler.lookup({ currentRequest: req }, [newReviewer]))
-        .length === 0
+      ((await dal.reviewerHandler.getFallbackReviewer(ctx))?.sub !==
+        newReviewer &&
+        (await dal.reviewerHandler.lookup(ctx, [newReviewer])).length === 0)
     ) {
       return res.sendStatus(400);
     }
