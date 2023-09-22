@@ -58,10 +58,16 @@ export const getAuthToken =
         );
       }
 
+      const teams = await dal.teamHandler.getTeamsForUser(
+        { currentRequest: req },
+        identity.identity.sub
+      );
+
       const token: UserToken = {
         ...user,
         sub: identity.identity.sub,
         roles,
+        teams,
       };
       const jwtToken = await jwt.generateToken({ ...token });
       return res.json({ status: "ok", token: jwtToken });

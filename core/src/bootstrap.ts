@@ -31,6 +31,9 @@ export async function bootstrap(): Promise<DataAccessLayer> {
     bt.registerSystemPropertyProvider(spp)
   );
 
+  if (providers.teamProvider) {
+    bt.setTeamProvider(providers.teamProvider);
+  }
   providers.assetFolders?.forEach((af) =>
     bt.registerAssets(af.name, af.folderPath)
   );
