@@ -16,6 +16,7 @@ import { ReviewerProvider } from "./data/reviews/ReviewerProvider";
 import { SystemPropertyProvider } from "./data/system-property/SystemPropertyProvider";
 import { getPool, migratePlugin } from "./plugins/data";
 import { Pool } from "pg";
+import { TeamProvider } from "./auth/TeamProvider";
 
 /* Could create a temporary directory instead */
 export const AssetDir = "assets";
@@ -124,6 +125,11 @@ export class Bootstrapper {
   setUserProvider(userProvider: UserProvider) {
     this.log.info(`Set User Provider: ${userProvider.key}`);
     this.dal.userHandler.setUserProvider(userProvider);
+  }
+
+  setTeamProvider(teamProvider: TeamProvider) {
+    this.log.info(`Set Team Provider: ${teamProvider.key}`);
+    this.dal.teamHandler.setTeamProvider(teamProvider);
   }
 
   setReviewerProvider(reviewerProvider: ReviewerProvider): void {

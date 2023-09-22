@@ -13,6 +13,7 @@ import { ThreatDataService } from "./threats/ThreatDataService";
 import { ReportDataService } from "./reports/ReportDataService";
 import { BannerDataService } from "./banners/BannerDataService";
 import { UserHandler } from "../auth/UserHandler";
+import { TeamHandler } from "../auth/TeamHandler";
 import { AuthzProvider } from "../auth/AuthzProvider";
 import { authzProvider } from "../auth/authorization";
 import { systemProvider } from "./systems/systems";
@@ -45,6 +46,7 @@ export class DataAccessLayer {
   suggestionEngine: SuggestionEngine;
   userHandler: UserHandler;
   reviewerHandler: ReviewerHandler;
+  teamHandler: TeamHandler;
 
   get authzProvider(): AuthzProvider {
     return authzProvider;
@@ -64,6 +66,7 @@ export class DataAccessLayer {
     this.sysPropHandler = new SystemPropertyHandler();
     this.ccHandler = new ComponentClassHandler();
     this.templateHandler = new TemplateHandler();
+    this.teamHandler = new TeamHandler();
     this.userHandler = new UserHandler();
     this.reviewerHandler = new ReviewerHandler();
 

@@ -11,6 +11,7 @@ import type { SuggestionSource } from "../suggestions/models";
 import type { AssetFolder } from "./AssetFolder";
 import type { Secret } from "./Secret";
 import type { Migration } from "../data/Migration";
+import type { TeamProvider } from "../auth/TeamProvider";
 
 export interface Providers {
   /**
@@ -30,7 +31,7 @@ export interface Providers {
   componentClasses?: ComponentClass[];
   notificationTemplates?: NotificationTemplate[];
   suggestionSources?: SuggestionSource[];
-  // Migrate?
+  teamProvider?: TeamProvider;
 }
 
 export interface GramConfiguration {

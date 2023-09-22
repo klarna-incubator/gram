@@ -7,5 +7,4 @@ export type User = {
   // Optional attributes
   mail?: string;
   slackUrl?: string;
-  teams: Team[];
 };
