@@ -81,7 +81,9 @@ export function ChangeReviewer({ modelId }) {
         {isError && (
           <>
             <Typography variant="h6">Something went wrong :(</Typography>
-            <Typography variant="caption">Error: {error}</Typography>
+            <Typography variant="caption">
+              Error: {JSON.stringify(error)}
+            </Typography>
           </>
         )}
       </DialogContent>

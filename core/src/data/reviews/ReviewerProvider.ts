@@ -31,5 +31,5 @@ export interface ReviewerProvider extends Provider {
    * Return a fallback reviewer, used for e.g. reassignment.
    * @param ctx
    */
-  getFallbackReviewer(ctx: RequestContext): Promise<Reviewer>;
+  getFallbackReviewer(ctx: RequestContext): Promise<Reviewer | null>;
 }

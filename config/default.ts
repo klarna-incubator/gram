@@ -114,13 +114,20 @@ export const defaultConfig: GramConfiguration = {
         recommended: false,
       },
       {
-        name: "Security Team",
-        recommended: true,
-        sub: "security-team@localhost",
-        mail: "security-team@localhost",
-        slackUrl: "",
+        name: "Admin",
+        sub: "admin@localhost",
+        mail: "admin@localhost",
+        recommended: false,
       },
     ];
+
+    const fallbackReviewer: Reviewer = {
+      name: "Security Team",
+      recommended: true,
+      sub: "security-team@localhost",
+      mail: "security-team@localhost",
+      slackUrl: "",
+    };
 
     const sampleSystems: System[] = [
       new System(
@@ -146,7 +153,7 @@ export const defaultConfig: GramConfiguration = {
       notificationTemplates: [MagicLinkEmail(), ...defaultNotifications],
       reviewerProvider: new StaticReviewerProvider(
         sampleReviewers,
-        sampleReviewers[1]
+        fallbackReviewer
       ),
       authzProvider: new StaticAuthzProvider(
         [sampleUsers[0].sub],
