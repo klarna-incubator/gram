@@ -56,7 +56,6 @@ export async function ldapQuery(
   log.debug("Cache miss LDAP lookup for", cacheKey);
 
   const results = await ldapClient.search(base, options);
-  await ldapClient.unbind();
   return results;
 }
 

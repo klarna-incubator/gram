@@ -93,19 +93,16 @@ export const defaultConfig: GramConfiguration = {
         name: "User",
         sub: "user@localhost", // Must be the same as sub provided by IdentityProvider for authz to work
         mail: "user@localhost",
-        teams: [],
       },
       {
         name: "Reviewer",
         sub: "reviewer@localhost",
         mail: "reviewer@localhost",
-        teams: [],
       },
       {
         name: "Admin",
         sub: "admin@localhost",
         mail: "admin@localhost",
-        teams: [],
       },
     ];
 
