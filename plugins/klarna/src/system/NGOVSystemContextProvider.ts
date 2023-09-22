@@ -4,12 +4,12 @@ import {
   SystemProperty,
   SystemPropertyValue,
 } from "@gram/core/dist/data/system-property/types";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { OctaneSystemProvider } from "./OctaneSystemProvider";
 
 const log = getLogger("system-context-provider");
 
-export class SystemContextProvider implements SystemPropertyProvider {
+export class NGOVSystemContextProvider implements SystemPropertyProvider {
   id = "ngov";
 
   constructor(private systemProvider: OctaneSystemProvider) {}

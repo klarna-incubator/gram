@@ -1,4 +1,3 @@
-import config from "config";
 import JiraApi from "jira-client";
 import { getLogger } from "log4js";
 import Control from "@gram/core/dist/data/controls/Control";
@@ -7,7 +6,6 @@ import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
 import { Component } from "@gram/core/dist/data/models/Model";
 import { Review } from "@gram/core/dist/data/reviews/Review";
 import Threat from "@gram/core/dist/data/threats/Threat";
-import secrets from "@gram/core/dist/secrets";
 import { linkToModel } from "@gram/core/dist/util/links";
 import {
   OctaneSystem,
@@ -23,21 +21,19 @@ interface ActionItem {
 }
 
 export async function createRiskOnThreatModelApprove(
+  jiraHost: string,
+  jiraToken: string,
+  jiraUser: string,
+  jiraPassword: string,
   dal: DataAccessLayer,
   systemProvider: OctaneSystemProvider
 ) {
-  const jiraToken = await secrets.getOrDefault("jira.token", undefined);
-  const jiraUser = await secrets.getOrDefault("jira.user", undefined);
-  const jiraPassword = await secrets.getOrDefault("jira.password", undefined);
-
   if (!(jiraToken || (jiraUser && jiraPassword))) {
     log.info(
       "Jira token or user/password not found. Skipping risk management."
     );
     return;
   }
-
-  const jiraHost = config.get<string>("jira.host");
 
   if (!jiraHost) {
     log.info("Jira host not configured. Skipping risk management");
@@ -122,6 +118,7 @@ export async function createRiskOnThreatModelApprove(
     }
 
     const issueId = await createRiskTicket(
+      jiraHost,
       jira,
       system,
       review.reviewedBy,
@@ -175,6 +172,7 @@ async function fetchModel(dal: DataAccessLayer, modelId: string) {
 }
 
 async function createRiskTicket(
+  jiraHost: string,
   jira: JiraApi,
   system: Partial<OctaneSystem>,
   reporterEmail: string,
@@ -226,9 +224,7 @@ async function createRiskTicket(
 
       // Originates from
       customfield_39937:
-        config.get<string>("jira.host").indexOf("staging") > -1
-          ? undefined
-          : [{ key: "RC-7088236" }],
+        jiraHost.indexOf("staging") > -1 ? undefined : [{ key: "RC-7088236" }],
 
       /* */
       // customfield_21980: -1,
@@ -271,14 +267,10 @@ async function createRiskTicket(
 
   log.debug("created web link", respRemoteLink);
 
-  log.info(
-    "url",
-    `https://${config.get<string>("jira.host")}/browse/${ticket.key}`
-  );
+  log.info("url", `https://${jiraHost}/browse/${ticket.key}`);
 
-  // //
-  //customfield_10091=399211
   await createRiskActions(
+    jiraHost,
     jira,
     actionItems,
     system,
@@ -286,9 +278,6 @@ async function createRiskTicket(
     reporterUsername
   );
 
-  //   console.log("Here is your risk ticket:");
-  //   console.log("https://jira.int.klarna.net/jira/browse/" + ticket.key);
-  //   console.log("Don't forget to mark Assessment Done!");
   return ticket.key;
 }
 
@@ -309,6 +298,7 @@ const residualLikelihoodMap = new Map([
 ]);
 
 async function createRiskActions(
+  jiraHost: string,
   jira: JiraApi,
   actionItems: ActionItem[],
   system: Partial<OctaneSystem>,
@@ -339,7 +329,7 @@ async function createRiskActions(
           // <option selected="selected" value="39921">Major</option>
           // <option value="39922">Critical</option>
           customfield_10091:
-            config.get<string>("jira.host").indexOf("staging") > -1
+            jiraHost.indexOf("staging") > -1
               ? { id: "39172" }
               : { id: "39920" },
           assignee: { name: system?.team?.manager?.username },

@@ -29,11 +29,19 @@
   },
   "dependencies": {
     "@gram/aws": "^4.0.2",
+    "@gram/azure": "^3.0.0",
+    "@gram/cncf": "^3.0.0",
     "@gram/core": "^4.0.2",
+    "@gram/klarna": "^3.0.0",
+    "@gram/kubernetes": "^3.0.0",
+    "@gram/ldap": "^4.0.2",
     "@gram/magiclink": "^4.0.2",
+    "@gram/oidc": "^4.0.2",
     "@gram/svgporn": "^4.0.2",
     "@gram/threatlib": "^4.0.2",
-    "dotenv": "^16.3.1"
+    "@gram/threatsaurus": "^3.0.0",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.2"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",

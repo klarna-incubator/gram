@@ -1,18 +1,19 @@
 import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate";
-import { generalReviewNotificationVariables } from "./util";
+import { CoolestTeam, generalReviewNotificationVariables } from "./util";
 
 const key = "review-meeting-requested-reminder";
 
-const subject = `Reminder to schedule threat model for {{model.name}}`;
+const subject = `Reminder to schedule threat model meeting for {{model.name}}`;
 
-// Can try to update this template later to automagically create the construction method by using a Template literal
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
 const template = `
-Hi {{requester.name}}!  
+Hi {{owner.name}}{{#if ownerIsNotRequester}} and {{requester.name}}{{/if}}!  
 
-We would like to remind you that you still have to schedule a threat model for {{model.name}} and it has been more than 60 days since the meeting was requested ({{review.meetingRequestedAt}}).
-To get approval, please schedule a review session using the link below. 
-Please use the cancel review option on the left side panel if you want to cancel the review.
+{{#if missingTeamEmail}}{{missingTeamEmail}}{{/if}}
+
+We would like to remind you that you still have to schedule a threat model meeting for {{model.name}} and 
+it has been more than 60 days since the meeting was requested ({{review.meetingRequestedAt}}). 
+
+If you no longer need the review, please use the cancel review option on the left side panel.
 
 You can access and review the threat model here: {{model.link}}
 
@@ -24,6 +25,14 @@ You can access and review the threat model here: {{model.link}}
 
 {{/if}}
 
+{{#if reviewIsSecDev}}
+Please schedule a session by selecting a slot on this calendar: 
+https://calendar.google.com/calendar/selfsched?sstoken=UUdBOVg2MXlrZ0k1fGRlZmF1bHR8YTQ2YzFlODRlMDk1OGI0YTkxYjY2ZjE5MzljNWQxYzU  
+{{/if}}
+
+---
+    
+Please reach out to the Secure Development team at  #team-ea-secure-development with any further questions or feedback about this process. 
 `.trim();
 
 export const EmailReviewMeetingRequestedReminder = () =>
@@ -34,10 +43,16 @@ export const EmailReviewMeetingRequestedReminder = () =>
     async (dal, { review }) => {
       const variables = await generalReviewNotificationVariables(dal, review);
       const recipients = [variables.requester];
-
+      if (variables.owner.email && variables.owner.email !== "UNDEFINED") {
+        recipients.push(variables.owner);
+      }
       return {
-        cc: [],
+        cc: [CoolestTeam],
         recipients,
+        ownerIsNotRequester: variables.requester.email != variables.owner.email,
+        reviewIsSecDev:
+          review?.reviewedBy ===
+          (await dal.reviewerHandler.getFallbackReviewer({}))?.mail,
         ...variables,
       };
     }

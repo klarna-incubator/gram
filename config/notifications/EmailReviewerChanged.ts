@@ -43,6 +43,10 @@ export const EmailReviewerChanged = () =>
         }
       }
 
+      if (variables.owner.email && variables.owner.email !== "UNDEFINED") {
+        cc.push(variables.owner);
+      }
+
       return {
         cc,
         recipients,

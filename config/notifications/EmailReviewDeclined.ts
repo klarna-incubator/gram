@@ -13,7 +13,8 @@ Hi {{requester.name}}!
 
 {{previousReviewer.name}} has declined your request to review the threat model of {{model.name}}. 
 
-It has been automatically re-assigned to {{reviewer.name}}
+It has been automatically re-assigned to {{reviewer.name}}, however if you have a specific DSL or Security Champion 
+who you would like to review your model, feel free to assign it to them instead.
  `.trim();
 
 export const EmailReviewDeclined = () =>

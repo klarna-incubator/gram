@@ -1,5 +1,6 @@
+import cron from "node-cron";
 import { AWSAssets, AWSComponentClasses } from "@gram/aws";
-import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
+import { Role } from "@gram/core/dist/auth/models/Role";
 import { User } from "@gram/core/dist/auth/models/User";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
 import type {
@@ -7,19 +8,29 @@ import type {
   Providers,
 } from "@gram/core/dist/config/GramConfiguration";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal";
-import System from "@gram/core/dist/data/systems/System";
 import {
-  MagicLinkEmail,
-  MagicLinkIdentityProvider,
-  MagicLinkMigrations,
-} from "@gram/magiclink";
+  LDAPBasicAuthIdentityProvider,
+  LDAPCache,
+  LDAPGroupBasedAuthzProvider,
+  LDAPTeamProvider,
+  LDAPUserProvider,
+} from "@gram/ldap";
+import { OIDCIdentityProvider } from "@gram/oidc";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatLibSuggestionProvider } from "@gram/threatlib";
+import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings";
 import defaultNotifications from "./notifications";
-import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider";
-import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider";
-import { StaticSystemProvider } from "./providers/static/StaticSystemProvider";
-import { StaticUserProvider } from "./providers/static/StaticUserProvider";
+import {
+  KlarnaReviewerProvider,
+  OctaneSystemProvider,
+  NGOVSystemContextProvider,
+  HSFContextProvider,
+  KlarnaCronJob,
+} from "@gram/klarna";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
+
+const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
+const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -80,88 +91,174 @@ export const defaultConfig: GramConfiguration = {
     },
   ],
 
-  additionalMigrations: [MagicLinkMigrations],
-
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {
-    const pluginPool = await dal.pluginPool("magic-link");
-    const magicLink = new MagicLinkIdentityProvider(dal, pluginPool);
+    const oidc = new OIDCIdentityProvider(
+      "https://klarna-dev-admin.oktapreview.com/",
+      new EnvSecret("OIDC_CLIENT_ID"),
+      new EnvSecret("OIDC_CLIENT_SECRET"),
+      new EnvSecret("OIDC_SESSION_SECRET"),
+      "email"
+    );
 
-    const sampleUsers: User[] = [
-      {
-        name: "User",
-        sub: "user@localhost", // Must be the same as sub provided by IdentityProvider for authz to work
-        mail: "user@localhost",
+    const ldapSettings: LDAPClientSettings = {
+      clientOptions: {
+        url: "ldaps://ldap.klarna.net",
       },
-      {
-        name: "Reviewer",
-        sub: "reviewer@localhost",
-        mail: "reviewer@localhost",
+      bindOptions: {
+        bindDN: new EnvSecret("LDAP_BIND_DN"),
+        bindCredentials: new EnvSecret("LDAP_BIND_CREDENTIALS"),
       },
-      {
-        name: "Admin",
-        sub: "admin@localhost",
-        mail: "admin@localhost",
-      },
-    ];
-
-    const sampleReviewers: Reviewer[] = [
-      {
-        name: "Reviewer",
-        sub: "reviewer@localhost",
-        mail: "reviewer@localhost",
-        recommended: false,
-      },
-      {
-        name: "Admin",
-        sub: "admin@localhost",
-        mail: "admin@localhost",
-        recommended: false,
-      },
-    ];
-
-    const fallbackReviewer: Reviewer = {
-      name: "Security Team",
-      recommended: true,
-      sub: "security-team@localhost",
-      mail: "security-team@localhost",
-      slackUrl: "",
     };
 
-    const sampleSystems: System[] = [
-      new System(
-        "web",
-        "Website",
-        "Website",
-        [],
-        "The main website of the org"
-      ),
-      new System(
-        "order-api",
-        "Order API",
-        "Order API",
-        [],
-        "Backend API for receiving orders"
-      ),
-    ];
+    const ldap = new LDAPBasicAuthIdentityProvider(
+      ldapSettings,
+      (name) => `uid=${name},ou=People,dc=internal,dc=machines`
+    );
+
+    const ldapAuthz = new LDAPGroupBasedAuthzProvider({
+      ldapSettings,
+      groupAttribute: "memberOfGroupId",
+      groupToRoleMap: new Map([
+        ["access.1288598.stag.admins", Role.Admin],
+        ["domain.security.leads", Role.Admin],
+        ["access.1288598.stag.reviewers", Role.Reviewer],
+        ["security-champions", Role.Reviewer],
+        ["access.1288598.stag.users", Role.User],
+        ["access.1288598.stag.sso-prod", Role.User],
+      ]),
+      searchBase: LDAPUserSearchBase,
+      searchFilter: (sub) => {
+        return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
+      },
+    });
+
+    const ldapUserProvider = new LDAPUserProvider({
+      ldapSettings,
+      searchBase: LDAPUserSearchBase,
+      searchFilter: (sub) => {
+        return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
+      },
+      attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
+      attributesToUser: async (ldapUser) => {
+        const user: User = {
+          sub: ldapUser["mail"].toString(),
+          mail: ldapUser["mail"].toString(),
+          name: ldapUser["displayName"].toString(),
+        };
+        return user;
+      },
+    });
+
+    const ldapTeamProvider = new LDAPTeamProvider({
+      ldapSettings,
+      teamLookup: {
+        attributes: ["displayName", "klarnaProjectCode", "mail", "dn"],
+        attributesToTeam: async (ldapEntry) => ({
+          id: ldapEntry["klarnaProjectCode"].toString(),
+          name: ldapEntry["displayName"].toString(),
+          email: ldapEntry["mail"].toString(),
+        }),
+        searchBase: LDAPTeamSearchBase,
+        searchFilter: (teamIds) => {
+          return `(|${teamIds.map(
+            (teamId) => `(klarnaProjectCode=${teamId})`
+          )})`;
+        },
+      },
+      userLookup: {
+        searchBase: LDAPUserSearchBase,
+        searchFilter: (sub) => {
+          return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
+        },
+        teamAttribute: "klarnaProjectCode",
+      },
+    });
+
+    const systemProvider = new OctaneSystemProvider();
+
+    // Will used mocked data when supplied empty params
+    const hsfProvider = new HSFContextProvider("", "", "", "");
+
+    const ngovProvider = new NGOVSystemContextProvider(systemProvider);
+
+    const reviewerProvider = new KlarnaReviewerProvider(
+      dal,
+      systemProvider,
+      hsfProvider,
+      {
+        groupLookup: {
+          searchBase: LDAPUserSearchBase,
+          groupFilters: [
+            "(&(memberOfGroupId=access.secure-development)(kreditorEnabledUser=TRUE))",
+            "(&(memberOfGroupId=domain.security.leads)(kreditorEnabledUser=TRUE))",
+            "(&(memberOfGroupId=access.1288598.stag.reviewers)(kreditorEnabledUser=TRUE))",
+            "(&(memberOfGroupId=security-champions)(kreditorEnabledUser=TRUE))",
+          ],
+          attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
+          attributesToReviewer: async (ldapUser) => {
+            const user: Reviewer = {
+              sub: ldapUser["mail"].toString(),
+              mail: ldapUser["mail"].toString(),
+              name: ldapUser["displayName"].toString(),
+              recommended: false,
+            };
+            return user;
+          },
+        },
+        reviewerLookup: {
+          searchBase: LDAPUserSearchBase,
+          searchFilter: (sub) => {
+            return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
+          },
+          attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
+          attributesToReviewer: async (ldapUser) => {
+            const user: Reviewer = {
+              sub: ldapUser["mail"].toString(),
+              mail: ldapUser["mail"].toString(),
+              name: ldapUser["displayName"].toString(),
+              recommended: false,
+            };
+            return user;
+          },
+        },
+        ldapSettings,
+      }
+    );
+
+    // cron jobs
+    cron.schedule("0 6 * * *", async () => {
+      // runs every day at 06:00 AM
+      const cronJobs = new KlarnaCronJob(dal);
+      await cronJobs.sendRemindersForMeetingRequested();
+      await cronJobs.sendRemindersForRequested();
+      await cronJobs.reassignOverdueReviews();
+    });
+
+    cron.schedule("*/30 * * * *", async () => {
+      // runs every 30 minutes
+      await reviewerProvider.preloadReviewers();
+    });
+
+    cron.schedule("*/10 * * * *", async () => {
+      // runs every 30 minutes
+      systemProvider.loadSystems();
+    });
+
+    cron.schedule("*/30 * * * *", async () => LDAPCache.expire());
 
     return {
       assetFolders: [AWSAssets, SVGPornAssets],
       componentClasses: [...AWSComponentClasses, ...SVGPornComponentClasses],
-      identityProviders: [magicLink],
-      notificationTemplates: [MagicLinkEmail(), ...defaultNotifications],
-      reviewerProvider: new StaticReviewerProvider(
-        sampleReviewers,
-        fallbackReviewer
-      ),
-      authzProvider: new StaticAuthzProvider(
-        [sampleUsers[0].sub],
-        [sampleUsers[1].sub],
-        [sampleUsers[2].sub]
-      ),
-      userProvider: new StaticUserProvider(sampleUsers),
-      systemProvider: new StaticSystemProvider(sampleSystems),
+      identityProviders: [oidc, ldap],
+      notificationTemplates: [...defaultNotifications],
+      reviewerProvider,
+      systemProvider,
+      systemPropertyProviders: [ngovProvider],
+      authzProvider: ldapAuthz,
+      userProvider: ldapUserProvider,
+      teamProvider: ldapTeamProvider,
       suggestionSources: [new ThreatLibSuggestionProvider()],
     };
   },

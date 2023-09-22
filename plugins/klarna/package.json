@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@gram/core": "*",
+    "@gram/ldap": "^4.0.2",
     "hpagent": "^1.2.0",
     "jira-client": "^8.2.2",
     "ldapts": "^4.2.6",
