@@ -24,7 +24,7 @@ export class LDAPUserProvider implements UserProvider {
     const users = (
       await Promise.all(userIds.map(async (uid) => await this.getUser(uid)))
     ).filter((u) => u) as User[];
-    users.forEach((u) => log.info(u));
+    log.debug(users);
     return users;
   }
 
@@ -32,16 +32,20 @@ export class LDAPUserProvider implements UserProvider {
     const ldap = await connectLdapClient(this.settings.ldapSettings);
     const escapedEmail = escapeFilterValue(email);
 
-    const ldapUser = await ldapQueryOne(ldap, this.settings.searchBase, {
-      scope: "sub",
-      filter: this.settings.searchFilter(escapedEmail),
-      attributes: this.settings.attributes,
-    });
+    try {
+      const ldapUser = await ldapQueryOne(ldap, this.settings.searchBase, {
+        scope: "sub",
+        filter: this.settings.searchFilter(escapedEmail),
+        attributes: this.settings.attributes,
+      });
 
-    if (ldapUser === null) return null;
+      if (ldapUser === null) return null;
 
-    const user = await this.settings.attributesToUser(ldapUser);
-    return user;
+      const user = await this.settings.attributesToUser(ldapUser);
+      return user;
+    } finally {
+      await ldap.unbind();
+    }
   }
 
   key = "ldap";
