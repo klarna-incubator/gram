@@ -30,7 +30,7 @@
   "default": {
     "api_version": "v2",
     "minimum_instances": 1,
-    "container_size": "small",
+    "container_size": "xsmall",
     "canary_promotion": {
       "strategy": "CONFIRM",
       "timeout": 1200
