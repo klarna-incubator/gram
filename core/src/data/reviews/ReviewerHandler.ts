@@ -56,6 +56,10 @@ export class ReviewerHandler {
   ): Promise<Reviewer | null> {
     const reviewers = await this.lookup(ctx, [userId]);
     if (!reviewers || reviewers.length === 0) {
+      const fallback = await this.getFallbackReviewer(ctx);
+      if (fallback?.sub === userId) {
+        return fallback;
+      }
       return null;
     }
     return reviewers[0];
