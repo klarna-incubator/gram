@@ -13,6 +13,7 @@ import {
   SystemPropertyValue,
 } from "@gram/core/dist/data/system-property/types";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { ProxyAgent } from "proxy-agent";
 
 const log = getLogger("HSFContextProvider");
 
@@ -59,9 +60,7 @@ async function assumeRole(
       httpOptions: {
         // STS is not whitelisted by C2C, so we need to use the proxy to access it.
         // https://stash.int.klarna.net/projects/DEVSERV/repos/docs/pull-requests/1985/diff#content/documentation/c2c-platform/05_explanations/c2c_networking.md
-        agent: process.env.HTTP_PROXY
-          ? proxy(process.env.HTTP_PROXY)
-          : undefined,
+        agent: process.env.HTTP_PROXY ? new ProxyAgent() : undefined,
       },
     },
     masterCredentials,
