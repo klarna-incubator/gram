@@ -49,7 +49,6 @@
     "lint-fix": "prettier -l src/ --write",
     "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
     "test": "jest --silent",
-    "snyk": "snyk test",
     "jest": "jest",
     "eject": "react-scripts eject"
   },

@@ -13,8 +13,7 @@
     "clean": "rimraf ./dist",
     "compile": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
-    "lint-fix": "prettier -l . --write",
-    "snyk": "snyk test"
+    "lint-fix": "prettier -l . --write"
   },
   "author": "",
   "license": "ISC",

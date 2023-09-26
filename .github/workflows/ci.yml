@@ -1,4 +1,4 @@
-name: API CI
+name: CI
 
 on:
   push:
@@ -7,10 +7,6 @@ on:
       - "master"
       - "ci"
   workflow_dispatch:
-
-# defaults:
-#   run:
-#     working-directory: api
 
 jobs:
   ci:
@@ -49,7 +45,3 @@ jobs:
       - name: "Lint"
         shell: bash
         run: npm run lint
-
-      - name: "Snyk"
-        shell: bash
-        run: npm run snyk
