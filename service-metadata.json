@@ -89,6 +89,7 @@
       "EMAIL_PASSWORD": { "secret": "/notifications.providers.email.password" },
       "AUTH_LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
       "AUTH_LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
+      "JIRA_HOST": { "value": "jira.int.klarna.net/jira" },
       "JIRA_USER": { "secret": "/jira.user" },
       "JIRA_PASSWORD": { "secret": "/jira.password" },
       "AUTH_GOOGLE_CLIENT_SECRET": { "secret": "/auth.google.client_secret" },

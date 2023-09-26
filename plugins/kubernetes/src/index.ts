@@ -12,9 +12,11 @@ const toComponentClass = (c: any): ComponentClass => {
   };
 };
 
-export const CNCFAssets: AssetFolder = {
+export const KubernetesAssets: AssetFolder = {
   name: "kubernetes",
   folderPath: join(__dirname, "assets"),
 };
 
-export const CNCFComponentClasses = classes.map((c) => toComponentClass(c));
+export const KubernetesComponentClasses = classes.map((c) =>
+  toComponentClass(c)
+);

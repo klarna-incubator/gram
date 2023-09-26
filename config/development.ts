@@ -1,6 +1,7 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret";
 import { defaultConfig } from "./default";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 
 export const developmentConfig: GramConfiguration = {
   ...defaultConfig,
@@ -49,5 +50,17 @@ export const developmentConfig: GramConfiguration = {
       },
       simplified: true,
     },
+  },
+
+  async bootstrapProviders(dal) {
+    const providers = await defaultConfig.bootstrapProviders(dal);
+
+    const threatsaurus = new ThreatsaurusSuggestionSource(
+      "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+    );
+
+    providers.suggestionSources?.push(threatsaurus);
+
+    return providers;
   },
 };

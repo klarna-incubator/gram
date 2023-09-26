@@ -51,16 +51,15 @@ export async function generalReviewNotificationVariables(
   const [owner, reviewer, requester, fallbackReviewer] = await Promise.all([
     // Lookup Model Owner
     (async () => {
-      // TODO: restore this functionality
-      // if (system?.team?.accountability_code) {
-      //   const team = await getTeam(system.team.accountability_code);
-      //   if (team && team.email) {
-      //     return {
-      //       name: team.name,
-      //       email: team.email,
-      //     };
-      //   }
-      // }
+      if (system?.owners && system.owners?.length > 0) {
+        const team = await dal.teamHandler.getTeam({}, system.owners[0].id);
+        if (team && team.email) {
+          return {
+            name: team.name,
+            email: team.email,
+          };
+        }
+      }
       const employee = await dal.userHandler.lookupUser({}, model.createdBy);
       return {
         name: employee?.name || "Model Owner",

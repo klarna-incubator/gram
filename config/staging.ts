@@ -1,6 +1,7 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
 import { defaultConfig } from "./default";
 import { HSFContextProvider } from "@gram/klarna";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 
 export const stagingConfig: GramConfiguration = {
   ...defaultConfig,
@@ -30,6 +31,12 @@ export const stagingConfig: GramConfiguration = {
     );
 
     providers.systemPropertyProviders?.push(hsfProvider);
+
+    const threatsaurus = new ThreatsaurusSuggestionSource(
+      "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+    );
+
+    providers.suggestionSources?.push(threatsaurus);
 
     return providers;
   },

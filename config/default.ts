@@ -26,11 +26,27 @@ import {
   NGOVSystemContextProvider,
   HSFContextProvider,
   KlarnaCronJob,
+  KlarnaAssets,
+  KlarnaComponentClasses,
+  hookIntoReviewApproval,
 } from "@gram/klarna";
 import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
+import { AzureComponentClasses, AzureAssets } from "@gram/azure";
+import { CNCFComponentClasses, CNCFAssets } from "@gram/cncf";
+import { KubernetesComponentClasses, KubernetesAssets } from "@gram/kubernetes";
 
-const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
-const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
+export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
+export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
+
+export const ldapSettings: LDAPClientSettings = {
+  clientOptions: {
+    url: "ldaps://ldap.klarna.net",
+  },
+  bindOptions: {
+    bindDN: new EnvSecret("LDAP_BIND_DN"),
+    bindCredentials: new EnvSecret("LDAP_BIND_CREDENTIALS"),
+  },
+};
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -101,16 +117,6 @@ export const defaultConfig: GramConfiguration = {
       new EnvSecret("OIDC_SESSION_SECRET"),
       "email"
     );
-
-    const ldapSettings: LDAPClientSettings = {
-      clientOptions: {
-        url: "ldaps://ldap.klarna.net",
-      },
-      bindOptions: {
-        bindDN: new EnvSecret("LDAP_BIND_DN"),
-        bindCredentials: new EnvSecret("LDAP_BIND_CREDENTIALS"),
-      },
-    };
 
     const ldap = new LDAPBasicAuthIdentityProvider(
       ldapSettings,
@@ -227,6 +233,16 @@ export const defaultConfig: GramConfiguration = {
       }
     );
 
+    // Hook for Reviews to create Risk Tickets
+    await hookIntoReviewApproval(
+      dal,
+      systemProvider,
+      new EnvSecret("JIRA_HOST"),
+      new EnvSecret("JIRA_TOKEN"),
+      new EnvSecret("JIRA_USER"),
+      new EnvSecret("JIRA_PASSWORD")
+    );
+
     // cron jobs
     cron.schedule("0 6 * * *", async () => {
       // runs every day at 06:00 AM
@@ -249,8 +265,22 @@ export const defaultConfig: GramConfiguration = {
     cron.schedule("*/30 * * * *", async () => LDAPCache.expire());
 
     return {
-      assetFolders: [AWSAssets, SVGPornAssets],
-      componentClasses: [...AWSComponentClasses, ...SVGPornComponentClasses],
+      assetFolders: [
+        KlarnaAssets,
+        AWSAssets,
+        SVGPornAssets,
+        AzureAssets,
+        CNCFAssets,
+        KubernetesAssets,
+      ],
+      componentClasses: [
+        ...KlarnaComponentClasses,
+        ...AWSComponentClasses,
+        ...SVGPornComponentClasses,
+        ...AzureComponentClasses,
+        ...CNCFComponentClasses,
+        ...KubernetesComponentClasses,
+      ],
       identityProviders: [oidc, ldap],
       notificationTemplates: [...defaultNotifications],
       reviewerProvider,

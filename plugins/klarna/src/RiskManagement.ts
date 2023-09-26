@@ -1,5 +1,3 @@
-import JiraApi from "jira-client";
-import { getLogger } from "log4js";
 import Control from "@gram/core/dist/data/controls/Control";
 import { DataAccessLayer } from "@gram/core/dist/data/dal";
 import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
@@ -7,10 +5,13 @@ import { Component } from "@gram/core/dist/data/models/Model";
 import { Review } from "@gram/core/dist/data/reviews/Review";
 import Threat from "@gram/core/dist/data/threats/Threat";
 import { linkToModel } from "@gram/core/dist/util/links";
+import JiraApi from "jira-client";
+import { getLogger } from "log4js";
 import {
   OctaneSystem,
   OctaneSystemProvider,
 } from "./system/OctaneSystemProvider";
+import { Secret } from "@gram/core/dist/config/Secret";
 
 const log = getLogger("RiskManagement");
 
@@ -20,13 +21,34 @@ interface ActionItem {
   controls: Control[];
 }
 
-export async function createRiskOnThreatModelApprove(
-  jiraHost: string,
-  jiraToken: string,
-  jiraUser: string,
-  jiraPassword: string,
+export async function hookIntoReviewApproval(
   dal: DataAccessLayer,
-  systemProvider: OctaneSystemProvider
+  octane: OctaneSystemProvider,
+  jiraHost: Secret,
+  jiraToken: Secret,
+  jiraUser: Secret,
+  jiraPassword: Secret
+) {
+  const riskMgmtListener = await createRiskOnThreatModelApprove(
+    dal,
+    octane,
+    await jiraHost.getValue(),
+    await jiraToken.getValue(),
+    await jiraUser.getValue(),
+    await jiraPassword.getValue()
+  );
+  if (riskMgmtListener) {
+    dal.reviewService.on("approved", riskMgmtListener);
+  }
+}
+
+async function createRiskOnThreatModelApprove(
+  dal: DataAccessLayer,
+  systemProvider: OctaneSystemProvider,
+  jiraHost?: string,
+  jiraToken?: string,
+  jiraUser?: string,
+  jiraPassword?: string
 ) {
   if (!(jiraToken || (jiraUser && jiraPassword))) {
     log.info(

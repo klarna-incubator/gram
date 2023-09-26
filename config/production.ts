@@ -1,6 +1,9 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
-import { defaultConfig } from "./default";
+import { LDAPUserSearchBase, defaultConfig, ldapSettings } from "./default";
 import { HSFContextProvider } from "@gram/klarna";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
+import { LDAPGroupBasedAuthzProvider } from "@gram/ldap";
+import { Role } from "@gram/core/dist/auth/models/Role";
 
 export const productionConfig: GramConfiguration = {
   ...defaultConfig,
@@ -30,6 +33,32 @@ export const productionConfig: GramConfiguration = {
     );
 
     providers.systemPropertyProviders?.push(hsfProvider);
+
+    const threatsaurus = new ThreatsaurusSuggestionSource(
+      "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+    );
+
+    providers.suggestionSources?.push(threatsaurus);
+
+    // Fix LDAP Access Groups used by production
+    const ldapAuthz = new LDAPGroupBasedAuthzProvider({
+      ldapSettings,
+      groupAttribute: "memberOfGroupId",
+      groupToRoleMap: new Map([
+        ["access.1288598.prod.admins", Role.Admin],
+        ["domain.security.leads", Role.Admin],
+        ["access.1288598.prod.reviewers", Role.Reviewer],
+        ["security-champions", Role.Reviewer],
+        ["access.1288598.prod.users", Role.User],
+        ["access.1288598.prod.sso-prod", Role.User],
+      ]),
+      searchBase: LDAPUserSearchBase,
+      searchFilter: (sub) => {
+        return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
+      },
+    });
+
+    providers.authzProvider = ldapAuthz;
 
     return providers;
   },
