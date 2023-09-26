@@ -18,13 +18,15 @@
   "dependencies": {
     "@gram/core": "*",
     "@gram/ldap": "^4.0.2",
+    "aws-sdk": "^2.1465.0",
     "hpagent": "^1.2.0",
     "jira-client": "^8.2.2",
     "jsprim": "^2.0.2",
     "ldapts": "^4.2.6",
     "openid-client": "^5.3.2",
     "postman-request": "^2.88.1-postman.33",
-    "precond": "^0.2.3"
+    "precond": "^0.2.3",
+    "proxy-agent": "^6.3.1"
   },
   "private": true,
   "devDependencies": {
