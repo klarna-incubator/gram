@@ -7,16 +7,18 @@ import {
   SuggestionSource,
 } from "@gram/core/dist/suggestions/models";
 import { fetchIndex, fetchTech, ThreatsaurusSuggestions } from "./client";
-import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
 
 /**
  * Example implementation, will be replaced later with one that fetches from external data
  */
-class ThreatsaurusSuggestionSource implements SuggestionSource {
+export class ThreatsaurusSuggestionSource implements SuggestionSource {
   slug = "threatsaurus";
   name = "Threatsaurus";
+
+  constructor(private baseUrl: string) {}
+
   async suggest(model: Model): Promise<SuggestionResult> {
-    const index = await fetchIndex();
+    const index = await fetchIndex(this.baseUrl);
     const supported = new Set(Object.keys(index).map((s) => s.toLowerCase()));
 
     // Extract all techs from the model, filter out to those supported by
@@ -37,7 +39,10 @@ class ThreatsaurusSuggestionSource implements SuggestionSource {
     const suggestionMap = new Map<string, ThreatsaurusSuggestions>();
     (
       await Promise.all(
-        Array.from(allTechs.keys()).map(async (t) => [t, await fetchTech(t)])
+        Array.from(allTechs.keys()).map(async (t) => [
+          t,
+          await fetchTech(this.baseUrl, t),
+        ])
       )
     )
       .filter(([_, b]) => !!b)
@@ -77,11 +82,5 @@ class ThreatsaurusSuggestionSource implements SuggestionSource {
     }
 
     return { controls: suggestedControls, threats: suggestedThreats };
-  }
-}
-
-export class ThreatsaurusPlugin implements Plugin {
-  async bootstrap(reg: PluginRegistrator): Promise<void> {
-    reg.registerSuggestionSource(new ThreatsaurusSuggestionSource());
   }
 }

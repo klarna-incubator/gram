@@ -13,7 +13,6 @@ jest.mock("react-router-dom", () => {
   }));
 });
 
-// TODO make this more reusable
 const wrappedRender = (login) =>
   render(
     <Router>
@@ -69,7 +68,6 @@ describe.skip("Login", () => {
 
     const { container } = wrappedRender();
     expect(mockUseNavigate.mock.calls[0][0]).toBe("/");
-    // TODO: Redirect test (mocked)
   });
 
   afterAll(() => {

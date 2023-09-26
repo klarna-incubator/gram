@@ -1,9 +1,9 @@
 import { RewriteFrames } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
-import config from "config";
 import { Express } from "express";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
+import { config } from "@gram/core/dist/config";
 
 const log = getLogger("sentry");
 
@@ -21,18 +21,18 @@ const ALLOWED_HEADERS = [
 ];
 
 export function hasSentry() {
-  return config.has("sentryDSN");
+  return !!config.sentryDSN;
 }
 
 export function initSentry(app: Express) {
-  const sentryDSN = config.has("sentryDSN") ? config.get("sentryDSN") : false;
+  const sentryDSN = config.sentryDSN;
   if (!sentryDSN) {
     return;
   }
 
   Sentry.init({
     release: `gram@${process.env.npm_package_version}`,
-    environment: config.util.getEnv("NODE_ENV"),
+    environment: process.env["NODE_ENV"],
     dsn: sentryDSN as string,
     integrations: [
       // Sentry.Integrations.Http is not here due to error when used with c2c proxy :/

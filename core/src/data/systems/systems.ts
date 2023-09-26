@@ -1,6 +1,6 @@
 import System from "./System";
 import { SystemProvider } from "./SystemProvider";
-import { RequestContext } from "../providers/RequestContext";
+import { DummySystemProvider } from "./DummySystemProvider";
 
 export enum SystemListFilter {
   Batch = "batch",
@@ -26,21 +26,7 @@ export interface SystemOwner {
   name: string;
 }
 
-class DefaultSystemProvider implements SystemProvider {
-  key = "default";
-  getSystem(ctx: RequestContext, systemId: string): Promise<System | null> {
-    throw new Error("Method not implemented.");
-  }
-  listSystems(
-    ctx: RequestContext,
-    input: SystemListInput,
-    pagination: { page: number; pageSize: number } = { page: 0, pageSize: 10 }
-  ): Promise<SystemListResult> {
-    throw new Error("Method not implemented.");
-  }
-}
-
-export let systemProvider: SystemProvider = new DefaultSystemProvider();
+export let systemProvider: SystemProvider = new DummySystemProvider();
 
 export function setSystemProvider(newSystemProvider: SystemProvider) {
   systemProvider = newSystemProvider;

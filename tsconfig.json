@@ -4,12 +4,15 @@
   "include": ["package.json", "src/**/*"],
 
   "compilerOptions": {
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
       "@gram/core/dist/*": ["./core/src/*"],
-      "@gram/*/dist": ["./plugins/*/src"]
+      "@gram/config/dist/*": ["./config/*"],
+      "@gram/api/dist/*": ["./api/src/*"],
+      "@gram/*": ["./plugins/*/src"]
     },
     "noEmit": true,
-    "types": ["jest"]
+    "types": ["jest"],
+    "esModuleInterop": true
   }
 }

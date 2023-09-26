@@ -6,7 +6,7 @@ import {
   SystemListInput,
   SystemListResult,
 } from "@gram/core/dist/data/systems/systems";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { isDevelopment } from "@gram/core/dist/util/env";
 import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
@@ -115,6 +115,10 @@ export class OctaneSystemProvider implements SystemProvider {
 
   systemsByTeam: Map<string, OctaneSystem[]> = new Map();
   systemsById: Map<string, OctaneSystem> = new Map();
+
+  constructor() {
+    this.loadSystems();
+  }
 
   async loadSystems() {
     let result: SystemResponse | null = null;

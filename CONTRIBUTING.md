@@ -21,5 +21,6 @@ Your contribution has to meet the following criteria:
 - Pull requests should implement a boxed change, meaning they should optimally not try to address many things at once.
 - All code and documentation must follow the style specified by
   the included configuration.
+- Commits should follow the [Conventional Commit convention](https://www.conventionalcommits.org/en/v1.0.0/).
 - New features and bug fixes must have accompanying unit tests.
 - All unit tests should pass.

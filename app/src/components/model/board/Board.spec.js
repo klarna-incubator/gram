@@ -209,7 +209,7 @@ describe("Board", () => {
         review: null,
       },
       id: "bc5a8039-60ef-4eca-904e-21bd0e782d2d",
-      systemId: "00000000-0000-0000-0000-000000000000",
+      systemId: null,
       version: "2021-09-23",
       data: {
         dataFlows: [

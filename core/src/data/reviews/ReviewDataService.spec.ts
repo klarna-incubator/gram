@@ -6,7 +6,6 @@ import { _deleteAllTheThings } from "../utils";
 import { Review, ReviewStatus } from "./Review";
 import { ReviewDataService } from "./ReviewDataService";
 import { createSampleModel } from "../../test-util/model";
-import { setReviewerProvider } from "./ReviewerProvider";
 import { testReviewerProvider } from "../../test-util/sampleReviewer";
 
 describe("ReviewDataService implementation", () => {
@@ -22,7 +21,7 @@ describe("ReviewDataService implementation", () => {
     data = new ReviewDataService(pool, dal);
     notificationQueue = jest.spyOn(dal.notificationService, "queue");
     await _deleteAllTheThings(pool);
-    setReviewerProvider(testReviewerProvider);
+    dal.reviewerHandler.setReviewerProvider(testReviewerProvider);
   });
 
   beforeEach(async () => {
@@ -72,6 +71,17 @@ describe("ReviewDataService implementation", () => {
     it("should return null value by default", async () => {
       const review = await data.getByModelId(randomUUID());
       expect(review).toBe(null);
+    });
+  });
+
+  describe("create", () => {
+    it("should set requested_at", async () => {
+      const review = new Review(modelId, "some-user", ReviewStatus.Requested);
+      review.note = "Good review";
+      await data.create(review);
+
+      const fetched = await data.getByModelId(modelId);
+      expect(fetched?.requestedAt).toBeTruthy();
     });
   });
 

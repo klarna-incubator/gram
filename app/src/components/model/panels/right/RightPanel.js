@@ -1,4 +1,4 @@
-import { Drawer, Toolbar, Box } from "@mui/material";
+import { Drawer, Toolbar, Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ToggleRightPanelButton } from "../../board/components/ToggleRightPanelButton";
@@ -71,57 +71,56 @@ export function RightPanel() {
   }, [selectedId]);
 
   return (
-    <div>
+    <>
       {rightPanelCollapsed === false && (
-        <>
-          <Box>
-            <ToggleRightPanelButton />
-            <Drawer
-              id="panel-right"
-              sx={{
+        <Box>
+          <ToggleRightPanelButton />
+          <Drawer
+            id="panel-right"
+            sx={{
+              width,
+              minWidth,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
                 width,
                 minWidth,
-                flexShrink: 0,
-                "& .MuiDrawer-paper": {
-                  width,
-                  minWidth,
-                  boxSizing: "border-box",
-                },
-              }}
-              variant="permanent"
-              anchor="right"
-            >
-              <Toolbar />
-              {(selectedComponent?.type === "ds" ||
-                selectedComponent?.type === "proc") && (
-                <>
-                  <RightTabsHeader tab={tab} setTab={setTab} />
-                  <TabPanel value={tab} index={TAB.SUGGESTIONS}>
-                    <SuggestionTab />
-                  </TabPanel>
-                  <TabPanel value={tab} index={TAB.THREATS}>
-                    <ThreatTab
-                      scrollToId={scrollToId}
-                      selectedId={selectedId}
-                    />
-                  </TabPanel>
-                  <TabPanel value={tab} index={TAB.CONTROLS}>
-                    <ControlTab
-                      threats={threats}
-                      controls={controls}
-                      controlsMap={controlsMap}
-                      modelId={modelId}
-                      componentId={selectedComponent?.id}
-                      scrollToId={scrollToId}
-                      selectedId={selectedId}
-                    />
-                  </TabPanel>
-                </>
-              )}
-            </Drawer>
-          </Box>
-        </>
+                boxSizing: "border-box",
+              },
+            }}
+            variant="permanent"
+            anchor="right"
+          >
+            <Toolbar />
+            {selectedComponent?.type === "ds" ||
+            selectedComponent?.type === "proc" ? (
+              <>
+                <RightTabsHeader tab={tab} setTab={setTab} />
+                <TabPanel value={tab} index={TAB.SUGGESTIONS}>
+                  <SuggestionTab />
+                </TabPanel>
+                <TabPanel value={tab} index={TAB.THREATS}>
+                  <ThreatTab scrollToId={scrollToId} selectedId={selectedId} />
+                </TabPanel>
+                <TabPanel value={tab} index={TAB.CONTROLS}>
+                  <ControlTab
+                    threats={threats}
+                    controls={controls}
+                    controlsMap={controlsMap}
+                    modelId={modelId}
+                    componentId={selectedComponent?.id}
+                    scrollToId={scrollToId}
+                    selectedId={selectedId}
+                  />
+                </TabPanel>
+              </>
+            ) : (
+              <Typography align="center" color={"#777"} marginTop={"50%"}>
+                No component selected
+              </Typography>
+            )}
+          </Drawer>
+        </Box>
       )}
-    </div>
+    </>
   );
 }

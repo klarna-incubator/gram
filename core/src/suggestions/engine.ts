@@ -1,5 +1,5 @@
 import { DataAccessLayer } from "../data/dal";
-import { getLogger } from "../logger";
+import { getLogger } from "log4js";
 import {
   EngineSuggestedResult,
   SourceSuggestedControl,
@@ -19,16 +19,18 @@ export class SuggestionEngine {
   // One timeout per ModelID: should be threadsafe because node runs singlethreaded ;))
   delayer = new Map<string, NodeJS.Timeout>();
 
-  constructor(private dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer, public noListen: boolean = false) {
     dal.modelService.on("updated-for", ({ modelId }) => {
-      this.log.debug(`model ${modelId} was updated via api`);
-      // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
-      const timeout = this.delayer.get(modelId);
-      if (timeout) clearTimeout(timeout);
-      this.delayer.set(
-        modelId,
-        setTimeout(() => this.work(modelId), SUGGESTION_DELAY)
-      );
+      if (!this.noListen) {
+        this.log.debug(`model ${modelId} was updated via api`);
+        // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
+        const timeout = this.delayer.get(modelId);
+        if (timeout) clearTimeout(timeout);
+        this.delayer.set(
+          modelId,
+          setTimeout(() => this.work(modelId), SUGGESTION_DELAY)
+        );
+      }
     });
   }
 

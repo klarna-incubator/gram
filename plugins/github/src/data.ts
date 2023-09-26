@@ -1,12 +1,10 @@
 import { createDb, migrate } from "postgres-migrations";
 import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { getLogger } from "@gram/core/dist/logger";
-import secrets from "@gram/core/dist/secrets";
+import { getLogger } from "log4js";
+import { config } from "@gram/core/src/config";
 
 export async function getDatabaseName() {
-  const regularDatabase = (await secrets.get(
-    "data._providers.postgres.database"
-  )) as string;
+  const regularDatabase = (await config.postgres.database.getValue()) as string;
   const databaseName = regularDatabase + "_github";
   return databaseName;
 }
@@ -15,7 +13,7 @@ export async function additionalMigrations() {
   const log = getLogger("gh-migrate");
 
   const databaseName = await getDatabaseName();
-  const host = (await secrets.get("data._providers.postgres.host")) as string;
+  const host = (await config.postgres.host.getValue()) as string;
 
   log.info(
     `Starting migration for ${process.env.NODE_ENV} (${host} - ${databaseName})`

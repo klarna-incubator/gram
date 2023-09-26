@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { Pool, QueryResult } from "pg";
-import { getLogger } from "../../logger";
+import { getLogger } from "log4js";
 import { EngineSuggestedResult, SuggestionID } from "../../suggestions/models";
 import Control from "../controls/Control";
 import { convertToControl } from "../controls/ControlDataService";

@@ -1,4 +1,4 @@
-import { getLogger } from "../../logger";
+import { getLogger } from "log4js";
 import { RequestContext } from "../providers/RequestContext";
 import { SystemProperty, SystemPropertyValue } from "./types";
 import { SystemPropertyProvider } from "./SystemPropertyProvider";

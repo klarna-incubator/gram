@@ -17,5 +17,6 @@
   "dependencies": {
     "@gram/core": "*"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {}
 }

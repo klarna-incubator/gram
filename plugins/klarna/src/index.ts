@@ -1,99 +1,27 @@
-import cron from "node-cron";
-import { join } from "path";
-import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
+import { AssetFolder } from "@gram/core/dist/config/AssetFolder";
 import { ComponentClass } from "@gram/core/dist/data/component-classes";
-import classes from "./classes.json";
-import { HSFContextProvider } from "./HSFContextProvider";
-import { KlarnaAuthzProvider } from "./KlarnaAuthzProvider";
-import { KlarnaCronJob } from "./KlarnaCronJob";
-import { KlarnaReviewerProvider } from "./KlarnaReviewerProvider";
-import { KlarnaUserProvider } from "./KlarnaUserProvider";
-import LDAPAuthProvider from "./ldap/LDAPAuthProvider";
-import { LDAPCache, testLdapClient } from "./ldap/lookup";
-import { EmailReviewApproved } from "./notifications/review-approved";
-import { EmailReviewMeetingRequested } from "./notifications/review-meeting-requested";
-import { EmailReviewMeetingRequestedReminder } from "./notifications/review-meeting-requested-reminder";
-import { EmailReviewRequested } from "./notifications/review-requested";
-import { EmailReviewRequestedReminder } from "./notifications/review-requested-reminder";
-import { EmailReviewerChanged } from "./notifications/reviewer-changed";
-import { createRiskOnThreatModelApprove } from "./RiskManagement";
-import { OctaneSystemProvider } from "./system/OctaneSystemProvider";
-import { SystemContextProvider } from "./system/SystemContextProvider";
-import OktaAuthProvider from "./okta";
-import { EmailReviewCanceled } from "./notifications/review-canceled";
-import { EmailReviewDeclined } from "./notifications/review-declined";
+import { join } from "path";
 
-const toComponentClass = (o: any): ComponentClass => {
+export { OctaneSystemProvider } from "./system/OctaneSystemProvider";
+export { NGOVSystemContextProvider } from "./system/NGOVSystemContextProvider";
+export { KlarnaReviewerProvider } from "./KlarnaReviewerProvider";
+export { HSFContextProvider } from "./HSFContextProvider";
+export { KlarnaCronJob } from "./KlarnaCronJob";
+export { hookIntoReviewApproval } from "./RiskManagement";
+import classes from "./classes.json";
+
+export const KlarnaAssets: AssetFolder = {
+  name: "klarna",
+  folderPath: join(__dirname, "assets"),
+};
+
+const toComponentClass = (c: any): ComponentClass => {
   return {
-    id: o.id,
-    name: o.name,
-    icon: o.icon,
-    componentType: o.componentType,
+    id: c.id,
+    name: c.name,
+    icon: c.icon,
+    componentType: c.componentType,
   };
 };
 
-const SYSTEM_RELOAD_INTERVAL_MS = 10 * 60 * 1000;
-const CACHE_EXPIRY_INTERVAL_MS = 5 * 60 * 1000;
-
-export default class KlarnaPack implements Plugin {
-  async bootstrap(reg: PluginRegistrator): Promise<void> {
-    await testLdapClient();
-
-    // Register stuff
-    reg.registerAssets("klarna", join(__dirname, "assets"));
-    const octane = new OctaneSystemProvider();
-    octane.loadSystems();
-    reg.setSystemProvider(octane);
-    const hsf = new HSFContextProvider();
-    reg.registerSystemPropertyProvider(hsf);
-    reg.registerSystemPropertyProvider(new SystemContextProvider(octane));
-    reg.registerComponentClasses(classes.map((logo) => toComponentClass(logo)));
-    reg.registerNotificationTemplates([
-      EmailReviewApproved(octane),
-      EmailReviewMeetingRequested(octane),
-      EmailReviewMeetingRequestedReminder(octane),
-      EmailReviewRequested(octane),
-      EmailReviewerChanged(octane),
-      EmailReviewRequestedReminder(octane),
-      EmailReviewCanceled(octane),
-      EmailReviewDeclined(octane),
-    ]);
-    reg.registerAuthProvider(new LDAPAuthProvider());
-    reg.registerAuthProvider(new OktaAuthProvider());
-    reg.setAuthzProvider(new KlarnaAuthzProvider(reg.dal, octane));
-    reg.setUserProvider(new KlarnaUserProvider());
-
-    const reviewerProvider = new KlarnaReviewerProvider(reg.dal, octane, hsf);
-    reg.setReviewerProvider(reviewerProvider);
-    reg.dal.reviewService.on("updated-for", ({ modelId }) =>
-      reviewerProvider.onReviewUpdated(modelId)
-    );
-
-    const riskMgmtListener = await createRiskOnThreatModelApprove(
-      reg.dal,
-      octane
-    );
-    if (riskMgmtListener) {
-      reg.dal.reviewService.on("approved", riskMgmtListener);
-    }
-
-    setInterval(() => octane.loadSystems(), SYSTEM_RELOAD_INTERVAL_MS);
-    setInterval(() => LDAPCache.expire(), CACHE_EXPIRY_INTERVAL_MS);
-
-    // cron jobs
-    cron.schedule("0 6 * * *", async () => {
-      // runs every day at 06:00 AM
-      const cronJobs = new KlarnaCronJob(reg.dal);
-      await cronJobs.sendRemindersForMeetingRequested();
-      await cronJobs.sendRemindersForRequested();
-      await cronJobs.reassignOverdueReviews();
-    });
-
-    cron.schedule("*/30 * * * *", async () => {
-      // runs every 30 minutes
-      await reviewerProvider.loadDSL();
-      await reviewerProvider.loadSecDev();
-      await reviewerProvider.loadReviewers();
-    });
-  }
-}
+export const KlarnaComponentClasses = classes.map((c) => toComponentClass(c));

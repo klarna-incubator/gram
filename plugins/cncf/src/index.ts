@@ -1,11 +1,20 @@
-import { join } from "path";
-import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
-import { isComponentClass } from "@gram/core/dist/data/component-classes";
+import { AssetFolder } from "@gram/core/dist/config/AssetFolder";
+import { ComponentClass } from "@gram/core/dist/data/component-classes";
+import { join } from "node:path";
 import classes from "./classes.json";
 
-export default class CNCFPack implements Plugin {
-  async bootstrap(reg: PluginRegistrator): Promise<void> {
-    reg.registerAssets("cncf", join(__dirname, "assets"));
-    reg.registerComponentClasses((classes as any[]).filter(isComponentClass));
-  }
-}
+const toComponentClass = (c: any): ComponentClass => {
+  return {
+    id: c.id,
+    name: c.name,
+    icon: c.icon,
+    componentType: c.componentType,
+  };
+};
+
+export const CNCFAssets: AssetFolder = {
+  name: "cncf",
+  folderPath: join(__dirname, "assets"),
+};
+
+export const CNCFComponentClasses = classes.map((c) => toComponentClass(c));

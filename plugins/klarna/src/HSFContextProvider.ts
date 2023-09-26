@@ -1,12 +1,11 @@
 import { ChainableTemporaryCredentials, Credentials, S3, STS } from "aws-sdk";
 import { execSync } from "child_process";
-import config from "config";
 import fs from "fs";
 import proxy from "proxy-agent";
 import { uniqueId } from "lodash";
 import readline from "readline";
 import { Readable } from "stream";
-import { getLogger } from "@gram/core/dist/logger";
+import { getLogger } from "log4js";
 import { isDevelopment } from "@gram/core/dist/util/env";
 import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
 import {
@@ -17,17 +16,21 @@ import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
 
 const log = getLogger("HSFContextProvider");
 
-async function assumeRole(): Promise<Credentials> {
+async function assumeRole(
+  awsRole: string,
+  awsExternalId: string,
+  beCursed: boolean
+): Promise<Credentials> {
   const params: STS.AssumeRoleRequest = {
-    RoleArn: config.get("data._providers.hsf.awsRole") as string,
+    RoleArn: awsRole, //config.get("data._providers.hsf.awsRole") as string,
     RoleSessionName: `gram-hsf-access-${uniqueId(Date.now().toString())}`,
-    ExternalId: config.get("data._providers.hsf.awsExternalId") as string,
+    ExternalId: awsExternalId, //config.get("data._providers.hsf.awsExternalId") as string,
   };
 
   let masterCredentials: Credentials | undefined; // Credentials to inherit from
   if (
     isDevelopment() &&
-    config.get("data._providers.hsf.doCursedThing") === true
+    beCursed //config.get("data._providers.hsf.doCursedThing") === true
   ) {
     // Cursed workaround to assume role in a development environment. This uses the staging c2c container
     // to assume the role. Normally, you should not need to do this, and can use mocked data instead.
@@ -80,12 +83,17 @@ export class HSFContextProvider implements SystemPropertyProvider {
   hsfset: Set<string>;
   refreshInterval?: NodeJS.Timeout;
 
-  constructor() {
+  constructor(
+    hsfBucket: string,
+    hsfKey: string,
+    awsRole: string,
+    awsExternalId: string
+  ) {
     this.hsfset = new Set();
-    this.load();
+    this.load(hsfBucket, hsfKey, awsRole, awsExternalId);
     if (process.env.NODE_ENV !== "test") {
       this.refreshInterval = setInterval(
-        () => this.load(),
+        () => this.load(hsfBucket, hsfKey, awsRole, awsExternalId),
         HSF_REFRESH_TIME_MS
       );
     }
@@ -126,23 +134,21 @@ export class HSFContextProvider implements SystemPropertyProvider {
     return [item];
   }
 
-  async load() {
-    const configKeys = [
-      "data._providers.hsf.bucket",
-      "data._providers.hsf.key",
-      "data._providers.hsf.awsRole",
-      "data._providers.hsf.awsExternalId",
-    ];
-
+  async load(
+    hsfBucket: string,
+    hsfKey: string,
+    awsRole: string,
+    awsExternalId: string
+  ) {
     try {
       let stream: Readable;
-      if (configKeys.reduce((p, key) => p && config.has(key), true)) {
+      if (hsfBucket) {
         const s3Params = {
-          Bucket: config.get("data._providers.hsf.bucket") as string,
-          Key: config.get("data._providers.hsf.key") as string,
+          Bucket: hsfBucket,
+          Key: hsfKey,
         };
 
-        const credentials = await assumeRole();
+        const credentials = await assumeRole(awsRole, awsExternalId, false);
         const s3 = new S3({
           credentials,
           region: process.env.AWS_REGION,
