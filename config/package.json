@@ -35,7 +35,6 @@
     "@gram/klarna": "^3.0.0",
     "@gram/kubernetes": "^3.0.0",
     "@gram/ldap": "^4.0.2",
-    "@gram/magiclink": "^4.0.2",
     "@gram/oidc": "^4.0.2",
     "@gram/svgporn": "^4.0.2",
     "@gram/threatlib": "^4.0.2",
