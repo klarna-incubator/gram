@@ -12,7 +12,7 @@
     "lint-fix": "lerna run lint-fix",
     "start-frontend": "npm run -w app start",
     "start-backend": "npm run -w api start",
-    "docker-start": "NODE_ENV=$SERVICE_STAGE node core/dist/data/migrate.js && NODE_CONFIG_DIR=./config/ NODE_CONFIG_STRICT_MODE=true NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/dist/index.js"
+    "docker-start": "NODE_ENV=$SERVICE_STAGE SERVE_FRONTEND=yesplease node api/dist/index.js"
   },
   "repository": {
     "type": "git",
