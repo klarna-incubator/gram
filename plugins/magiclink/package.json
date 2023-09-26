@@ -11,7 +11,10 @@
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",
     "compile": "tsc -p tsconfig.build.json",
-    "migrate-database": "ts-node src/migrate.ts"
+    "migrate-database": "ts-node src/migrate.ts",
+    "lint": "prettier --check .",
+    "lint-fix": "prettier -l . --write",
+    "snyk": "snyk test"
   },
   "author": "",
   "license": "ISC",
