@@ -50,6 +50,6 @@ jobs:
         shell: bash
         run: npm run lint
 
-      # - name: "Snyk"
-      #   shell: bash
-      #   run: npm run snyk
+      - name: "Snyk"
+        shell: bash
+        run: npm run snyk
