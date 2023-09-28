@@ -1,9 +1,10 @@
 {
   "name": "@gram/threatsaurus",
   "version": "3.0.0",
+  "type": "module",
   "description": "Threatsaurus suggestions for Gram",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -15,8 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "*"
+    "@gram/core": "*",
+    "node-fetch": "^3.3.2"
   },
-  "private": true,
-  "devDependencies": {}
+  "private": true
 }

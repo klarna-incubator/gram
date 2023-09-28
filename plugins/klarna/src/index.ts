@@ -1,14 +1,17 @@
-import { AssetFolder } from "@gram/core/dist/config/AssetFolder";
+import { AssetFolder } from "@gram/core/dist/config/AssetFolder.js";
 import { ComponentClass } from "@gram/core/dist/data/component-classes";
 import { join } from "path";
 
-export { OctaneSystemProvider } from "./system/OctaneSystemProvider";
-export { NGOVSystemContextProvider } from "./system/NGOVSystemContextProvider";
-export { KlarnaReviewerProvider } from "./KlarnaReviewerProvider";
-export { HSFContextProvider } from "./HSFContextProvider";
-export { KlarnaCronJob } from "./KlarnaCronJob";
-export { hookIntoReviewApproval } from "./RiskManagement";
-import classes from "./classes.json";
+export { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
+export { NGOVSystemContextProvider } from "./system/NGOVSystemContextProvider.js";
+export { KlarnaReviewerProvider } from "./KlarnaReviewerProvider.js";
+export { HSFContextProvider } from "./HSFContextProvider.js";
+export { KlarnaCronJob } from "./KlarnaCronJob.js";
+export { hookIntoReviewApproval } from "./RiskManagement.js";
+import classes from "./classes.js";
+import * as url from "url";
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 export const KlarnaAssets: AssetFolder = {
   name: "klarna",

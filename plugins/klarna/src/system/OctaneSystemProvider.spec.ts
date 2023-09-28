@@ -1,5 +1,5 @@
-import { SystemListFilter } from "@gram/core/dist/data/systems/systems";
-import { OctaneSystemProvider } from "./OctaneSystemProvider";
+import { SystemListFilter } from "@gram/core/dist/data/systems/systems.js";
+import { OctaneSystemProvider } from "./OctaneSystemProvider.js";
 
 /**
  * These test against the actual Octane API

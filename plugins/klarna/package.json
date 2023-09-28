@@ -1,9 +1,10 @@
 {
   "name": "@gram/klarna",
   "version": "3.0.0",
+  "type": "module",
   "description": "Custom Gram logic for Klarna",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -11,7 +12,7 @@
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",
     "compile": "tsc -p tsconfig.build.json",
-    "test": "NODE_CONFIG_DIR=../../config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_CONFIG_DIR=../../config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
   },
   "author": "",
   "license": "ISC",
@@ -26,7 +27,8 @@
     "openid-client": "^5.3.2",
     "postman-request": "^2.88.1-postman.33",
     "precond": "^0.2.3",
-    "proxy-agent": "^6.3.1"
+    "proxy-agent": "^6.3.1",
+    "node-fetch": "^3.3.2"
   },
   "private": true,
   "devDependencies": {

@@ -1,34 +1,33 @@
-import { ChainableTemporaryCredentials, Credentials, S3, STS } from "aws-sdk";
+import aws from "aws-sdk";
 import { execSync } from "child_process";
 import fs from "fs";
-import proxy from "proxy-agent";
-import { uniqueId } from "lodash";
+import _ from "lodash";
 import readline from "readline";
 import { Readable } from "stream";
-import { getLogger } from "log4js";
-import { isDevelopment } from "@gram/core/dist/util/env";
-import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
+import log4js from "log4js";
+import { isDevelopment } from "@gram/core/dist/util/env.js";
+import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider.js";
 import {
   SystemProperty,
   SystemPropertyValue,
-} from "@gram/core/dist/data/system-property/types";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+} from "@gram/core/dist/data/system-property/types.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { ProxyAgent } from "proxy-agent";
 
-const log = getLogger("HSFContextProvider");
+const log = log4js.getLogger("HSFContextProvider");
 
 async function assumeRole(
   awsRole: string,
   awsExternalId: string,
   beCursed: boolean
-): Promise<Credentials> {
-  const params: STS.AssumeRoleRequest = {
+): Promise<aws.Credentials> {
+  const params: aws.STS.AssumeRoleRequest = {
     RoleArn: awsRole, //config.get("data._providers.hsf.awsRole") as string,
-    RoleSessionName: `gram-hsf-access-${uniqueId(Date.now().toString())}`,
+    RoleSessionName: `gram-hsf-access-${_.uniqueId(Date.now().toString())}`,
     ExternalId: awsExternalId, //config.get("data._providers.hsf.awsExternalId") as string,
   };
 
-  let masterCredentials: Credentials | undefined; // Credentials to inherit from
+  let masterCredentials: aws.Credentials | undefined; // Credentials to inherit from
   if (
     isDevelopment() &&
     beCursed //config.get("data._providers.hsf.doCursedThing") === true
@@ -46,14 +45,14 @@ async function assumeRole(
     let res = execSync(cmd).toString();
     res = res.split("\n").slice(1).join("\n");
     const jsoned = JSON.parse(res);
-    masterCredentials = new Credentials({
+    masterCredentials = new aws.Credentials({
       accessKeyId: jsoned.AccessKeyId,
       secretAccessKey: jsoned.SecretAccessKey,
       sessionToken: jsoned.Token,
     });
   }
   // Assume role the normal way. This should work from C2C.
-  const creds = new ChainableTemporaryCredentials({
+  const creds = new aws.ChainableTemporaryCredentials({
     params,
     stsConfig: {
       region: process.env.AWS_REGION,
@@ -148,7 +147,7 @@ export class HSFContextProvider implements SystemPropertyProvider {
         };
 
         const credentials = await assumeRole(awsRole, awsExternalId, false);
-        const s3 = new S3({
+        const s3 = new aws.S3({
           credentials,
           region: process.env.AWS_REGION,
         });

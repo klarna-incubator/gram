@@ -1,12 +1,12 @@
-import { ComponentClass } from "@gram/core/dist//data/component-classes";
-import Model from "@gram/core/dist/data/models/Model";
+import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js";
+import Model from "@gram/core/dist/data/models/Model.js";
 import {
   SourceSuggestedControl,
   SourceSuggestedThreat,
   SuggestionResult,
   SuggestionSource,
-} from "@gram/core/dist/suggestions/models";
-import { fetchIndex, fetchTech, ThreatsaurusSuggestions } from "./client";
+} from "@gram/core/dist/suggestions/models.js";
+import { fetchIndex, fetchTech, ThreatsaurusSuggestions } from "./client.js";
 
 /**
  * Example implementation, will be replaced later with one that fetches from external data

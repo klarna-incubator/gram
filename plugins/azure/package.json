@@ -1,9 +1,10 @@
 {
   "name": "@gram/azure",
   "version": "3.0.0",
+  "type": "module",
   "description": "Azure icons for Gram",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],

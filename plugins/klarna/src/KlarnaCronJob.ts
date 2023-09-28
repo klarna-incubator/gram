@@ -1,8 +1,8 @@
-import { getLogger } from "log4js";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService";
-import { fallbackReviewer } from "./KlarnaReviewerProvider";
+import log4js from "log4js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService.js";
+import { fallbackReviewer } from "./KlarnaReviewerProvider.js";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;
 const REQUESTED_REMIND_AFTER_X_DAYS = 14;
@@ -15,7 +15,7 @@ function differenceInDays(dateToCompare: Date) {
   return diffDays;
 }
 
-const log = getLogger("klarnaCronJob");
+const log = log4js.getLogger("klarnaCronJob");
 
 export class KlarnaCronJob {
   constructor(private dal: DataAccessLayer) {}

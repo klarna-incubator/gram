@@ -1,20 +1,20 @@
-import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import {
   LDAPGroupBasedReviewerProvider,
   connectLdapClient,
   escapeFilterValue,
   ldapQuery,
 } from "@gram/ldap";
-import { LDAPGroupBasedReviewerProviderSettings } from "@gram/ldap/dist/LDAPGroupBasedReviewerProvider";
-import { getLogger } from "log4js";
-import { HSFContextProvider } from "./HSFContextProvider";
-import { getDomainMembers } from "./ldap";
-import { OctaneSystemProvider } from "./system/OctaneSystemProvider";
+import { LDAPGroupBasedReviewerProviderSettings } from "@gram/ldap/dist/LDAPGroupBasedReviewerProvider.js";
+import log4js from "log4js";
+import { HSFContextProvider } from "./HSFContextProvider.js";
+import { getDomainMembers } from "./ldap.js";
+import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
 
-const log = getLogger("KlarnaReviewerProvider");
+const log = log4js.getLogger("KlarnaReviewerProvider");
 
 const secdevCalendarLink =
   "https://calendar.google.com/calendar/u/0/selfsched?sstoken=UUdBOVg2MXlrZ0k1fGRlZmF1bHR8YTQ2YzFlODRlMDk1OGI0YTkxYjY2ZjE5MzljNWQxYzU";

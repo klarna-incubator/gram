@@ -1,19 +1,19 @@
-import Control from "@gram/core/dist/data/controls/Control";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
-import { Component } from "@gram/core/dist/data/models/Model";
-import { Review } from "@gram/core/dist/data/reviews/Review";
-import Threat from "@gram/core/dist/data/threats/Threat";
-import { linkToModel } from "@gram/core/dist/util/links";
+import Control from "@gram/core/dist/data/controls/Control.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation.js";
+import { Component } from "@gram/core/dist/data/models/Model.js";
+import { Review } from "@gram/core/dist/data/reviews/Review.js";
+import Threat from "@gram/core/dist/data/threats/Threat.js";
+import { linkToModel } from "@gram/core/dist/util/links.js";
 import JiraApi from "jira-client";
-import { getLogger } from "log4js";
+import log4js from "log4js";
 import {
   OctaneSystem,
   OctaneSystemProvider,
-} from "./system/OctaneSystemProvider";
-import { Secret } from "@gram/core/dist/config/Secret";
+} from "./system/OctaneSystemProvider.js";
+import { Secret } from "@gram/core/dist/config/Secret.js";
 
-const log = getLogger("RiskManagement");
+const log = log4js.getLogger("RiskManagement");
 
 interface ActionItem {
   threat: Threat;

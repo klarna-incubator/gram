@@ -11,7 +11,7 @@ interface ThreatsaurusIndex {
 export async function fetchIndex(baseUrl: string): Promise<ThreatsaurusIndex> {
   const url = `${baseUrl}/index.json`;
   const res = await fetch(url);
-  return await res.json();
+  return (await res.json()) as ThreatsaurusIndex;
 }
 
 export interface ThreatsaurusThreat {
@@ -65,5 +65,5 @@ export async function fetchTech(
   if (res.status !== 200) {
     return null;
   }
-  return await res.json();
+  return (await res.json()) as ThreatsaurusSuggestions;
 }

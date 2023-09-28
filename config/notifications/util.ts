@@ -3,7 +3,7 @@ import { Review } from "@gram/core/dist/data/reviews/Review.js";
 import { linkToModel } from "@gram/core/dist/util/links.js";
 import System from "@gram/core/dist/data/systems/System.js";
 import Handlebars from "handlebars";
-import { getLogger } from "log4js";
+import log4js from "log4js";
 
 const missingTeamEmailTemplate = Handlebars.compile(`
 --- 
@@ -16,7 +16,7 @@ https://jira.int.klarna.net/jira/plugins/servlet/desk/portal/44/create/1488
 ---
 `);
 
-const logger = getLogger("klarna-pack-notifications");
+const logger = log4js.getLogger("klarna-pack-notifications");
 
 const playbookLink =
   "https://docs.google.com/document/d/1fWJqeZBqP4GQfPpH7tCvvpdCa1ls261PO1dmYDlJrkw/edit?usp=sharing";

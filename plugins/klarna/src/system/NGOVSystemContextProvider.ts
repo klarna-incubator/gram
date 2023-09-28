@@ -1,13 +1,13 @@
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider.js";
 import {
   SystemProperty,
   SystemPropertyValue,
-} from "@gram/core/dist/data/system-property/types";
-import { getLogger } from "log4js";
-import { OctaneSystemProvider } from "./OctaneSystemProvider";
+} from "@gram/core/dist/data/system-property/types.js";
+import log4js from "log4js";
+import { OctaneSystemProvider } from "./OctaneSystemProvider.js";
 
-const log = getLogger("system-context-provider");
+const log = log4js.getLogger("system-context-provider");
 
 export class NGOVSystemContextProvider implements SystemPropertyProvider {
   id = "ngov";

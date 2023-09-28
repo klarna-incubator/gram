@@ -28,6 +28,7 @@
     "node": "18"
   },
   "dependencies": {
+    "@gram/aws": "*",
     "@gram/azure": "*",
     "@gram/cncf": "*",
     "@gram/klarna": "*",

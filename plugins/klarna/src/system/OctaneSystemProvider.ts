@@ -1,17 +1,17 @@
 import { readFileSync, writeFileSync } from "fs";
 import fetch from "node-fetch";
-import System from "@gram/core/dist/data/systems/System";
+import System from "@gram/core/dist/data/systems/System.js";
 import {
   SystemListFilter,
   SystemListInput,
   SystemListResult,
-} from "@gram/core/dist/data/systems/systems";
-import { getLogger } from "log4js";
-import { isDevelopment } from "@gram/core/dist/util/env";
-import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+} from "@gram/core/dist/data/systems/systems.js";
+import log4js from "log4js";
+import { isDevelopment } from "@gram/core/dist/util/env.js";
+import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 
-const log = getLogger("OktaneSystemProvider");
+const log = log4js.getLogger("OktaneSystemProvider");
 
 export interface OctaneSystem {
   key: string;
@@ -141,9 +141,12 @@ export class OctaneSystemProvider implements SystemProvider {
 
       if (!result) {
         const resp = await fetch("https://octane.klarna.net/api/systems");
-        result = await resp.json();
-        if (isDevelopment()) {
-          writeFileSync(DevelopmentLocalFileCache, JSON.stringify(result));
+
+        if (resp.status === 200) {
+          result = (await resp.json()) as SystemResponse;
+          if (isDevelopment()) {
+            writeFileSync(DevelopmentLocalFileCache, JSON.stringify(result));
+          }
         }
       }
     } catch (err: unknown) {
