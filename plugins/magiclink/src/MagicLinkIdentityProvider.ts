@@ -2,23 +2,23 @@ import {
   IdentityProvider,
   IdentityProviderParams,
   LoginResult,
-} from "@gram/core/dist/auth/IdentityProvider";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { linkTo } from "@gram/core/dist/util/links";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { Pool } from "pg";
-import { getLogger } from "log4js";
+} from "@gram/core/dist/auth/IdentityProvider.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { linkTo } from "@gram/core/dist/util/links.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import pg from "pg";
+import log4js from "log4js";
 import { randomUUID } from "crypto";
 
-const log = getLogger("MagicLinkIdentityProvider");
+const log = log4js.getLogger("MagicLinkIdentityProvider");
 
 export class MagicLinkIdentityProvider implements IdentityProvider {
   key: string = "magic-link";
 
   dal: DataAccessLayer;
-  pool: Pool;
+  pool: pg.Pool;
 
-  constructor(dal: DataAccessLayer, pluginPool: Pool) {
+  constructor(dal: DataAccessLayer, pluginPool: pg.Pool) {
     this.dal = dal;
     this.pool = pluginPool;
   }

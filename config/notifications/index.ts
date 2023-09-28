@@ -1,11 +1,11 @@
-import { EmailReviewApproved } from "./EmailReviewApproved";
-import { EmailReviewCanceled } from "./EmailReviewCanceled";
-import { EmailReviewDeclined } from "./EmailReviewDeclined";
-import { EmailReviewMeetingRequested } from "./EmailReviewMeetingRequested";
-import { EmailReviewMeetingRequestedReminder } from "./EmailReviewMeetingRequestedReminder";
-import { EmailReviewRequested } from "./EmailReviewRequested";
-import { EmailReviewRequestedReminder } from "./EmailReviewRequestedReminder";
-import { EmailReviewerChanged } from "./EmailReviewerChanged";
+import { EmailReviewApproved } from "./EmailReviewApproved.js";
+import { EmailReviewCanceled } from "./EmailReviewCanceled.js";
+import { EmailReviewDeclined } from "./EmailReviewDeclined.js";
+import { EmailReviewMeetingRequested } from "./EmailReviewMeetingRequested.js";
+import { EmailReviewMeetingRequestedReminder } from "./EmailReviewMeetingRequestedReminder.js";
+import { EmailReviewRequested } from "./EmailReviewRequested.js";
+import { EmailReviewRequestedReminder } from "./EmailReviewRequestedReminder.js";
+import { EmailReviewerChanged } from "./EmailReviewerChanged.js";
 
 export default [
   EmailReviewApproved(),

@@ -1,9 +1,9 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { systemProvider } from "@gram/core/dist/data/systems/systems";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("systems.list", () => {
   let app: any;

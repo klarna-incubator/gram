@@ -1,11 +1,11 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("Threats.create", () => {
   const validate = jest.spyOn(jwt, "validateToken");

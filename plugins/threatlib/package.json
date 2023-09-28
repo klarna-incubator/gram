@@ -1,17 +1,16 @@
 {
   "name": "@gram/threatlib",
+  "type": "module",
   "version": "4.0.2",
   "description": "",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "private": true,
   "scripts": {
-    "build": "npm run clean && npm run compile",
-    "clean": "rimraf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
     "lint-fix": "prettier -l . --write"
   },

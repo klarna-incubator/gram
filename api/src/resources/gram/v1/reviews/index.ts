@@ -1,14 +1,14 @@
-import get from "./get";
-import list from "./list";
-import create from "./create";
-import patch from "./patch";
-import cancel from "./cancel";
-import decline from "./decline";
-import approve from "./approve";
-import requestMeeting from "./requestMeeting";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import reviewers from "./reviewers";
-import changeReviewer from "./changeReviewer";
+import get from "./get.js";
+import list from "./list.js";
+import create from "./create.js";
+import patch from "./patch.js";
+import cancel from "./cancel.js";
+import decline from "./decline.js";
+import approve from "./approve.js";
+import requestMeeting from "./requestMeeting.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import reviewers from "./reviewers.js";
+import changeReviewer from "./changeReviewer.js";
 
 export default (dal: DataAccessLayer) => ({
   get: get(dal),

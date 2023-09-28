@@ -1,7 +1,7 @@
 import request from "supertest";
 import express from "express";
 
-import cache from "./cache";
+import cache from "./cache.js";
 
 describe("auth middleware", () => {
   let counter = 0;

@@ -1,9 +1,9 @@
-import { Pool } from "pg";
-import { PlaintextHandlebarsNotificationTemplate } from "../../notifications/NotificationTemplate";
-import { DataAccessLayer } from "../dal";
-import { createPostgresPool } from "../postgres";
-import { _deleteAllTheThings } from "../utils";
-import { NotificationDataService } from "./NotificationDataService";
+import pg from "pg";
+import { PlaintextHandlebarsNotificationTemplate } from "../../notifications/NotificationTemplate.js";
+import { DataAccessLayer } from "../dal.js";
+import { createPostgresPool } from "../postgres.js";
+import { _deleteAllTheThings } from "../utils.js";
+import { NotificationDataService } from "./NotificationDataService.js";
 
 const sampleNotification = new PlaintextHandlebarsNotificationTemplate(
   "review-approved",
@@ -29,7 +29,7 @@ const sampleNotification = new PlaintextHandlebarsNotificationTemplate(
 );
 
 describe("NotificationDataService implementation", () => {
-  let pool: Pool;
+  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let data: NotificationDataService;
 

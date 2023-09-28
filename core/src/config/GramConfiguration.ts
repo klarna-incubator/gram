@@ -1,17 +1,17 @@
-import type { AuthzProvider } from "../auth/AuthzProvider";
-import type { IdentityProvider } from "../auth/IdentityProvider";
-import type { UserProvider } from "../auth/UserProvider";
-import type { ComponentClass } from "../data/component-classes";
-import type { DataAccessLayer } from "../data/dal";
-import type { ReviewerProvider } from "../data/reviews/ReviewerProvider";
-import type { SystemPropertyProvider } from "../data/system-property/SystemPropertyProvider";
-import type { SystemProvider } from "../data/systems/SystemProvider";
-import type { NotificationTemplate } from "../notifications/NotificationTemplate";
-import type { SuggestionSource } from "../suggestions/models";
-import type { AssetFolder } from "./AssetFolder";
-import type { Secret } from "./Secret";
-import type { Migration } from "../data/Migration";
-import type { TeamProvider } from "../auth/TeamProvider";
+import type { AuthzProvider } from "../auth/AuthzProvider.js";
+import type { IdentityProvider } from "../auth/IdentityProvider.js";
+import type { UserProvider } from "../auth/UserProvider.js";
+import type { ComponentClass } from "../data/component-classes/index.js";
+import type { DataAccessLayer } from "../data/dal.js";
+import type { ReviewerProvider } from "../data/reviews/ReviewerProvider.js";
+import type { SystemPropertyProvider } from "../data/system-property/SystemPropertyProvider.js";
+import type { SystemProvider } from "../data/systems/SystemProvider.js";
+import type { NotificationTemplate } from "../notifications/NotificationTemplate.js";
+import type { SuggestionSource } from "../suggestions/models.js";
+import type { AssetFolder } from "./AssetFolder.js";
+import type { Secret } from "./Secret.js";
+import type { Migration } from "../data/Migration.js";
+import type { TeamProvider } from "../auth/TeamProvider.js";
 
 export interface Providers {
   /**

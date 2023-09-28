@@ -1,9 +1,9 @@
-import { Role } from "../auth/models/Role";
-import { User } from "../auth/models/User";
-import { UserToken } from "../auth/models/UserToken";
-import { UserProvider } from "../auth/UserProvider";
-import { RequestContext } from "../data/providers/RequestContext";
-import { sampleOtherTeam, sampleTeam } from "./sampleTeam";
+import { Role } from "../auth/models/Role.js";
+import { User } from "../auth/models/User.js";
+import { UserToken } from "../auth/models/UserToken.js";
+import { UserProvider } from "../auth/UserProvider.js";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { sampleOtherTeam, sampleTeam } from "./sampleTeam.js";
 
 export const sampleUser: UserToken = {
   sub: "test@abc.xyz",

@@ -1,4 +1,4 @@
-import { config } from "../config";
+import { config } from "../config/index.js";
 
 function trimEndSlash(s: string) {
   return s.endsWith("/") ? s.substr(0, s.length - 1) : s;

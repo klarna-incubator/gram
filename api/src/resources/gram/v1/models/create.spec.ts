@@ -1,16 +1,17 @@
-import { Pool } from "pg";
+import { jest } from "@jest/globals";
+import pg from "pg";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model, { Component } from "@gram/core/dist/data/models/Model";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model, { Component } from "@gram/core/dist/data/models/Model.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import {
   sampleAdmin,
   sampleOtherUser,
   sampleUser,
-} from "../../../../test-util/sampleUser";
+} from "../../../../test-util/sampleUser.js";
 
 describe("models.create", () => {
   const validate = jest.spyOn(jwt, "validateToken");
@@ -18,7 +19,7 @@ describe("models.create", () => {
   const componentId2 = "fe93572e-9d0c-4afe-b042-e02c1c459999";
   const dataFlowId = "fe93572e-9d0c-4afe-b042-e02c1cstonks";
   let app: any;
-  let pool: Pool;
+  let pool: pg.Pool;
   let dal: DataAccessLayer;
 
   beforeAll(async () => {

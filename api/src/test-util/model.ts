@@ -1,6 +1,6 @@
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import { sampleOwnedSystem } from "./sampleOwnedSystem";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { sampleOwnedSystem } from "./sampleOwnedSystem.js";
 
 export async function createSampleModel(dal: DataAccessLayer) {
   const model = new Model(sampleOwnedSystem.id, "some-version", "root");

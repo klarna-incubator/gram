@@ -1,8 +1,8 @@
 import {
   EmailRecipient,
   PlaintextHandlebarsNotificationTemplate,
-} from "@gram/core/dist/notifications/NotificationTemplate";
-import { generalReviewNotificationVariables } from "./util";
+} from "@gram/core/dist/notifications/NotificationTemplate.js";
+import { generalReviewNotificationVariables } from "./util.js";
 
 const key = "review-declined";
 

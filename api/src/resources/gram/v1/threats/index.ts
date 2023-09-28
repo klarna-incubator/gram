@@ -1,8 +1,8 @@
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { create } from "./create";
-import { _delete } from "./delete";
-import { list } from "./list";
-import { update } from "./update";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { create } from "./create.js";
+import { _delete } from "./delete.js";
+import { list } from "./list.js";
+import { update } from "./update.js";
 
 export default (dal: DataAccessLayer) => ({
   create: create(dal),

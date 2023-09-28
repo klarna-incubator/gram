@@ -3,8 +3,8 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
 export function listProperties(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

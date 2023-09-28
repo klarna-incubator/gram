@@ -1,22 +1,23 @@
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion.js";
+import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 import { randomUUID } from "crypto";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion";
-import { systemProvider } from "@gram/core/dist/data/systems/systems";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import {
+  sampleOtherUserToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../../../../test-util/suggestions";
+} from "../../../../test-util/suggestions.js";
 
 describe("Suggestions.reject", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
   const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   let app: any;
@@ -24,7 +25,10 @@ describe("Suggestions.reject", () => {
   let dal: DataAccessLayer;
   let modelId: string;
 
+  let token = "";
+
   beforeAll(async () => {
+    token = await sampleUserToken();
     pool = await createPostgresPool();
     ({ app, dal } = await createTestApp());
 
@@ -33,10 +37,6 @@ describe("Suggestions.reject", () => {
 
   beforeEach(async () => {
     modelId = await createSampleModel(dal);
-
-    validate.mockImplementation(async () => {
-      return sampleUser;
-    });
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -49,7 +49,7 @@ describe("Suggestions.reject", () => {
   it("should return 400 on bad modelId", async () => {
     const res = await request(app)
       .patch(`/api/v1/suggestions/kanelbulle/reject`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: genSuggestedControl().id.val });
     expect(res.status).toBe(400);
   });
@@ -57,18 +57,18 @@ describe("Suggestions.reject", () => {
   it("should return 400 on bad suggestionId", async () => {
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/reject`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: randomUUID() });
 
     expect(res.status).toBe(400);
   });
 
   it("should return 403 on unauthorized request (default user)", async () => {
-    validate.mockImplementation(async () => sampleOtherUser);
+    const otherToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/reject`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", otherToken)
       .send({ suggestionId: genSuggestedControl().id.val });
 
     expect(res.status).toBe(403);
@@ -84,7 +84,7 @@ describe("Suggestions.reject", () => {
     });
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/reject`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: control.id.val });
 
     expect(res.status).toBe(200);
@@ -106,7 +106,7 @@ describe("Suggestions.reject", () => {
     });
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/reject`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: threat.id.val });
 
     expect(res.status).toBe(200);
@@ -119,14 +119,13 @@ describe("Suggestions.reject", () => {
   it("should return 404 on invalid suggestion-id", async () => {
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/reject`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: genSuggestedControl().id.val });
 
     expect(res.status).toBe(404);
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     systemGetById.mockRestore();
     await _deleteAllTheThings(pool);
   });

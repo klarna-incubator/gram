@@ -1,7 +1,7 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("system-compliance", () => {
   const validate = jest.spyOn(jwt, "validateToken");

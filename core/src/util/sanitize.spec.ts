@@ -1,5 +1,4 @@
-import each from "jest-each";
-import { sanitizeEmail } from "./sanitize";
+import { sanitizeEmail } from "./sanitize.js";
 
 describe("sanitizeEmail", () => {
   const valid = [
@@ -8,17 +7,21 @@ describe("sanitizeEmail", () => {
     "not-a-real-email@not-k-larna.com",
   ];
 
-  each(valid).it("should allow valid email '%j'", (email) => {
-    expect(sanitizeEmail(email)).toEqual(email);
-  });
+  valid.map((email) =>
+    it(`should allow valid email '${email}'`, () => {
+      expect(sanitizeEmail(email)).toEqual(email);
+    })
+  );
 
-  each([
+  [
     ["test@t23st.tld", "test{;@t23st.tld"],
     ["", "\n\r"],
     ["", "!\"/=(#&='!(/#&"],
     ["aspacehere@hello", "a space here @ hello"],
     ["userpassword@hello", "user:password@hello"],
-  ]).test("should replace illegal characters '%j'", (expected, ...args) => {
-    expect(sanitizeEmail(args[0])).toEqual(expected);
-  });
+  ].map((sane) =>
+    it(`should replace illegal characters '${sane[1]}'`, () => {
+      expect(sanitizeEmail(sane[1])).toEqual(sane[0]);
+    })
+  );
 });

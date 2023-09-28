@@ -1,5 +1,5 @@
-import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
-import { defaultConfig } from "./default";
+import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
+import { defaultConfig } from "./default.js";
 
 export const productionConfig: GramConfiguration = {
   ...defaultConfig,

@@ -1,9 +1,10 @@
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { User } from "@gram/core/dist/auth/models/User";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import { UserProvider } from "@gram/core/dist/auth/UserProvider";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { sampleOtherTeam, sampleTeam } from "./sampleTeam";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { User } from "@gram/core/dist/auth/models/User.js";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
+import { UserProvider } from "@gram/core/dist/auth/UserProvider.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { sampleOtherTeam, sampleTeam } from "./sampleTeam.js";
+import { generateToken } from "@gram/core/dist/auth/jwt.js";
 
 export const sampleUser: UserToken = {
   sub: "test@abc.xyz",

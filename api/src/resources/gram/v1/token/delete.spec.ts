@@ -1,5 +1,5 @@
 import request from "supertest";
-import { createTestApp } from "../../../../test-util/app";
+import { createTestApp } from "../../../../test-util/app.js";
 
 describe("token.delete", () => {
   let app: any;

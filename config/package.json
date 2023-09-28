@@ -1,12 +1,13 @@
 {
   "name": "@gram/config",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "private": true,
   "version": "4.0.3",
   "description": "Gram Configuration",
   "scripts": {
-    "build": "npm run compile",
-    "clean": "rimraf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
     "lint-fix": "prettier -l . --write"
   },

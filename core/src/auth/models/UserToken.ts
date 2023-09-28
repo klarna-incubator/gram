@@ -1,5 +1,5 @@
-import { Role } from "./Role";
-import { Team } from "./Team";
+import { Role } from "./Role.js";
+import { Team } from "./Team.js";
 
 export interface UserToken {
   sub: string;

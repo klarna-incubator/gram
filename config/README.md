@@ -18,7 +18,7 @@ This is where the different environment configurations are registered. To add a 
 include it here via `registerConfiguration`.
 
 ```ts
-import { developmentConfig } from "./development";
+import { developmentConfig } from "./development.js";
 
 export function initConfig() {
   registerConfiguration("development", developmentConfig);

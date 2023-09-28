@@ -1,13 +1,13 @@
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 // import { createSampleModel } from "api/src/test-util/model";
 import request from "supertest";
-import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "@gram/core/dist/test-util/authz";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { sampleUser } from "../../../../test-util/sampleUser";
-import { createSampleModel } from "../../../../test-util/model";
+import { createTestApp } from "../../../../test-util/app.js";
+import { genUser } from "@gram/core/dist/test-util/authz.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { createSampleModel } from "../../../../test-util/model.js";
 
 const validate = jest.spyOn(jwt, "validateToken");
 

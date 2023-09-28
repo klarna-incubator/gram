@@ -1,17 +1,18 @@
-import * as authorizationModule from "@gram/core/dist/auth/authorization";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import { jest } from "@jest/globals";
+import * as authorizationModule from "@gram/core/dist/auth/authorization.js";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
 import { randomUUID } from "crypto";
 import express from "express";
 import http from "http";
 import WebSocket from "ws";
-import * as ws from ".";
-import { genUser } from "@gram/core/dist/test-util/authz";
-import { sampleOwnedSystem } from "../test-util/sampleOwnedSystem";
-import { ModelWebsocketServer } from "./model";
+import * as ws from "./index.js";
+import { genUser } from "@gram/core/dist/test-util/authz.js";
+import { sampleOwnedSystem } from "../test-util/sampleOwnedSystem.js";
+import { ModelWebsocketServer } from "./model.js";
 
 const receive = (client: WebSocket, t = 500) =>
   new Promise<any>((resolve, reject) => {
@@ -36,9 +37,9 @@ const connected = (client: WebSocket) =>
 
 describe("websocket protocol", () => {
   let dal: DataAccessLayer;
-  const authenticate = jest.spyOn(jwt, "validateToken");
+  // const authenticate = jest.spyOn(jwt, "validateToken");
 
-  let modelGetById: jest.SpyInstance;
+  let modelGetById: any;
   const getPermissionsForModel = jest.spyOn(
     authorizationModule,
     "getPermissionsForModel"
@@ -64,9 +65,9 @@ describe("websocket protocol", () => {
   beforeEach(() => {
     wssRegistry.clear();
 
-    authenticate.mockImplementation(async (sub: string) => {
-      return genUser({ sub });
-    });
+    // authenticate.mockImplementation(async (sub: string) => {
+    //   return genUser({ sub });
+    // });
 
     getPermissionsForModel.mockImplementation(async () => {
       return [Permission.Read, Permission.Write];
@@ -114,16 +115,21 @@ describe("websocket protocol", () => {
       { headers: { sub: "first@abc.xyz", origin: "http://localhost:4726" } }
     );
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
-    authenticate.mockImplementation(async (token: string) => {
-      return genUser({ sub: "second@abc.xyz" as string });
-    });
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
     secondClient = new WebSocket(
       "http://localhost:8123/api/ws/ae269267-d025-49ba-9f5b-126e938e4c89",
       { headers: { sub: "second@abc.xyz", origin: "http://localhost:4726" } }
     );
     await connected(secondClient);
-    secondClient.send(JSON.stringify({ token: "second@abc.xyz" }));
+    secondClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "second@abc.xyz" })),
+      })
+    );
 
     const received = await receive(firstClient);
     const parsed = JSON.parse(received);
@@ -137,7 +143,11 @@ describe("websocket protocol", () => {
       { headers: { origin: "http://localhost:4726" } }
     );
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
 
     const msg = { type: "ADD_COMPONENT", message: "Hello from second client" };
     secondClient = new WebSocket(
@@ -145,7 +155,11 @@ describe("websocket protocol", () => {
       { headers: { origin: "http://localhost:4726" } }
     );
     await connected(secondClient);
-    secondClient.send(JSON.stringify({ token: "second@abc.xyz" }));
+    secondClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "second@abc.xyz" })),
+      })
+    );
 
     let received = await receive(firstClient); // second user joining
     // console.log(received);
@@ -158,16 +172,16 @@ describe("websocket protocol", () => {
   });
 
   it("must only allow authenticated clients", async () => {
-    authenticate.mockImplementation(() => {
-      throw new Error("unauthorized");
-    });
-
     firstClient = new WebSocket(
       "http://localhost:8123/api/ws/ae269267-d025-49ba-9f5b-126e938e4c89",
       { headers: { origin: "http://localhost:4726" } }
     );
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
     // let received =
     await receive(firstClient);
     // console.log(received);
@@ -189,7 +203,11 @@ describe("websocket protocol", () => {
       { headers: { sub: "first@abc.xyz", origin: "http://localhost:4726" } }
     );
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
     expect(receive(firstClient, 500)).rejects.toMatch(
       "receive message timed out"
     );
@@ -219,7 +237,11 @@ describe("websocket protocol", () => {
       }
     );
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
 
     expect(
       new Promise((resolve) => {
@@ -245,13 +267,21 @@ describe("websocket protocol", () => {
       headers: { origin: "http://localhost:4726" },
     });
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
 
     secondClient = new WebSocket(`http://localhost:8123/api/ws/${id}`, {
       headers: { origin: "http://localhost:4726" },
     });
     await connected(secondClient);
-    secondClient.send(JSON.stringify({ token: "second@abc.xyz" }));
+    secondClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "second@abc.xyz" })),
+      })
+    );
 
     let received = await receive(firstClient); // second user joining
     let parsed = JSON.parse(received);
@@ -280,16 +310,21 @@ describe("websocket protocol", () => {
       headers: { sub: "first@abc.xyz", origin: "http://localhost:4726" },
     });
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "valid_token" }));
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
 
-    authenticate.mockImplementation(async (token: string) => {
-      return genUser({ sub: "second@abc.xyz" as string });
-    });
     secondClient = new WebSocket(`http://localhost:8123/api/ws/${id}`, {
       headers: { sub: "second@abc.xyz", origin: "http://localhost:4726" },
     });
     await connected(secondClient);
-    secondClient.send(JSON.stringify({ token: "valid_token" }));
+    secondClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "second@abc.xyz" })),
+      })
+    );
     await receive(firstClient); // second user joining
 
     let received = receive(firstClient);
@@ -317,13 +352,21 @@ describe("websocket protocol", () => {
       headers: { origin: "http://localhost:4726" },
     });
     await connected(firstClient);
-    firstClient.send(JSON.stringify({ token: "first@abc.xyz" }));
+    firstClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "first@abc.xyz" })),
+      })
+    );
 
     secondClient = new WebSocket(`http://localhost:8123/api/ws/${id}`, {
       headers: { origin: "http://localhost:4726" },
     });
     await connected(secondClient);
-    secondClient.send(JSON.stringify({ token: "second@abc.xyz" }));
+    secondClient.send(
+      JSON.stringify({
+        token: await jwt.generateToken(genUser({ sub: "second@abc.xyz" })),
+      })
+    );
     await receive(firstClient); // second user joining
 
     const received = receive(firstClient);

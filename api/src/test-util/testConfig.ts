@@ -1,16 +1,16 @@
-import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider";
-import { DummyIdentityProvider } from "@gram/core/dist/auth/DummyIdentityProvider";
-import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret";
+import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider.js";
+import { DummyIdentityProvider } from "@gram/core/dist/auth/DummyIdentityProvider.js";
+import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
 import type {
   GramConfiguration,
   Providers,
-} from "@gram/core/dist/config/GramConfiguration";
-import type { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { testReviewerProvider } from "./sampleReviewer";
-import { testUserProvider } from "./sampleUser";
-import { testSystemProvider } from "./system";
-import { ComponentClass } from "@gram/core/dist/data/component-classes";
-import classes from "./classes.json";
+} from "@gram/core/dist/config/GramConfiguration.js";
+import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { testReviewerProvider } from "./sampleReviewer.js";
+import { testUserProvider } from "./sampleUser.js";
+import { testSystemProvider } from "./system.js";
+import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js";
+import classes from "./classes.js";
 
 export const testConfig: GramConfiguration = {
   appPort: 8080,

@@ -1,9 +1,10 @@
+import { jest } from "@jest/globals";
 import express from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import { sampleUser } from "../test-util/sampleUser";
-import { authRequiredMiddleware, validateTokenMiddleware } from "./auth";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
+import { sampleUser } from "../test-util/sampleUser.js";
+import { authRequiredMiddleware, validateTokenMiddleware } from "./auth.js";
 
 const app = express();
 app.use(validateTokenMiddleware);

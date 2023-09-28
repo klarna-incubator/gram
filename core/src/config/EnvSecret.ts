@@ -1,4 +1,4 @@
-import type { Secret } from "./Secret";
+import type { Secret } from "./Secret.js";
 
 export class EnvSecret implements Secret {
   constructor(public key: string) {}

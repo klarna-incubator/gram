@@ -4,8 +4,8 @@
  */
 
 import { Request, Response } from "express";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
 
 export default (dataModels: ModelDataService) => {
   return async (req: Request, res: Response) => {

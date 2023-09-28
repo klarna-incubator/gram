@@ -1,5 +1,7 @@
 # README
 
+# Warning: needs more work
+
 To run this GitHub integration, you'll need to set up your own Github App.
 
 Permissions needed:

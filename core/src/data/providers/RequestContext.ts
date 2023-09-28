@@ -1,6 +1,6 @@
 import { Request } from "express";
-import { CurrentAuthz } from "../../auth/CurrentAuthz";
-import { UserToken } from "../../auth/models/UserToken";
+import { CurrentAuthz } from "../../auth/CurrentAuthz.js";
+import { UserToken } from "../../auth/models/UserToken.js";
 
 export interface GramRequest extends Request {
   user: UserToken;

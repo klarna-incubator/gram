@@ -4,7 +4,7 @@
  */
 
 import { Request, Response } from "express";
-import { getPermissionsForSystem } from "@gram/core/dist/auth/authorization";
+import { getPermissionsForSystem } from "@gram/core/dist/auth/authorization.js";
 
 export default async (req: Request, res: Response) => {
   const permissions = await getPermissionsForSystem(

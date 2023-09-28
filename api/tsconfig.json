@@ -1,7 +1,11 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["src/**/*"],
+
   "compilerOptions": {
-    "types": ["jest"]
-  }
+    "target": "ESNext",
+    "types": ["node", "jest"],
+    "allowSyntheticDefaultImports": true
+  },
+
+  "include": ["src/"]
 }

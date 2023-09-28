@@ -1,30 +1,11 @@
 {
+  "extends": "@tsconfig/node18/tsconfig.json",
+
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
     "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "noEmitOnError": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "types": ["node"],
-    "jsx": "react",
-    "noEmit": false,
-    "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "baseUrl": ".",
-    "outDir": "./dist"
-    // "paths": {
-    //   "@gram/plugin-aws/*": ["plugins/aws/src/*"],
-    //   "@gram/plugin-github/*": ["plugins/github/src/*"],
-    //   "@gram/plugin-static/*": ["plugins/static/src/*"],
-    //   "@gram/plugin-svgporn/*": ["plugins/svgporn/src/*"],
-    //   "@gram/plugin-threatlib/*": ["plugins/threatlib/src/*"],
-    //   "@gram/core/dist/*": ["core/src/*"]
-    // }
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "declaration": true
+    // "esModuleInterop": true
   }
-  // "exclude": ["node_modules", "dist"]
 }

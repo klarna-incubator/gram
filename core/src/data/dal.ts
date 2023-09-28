@@ -1,32 +1,32 @@
-import { Pool } from "pg";
-import { TemplateHandler } from "../notifications/TemplateHandler";
-import { SuggestionEngine } from "../suggestions/engine";
-import { ComponentClassHandler } from "./component-classes";
-import { SystemPropertyHandler } from "./system-property/SystemPropertyHandler";
-import { ControlDataService } from "./controls/ControlDataService";
-import { MitigationDataService } from "./mitigations/MitigationDataService";
-import { ModelDataService } from "./models/ModelDataService";
-import { NotificationDataService } from "./notifications/NotificationDataService";
-import { ReviewDataService } from "./reviews/ReviewDataService";
-import { SuggestionDataService } from "./suggestions/SuggestionDataService";
-import { ThreatDataService } from "./threats/ThreatDataService";
-import { ReportDataService } from "./reports/ReportDataService";
-import { BannerDataService } from "./banners/BannerDataService";
-import { UserHandler } from "../auth/UserHandler";
-import { TeamHandler } from "../auth/TeamHandler";
-import { AuthzProvider } from "../auth/AuthzProvider";
-import { authzProvider } from "../auth/authorization";
-import { systemProvider } from "./systems/systems";
-import { SystemProvider } from "./systems/SystemProvider";
-import { ReviewerHandler } from "./reviews/ReviewerHandler";
-import { createPostgresPool, getDatabaseName } from "./postgres";
+import pg from "pg";
+import { TemplateHandler } from "../notifications/TemplateHandler.js";
+import { SuggestionEngine } from "../suggestions/engine.js";
+import { ComponentClassHandler } from "./component-classes/index.js";
+import { SystemPropertyHandler } from "./system-property/SystemPropertyHandler.js";
+import { ControlDataService } from "./controls/ControlDataService.js";
+import { MitigationDataService } from "./mitigations/MitigationDataService.js";
+import { ModelDataService } from "./models/ModelDataService.js";
+import { NotificationDataService } from "./notifications/NotificationDataService.js";
+import { ReviewDataService } from "./reviews/ReviewDataService.js";
+import { SuggestionDataService } from "./suggestions/SuggestionDataService.js";
+import { ThreatDataService } from "./threats/ThreatDataService.js";
+import { ReportDataService } from "./reports/ReportDataService.js";
+import { BannerDataService } from "./banners/BannerDataService.js";
+import { UserHandler } from "../auth/UserHandler.js";
+import { TeamHandler } from "../auth/TeamHandler.js";
+import { AuthzProvider } from "../auth/AuthzProvider.js";
+import { authzProvider } from "../auth/authorization.js";
+import { systemProvider } from "./systems/systems.js";
+import { SystemProvider } from "./systems/SystemProvider.js";
+import { ReviewerHandler } from "./reviews/ReviewerHandler.js";
+import { createPostgresPool, getDatabaseName } from "./postgres.js";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
  */
 export class DataAccessLayer {
   // Database Connection Pool for direct access to postgres
-  pool: Pool;
+  pool: pg.Pool;
 
   // DataServices - specific logic to handle database interactions
   modelService: ModelDataService;
@@ -56,12 +56,12 @@ export class DataAccessLayer {
     return systemProvider;
   }
 
-  async pluginPool(pluginSuffix: string): Promise<Pool> {
+  async pluginPool(pluginSuffix: string): Promise<pg.Pool> {
     const databaseName = await getDatabaseName(pluginSuffix);
     return createPostgresPool({ database: databaseName });
   }
 
-  constructor(pool: Pool) {
+  constructor(pool: pg.Pool) {
     this.pool = pool;
     this.sysPropHandler = new SystemPropertyHandler();
     this.ccHandler = new ComponentClassHandler();

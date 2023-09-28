@@ -1,6 +1,6 @@
-import { RequestContext } from "../data/providers/RequestContext";
-import { Team } from "./models/Team";
-import { TeamProvider } from "./TeamProvider";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { Team } from "./models/Team.js";
+import { TeamProvider } from "./TeamProvider.js";
 
 export class DummyTeamProvider implements TeamProvider {
   async lookup(ctx: RequestContext, teamIds: string[]): Promise<Team[]> {

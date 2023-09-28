@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
-import { validateUUID } from "@gram/core/dist/util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
+import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
 /**
  * GET /api/v1/models/{id}

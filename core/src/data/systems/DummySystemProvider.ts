@@ -1,7 +1,7 @@
-import System from "./System";
-import { SystemProvider } from "./SystemProvider";
-import { RequestContext } from "../providers/RequestContext";
-import { SystemListInput, SystemListResult } from "./systems";
+import System from "./System.js";
+import { SystemProvider } from "./SystemProvider.js";
+import { RequestContext } from "../providers/RequestContext.js";
+import { SystemListInput, SystemListResult } from "./systems.js";
 
 export class DummySystemProvider implements SystemProvider {
   key = "default";

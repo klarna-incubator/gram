@@ -1,18 +1,19 @@
+import { jest } from "@jest/globals";
 import { randomUUID } from "crypto";
 import { Express } from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { genUser } from "@gram/core/dist/test-util/authz";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import Model from "@gram/core/dist/data/models/Model";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { genUser } from "@gram/core/dist/test-util/authz.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import {
   sampleAdmin,
   sampleOtherUser,
   sampleUser,
-} from "../../../../test-util/sampleUser";
+} from "../../../../test-util/sampleUser.js";
 
 describe("models.get", () => {
   let app: Express;

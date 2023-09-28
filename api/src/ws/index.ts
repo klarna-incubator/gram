@@ -1,10 +1,11 @@
 import { IncomingMessage, Server } from "http";
 import url from "url";
 import WebSocket from "ws";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { getLogger } from "log4js";
-import { ModelWebsocketServer } from "./model";
-import { config } from "@gram/core/dist/config";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { ModelWebsocketServer } from "./model.js";
+import { config } from "@gram/core/dist/config/index.js";
 
 const log = getLogger("wss");
 const wssRegistry = new Map<string, ModelWebsocketServer>();

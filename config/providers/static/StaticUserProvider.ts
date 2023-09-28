@@ -1,6 +1,6 @@
-import { UserProvider } from "@gram/core/dist/auth/UserProvider";
-import { User } from "@gram/core/dist/auth/models/User";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { UserProvider } from "@gram/core/dist/auth/UserProvider.js";
+import { User } from "@gram/core/dist/auth/models/User.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 
 export class StaticUserProvider implements UserProvider {
   constructor(public users: User[]) {}

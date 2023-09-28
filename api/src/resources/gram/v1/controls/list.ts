@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
 /**
  * GET /api/v1/models/{modelId}/controls

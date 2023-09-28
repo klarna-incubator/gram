@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { ensureControlAndThreatPermission } from "./util";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { ensureControlAndThreatPermission } from "./util.js";
 
 export function _delete(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

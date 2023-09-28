@@ -1,7 +1,7 @@
-import { Provider } from "../providers/Provider";
-import System from "./System";
-import { SystemListInput, SystemListResult } from "./systems";
-import { RequestContext } from "../providers/RequestContext";
+import { Provider } from "../providers/Provider.js";
+import System from "./System.js";
+import { SystemListInput, SystemListResult } from "./systems.js";
+import { RequestContext } from "../providers/RequestContext.js";
 
 export interface SystemProvider extends Provider {
   getSystem(ctx: RequestContext, systemId: string): Promise<System | null>;

@@ -1,5 +1,5 @@
-import { NotificationVariables } from "../../notifications/NotificationTemplate";
-import { NotificationTemplateKey } from "./NotificationInput";
+import { NotificationVariables } from "../../notifications/NotificationTemplate.js";
+import { NotificationTemplateKey } from "./NotificationInput.js";
 
 export type NotificationStatus = "new" | "pending" | "sent" | "failed";
 

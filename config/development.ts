@@ -1,6 +1,6 @@
-import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
-import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret";
-import { defaultConfig } from "./default";
+import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
+import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
+import { defaultConfig } from "./default.js";
 
 export const developmentConfig: GramConfiguration = {
   ...defaultConfig,

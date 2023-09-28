@@ -1,11 +1,11 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { genUser } from "@gram/core/dist/test-util/authz";
-import { sampleUser } from "../../../../test-util/sampleUser";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { createTestApp } from "../../../../test-util/app";
-import { getMockedSystemById } from "../../../../test-util/system";
-import { systemProvider } from "@gram/core/dist/data/systems/systems";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { genUser } from "@gram/core/dist/test-util/authz.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { getMockedSystemById } from "../../../../test-util/system.js";
+import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
 
 const validate = jest.spyOn(jwt, "validateToken");
 

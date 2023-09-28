@@ -1,9 +1,10 @@
+import { jest } from "@jest/globals";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { createTestApp } from "../../../../test-util/app";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleAdmin, sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import { sampleAdmin, sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("models.setTemplate", () => {
   const validate = jest.spyOn(jwt, "validateToken");

@@ -1,10 +1,10 @@
 import { EventEmitter } from "events";
-import { Pool } from "pg";
-import { getLogger } from "log4js";
-import { SuggestionID } from "../../suggestions/models";
-import { DataAccessLayer } from "../dal";
-import { SuggestionStatus } from "../suggestions/Suggestion";
-import Control from "./Control";
+import pg from "pg";
+import log4js from "log4js";
+import { SuggestionID } from "../../suggestions/models.js";
+import { DataAccessLayer } from "../dal.js";
+import { SuggestionStatus } from "../suggestions/Suggestion.js";
+import Control from "./Control.js";
 
 export function convertToControl(row: any) {
   const control = new Control(
@@ -23,14 +23,14 @@ export function convertToControl(row: any) {
 }
 
 export class ControlDataService extends EventEmitter {
-  constructor(pool: Pool, dal: DataAccessLayer) {
+  constructor(pool: pg.Pool, dal: DataAccessLayer) {
     super();
     this.pool = pool;
     this.dal = dal;
-    this.log = getLogger("ControlDataService");
+    this.log = log4js.getLogger("ControlDataService");
   }
 
-  private pool: Pool;
+  private pool: pg.Pool;
   private dal: DataAccessLayer;
   log: any;
   /**

@@ -1,10 +1,10 @@
-import Model from "@gram/core/dist/data/models/Model";
+import Model from "@gram/core/dist/data/models/Model.js";
 import {
   SuggestionResult,
   SuggestionSource,
-} from "@gram/core/dist/suggestions/models";
-import { mapControls } from "./controls";
-import { mapThreats } from "./threats";
+} from "@gram/core/dist/suggestions/models.js";
+import { mapControls } from "./controls.js";
+import { mapThreats } from "./threats.js";
 
 export class ThreatLibSuggestionProvider implements SuggestionSource {
   slug: string = "threatlib";

@@ -2,15 +2,16 @@ import {
   IdentityProvider,
   IdentityProviderParams,
   LoginResult,
-} from "@gram/core/dist/auth/IdentityProvider";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { InvalidInputError } from "@gram/core/dist/util/errors";
-import { getLogger } from "log4js";
+} from "@gram/core/dist/auth/IdentityProvider.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { InvalidInputError } from "@gram/core/dist/util/errors.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 import { HttpsProxyAgent } from "hpagent";
 import { Client, custom, generators, Issuer } from "openid-client";
-import { aes256gcm } from "./util";
-import { Secret } from "@gram/core/dist/config/Secret";
-import { config } from "@gram/core/dist/config";
+import { aes256gcm } from "./util.js";
+import { Secret } from "@gram/core/dist/config/Secret.js";
+import { config } from "@gram/core/dist/config/index.js";
 
 const log = getLogger("OIDCIdentityProvider");
 

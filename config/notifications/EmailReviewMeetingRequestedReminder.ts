@@ -1,5 +1,5 @@
-import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate";
-import { generalReviewNotificationVariables } from "./util";
+import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate.js";
+import { generalReviewNotificationVariables } from "./util.js";
 
 const key = "review-meeting-requested-reminder";
 

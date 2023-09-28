@@ -1,6 +1,6 @@
-import { RequestContext } from "../data/providers/RequestContext";
-import { Provider } from "../data/providers/Provider";
-import { Identity } from "./models/Identity";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { Provider } from "../data/providers/Provider.js";
+import { Identity } from "./models/Identity.js";
 
 export type IdentityProviderForm = {
   type: "redirect" | "email";

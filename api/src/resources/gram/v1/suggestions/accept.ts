@@ -4,10 +4,10 @@
  */
 
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { SuggestionID } from "@gram/core/dist/suggestions/models";
-import { validateUUID } from "@gram/core/dist/util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { SuggestionID } from "@gram/core/dist/suggestions/models.js";
+import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
 export default function accept(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

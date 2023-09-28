@@ -13,7 +13,7 @@ npm -w config i @gram/oidc
 Then modify your configuration by adding the OIDCIdentityProvider.
 
 ```ts
-import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
+import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
 import { OIDCIdentityProvider } from "@gram/oidc";
 
 

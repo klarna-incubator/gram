@@ -1,8 +1,8 @@
-import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
-import { Role } from "./models/Role";
-import * as jwt from "./jwt";
-import { UserToken } from "./models/UserToken";
-import { config } from "../config";
+import jsonwebtoken from "jsonwebtoken";
+import { Role } from "./models/Role.js";
+import * as jwt from "./jwt.js";
+import { UserToken } from "./models/UserToken.js";
+import { config } from "../config/index.js";
 
 const payload: UserToken = {
   name: "user name",
@@ -51,18 +51,22 @@ describe("JWT wrapper for authentication", () => {
 
     it("should reject invalid token", async () => {
       expect(() => jwt.validateToken("invalid_token")).rejects.toThrow(
-        JsonWebTokenError
+        jsonwebtoken.JsonWebTokenError
       );
     });
 
     it("should detect expired token", async () => {
       const token = await jwt.generateToken(payload, -1);
-      expect(() => jwt.validateToken(token)).rejects.toThrow(TokenExpiredError);
+      expect(() => jwt.validateToken(token)).rejects.toThrow(
+        jsonwebtoken.TokenExpiredError
+      );
     });
 
     it("should reject unsecure JWT", async () => {
       const token = "eyJhbGciOiJub25lIn0.eyJzb21lIjoidGVzdCJ9.";
-      expect(() => jwt.validateToken(token)).rejects.toThrow(JsonWebTokenError);
+      expect(() => jwt.validateToken(token)).rejects.toThrow(
+        jsonwebtoken.JsonWebTokenError
+      );
     });
   });
 });

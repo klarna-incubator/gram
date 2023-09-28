@@ -1,21 +1,21 @@
 import { randomUUID } from "crypto";
-import { Pool } from "pg";
+import pg from "pg";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { systemProvider } from "@gram/core/dist/data/systems/systems";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { createSampleModel } from "../../../../test-util/model";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
 import {
   sampleAdmin,
   sampleOtherUser,
   sampleUser,
-} from "../../../../test-util/sampleUser";
+} from "../../../../test-util/sampleUser.js";
 
 describe("reviews.create", () => {
   let app: any;
-  let pool: Pool;
+  let pool: pg.Pool;
   let modelId: any;
   let dal: DataAccessLayer;
 

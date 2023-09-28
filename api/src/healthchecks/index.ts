@@ -1,14 +1,14 @@
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import physical from "express-physical";
 // import {
 //   notificationsFailedCheck,
 //   notificationsStalledCheck,
-// } from "./notificationsCheck";
+// } from "./notificationsCheck.js";
 import {
   postgresAvailableConnectionsCheck,
   postgresSimpleQueryCheck,
-} from "./postgresCheck";
-import { selfCheck } from "./selfCheck";
+} from "./postgresCheck.js";
+import { selfCheck } from "./selfCheck.js";
 
 export const createHealthChecks = (dal: DataAccessLayer) =>
   //TODO ability to extend with deployment specific healtchecks

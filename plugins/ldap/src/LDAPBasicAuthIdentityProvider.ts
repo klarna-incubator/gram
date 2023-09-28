@@ -2,13 +2,14 @@ import {
   IdentityProvider,
   IdentityProviderParams,
   LoginResult,
-} from "@gram/core/dist/auth/IdentityProvider";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { InvalidInputError } from "@gram/core/dist/util/errors";
+} from "@gram/core/dist/auth/IdentityProvider.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { InvalidInputError } from "@gram/core/dist/util/errors.js";
 import basicAuth from "basic-auth";
-import { initLdapClient } from "./lookup";
-import { getLogger } from "log4js";
-import { LDAPClientSettings } from "./LDAPClientSettings";
+import { initLdapClient } from "./lookup.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { LDAPClientSettings } from "./LDAPClientSettings.js";
 
 const log = getLogger("LDAPAuthProvider");
 

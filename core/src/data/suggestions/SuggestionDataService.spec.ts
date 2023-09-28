@@ -1,24 +1,27 @@
 import { randomUUID } from "crypto";
-import { Pool } from "pg";
-import { EngineSuggestedResult, SuggestionID } from "../../suggestions/models";
-import { createSampleModel } from "../../test-util/model";
+import pg from "pg";
+import {
+  EngineSuggestedResult,
+  SuggestionID,
+} from "../../suggestions/models.js";
+import { createSampleModel } from "../../test-util/model.js";
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../../test-util/suggestions";
-import Control from "../controls/Control";
-import { DataAccessLayer } from "../dal";
-import { createPostgresPool } from "../postgres";
-import Threat from "../threats/Threat";
-import { _deleteAllTheThings } from "../utils";
+} from "../../test-util/suggestions.js";
+import Control from "../controls/Control.js";
+import { DataAccessLayer } from "../dal.js";
+import { createPostgresPool } from "../postgres.js";
+import Threat from "../threats/Threat.js";
+import { _deleteAllTheThings } from "../utils.js";
 import {
   SuggestedControl,
   SuggestedThreat,
   SuggestionStatus,
-} from "./Suggestion";
+} from "./Suggestion.js";
 
 describe("SuggestionDataService implementation", () => {
-  let pool: Pool;
+  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let modelId: string;
 

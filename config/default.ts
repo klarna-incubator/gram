@@ -1,13 +1,13 @@
 import { AWSAssets, AWSComponentClasses } from "@gram/aws";
-import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
-import { User } from "@gram/core/dist/auth/models/User";
-import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer.js";
+import { User } from "@gram/core/dist/auth/models/User.js";
+import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
 import type {
   GramConfiguration,
   Providers,
-} from "@gram/core/dist/config/GramConfiguration";
-import type { DataAccessLayer } from "@gram/core/dist/data/dal";
-import System from "@gram/core/dist/data/systems/System";
+} from "@gram/core/dist/config/GramConfiguration.js";
+import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import System from "@gram/core/dist/data/systems/System.js";
 import {
   MagicLinkEmail,
   MagicLinkIdentityProvider,
@@ -15,11 +15,11 @@ import {
 } from "@gram/magiclink";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatLibSuggestionProvider } from "@gram/threatlib";
-import defaultNotifications from "./notifications";
-import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider";
-import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider";
-import { StaticSystemProvider } from "./providers/static/StaticSystemProvider";
-import { StaticUserProvider } from "./providers/static/StaticUserProvider";
+import defaultNotifications from "./notifications/index.js";
+import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider.js";
+import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider.js";
+import { StaticSystemProvider } from "./providers/static/StaticSystemProvider.js";
+import { StaticUserProvider } from "./providers/static/StaticUserProvider.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,

@@ -1,7 +1,7 @@
-import { Reviewer } from "../../auth/models/Reviewer";
-import { Provider } from "../providers/Provider";
-import Model from "../models/Model";
-import { RequestContext } from "../providers/RequestContext";
+import { Reviewer } from "../../auth/models/Reviewer.js";
+import { Provider } from "../providers/Provider.js";
+import Model from "../models/Model.js";
+import { RequestContext } from "../providers/RequestContext.js";
 
 export interface ReviewerProvider extends Provider {
   /**

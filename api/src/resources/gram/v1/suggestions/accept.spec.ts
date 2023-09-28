@@ -1,16 +1,19 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import {
+  sampleOtherUser,
+  sampleUser,
+} from "../../../../test-util/sampleUser.js";
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../../../../test-util/suggestions";
+} from "../../../../test-util/suggestions.js";
 
 const suggestion = genSuggestedControl();
 

@@ -1,9 +1,9 @@
-import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry";
-import MockAuthProvider from "@gram/core/dist/auth/mock/MockAuthProvider";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry.js";
+import MockAuthProvider from "@gram/core/dist/auth/mock/MockAuthProvider.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
 import request from "supertest";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("token.get", () => {
   let app: any;

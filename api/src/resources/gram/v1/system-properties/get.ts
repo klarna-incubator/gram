@@ -3,9 +3,9 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
-import { SystemPropertyHandler } from "@gram/core/dist/data/system-property/SystemPropertyHandler";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
+import { SystemPropertyHandler } from "@gram/core/dist/data/system-property/SystemPropertyHandler.js";
 
 export function getProperties(
   sysPropHandler: SystemPropertyHandler,

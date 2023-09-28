@@ -1,6 +1,6 @@
-import { Pool } from "pg";
-import { getLogger } from "log4js";
-import { DataAccessLayer } from "../dal";
+import pg from "pg";
+import log4js from "log4js";
+import { DataAccessLayer } from "../dal.js";
 
 interface Banner {
   id: number;
@@ -10,9 +10,9 @@ interface Banner {
 }
 
 export class BannerDataService {
-  constructor(private pool: Pool, private dal: DataAccessLayer) {}
+  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {}
 
-  log = getLogger("BannerDataService");
+  log = log4js.getLogger("BannerDataService");
 
   async listBanners(): Promise<Banner[]> {
     const query = `        

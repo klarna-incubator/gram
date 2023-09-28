@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-import { loadConfig } from "@gram/core/dist/config";
-import { registerConfiguration } from "@gram/core/dist/config/configMap";
-import { developmentConfig } from "./development";
+import { loadConfig } from "@gram/core/dist/config/index.js";
+import { registerConfiguration } from "@gram/core/dist/config/configMap.js";
+import { developmentConfig } from "./development.js";
 
 export function initConfig() {
   dotenv.config({ path: "../.env" });

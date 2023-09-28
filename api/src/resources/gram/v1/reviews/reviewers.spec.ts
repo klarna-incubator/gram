@@ -1,10 +1,13 @@
 import { Application } from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { createTestApp } from "../../../../test-util/app";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleReviewer, sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import {
+  sampleReviewer,
+  sampleUser,
+} from "../../../../test-util/sampleUser.js";
 
 describe("reviews.list", () => {
   const validate = jest.spyOn(jwt, "validateToken");

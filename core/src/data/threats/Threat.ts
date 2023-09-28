@@ -1,4 +1,4 @@
-import { SuggestionID } from "../../suggestions/models";
+import { SuggestionID } from "../../suggestions/models.js";
 
 /**
  * Class definition for threat

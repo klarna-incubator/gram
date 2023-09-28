@@ -1,8 +1,8 @@
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import accept from "./accept";
-import list from "./list";
-import reject from "./reject";
-import reset from "./reset";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import accept from "./accept.js";
+import list from "./list.js";
+import reject from "./reject.js";
+import reset from "./reset.js";
 
 export default (dal: DataAccessLayer) => ({
   accept: accept(dal),

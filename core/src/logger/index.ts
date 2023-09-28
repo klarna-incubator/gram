@@ -5,8 +5,8 @@
  */
 
 import log4js from "log4js";
-import { sentryLog4jsAppender } from "./sentryLog4jsAppender";
-import { config } from "../config";
+import { sentryLog4jsAppender } from "./sentryLog4jsAppender.js";
+import { config } from "../config/index.js";
 
 export type LogLine = {
   type?: "log" | "reqres" | "data" | "metric";

@@ -1,13 +1,13 @@
 import { randomUUID } from "crypto";
 import { Express } from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "@gram/core/dist/test-util/authz";
-import { createSampleModel as genSampleModel } from "../../../../test-util/model";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { genUser } from "@gram/core/dist/test-util/authz.js";
+import { createSampleModel as genSampleModel } from "../../../../test-util/model.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("reviews.get", () => {
   let app: Express;

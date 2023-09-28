@@ -1,4 +1,4 @@
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 
 /**

@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
-import { createTestApp } from "../test-util/app";
-import logger from "./logger";
+import { createTestApp } from "../test-util/app.js";
+import logger from "./logger.js";
 
 const logMock = {
   info: jest.fn(),

@@ -1,5 +1,5 @@
 import { ClientOptions } from "ldapts";
-import { Secret } from "@gram/core/dist/config/Secret";
+import { Secret } from "@gram/core/dist/config/Secret.js";
 
 export interface LDAPClientSettings {
   clientOptions: ClientOptions;

@@ -1,8 +1,8 @@
-import { config } from "./config";
-import { DataAccessLayer } from "./data/dal";
-import { createPostgresPool } from "./data/postgres";
-import { Bootstrapper } from "./Bootstrapper";
-import { migrate } from "./data/Migration";
+import { config } from "./config/index.js";
+import { DataAccessLayer } from "./data/dal.js";
+import { createPostgresPool } from "./data/postgres.js";
+import { Bootstrapper } from "./Bootstrapper.js";
+import { migrate } from "./data/Migration.js";
 
 export async function bootstrap(): Promise<DataAccessLayer> {
   const pool = await createPostgresPool();

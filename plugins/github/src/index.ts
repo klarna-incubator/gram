@@ -1,11 +1,11 @@
 import { App } from "octokit";
 import { join } from "path";
-import { additionalMigrations } from "./data";
-import { GithubIdentityProvider } from "./GithubIdentityProvider";
-import { GithubAuthzProvider } from "./GithubAuthzProvider";
-import { GithubSystemPropertyProvider } from "./GithubSystemPropertyProvider";
-import { GithubSystemProvider } from "./GithubSystemProvider";
-import { GithubUserProvider } from "./GithubUserProvider";
+import { additionalMigrations } from "./data.js";
+import { GithubIdentityProvider } from "./GithubIdentityProvider.js";
+import { GithubAuthzProvider } from "./GithubAuthzProvider.js";
+import { GithubSystemPropertyProvider } from "./GithubSystemPropertyProvider.js";
+import { GithubSystemProvider } from "./GithubSystemProvider.js";
+import { GithubUserProvider } from "./GithubUserProvider.js";
 
 export {
   GithubAuthzProvider,

@@ -1,8 +1,8 @@
-import { Pool } from "pg";
+import pg from "pg";
 import { createDb, migrate } from "postgres-migrations";
-import { createPostgresPool } from "../data/postgres";
-import { getLogger } from "log4js";
-import { config } from "../config";
+import { createPostgresPool } from "../data/postgres.js";
+import log4js from "log4js";
+import { config } from "../config/index.js";
 
 async function getDatabaseName(suffix: string) {
   const regularDatabase = (await config.postgres.database.getValue()) as string;
@@ -18,7 +18,7 @@ export async function migratePlugin(
     throw new Error("Plugin suffix must be provided");
   }
 
-  const log = getLogger("migrate-" + pluginSuffix);
+  const log = log4js.getLogger("migrate-" + pluginSuffix);
 
   const databaseName = await getDatabaseName(pluginSuffix);
   const host = (await config.postgres.host.getValue()) as string;
@@ -39,7 +39,7 @@ export async function migratePlugin(
   log.info("Successfully ran all migrations");
 }
 
-export async function getPool(pluginDbSuffix: string): Promise<Pool> {
+export async function getPool(pluginDbSuffix: string): Promise<pg.Pool> {
   const databaseName = await getDatabaseName(pluginDbSuffix);
   const pool = await createPostgresPool({ database: databaseName });
   return pool;

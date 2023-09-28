@@ -1,10 +1,10 @@
-import Model from "../data/models/Model";
-import { RequestContext } from "../data/providers/RequestContext";
-import { systemProvider } from "../data/systems/systems";
-import { AuthzProvider } from "./AuthzProvider";
-import { AllPermissions, Permission } from "./authorization";
-import { Role } from "./models/Role";
-import { UserToken } from "./models/UserToken";
+import Model from "../data/models/Model.js";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { systemProvider } from "../data/systems/systems.js";
+import { AuthzProvider } from "./AuthzProvider.js";
+import { AllPermissions, Permission } from "./authorization.js";
+import { Role } from "./models/Role.js";
+import { UserToken } from "./models/UserToken.js";
 
 export class DefaultAuthzProvider implements AuthzProvider {
   async getPermissionsForSystem(

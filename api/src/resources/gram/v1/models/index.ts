@@ -1,12 +1,12 @@
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
-import create from "./create";
-import _delete from "./delete";
-import get from "./get";
-import templates from "./templates";
-import list from "./list";
-import patch from "./patch";
-import permissions from "./permissions";
-import setTemplate from "./setTemplate";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
+import create from "./create.js";
+import _delete from "./delete.js";
+import get from "./get.js";
+import templates from "./templates.js";
+import list from "./list.js";
+import patch from "./patch.js";
+import permissions from "./permissions.js";
+import setTemplate from "./setTemplate.js";
 
 export default (service: ModelDataService) => ({
   list: list(service),

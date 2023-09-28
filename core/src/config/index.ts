@@ -1,6 +1,7 @@
-import { getLogger } from "log4js";
-import { GramConfiguration } from "./GramConfiguration";
-import { configurationMap } from "./configMap";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { GramConfiguration } from "./GramConfiguration.js";
+import { configurationMap } from "./configMap.js";
 
 const log = getLogger("config");
 

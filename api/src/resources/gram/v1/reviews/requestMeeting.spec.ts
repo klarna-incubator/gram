@@ -1,14 +1,14 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "@gram/core/dist/test-util/authz";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { genUser } from "@gram/core/dist/test-util/authz.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("Reviews.requestMeeting", () => {
   const validate = jest.spyOn(jwt, "validateToken");

@@ -1,4 +1,4 @@
-import { Team } from "./Team";
+import { Team } from "./Team.js";
 
 export type User = {
   sub: string;

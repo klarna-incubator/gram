@@ -1,8 +1,8 @@
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { SystemPropertyHandler } from "@gram/core/dist/data/system-property/SystemPropertyHandler";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { SystemPropertyHandler } from "@gram/core/dist/data/system-property/SystemPropertyHandler.js";
 import request from "supertest";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("system-properties.properties", () => {
   let getProperties: any;

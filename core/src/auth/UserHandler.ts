@@ -1,6 +1,6 @@
-import { RequestContext } from "../data/providers/RequestContext";
-import { User } from "./models/User";
-import { UserProvider } from "./UserProvider";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { User } from "./models/User.js";
+import { UserProvider } from "./UserProvider.js";
 
 export class DummyUserProvider implements UserProvider {
   key = "default";

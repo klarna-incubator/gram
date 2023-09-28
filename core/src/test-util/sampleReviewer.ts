@@ -1,7 +1,7 @@
-import { Reviewer } from "../auth/models/Reviewer";
-import Model from "../data/models/Model";
-import { RequestContext } from "../data/providers/RequestContext";
-import { ReviewerProvider } from "../data/reviews/ReviewerProvider";
+import { Reviewer } from "../auth/models/Reviewer.js";
+import Model from "../data/models/Model.js";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { ReviewerProvider } from "../data/reviews/ReviewerProvider.js";
 
 export const sampleReviewer: Reviewer = {
   sub: "reviewer@abc.xyz",

@@ -3,7 +3,7 @@ import {
   EngineSuggestedControl,
   EngineSuggestedThreat,
   SuggestionID,
-} from "../suggestions/models";
+} from "../suggestions/models.js";
 
 export function genSuggestedThreat(): EngineSuggestedThreat {
   const componentId = randomUUID();

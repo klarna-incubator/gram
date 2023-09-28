@@ -1,11 +1,12 @@
-import { Pool, PoolClient, PoolConfig } from "pg";
+import pg from "pg";
 import metricsClient from "prom-client";
-import { getLogger } from "log4js";
-import { config } from "../config";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { config } from "../config/index.js";
 
 const log = getLogger("postgres");
 
-type Transaction<T> = (client: PoolClient) => Promise<T>;
+type Transaction<T> = (client: pg.PoolClient) => Promise<T>;
 
 /**
  * Wrapper class around pg's Pool to allow us to better
@@ -16,9 +17,9 @@ type Transaction<T> = (client: PoolClient) => Promise<T>;
  * without the pool correctly terminating them.
  */
 export class GramConnectionPool {
-  _pool: Pool;
+  _pool: pg.Pool;
 
-  constructor(pool: Pool) {
+  constructor(pool: pg.Pool) {
     this._pool = pool;
   }
 
@@ -54,7 +55,7 @@ export class GramConnectionPool {
 }
 
 let metricsInited = false;
-function initPostgresMetrics(pool: Pool) {
+function initPostgresMetrics(pool: pg.Pool) {
   if (metricsInited) {
     return;
   }
@@ -92,8 +93,8 @@ export async function getDatabaseName(suffix: string) {
   return databaseName;
 }
 
-export async function createPostgresPool(passedOpts?: PoolConfig) {
-  const defaultOpts: PoolConfig = {
+export async function createPostgresPool(passedOpts?: pg.PoolConfig) {
+  const defaultOpts: pg.PoolConfig = {
     max: 100,
     connectionTimeoutMillis:
       process.env.NODE_ENV && ["test"].includes(process.env.NODE_ENV)
@@ -123,7 +124,7 @@ export async function createPostgresPool(passedOpts?: PoolConfig) {
     opts = { ...defaultOpts, ...passedOpts };
   }
 
-  const pool = new Pool(opts);
+  const pool = new pg.Pool(opts);
 
   /**
    * Just in case the pool errors, and recommended by pg docs.

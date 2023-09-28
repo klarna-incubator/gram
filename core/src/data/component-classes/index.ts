@@ -1,4 +1,5 @@
-import { getLogger } from "log4js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 
 export type ComponentType = "process" | "datastore" | "external";
 export const ComponentTypes = ["process", "datastore", "external"];

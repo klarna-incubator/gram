@@ -1,18 +1,19 @@
 {
   "name": "@gram/api",
   "private": true,
+  "type": "module",
   "version": "4.0.3",
   "description": "API for threat modelling",
   "scripts": {
     "oldstart": "NODE_ENV=development nodemon --watch src --watch ../core/src --files src/index.ts",
-    "start": "NODE_ENV=development ts-node --files src/index.ts",
+    "start": "NODE_ENV=development node dist/index.js",
     "build": "tsc -p tsconfig.build.json",
     "clean": "rimraf ./dist",
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
     "debug": "NODE_ENV=development node --loader ts-node/esm --inspect=127.0.0.1 src/index.js",
-    "test": "NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
-    "jest": "NODE_ENV=test jest --detectOpenHandles --no-cache"
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
+    "jest": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache"
   },
   "main": "dist/index.js",
   "repository": {

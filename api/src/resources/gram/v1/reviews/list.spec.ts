@@ -1,10 +1,10 @@
 import { randomUUID } from "crypto";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 describe("reviews.list", () => {
   const validate = jest.spyOn(jwt, "validateToken");

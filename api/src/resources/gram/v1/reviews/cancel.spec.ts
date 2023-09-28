@@ -1,12 +1,15 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { systemProvider } from "@gram/core/dist/data/systems/systems";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import {
+  sampleOtherUser,
+  sampleUser,
+} from "../../../../test-util/sampleUser.js";
 
 describe("Reviews.cancel", () => {
   const validate = jest.spyOn(jwt, "validateToken");
