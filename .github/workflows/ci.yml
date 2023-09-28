@@ -3,10 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - "main"
-      - "master"
-      - "ci"
-      - "esm-upgrade"
+      - "**"
   workflow_dispatch:
 
 jobs:
