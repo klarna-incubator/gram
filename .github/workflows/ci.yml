@@ -6,6 +6,7 @@ on:
       - "main"
       - "master"
       - "ci"
+      - "esm-upgrade"
   workflow_dispatch:
 
 jobs:
