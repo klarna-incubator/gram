@@ -1,13 +1,13 @@
 import cron from "node-cron";
 import { AWSAssets, AWSComponentClasses } from "@gram/aws";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { User } from "@gram/core/dist/auth/models/User";
-import { EnvSecret } from "@gram/core/dist/config/EnvSecret";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer.js";
+import { User } from "@gram/core/dist/auth/models/User.js";
+import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
 import type {
   GramConfiguration,
   Providers,
-} from "@gram/core/dist/config/GramConfiguration";
-import type { DataAccessLayer } from "@gram/core/dist/data/dal";
+} from "@gram/core/dist/config/GramConfiguration.js";
+import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import {
   LDAPBasicAuthIdentityProvider,
   LDAPCache,
@@ -18,8 +18,8 @@ import {
 import { OIDCIdentityProvider } from "@gram/oidc";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatLibSuggestionProvider } from "@gram/threatlib";
-import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings";
-import defaultNotifications from "./notifications";
+import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings.js";
+import defaultNotifications from "./notifications/index.js";
 import {
   KlarnaReviewerProvider,
   OctaneSystemProvider,
@@ -30,10 +30,10 @@ import {
   KlarnaComponentClasses,
   hookIntoReviewApproval,
 } from "@gram/klarna";
-import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
 import { AzureComponentClasses, AzureAssets } from "@gram/azure";
 import { CNCFComponentClasses, CNCFAssets } from "@gram/cncf";
 import { KubernetesComponentClasses, KubernetesAssets } from "@gram/kubernetes";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -120,7 +120,7 @@ export const defaultConfig: GramConfiguration = {
 
     const ldap = new LDAPBasicAuthIdentityProvider(
       ldapSettings,
-      (name) => `uid=${name},ou=People,dc=internal,dc=machines`
+      (name: string) => `uid=${name},ou=People,dc=internal,dc=machines`
     );
 
     const ldapAuthz = new LDAPGroupBasedAuthzProvider({
@@ -135,7 +135,7 @@ export const defaultConfig: GramConfiguration = {
         ["access.1288598.stag.sso-prod", Role.User],
       ]),
       searchBase: LDAPUserSearchBase,
-      searchFilter: (sub) => {
+      searchFilter: (sub: string) => {
         return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
       },
     });
@@ -143,7 +143,7 @@ export const defaultConfig: GramConfiguration = {
     const ldapUserProvider = new LDAPUserProvider({
       ldapSettings,
       searchBase: LDAPUserSearchBase,
-      searchFilter: (sub) => {
+      searchFilter: (sub: string) => {
         return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
       },
       attributes: ["displayName", "mail", "klarnaAccountabilityOU"],

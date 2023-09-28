@@ -1,7 +1,8 @@
-import { getLogger } from "log4js";
-import { RequestContext } from "../providers/RequestContext";
-import { SystemProperty, SystemPropertyValue } from "./types";
-import { SystemPropertyProvider } from "./SystemPropertyProvider";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { RequestContext } from "../providers/RequestContext.js";
+import { SystemProperty, SystemPropertyValue } from "./types.js";
+import { SystemPropertyProvider } from "./SystemPropertyProvider.js";
 
 export class SystemPropertyHandler {
   constructor() {

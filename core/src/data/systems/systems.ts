@@ -1,6 +1,6 @@
-import System from "./System";
-import { SystemProvider } from "./SystemProvider";
-import { DummySystemProvider } from "./DummySystemProvider";
+import System from "./System.js";
+import { SystemProvider } from "./SystemProvider.js";
+import { DummySystemProvider } from "./DummySystemProvider.js";
 
 export enum SystemListFilter {
   Batch = "batch",

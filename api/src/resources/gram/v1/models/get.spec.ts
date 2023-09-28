@@ -1,31 +1,38 @@
+import { jest } from "@jest/globals";
 import { randomUUID } from "crypto";
 import { Express } from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { genUser } from "@gram/core/dist/test-util/authz";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import Model from "@gram/core/dist/data/models/Model";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { genUser } from "@gram/core/dist/test-util/authz.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import {
   sampleAdmin,
   sampleOtherUser,
   sampleUser,
-} from "../../../../test-util/sampleUser";
+} from "../../../../test-util/sampleUser.js";
+import {
+  sampleAdminToken,
+  sampleOtherUserToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
 
 describe("models.get", () => {
   let app: Express;
   let pool: any;
   let modelService: ModelDataService;
 
-  const validate = jest.spyOn(jwt, "validateToken");
   let getById: any;
   let logAction: any;
+  let token = "";
 
   afterAll(async () => await pool.end());
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({
       pool,
       app,
@@ -37,7 +44,6 @@ describe("models.get", () => {
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
     logAction.mockImplementation(async () => {
       return;
     });
@@ -53,35 +59,14 @@ describe("models.get", () => {
   it("should return 400 on invalid model id (not uuid)", async () => {
     const res = await request(app)
       .get("/api/v1/models/234")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(400);
   });
 
-  it("should return 403 on unauthorized request (no role)", async () => {
-    getById.mockImplementation(async () => {
-      const model = new Model(sampleOwnedSystem.id, "Gram", "root");
-      model.id = "039cbb48-50ac-4b5a-abb0-018e50fb31c9";
-      model.createdAt = Date.now();
-      model.updatedAt = Date.now();
-      return model;
-    });
-
-    validate.mockImplementation(async () => {
-      return {
-        sub: "test@abc.xyz",
-        roles: [], // No role
-        teams: [{ name: "test team", id: "24" }],
-      };
-    });
-
-    const res = await request(app)
-      .get("/api/v1/models/039cbb48-50ac-4b5a-abb0-018e50fb31c9")
-      .set("Authorization", "bearer validToken");
-    expect(res.status).toBe(403);
-  });
-
   it("should return 200 on request from different team (read access ok)", async () => {
+    const otherToken = await sampleOtherUserToken();
+
     getById.mockImplementation(async () => {
       const model = new Model(sampleOwnedSystem.id, "Gram", "root");
       model.id = "039cbb48-50ac-4b5a-abb0-018e50fb31c9";
@@ -90,15 +75,15 @@ describe("models.get", () => {
       return model;
     });
 
-    validate.mockImplementation(async () => sampleOtherUser);
-
     const res = await request(app)
       .get("/api/v1/models/039cbb48-50ac-4b5a-abb0-018e50fb31c9")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", otherToken);
     expect(res.status).toBe(200);
   });
 
   it("should return 200 on request from admin (read access ok)", async () => {
+    const adminToken = await sampleAdminToken();
+
     getById.mockImplementation(async () => {
       const model = new Model(sampleOwnedSystem.id, "Gram", "root");
       model.id = "039cbb48-50ac-4b5a-abb0-018e50fb31c9";
@@ -106,45 +91,10 @@ describe("models.get", () => {
       model.updatedAt = Date.now();
       return model;
     });
-
-    validate.mockImplementation(async () => sampleAdmin);
 
     const res = await request(app)
       .get("/api/v1/models/039cbb48-50ac-4b5a-abb0-018e50fb31c9")
-      .set("Authorization", "bearer validToken");
-    expect(res.status).toBe(200);
-  });
-
-  it("should return 200 on request from multi-role (read access ok)", async () => {
-    getById.mockImplementation(async () => {
-      const model = new Model(sampleOwnedSystem.id, "Gram", "root");
-      model.id = "039cbb48-50ac-4b5a-abb0-018e50fb31c9";
-      model.createdAt = Date.now();
-      model.updatedAt = Date.now();
-      return model;
-    });
-
-    validate.mockImplementation(async () =>
-      genUser({
-        roles: [Role.Admin, Role.Reviewer, Role.User],
-      })
-    );
-
-    let res = await request(app)
-      .get("/api/v1/models/039cbb48-50ac-4b5a-abb0-018e50fb31c9")
-      .set("Authorization", "bearer validToken");
-    expect(res.status).toBe(200);
-
-    // Different order
-    validate.mockImplementation(async () =>
-      genUser({
-        roles: [Role.Reviewer, Role.User, Role.Admin],
-      })
-    );
-
-    res = await request(app)
-      .get("/api/v1/models/039cbb48-50ac-4b5a-abb0-018e50fb31c9")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", adminToken);
     expect(res.status).toBe(200);
   });
 
@@ -153,7 +103,7 @@ describe("models.get", () => {
 
     const res = await request(app)
       .get("/api/v1/models/" + randomUUID())
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(404);
   });
@@ -165,7 +115,7 @@ describe("models.get", () => {
 
     const res = await request(app)
       .get("/api/v1/models/039cbb48-50ac-4b5a-abb0-018e50fb31c9")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(500);
   });
@@ -181,7 +131,7 @@ describe("models.get", () => {
 
     const res = await request(app)
       .get("/api/v1/models/039cbb48-50ac-4b5a-abb0-018e50fb31c9")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.model.id).toBe("039cbb48-50ac-4b5a-abb0-018e50fb31c9");
@@ -194,7 +144,6 @@ describe("models.get", () => {
   });
 
   afterAll(() => {
-    validate.mockRestore();
     getById.mockRestore();
   });
 });

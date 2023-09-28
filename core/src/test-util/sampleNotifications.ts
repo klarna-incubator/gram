@@ -1,4 +1,4 @@
-import { PlaintextHandlebarsNotificationTemplate } from "../notifications/NotificationTemplate";
+import { PlaintextHandlebarsNotificationTemplate } from "../notifications/NotificationTemplate.js";
 
 const key = "review-approved";
 

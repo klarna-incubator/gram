@@ -2,14 +2,14 @@ import {
   IdentityProvider,
   IdentityProviderParams,
   LoginResult,
-} from "@gram/core/dist/auth/IdentityProvider";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { User } from "@gram/core/dist/auth/models/User";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+} from "@gram/core/dist/auth/IdentityProvider.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { User } from "@gram/core/dist/auth/models/User.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { randomUUID } from "crypto";
 import { App } from "octokit";
-import { GithubUserProvider } from "./GithubUserProvider";
-import { config } from "@gram/core/dist/config";
+import { GithubUserProvider } from "./GithubUserProvider.js";
+import { config } from "@gram/core/dist/config/index.js";
 
 export class GithubIdentityProvider implements IdentityProvider {
   admins: string[] = [];
@@ -80,10 +80,10 @@ export class GithubIdentityProvider implements IdentityProvider {
       name: name || login,
       mail: email,
       sub: login,
-      teams: installations.installations.map((inst) => ({
-        id: inst.account?.login || inst.id.toString(),
-        name: inst.account?.login || inst.id.toString(),
-      })),
+      // teams: installations.installations.map((inst) => ({
+      //   id: inst.account?.login || inst.id.toString(),
+      //   name: inst.account?.login || inst.id.toString(),
+      // })),
     };
 
     await this.userProvider.insert(user);

@@ -1,4 +1,4 @@
-import { SystemOwner } from "./systems";
+import { SystemOwner } from "./systems.js";
 
 /**
  * Class definition for system

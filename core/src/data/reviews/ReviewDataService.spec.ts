@@ -1,19 +1,21 @@
-import { Pool } from "pg";
+import { jest } from "@jest/globals";
+import pg from "pg";
 import { randomUUID } from "crypto";
-import { DataAccessLayer } from "../dal";
-import { createPostgresPool } from "../postgres";
-import { _deleteAllTheThings } from "../utils";
-import { Review, ReviewStatus } from "./Review";
-import { ReviewDataService } from "./ReviewDataService";
-import { createSampleModel } from "../../test-util/model";
-import { testReviewerProvider } from "../../test-util/sampleReviewer";
+import { DataAccessLayer } from "../dal.js";
+import { createPostgresPool } from "../postgres.js";
+import { _deleteAllTheThings } from "../utils.js";
+import { Review, ReviewStatus } from "./Review.js";
+import { ReviewDataService } from "./ReviewDataService.js";
+import { createSampleModel } from "../../test-util/model.js";
+import { testReviewerProvider } from "../../test-util/sampleReviewer.js";
+import { SpiedFunction, SpyInstance } from "jest-mock";
 
 describe("ReviewDataService implementation", () => {
-  let pool: Pool;
+  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let data: ReviewDataService;
   let modelId: string;
-  let notificationQueue: jest.SpyInstance;
+  let notificationQueue: SpiedFunction<any>;
 
   beforeAll(async () => {
     pool = await createPostgresPool();

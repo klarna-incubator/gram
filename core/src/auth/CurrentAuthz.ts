@@ -5,14 +5,14 @@ import {
   getPermissionsForModel,
   Permission,
   hasAnyPermissionsForModelId,
-} from "../auth/authorization";
-import { Role } from "../auth/models/Role";
-import { AuthzError } from "../auth/AuthzError";
-import { UserToken } from "../auth/models/UserToken";
-import Model from "../data/models/Model";
-import { DataAccessLayer } from "../data/dal";
-import { GramRequest } from "../data/providers/RequestContext";
-import { Checks } from "./Checks";
+} from "../auth/authorization.js";
+import { Role } from "../auth/models/Role.js";
+import { AuthzError } from "../auth/AuthzError.js";
+import { UserToken } from "../auth/models/UserToken.js";
+import Model from "../data/models/Model.js";
+import { DataAccessLayer } from "../data/dal.js";
+import { GramRequest } from "../data/providers/RequestContext.js";
+import { Checks } from "./Checks.js";
 
 /**
  * Current User's Authorization. Interface on the GramRequest level to

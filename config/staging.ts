@@ -1,5 +1,5 @@
-import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
-import { defaultConfig } from "./default";
+import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
+import { defaultConfig } from "./default.js";
 import { HSFContextProvider } from "@gram/klarna";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 

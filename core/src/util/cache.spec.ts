@@ -1,4 +1,5 @@
-import Cache from "./cache";
+import { jest } from "@jest/globals";
+import Cache from "./cache.js";
 
 describe("cache", () => {
   it("should get/set", () => {

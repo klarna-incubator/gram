@@ -1,9 +1,9 @@
-import { NotificationTemplateKey } from "@gram/core/dist/data/notifications/NotificationInput";
+import { NotificationTemplateKey } from "@gram/core/dist/data/notifications/NotificationInput.js";
 import {
   EmailRecipient,
   PlaintextHandlebarsNotificationTemplate,
-} from "@gram/core/dist/notifications/NotificationTemplate";
-import { generalReviewNotificationVariables } from "./util";
+} from "@gram/core/dist/notifications/NotificationTemplate.js";
+import { generalReviewNotificationVariables } from "./util.js";
 
 const key: NotificationTemplateKey = "review-reviewer-changed";
 

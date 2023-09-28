@@ -1,4 +1,5 @@
-import { getLogger } from "log4js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 
 const log = getLogger("cache");
 

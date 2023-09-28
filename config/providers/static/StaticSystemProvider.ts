@@ -1,11 +1,11 @@
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import System from "@gram/core/dist/data/systems/System";
-import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import System from "@gram/core/dist/data/systems/System.js";
+import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider.js";
 import {
   SystemListFilter,
   SystemListInput,
   SystemListResult,
-} from "@gram/core/dist/data/systems/systems";
+} from "@gram/core/dist/data/systems/systems.js";
 
 export class StaticSystemProvider implements SystemProvider {
   key: string = "static";

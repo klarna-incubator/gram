@@ -1,7 +1,7 @@
-import { Pool } from "pg";
-import { EventEmitter } from "stream";
-import { getLogger } from "log4js";
-import Mitigation from "./Mitigation";
+import pg from "pg";
+import { EventEmitter } from "node:events";
+import log4js from "log4js";
+import Mitigation from "./Mitigation.js";
 
 function convertToMitigation(row: any) {
   const mitigation = new Mitigation(
@@ -15,12 +15,12 @@ function convertToMitigation(row: any) {
 }
 
 export class MitigationDataService extends EventEmitter {
-  constructor(pool: Pool) {
+  constructor(pool: pg.Pool) {
     super();
     this.pool = pool;
-    this.log = getLogger("MitigationDataService");
+    this.log = log4js.getLogger("MitigationDataService");
   }
-  private pool: Pool;
+  private pool: pg.Pool;
   log: any;
 
   /**

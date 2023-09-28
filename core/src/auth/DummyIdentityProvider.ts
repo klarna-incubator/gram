@@ -1,9 +1,9 @@
-import { RequestContext } from "../data/providers/RequestContext";
+import { RequestContext } from "../data/providers/RequestContext.js";
 import {
   IdentityProvider,
   IdentityProviderParams,
   LoginResult,
-} from "./IdentityProvider";
+} from "./IdentityProvider.js";
 
 export class DummyIdentityProvider implements IdentityProvider {
   key = "dummy";

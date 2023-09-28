@@ -1,12 +1,13 @@
-import { getLogger } from "log4js";
+import log4js from "log4js";
+import * as url from "url";
 import {
   MigrateDBConfig,
   migrate as postgresMigrate,
 } from "postgres-migrations";
-import { config } from "../config";
-import { getDatabaseName } from "./postgres";
+import { config } from "../config/index.js";
+import { getDatabaseName } from "./postgres.js";
 
-const log = getLogger("Migration");
+const log = log4js.getLogger("Migration");
 
 export class Migration {
   constructor(public folderPath: string, public pluginSuffix: string) {}
@@ -36,6 +37,8 @@ export class Migration {
     log.info("Successfully ran the migration");
   }
 }
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 export const coreMigration = new Migration(
   __dirname.includes("/dist/")

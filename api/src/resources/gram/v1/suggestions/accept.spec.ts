@@ -1,38 +1,37 @@
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import {
+  sampleOtherUserToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../../../../test-util/suggestions";
+} from "../../../../test-util/suggestions.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 const suggestion = genSuggestedControl();
 
 describe("Suggestions.accept", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
   let pool: any;
   let dal: DataAccessLayer;
   let modelId: string;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     pool = await createPostgresPool();
     ({ app, dal } = await createTestApp());
   });
 
   beforeEach(async () => {
-    modelId = await createSampleModel(dal);
-
-    validate.mockImplementation(async () => {
-      return sampleUser;
-    });
+    modelId = await createSampleModel(dal, sampleUser.sub);
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -45,17 +44,17 @@ describe("Suggestions.accept", () => {
   it("should return 400 on bad modelId", async () => {
     const res = await request(app)
       .patch(`/api/v1/suggestions/kanelbulle/accept`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: suggestion.id.val });
     expect(res.status).toBe(400);
   });
 
   it("should return 403 on unauthorized request (default user)", async () => {
-    validate.mockImplementation(async () => sampleOtherUser);
+    const otherToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/accept`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", otherToken)
       .send({ suggestionId: suggestion.id.val });
 
     expect(res.status).toBe(403);
@@ -71,7 +70,7 @@ describe("Suggestions.accept", () => {
     });
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/accept`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: control.id.val });
 
     expect(res.status).toBe(200);
@@ -93,7 +92,7 @@ describe("Suggestions.accept", () => {
     });
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/accept`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: threat.id.val });
 
     expect(res.status).toBe(200);
@@ -106,14 +105,13 @@ describe("Suggestions.accept", () => {
   it("should return 404 on invalid suggestion-id", async () => {
     const res = await request(app)
       .patch(`/api/v1/suggestions/${modelId}/accept`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ suggestionId: suggestion.id.val });
 
     expect(res.status).toBe(404);
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     await _deleteAllTheThings(pool);
   });
 });

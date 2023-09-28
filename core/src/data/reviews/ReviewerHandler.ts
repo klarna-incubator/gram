@@ -1,7 +1,7 @@
-import { Reviewer } from "../../auth/models/Reviewer";
-import Model from "../models/Model";
-import { RequestContext } from "../providers/RequestContext";
-import { ReviewerProvider } from "./ReviewerProvider";
+import { Reviewer } from "../../auth/models/Reviewer.js";
+import Model from "../models/Model.js";
+import { RequestContext } from "../providers/RequestContext.js";
+import { ReviewerProvider } from "./ReviewerProvider.js";
 
 export class DummyReviewerProvider implements ReviewerProvider {
   key = "default";

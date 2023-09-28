@@ -1,16 +1,24 @@
-import { getLogger } from "log4js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 import { App } from "octokit";
-import { AllPermissions, Permission } from "@gram/core/dist/auth/authorization";
-import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import Model from "@gram/core/dist/data/models/Model";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { NotFoundError } from "@gram/core/dist/util/errors";
+import {
+  AllPermissions,
+  Permission,
+} from "@gram/core/dist/auth/authorization.js";
+import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider.js";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { NotFoundError } from "@gram/core/dist/util/errors.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
 
 const log = getLogger("GithubAuthzProvider");
 
 export class GithubAuthzProvider implements AuthzProvider {
   constructor(private app: App) {}
+  getRolesForUser(sub: string): Promise<Role[]> {
+    throw new Error("Method not implemented.");
+  }
 
   async getPermissionsForSystem(
     ctx: RequestContext,

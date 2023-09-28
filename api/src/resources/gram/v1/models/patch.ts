@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
 
 /**
  * PATCH /api/v1/models/{id}

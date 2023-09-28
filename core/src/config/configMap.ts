@@ -1,4 +1,4 @@
-import { GramConfiguration } from "./GramConfiguration";
+import { GramConfiguration } from "./GramConfiguration.js";
 
 export const configurationMap: Map<string, GramConfiguration> = new Map();
 

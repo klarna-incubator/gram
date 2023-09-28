@@ -4,8 +4,8 @@
  */
 
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { systemProvider } from "@gram/core/dist/data/systems/systems";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
 
 export default async (req: Request, res: Response) => {
   const id = req.params.id;

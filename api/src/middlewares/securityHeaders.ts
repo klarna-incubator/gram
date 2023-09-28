@@ -1,5 +1,8 @@
-import { config } from "@gram/core/dist/config";
-import helmet from "helmet";
+import { config } from "@gram/core/dist/config/index.js";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const helmet = require("helmet");
 
 export function securityHeaders() {
   const allowedImgs: string[] = config.allowedSrc.img;

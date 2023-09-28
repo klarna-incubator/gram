@@ -1,22 +1,17 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { sampleUser } from "@gram/core/dist/test-util/sampleUser";
-import { createTestApp } from "../../../../test-util/app";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 
 /**
  * Tests are based on the classes added in the test-util/classes.json
  */
 describe("component-class.search", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ app } = await createTestApp());
-  });
-
-  beforeEach(() => {
-    validate.mockImplementation(async () => sampleUser);
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -29,7 +24,7 @@ describe("component-class.search", () => {
   it("should return 200 and a list", async () => {
     const res = await request(app)
       .get("/api/v1/component-class?type=process&search=S")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.classes).toHaveLength(2);
@@ -38,7 +33,7 @@ describe("component-class.search", () => {
   it("should find S3 under datastore", async () => {
     const res = await request(app)
       .get("/api/v1/component-class?type=datastore&search=S3")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.count).toBeGreaterThan(0);
@@ -51,7 +46,7 @@ describe("component-class.search", () => {
       .get(
         "/api/v1/component-class?type=datastore&search=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       )
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.count).toEqual(0);
@@ -61,13 +56,13 @@ describe("component-class.search", () => {
   it("should return 400 on invalid type", async () => {
     let res = await request(app)
       .get("/api/v1/component-class?type=elephant&search=a")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(400);
 
     res = await request(app)
       .get("/api/v1/component-class?type[]=elephant&search=a")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(400);
   });
@@ -75,12 +70,8 @@ describe("component-class.search", () => {
   it("should return 400 on invalid search", async () => {
     const res = await request(app)
       .get("/api/v1/component-class?type=elephant&search[]=a")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(400);
-  });
-
-  afterAll(() => {
-    validate.mockRestore();
   });
 });

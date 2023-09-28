@@ -1,5 +1,5 @@
-import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider";
-import { Role } from "@gram/core/dist/auth/models/Role";
+import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
 
 export class StaticAuthzProvider extends DefaultAuthzProvider {
   key: string = "static";

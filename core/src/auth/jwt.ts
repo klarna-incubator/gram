@@ -1,12 +1,8 @@
-import jsonwebtoken, {
-  JsonWebTokenError,
-  SignOptions,
-  VerifyOptions,
-} from "jsonwebtoken";
-import { UserToken } from "./models/UserToken";
-import { config } from "../config";
+import jwt from "jsonwebtoken";
+import { UserToken } from "./models/UserToken.js";
+import { config } from "../config/index.js";
 
-const globalOpts: VerifyOptions & SignOptions = {
+const globalOpts: jwt.VerifyOptions & jwt.SignOptions = {
   algorithm: "HS512",
 };
 
@@ -36,7 +32,7 @@ export async function generateToken(
 
   const finalClaims = { ...payload, ...requiredClaims };
   const secret = await getSecret();
-  const token = jsonwebtoken.sign(finalClaims, secret, {
+  const token = jwt.sign(finalClaims, secret, {
     expiresIn: ttl,
     ...globalOpts,
   });
@@ -45,10 +41,10 @@ export async function generateToken(
 
 export async function validateToken(token: string): Promise<UserToken> {
   const secret = await getSecret();
-  const result = jsonwebtoken.verify(token, secret, globalOpts);
+  const result = jwt.verify(token, secret, globalOpts);
   if (typeof result === "string") {
     // For some reason jsonwebtoken can return a string when verifying, which we dont want.
-    throw new JsonWebTokenError(
+    throw new jwt.JsonWebTokenError(
       "invalid token, verify returned a string not object"
     );
   }

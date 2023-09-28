@@ -1,23 +1,22 @@
 {
   "name": "@gram/ldap",
-  "version": "4.0.2",
+  "type": "module",
+  "version": "4.1.0",
   "description": "Plugin with ldap related providers",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "npm run clean && npm run compile",
-    "clean": "rimraf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
     "lint-fix": "prettier -l . --write"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.0.2",
+    "@gram/core": "^4.1.0",
     "basic-auth": "^2.0.1",
     "ldapts": "^4.2.6"
   },

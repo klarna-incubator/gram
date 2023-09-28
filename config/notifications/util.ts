@@ -1,7 +1,7 @@
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { Review } from "@gram/core/dist/data/reviews/Review";
-import System from "@gram/core/dist/data/systems/System";
-import { linkToModel } from "@gram/core/dist/util/links";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Review } from "@gram/core/dist/data/reviews/Review.js";
+import { linkToModel } from "@gram/core/dist/util/links.js";
+import System from "@gram/core/dist/data/systems/System.js";
 import Handlebars from "handlebars";
 import { getLogger } from "log4js";
 

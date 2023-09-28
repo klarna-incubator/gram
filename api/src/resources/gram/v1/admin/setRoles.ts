@@ -13,10 +13,11 @@
  */
 
 import { Request, Response } from "express";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { getLogger } from "log4js";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
 
 const log = getLogger("dropRole");
 

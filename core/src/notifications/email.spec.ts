@@ -1,18 +1,21 @@
-import each from "jest-each";
-import { sanitizeRecipientName } from "./email";
+import { sanitizeRecipientName } from "./email.js";
 
 describe("email", () => {
   describe("sanitizeRecipientName", () => {
-    each(["Jön Jånsson", "jürgen straße"]).it("should allow '%j'", (name) => {
-      expect(sanitizeRecipientName(name)).toEqual(name);
-    });
+    ["Jön Jånsson", "jürgen straße"].map((name) =>
+      it(`should allow ${name}`, () => {
+        expect(sanitizeRecipientName(name)).toEqual(name);
+      })
+    );
 
-    each([
+    [
       ["adminadminadmin ", "admin.admin@admin ("],
       ["Evil Team", "Evil: Team"],
       ["Admin adminadminadmin", "Admin <admin@admin.admin>"],
-    ]).test("should replace illegal characters '%j'", (expected, ...args) => {
-      expect(sanitizeRecipientName(args[0])).toEqual(expected);
-    });
+    ].map((sane) =>
+      it(`should replace illegal characters '${sane[1]}'`, () => {
+        expect(sanitizeRecipientName(sane[1])).toEqual(sane[0]);
+      })
+    );
   });
 });

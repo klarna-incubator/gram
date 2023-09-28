@@ -1,11 +1,14 @@
-import type { GramConfiguration, Providers } from "../config/GramConfiguration";
-import { ExposedSecret } from "../config/ExposedSecret";
-import type { DataAccessLayer } from "../data/dal";
-import { DummyReviewerProvider } from "../data/reviews/ReviewerHandler";
-import { DummyUserProvider } from "../auth/UserHandler";
-import { DummySystemProvider } from "../data/systems/DummySystemProvider";
-import { DummyIdentityProvider } from "../auth/DummyIdentityProvider";
-import { DummyAuthzProvider } from "../auth/DummyAuthzProvider";
+import type {
+  GramConfiguration,
+  Providers,
+} from "../config/GramConfiguration.js";
+import { ExposedSecret } from "../config/ExposedSecret.js";
+import type { DataAccessLayer } from "../data/dal.js";
+import { DummyReviewerProvider } from "../data/reviews/ReviewerHandler.js";
+import { DummyUserProvider } from "../auth/UserHandler.js";
+import { DummySystemProvider } from "../data/systems/DummySystemProvider.js";
+import { DummyIdentityProvider } from "../auth/DummyIdentityProvider.js";
+import { DummyAuthzProvider } from "../auth/DummyAuthzProvider.js";
 
 export const testConfig: GramConfiguration = {
   appPort: 8080,

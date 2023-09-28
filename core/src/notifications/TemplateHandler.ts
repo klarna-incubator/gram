@@ -1,9 +1,10 @@
-import { NotificationTemplateKey } from "../data/notifications/NotificationInput";
-import { getLogger } from "log4js";
+import { NotificationTemplateKey } from "../data/notifications/NotificationInput.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 import {
   NotificationTemplate,
   NotificationVariables,
-} from "./NotificationTemplate";
+} from "./NotificationTemplate.js";
 
 const log = getLogger("TemplateHandler");
 

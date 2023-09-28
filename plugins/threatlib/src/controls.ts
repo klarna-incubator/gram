@@ -1,6 +1,6 @@
-import Model, { Component } from "@gram/core/dist/data/models/Model";
-import { SourceSuggestedControl } from "@gram/core/dist/suggestions/models";
-import { ThreatLibControlSuggestion } from "./types";
+import Model, { Component } from "@gram/core/dist/data/models/Model.js";
+import { SourceSuggestedControl } from "@gram/core/dist/suggestions/models.js";
+import { ThreatLibControlSuggestion } from "./types.js";
 
 const clientsideEncryption: ThreatLibControlSuggestion = {
   slug: "s3-clientside-encryption",

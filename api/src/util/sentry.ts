@@ -2,8 +2,9 @@ import { RewriteFrames } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 import { Express } from "express";
-import { getLogger } from "log4js";
-import { config } from "@gram/core/dist/config";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { config } from "@gram/core/dist/config/index.js";
 
 const log = getLogger("sentry");
 

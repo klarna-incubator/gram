@@ -1,4 +1,4 @@
-import { ComponentClass } from "../component-classes";
+import { ComponentClass } from "../component-classes/index.js";
 
 export interface DataFlow {
   id: string;

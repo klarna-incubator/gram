@@ -1,13 +1,13 @@
-import { DataAccessLayer } from "../data/dal";
-import Model from "../data/models/Model";
-import { RequestContext } from "../data/providers/RequestContext";
-import { NotFoundError } from "../util/errors";
-import { AuthzError } from "./AuthzError";
-import { AuthzProvider } from "./AuthzProvider";
-import { DefaultAuthzProvider } from "./DefaultAuthzProvider";
-import { DummyAuthzProvider } from "./DummyAuthzProvider";
-import { Role } from "./models/Role";
-import { UserToken } from "./models/UserToken";
+import { DataAccessLayer } from "../data/dal.js";
+import Model from "../data/models/Model.js";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { NotFoundError } from "../util/errors.js";
+import { AuthzError } from "./AuthzError.js";
+import { AuthzProvider } from "./AuthzProvider.js";
+import { DefaultAuthzProvider } from "./DefaultAuthzProvider.js";
+import { DummyAuthzProvider } from "./DummyAuthzProvider.js";
+import { Role } from "./models/Role.js";
+import { UserToken } from "./models/UserToken.js";
 
 export const AllRoles = [Role.User, Role.Reviewer, Role.Admin];
 

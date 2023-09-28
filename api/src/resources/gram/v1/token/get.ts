@@ -3,11 +3,12 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import { getLogger } from "log4js";
+import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry.js";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 
 const log = getLogger("getAuthToken");
 

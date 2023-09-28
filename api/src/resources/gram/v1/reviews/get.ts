@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { validateUUID } from "@gram/core/dist/util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
 /**
  * GET /api/v1/reviews/{modelId}

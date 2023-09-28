@@ -1,7 +1,8 @@
 import { createDb, migrate } from "postgres-migrations";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { getLogger } from "log4js";
-import { config } from "@gram/core/src/config";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { config } from "@gram/core/src/config/index.js";
 
 export async function getDatabaseName() {
   const regularDatabase = (await config.postgres.database.getValue()) as string;

@@ -1,4 +1,4 @@
-import { SuggestionID } from "../../suggestions/models";
+import { SuggestionID } from "../../suggestions/models.js";
 
 export enum SuggestionStatus {
   New = "new",

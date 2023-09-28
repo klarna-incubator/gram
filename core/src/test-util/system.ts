@@ -1,8 +1,8 @@
-import System from "../data/systems/System";
-import { SystemListInput, SystemListResult } from "../data/systems/systems";
-import { RequestContext } from "../data/providers/RequestContext";
-import { SystemProvider } from "../data/systems/SystemProvider";
-import { sampleOwnedSystem } from "./sampleOwnedSystem";
+import System from "../data/systems/System.js";
+import { SystemListInput, SystemListResult } from "../data/systems/systems.js";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { SystemProvider } from "../data/systems/SystemProvider.js";
+import { sampleOwnedSystem } from "./sampleOwnedSystem.js";
 
 const systems = [sampleOwnedSystem];
 

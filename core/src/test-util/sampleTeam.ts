@@ -1,4 +1,4 @@
-import { Team } from "../auth/models/Team";
+import { Team } from "../auth/models/Team.js";
 
 export const sampleTeam: Team = {
   id: "123",

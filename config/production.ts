@@ -1,9 +1,9 @@
-import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration";
-import { LDAPUserSearchBase, defaultConfig, ldapSettings } from "./default";
+import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
+import { LDAPUserSearchBase, defaultConfig, ldapSettings } from "./default.js";
 import { HSFContextProvider } from "@gram/klarna";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import { LDAPGroupBasedAuthzProvider } from "@gram/ldap";
-import { Role } from "@gram/core/dist/auth/models/Role";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
 
 export const productionConfig: GramConfiguration = {
   ...defaultConfig,
@@ -53,7 +53,7 @@ export const productionConfig: GramConfiguration = {
         ["access.1288598.prod.sso-prod", Role.User],
       ]),
       searchBase: LDAPUserSearchBase,
-      searchFilter: (sub) => {
+      searchFilter: (sub: string) => {
         return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
       },
     });

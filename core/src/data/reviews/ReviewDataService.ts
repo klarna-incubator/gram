@@ -1,14 +1,14 @@
 import { EventEmitter } from "events";
-import { Pool } from "pg";
-import { getLogger } from "log4js";
-import { DataAccessLayer } from "../dal";
-import { RequestContext } from "../providers/RequestContext";
+import pg from "pg";
+import log4js from "log4js";
+import { DataAccessLayer } from "../dal.js";
+import { RequestContext } from "../providers/RequestContext.js";
 import {
   SystemPropertyFilter,
   SystemPropertyValue,
-} from "../system-property/types";
-import { Review, ReviewStatus } from "./Review";
-import { ReviewSystemCompliance } from "./ReviewSystemCompliance";
+} from "../system-property/types.js";
+import { Review, ReviewStatus } from "./Review.js";
+import { ReviewSystemCompliance } from "./ReviewSystemCompliance.js";
 
 export function convertToReview(row: any): Review {
   const review = new Review(row.model_id, row.requested_by, row.status);
@@ -52,11 +52,11 @@ interface ReviewListResult {
 }
 
 export class ReviewDataService extends EventEmitter {
-  constructor(private pool: Pool, private dal: DataAccessLayer) {
+  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {
     super();
   }
 
-  log = getLogger("ReviewDataService");
+  log = log4js.getLogger("ReviewDataService");
 
   /**
    * Get the review object by modelId

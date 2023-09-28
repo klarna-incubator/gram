@@ -5,12 +5,12 @@
  */
 
 import { EventEmitter } from "events";
-import { Pool } from "pg";
-import { getLogger } from "log4js";
-import { SuggestionID } from "../../suggestions/models";
-import { DataAccessLayer } from "../dal";
-import { SuggestionStatus } from "../suggestions/Suggestion";
-import Threat from "./Threat";
+import pg from "pg";
+import log4js from "log4js";
+import { SuggestionID } from "../../suggestions/models.js";
+import { DataAccessLayer } from "../dal.js";
+import { SuggestionStatus } from "../suggestions/Suggestion.js";
+import Threat from "./Threat.js";
 
 export function convertToThreat(row: any): Threat {
   const threat = new Threat(
@@ -29,14 +29,14 @@ export function convertToThreat(row: any): Threat {
 }
 
 export class ThreatDataService extends EventEmitter {
-  constructor(pool: Pool, dal: DataAccessLayer) {
+  constructor(pool: pg.Pool, dal: DataAccessLayer) {
     super();
     this.pool = pool;
     this.dal = dal;
-    this.log = getLogger("ThreatDataService");
+    this.log = log4js.getLogger("ThreatDataService");
   }
 
-  private pool: Pool;
+  private pool: pg.Pool;
   private dal: DataAccessLayer;
   log: any;
 

@@ -1,5 +1,6 @@
-import type { Secret } from "./Secret";
-import { getLogger } from "log4js";
+import type { Secret } from "./Secret.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 
 const log = getLogger("ExposedSecret");
 

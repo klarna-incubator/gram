@@ -1,12 +1,13 @@
-import { DataAccessLayer } from "../data/dal";
-import { getLogger } from "log4js";
+import { DataAccessLayer } from "../data/dal.js";
+import pkg from "log4js";
+const { getLogger } = pkg;
 import {
   EngineSuggestedResult,
   SourceSuggestedControl,
   SourceSuggestedThreat,
   SuggestionID,
   SuggestionSource,
-} from "./models";
+} from "./models.js";
 
 // Controls the delay before suggestions are fetched for a model.
 const SUGGESTION_DELAY =

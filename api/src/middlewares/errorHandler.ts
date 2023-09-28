@@ -1,10 +1,11 @@
-import { getLogger } from "log4js";
-import { AuthzError } from "@gram/core/dist/auth/AuthzError";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { AuthzError } from "@gram/core/dist/auth/AuthzError.js";
 import {
   InvalidInputError,
   NotAuthenticatedError,
   NotFoundError,
-} from "@gram/core/dist/util/errors";
+} from "@gram/core/dist/util/errors.js";
 
 const log = getLogger("app");
 

@@ -1,6 +1,6 @@
-import { RequestContext } from "../data/providers/RequestContext";
-import { Provider } from "../data/providers/Provider";
-import { Team } from "./models/Team";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { Provider } from "../data/providers/Provider.js";
+import { Team } from "./models/Team.js";
 
 export interface TeamProvider extends Provider {
   lookup(ctx: RequestContext, teamIds: string[]): Promise<Team[]>;

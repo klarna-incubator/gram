@@ -1,5 +1,5 @@
-import { createApp } from "../app";
-import { bootstrap } from "@gram/core/dist/bootstrap";
+import { createApp } from "../app.js";
+import { bootstrap } from "@gram/core/dist/bootstrap.js";
 
 export async function createTestApp() {
   const dal = await bootstrap();

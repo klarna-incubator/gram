@@ -1,18 +1,13 @@
 {
   "extends": "./tsconfig.build.json",
 
-  "include": ["package.json", "src/**/*"],
-
   "compilerOptions": {
-    // "baseUrl": ".",
+    "types": ["node", "jest"],
+    "baseUrl": ".",
     "paths": {
       "@gram/core/dist/*": ["./core/src/*"],
-      "@gram/config/dist/*": ["./config/*"],
-      "@gram/api/dist/*": ["./api/src/*"],
+      "@gram/config/dist/": ["./config/*"],
       "@gram/*": ["./plugins/*/src"]
-    },
-    "noEmit": true,
-    "types": ["jest"],
-    "esModuleInterop": true
+    }
   }
 }

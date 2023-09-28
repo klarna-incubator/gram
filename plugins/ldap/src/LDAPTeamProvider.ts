@@ -1,10 +1,10 @@
-import { TeamProvider } from "@gram/core/dist/auth/TeamProvider";
-import { Team } from "@gram/core/dist/auth/models/Team";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+import { TeamProvider } from "@gram/core/dist/auth/TeamProvider.js";
+import { Team } from "@gram/core/dist/auth/models/Team.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { Entry } from "ldapts";
-import { LDAPClientSettings } from "./LDAPClientSettings";
-import { connectLdapClient, ldapQuery, ldapQueryOne } from "./lookup";
-import { escapeFilterValue, getAttributeAsArray } from "./util";
+import { LDAPClientSettings } from "./LDAPClientSettings.js";
+import { connectLdapClient, ldapQuery, ldapQueryOne } from "./lookup.js";
+import { escapeFilterValue, getAttributeAsArray } from "./util.js";
 
 export interface LDAPTeamProviderSettings {
   ldapSettings: LDAPClientSettings;

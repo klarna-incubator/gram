@@ -3,9 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - "main"
-      - "master"
-      - "ci"
+      - "**"
   workflow_dispatch:
 
 jobs:

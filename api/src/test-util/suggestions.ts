@@ -3,7 +3,7 @@ import {
   EngineSuggestedControl,
   EngineSuggestedThreat,
   SuggestionID,
-} from "@gram/core/dist/suggestions/models";
+} from "@gram/core/dist/suggestions/models.js";
 
 export function genSuggestedThreat(): EngineSuggestedThreat {
   const componentId = randomUUID();

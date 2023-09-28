@@ -1,23 +1,22 @@
 {
   "name": "@gram/aws",
-  "main": "dist/index",
-  "types": "dist/index",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "AWS icons for Gram",
   "scripts": {
-    "build": "npm run clean && npm run compile",
-    "clean": "rimraf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
     "lint-fix": "prettier -l . --write"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.0.2",
+    "@gram/core": "^4.1.0",
     "path": "^0.12.7"
   },
   "private": true,

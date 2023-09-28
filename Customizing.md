@@ -22,8 +22,8 @@ It will look something like this.
 
 ```ts
 import { Application } from "express";
-import { DataAccessLayer } from "./data/dal";
-import { PluginCompiler } from "./plugin";
+import { DataAccessLayer } from "./data/dal.js";
+import { PluginCompiler } from "./plugin.js";
 
 import AWSPlugin from "@gram/plugin-aws";
 import SVGPornPlugin from "@gram/plugin-svgporn";

@@ -1,10 +1,12 @@
 {
   "extends": "../tsconfig.build.json",
 
-  "include": ["src/", "../gram-config"],
+  "include": ["src/"],
 
   "compilerOptions": {
-    "outDir": "./dist"
+    "typeRoots": ["./src/@types"],
+    "outDir": "./dist",
+    "allowSyntheticDefaultImports": true
   },
 
   "exclude": ["**/*.spec.ts"]

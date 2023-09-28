@@ -1,5 +1,5 @@
-import { ProviderRegistry } from "../data/providers/ProviderRegistry";
-import { IdentityProvider } from "./IdentityProvider";
+import { ProviderRegistry } from "../data/providers/ProviderRegistry.js";
+import { IdentityProvider } from "./IdentityProvider.js";
 
 const IdentityProviderRegistry: ProviderRegistry<IdentityProvider> = new Map<
   string,

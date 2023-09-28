@@ -1,25 +1,25 @@
 import * as Sentry from "@sentry/node";
 import { SeverityLevel } from "@sentry/node";
-import { config } from "../config";
-import { AppenderFunction, AppenderModule, Level, levels } from "log4js";
+import { config } from "../config/index.js";
+import log4js from "log4js";
 
-function log4jLevelToSentrySeverity(level: Level): SeverityLevel {
+function log4jLevelToSentrySeverity(level: log4js.Level): SeverityLevel {
   switch (level) {
-    case levels.WARN:
+    case log4js.levels.WARN:
       return "warning";
-    case levels.DEBUG:
+    case log4js.levels.DEBUG:
       return "debug";
-    case levels.ERROR:
+    case log4js.levels.ERROR:
       return "error";
-    case levels.FATAL:
+    case log4js.levels.FATAL:
       return "fatal";
-    case levels.INFO:
+    case log4js.levels.INFO:
       return "info";
     default:
       return "log";
   }
 }
-function sentryAppender(): AppenderFunction {
+function sentryAppender(): log4js.AppenderFunction {
   if (!config.sentryDSN) {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
@@ -28,7 +28,9 @@ function sentryAppender(): AppenderFunction {
   return (loggingEvent) => {
     // Send only ERROR/FATAL/WARN events to sentry
     if (
-      [levels.ERROR, levels.FATAL, levels.WARN].includes(loggingEvent.level)
+      [log4js.levels.ERROR, log4js.levels.FATAL, log4js.levels.WARN].includes(
+        loggingEvent.level
+      )
     ) {
       // Avoid double logging of errors.
       if (loggingEvent.data.some((d) => d.errorHandled)) {
@@ -45,8 +47,8 @@ function sentryAppender(): AppenderFunction {
   };
 }
 
-export const sentryLog4jsAppender: AppenderModule = {
-  configure: function (): AppenderFunction {
+export const sentryLog4jsAppender: log4js.AppenderModule = {
+  configure: function (): log4js.AppenderFunction {
     return sentryAppender();
   },
 };

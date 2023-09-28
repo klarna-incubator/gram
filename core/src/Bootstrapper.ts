@@ -1,22 +1,22 @@
 import { readdirSync, symlinkSync, unlinkSync } from "fs";
 import { isAbsolute, join } from "path";
-import { ComponentClass } from "./data/component-classes";
-import { DataAccessLayer } from "./data/dal";
-import { getLogger } from "log4js";
-import { NotificationTemplate } from "./notifications/NotificationTemplate";
-import { SuggestionSource } from "./suggestions/models";
-import { AuthzProvider } from "./auth/AuthzProvider";
-import { IdentityProvider } from "./auth/IdentityProvider";
-import IdentityProviderRegistry from "./auth/IdentityProviderRegistry";
-import { setAuthorizationProvider } from "./auth/authorization";
-import { setSystemProvider } from "./data/systems/systems";
-import { SystemProvider } from "./data/systems/SystemProvider";
-import { UserProvider } from "./auth/UserProvider";
-import { ReviewerProvider } from "./data/reviews/ReviewerProvider";
-import { SystemPropertyProvider } from "./data/system-property/SystemPropertyProvider";
-import { getPool, migratePlugin } from "./plugins/data";
-import { Pool } from "pg";
-import { TeamProvider } from "./auth/TeamProvider";
+import { ComponentClass } from "./data/component-classes/index.js";
+import { DataAccessLayer } from "./data/dal.js";
+import log4js from "log4js";
+import { NotificationTemplate } from "./notifications/NotificationTemplate.js";
+import { SuggestionSource } from "./suggestions/models.js";
+import { AuthzProvider } from "./auth/AuthzProvider.js";
+import { IdentityProvider } from "./auth/IdentityProvider.js";
+import IdentityProviderRegistry from "./auth/IdentityProviderRegistry.js";
+import { setAuthorizationProvider } from "./auth/authorization.js";
+import { setSystemProvider } from "./data/systems/systems.js";
+import { SystemProvider } from "./data/systems/SystemProvider.js";
+import { UserProvider } from "./auth/UserProvider.js";
+import { ReviewerProvider } from "./data/reviews/ReviewerProvider.js";
+import { SystemPropertyProvider } from "./data/system-property/SystemPropertyProvider.js";
+import { getPool, migratePlugin } from "./plugins/data.js";
+import pg from "pg";
+import { TeamProvider } from "./auth/TeamProvider.js";
 
 /* Could create a temporary directory instead */
 export const AssetDir = "assets";
@@ -35,14 +35,14 @@ export class Bootstrapper {
 
   constructor(public dal: DataAccessLayer) {
     this.assetPaths = [];
-    this.log = getLogger("PackCompiler");
+    this.log = log4js.getLogger("PackCompiler");
   }
 
   /**
    * Returns pool for unique database created for plugin. This will be connected to a separate schema name based on the pluginDbSuffix.
    * @param pluginDbSuffix
    */
-  async getPluginDbPool(pluginDbSuffix: string): Promise<Pool> {
+  async getPluginDbPool(pluginDbSuffix: string): Promise<pg.Pool> {
     return getPool(pluginDbSuffix);
   }
 

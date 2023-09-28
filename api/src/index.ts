@@ -1,34 +1,20 @@
-// This allows TypeScript to detect our global value
-// Sentry needs this: https://docs.sentry.io/platforms/node/typescript/
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface Global {
-      __rootdir__: string;
-    }
-  }
-}
-
-global.__rootdir__ = __dirname || process.cwd();
-// End of Sentry stuff
-
 import { initConfig } from "@gram/config";
 initConfig(); // Must do this before loading config
-import { configureLogging } from "@gram/core/dist/logger";
+import { configureLogging } from "@gram/core/dist/logger/index.js";
 configureLogging();
 
 import http from "http";
-import { createApp } from "./app";
-import { createControlApp } from "./controlApp";
-import { bootstrap } from "@gram/core/dist/bootstrap";
-import { getLogger } from "log4js";
-import { notificationSender } from "@gram/core/dist/notifications/sender";
-import { attachWebsocketServer } from "./ws";
-import { config } from "@gram/core/dist/config";
+import { createApp } from "./app.js";
+import { createControlApp } from "./controlApp.js";
+import { bootstrap } from "@gram/core/dist/bootstrap.js";
+import log4js from "log4js";
+import { notificationSender } from "@gram/core/dist/notifications/sender.js";
+import { attachWebsocketServer } from "./ws/index.js";
+import { config } from "@gram/core/dist/config/index.js";
 
 const NOTIFICATION_INTERVAL = 1000 * 30; // 30 seconds
 
-const log = getLogger("api");
+const log = log4js.getLogger("api");
 
 // Catch and log unhandled errors
 const handleUnhandledError = (err: Error) => {

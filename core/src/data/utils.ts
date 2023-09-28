@@ -1,9 +1,10 @@
-import { Pool } from "pg";
-import { getLogger } from "log4js";
+import pg from "pg";
+import pkg from "log4js";
+const { getLogger } = pkg;
 
 const log = getLogger("UtilsDataService");
 
-export async function _deleteAllTheThings(pool: Pool) {
+export async function _deleteAllTheThings(pool: pg.Pool) {
   if (process.env.NODE_ENV !== "test") {
     log.warn("Attempted to _deleteAllTheThings in a non-test environment.");
     return;

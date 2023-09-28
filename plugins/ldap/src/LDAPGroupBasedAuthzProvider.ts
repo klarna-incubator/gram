@@ -1,9 +1,9 @@
-import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider";
-import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { LDAPClientSettings } from "./LDAPClientSettings";
-import { connectLdapClient, ldapQueryOne } from "./lookup";
-import { escapeFilterValue, getAttributeAsArray } from "./util";
+import { AuthzProvider } from "@gram/core/dist/auth/AuthzProvider.js";
+import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { LDAPClientSettings } from "./LDAPClientSettings.js";
+import { connectLdapClient, ldapQueryOne } from "./lookup.js";
+import { escapeFilterValue, getAttributeAsArray } from "./util.js";
 
 export interface LDAPAuthzProviderSettings {
   ldapSettings: LDAPClientSettings;

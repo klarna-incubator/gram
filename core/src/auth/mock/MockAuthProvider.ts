@@ -1,6 +1,6 @@
-import { RequestContext } from "../../data/providers/RequestContext";
-import { IdentityProvider, LoginResult } from "../IdentityProvider";
-import { Role } from "../models/Role";
+import { RequestContext } from "../../data/providers/RequestContext.js";
+import { IdentityProvider, LoginResult } from "../IdentityProvider.js";
+import { Role } from "../models/Role.js";
 
 export default class MockAuthProvider implements IdentityProvider {
   key = "mock";

@@ -1,4 +1,4 @@
-import { Review } from "../reviews/Review";
+import { Review } from "../reviews/Review.js";
 
 type NotificationInputVariables = {
   review?: Review;

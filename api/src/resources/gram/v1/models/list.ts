@@ -9,7 +9,7 @@ import {
   ModelFilter,
   ModelFilters,
   ModelListOptions,
-} from "@gram/core/dist/data/models/ModelDataService";
+} from "@gram/core/dist/data/models/ModelDataService.js";
 
 export default (dataModels: ModelDataService) =>
   async (req: Request, res: Response) => {

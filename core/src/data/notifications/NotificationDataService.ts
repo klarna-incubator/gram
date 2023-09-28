@@ -1,8 +1,8 @@
-import { Notification, NotificationStatus } from "./Notification";
-import { Pool } from "pg";
-import { getLogger } from "log4js";
-import { DataAccessLayer } from "../dal";
-import { NotificationInput } from "./NotificationInput";
+import { Notification, NotificationStatus } from "./Notification.js";
+import pg from "pg";
+import log4js from "log4js";
+import { DataAccessLayer } from "../dal.js";
+import { NotificationInput } from "./NotificationInput.js";
 
 function convertToNotification(row: any) {
   const model = new Notification(row.template_key, row.variables || {});
@@ -16,9 +16,9 @@ function convertToNotification(row: any) {
 }
 
 export class NotificationDataService {
-  constructor(private pool: Pool, private dal: DataAccessLayer) {}
+  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {}
 
-  log = getLogger("NotificationDataService");
+  log = log4js.getLogger("NotificationDataService");
 
   /**
    * Queue a new notification to be sent out
@@ -81,7 +81,7 @@ export class NotificationDataService {
    * Polls and updates for 25 notifications to be sent.
    * @returns {Notification[]}
    */
-  async pollNewNotifications() {
+  async pollNewNotifications(): Promise<Notification[]> {
     const query = `
     UPDATE notifications 
     SET status = 'pending', updated_at = current_timestamp

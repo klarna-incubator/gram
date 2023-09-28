@@ -1,9 +1,9 @@
-import { Pool } from "pg";
-import { getLogger } from "log4js";
-import { linkToModel } from "../../util/links";
-import { DataAccessLayer } from "../dal";
-import { SystemPropertyValue } from "../system-property/types";
-import { RequestContext } from "../providers/RequestContext";
+import pg from "pg";
+import log4js from "log4js";
+import { linkToModel } from "../../util/links.js";
+import { DataAccessLayer } from "../dal.js";
+import { SystemPropertyValue } from "../system-property/types.js";
+import { RequestContext } from "../providers/RequestContext.js";
 
 interface SystemCompliance {
   SystemID: string;
@@ -27,9 +27,9 @@ interface SystemComplianceReport {
 }
 
 export class ReportDataService {
-  constructor(private pool: Pool, private dal: DataAccessLayer) {}
+  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {}
 
-  log = getLogger("ReportDataService");
+  log = log4js.getLogger("ReportDataService");
 
   async listSystemCompliance(
     ctx: RequestContext,

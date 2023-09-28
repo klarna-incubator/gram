@@ -4,11 +4,11 @@
  */
 
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
-import Threat from "@gram/core/dist/data/threats/Threat";
-import { validateUUID } from "@gram/core/dist/util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation.js";
+import Threat from "@gram/core/dist/data/threats/Threat.js";
+import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
 export function create(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

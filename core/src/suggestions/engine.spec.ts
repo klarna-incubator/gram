@@ -1,19 +1,19 @@
 import { randomUUID } from "crypto";
-import { Pool } from "pg";
-import { DataAccessLayer } from "../data/dal";
-import { createPostgresPool } from "../data/postgres";
-import { createSampleModel } from "../test-util/model";
+import pg from "pg";
+import { DataAccessLayer } from "../data/dal.js";
+import { createPostgresPool } from "../data/postgres.js";
+import { createSampleModel } from "../test-util/model.js";
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../test-util/suggestions";
-import { SuggestionEngine } from "./engine";
+} from "../test-util/suggestions.js";
+import { SuggestionEngine } from "./engine.js";
 import {
   EngineSuggestedControl,
   EngineSuggestedThreat,
   SuggestionID,
   SuggestionSource,
-} from "./models";
+} from "./models.js";
 
 const EmptySuggestionSource: SuggestionSource = {
   name: "empty",
@@ -46,7 +46,7 @@ const ErroringSuggestionSource: SuggestionSource = {
 };
 
 describe("SuggestionEngine", () => {
-  let pool: Pool;
+  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let modelId: string;
   let engine: SuggestionEngine;

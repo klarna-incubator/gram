@@ -1,7 +1,8 @@
-import Cache from "@gram/core/dist/util/cache";
+import Cache from "@gram/core/dist/util/cache.js";
 import { Client, Entry, SearchOptions, SearchResult } from "ldapts";
-import { getLogger } from "log4js";
-import { LDAPClientSettings } from "./LDAPClientSettings";
+import pkg from "log4js";
+const { getLogger } = pkg;
+import { LDAPClientSettings } from "./LDAPClientSettings.js";
 
 const log = getLogger("ldapLookup");
 
