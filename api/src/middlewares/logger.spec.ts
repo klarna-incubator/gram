@@ -2,6 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import { createTestApp } from "../test-util/app.js";
 import logger from "./logger.js";
+import { jest } from "@jest/globals";
 
 const logMock = {
   info: jest.fn(),
@@ -59,7 +60,7 @@ describe("logger middleware", () => {
       correlation_id: "123",
     };
 
-    const calledEvent = logMock.info.mock.calls[0][0];
+    const calledEvent: any = logMock.info.mock.calls[0][0];
     expect(logMock.info).toHaveBeenCalledTimes(1);
     expect(calledEvent.meta.method).toBe(logEvent.method);
     expect(calledEvent.meta.originalUrl).toBe(logEvent.originalUrl);

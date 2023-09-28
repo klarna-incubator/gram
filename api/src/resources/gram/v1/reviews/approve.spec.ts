@@ -1,19 +1,17 @@
-import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
 import {
-  sampleOtherUser,
-  sampleReviewer,
-  sampleUser,
-} from "../../../../test-util/sampleUser.js";
+  sampleReviewerToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
+import { jest } from "@jest/globals";
 
 describe("Reviews.approve", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
   const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   let app: any;
@@ -21,18 +19,14 @@ describe("Reviews.approve", () => {
   let dal: DataAccessLayer;
   let modelId: string;
   let review: Review;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleReviewerToken();
     ({ app, pool, dal } = await createTestApp());
-
-    validate.mockImplementation(async () => {
-      return sampleUser;
-    });
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleReviewer);
-
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
 
@@ -51,11 +45,10 @@ describe("Reviews.approve", () => {
   });
 
   it("should return 403 on non-reviewer approval request (default user)", async () => {
-    validate.mockImplementation(async () => sampleOtherUser);
-
+    const userToken = await sampleUserToken();
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/approve`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", userToken);
 
     expect(res.status).toBe(403);
   });
@@ -63,7 +56,7 @@ describe("Reviews.approve", () => {
   it("should return 200 on succesful approve [without note] for role.reviewer", async () => {
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/approve`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();
@@ -72,7 +65,7 @@ describe("Reviews.approve", () => {
   it("should return 200 on succesful approve [with note] for role.reviewer", async () => {
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/approve`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ note: "Approved with note" });
 
     expect(res.status).toBe(200);
@@ -84,7 +77,6 @@ describe("Reviews.approve", () => {
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     systemGetById.mockRestore();
     await _deleteAllTheThings(pool);
   });

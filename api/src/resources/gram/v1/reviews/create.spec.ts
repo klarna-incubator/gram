@@ -1,34 +1,34 @@
-import { randomUUID } from "crypto";
-import pg from "pg";
-import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { randomUUID } from "crypto";
+import pg from "pg";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
 import {
-  sampleAdmin,
-  sampleOtherUser,
-  sampleUser,
-} from "../../../../test-util/sampleUser.js";
+  sampleAdminToken,
+  sampleOtherUserToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
+import { sampleAdmin } from "../../../../test-util/sampleUser.js";
+import { jest } from "@jest/globals";
 
 describe("reviews.create", () => {
   let app: any;
   let pool: pg.Pool;
   let modelId: any;
   let dal: DataAccessLayer;
+  let token = "";
 
-  const validate = jest.spyOn(jwt, "validateToken");
   const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ app, dal, pool } = await createTestApp());
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
-
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
   });
@@ -41,13 +41,11 @@ describe("reviews.create", () => {
   });
 
   it("should return 403 on un-authorized request (different team)", async () => {
-    validate.mockImplementation(async () => {
-      return sampleOtherUser;
-    });
+    const otherUserToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", otherUserToken)
       .send({ reviewedBy: "some-user" });
     expect(res.status).toBe(403);
   });
@@ -55,7 +53,7 @@ describe("reviews.create", () => {
   it("should return 200 and review object on user request", async () => {
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({
         reviewedBy: "another user",
       });
@@ -65,11 +63,11 @@ describe("reviews.create", () => {
   });
 
   it("should return 200 and review object on admin request", async () => {
-    validate.mockImplementation(async () => sampleAdmin);
+    const adminToken = await sampleAdminToken();
 
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", adminToken)
       .send({
         reviewedBy: "another user",
       });
@@ -79,7 +77,6 @@ describe("reviews.create", () => {
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     systemGetById.mockRestore();
     await _deleteAllTheThings(pool);
   });

@@ -16,6 +16,7 @@ import {
   genSuggestedControl,
   genSuggestedThreat,
 } from "../../../../test-util/suggestions.js";
+import { jest } from "@jest/globals";
 
 describe("Suggestions.reject", () => {
   const systemGetById = jest.spyOn(systemProvider, "getSystem");

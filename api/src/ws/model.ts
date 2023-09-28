@@ -10,6 +10,11 @@ import pkg from "log4js";
 const { getLogger } = pkg;
 import * as jwt from "@gram/core/dist/auth/jwt.js";
 
+// Hack to easily mock the permissions for testing.
+export const _permissionsInterface = {
+  getPermissions: getPermissionsForModel,
+};
+
 export class ModelWebsocketServer {
   constructor(model: Model, dal: DataAccessLayer) {
     this.id = model.id!;
@@ -127,7 +132,11 @@ export class ModelWebsocketServer {
     try {
       const { token } = JSON.parse(data);
       const user = await jwt.validateToken(token);
-      const permissions = await getPermissionsForModel({}, this.model, user);
+      const permissions = await _permissionsInterface.getPermissions(
+        {},
+        this.model,
+        user
+      );
 
       if (!permissions.includes(Permission.Read)) {
         ws.send(JSON.stringify({ msg: "authorization failed" }));

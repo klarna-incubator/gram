@@ -12,36 +12,30 @@ import {
   sampleOtherUser,
   sampleUser,
 } from "../../../../test-util/sampleUser.js";
+import {
+  sampleAdminToken,
+  sampleOtherUserToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
 
 describe("models.create", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
   const componentId = "fe93572e-9d0c-4afe-b042-e02c1c45f704";
   const componentId2 = "fe93572e-9d0c-4afe-b042-e02c1c459999";
   const dataFlowId = "fe93572e-9d0c-4afe-b042-e02c1cstonks";
   let app: any;
   let pool: pg.Pool;
   let dal: DataAccessLayer;
+  let token = "";
+  let adminToken = "";
 
   beforeAll(async () => {
+    adminToken = await sampleAdminToken();
+    token = await sampleUserToken();
     ({ app, dal, pool } = await createTestApp());
   });
 
   beforeEach(async () => {
     await _deleteAllTheThings(pool);
-  });
-
-  beforeEach(() => {
-    validate.mockImplementation(async () => sampleUser);
-
-    // modelGetById.mockImplementation(async () => {
-    // const model = new Model("sys1", "Version 1", "root");
-    // model.id = "mod1";
-    // return model;
-    // });
-  });
-
-  afterAll(() => {
-    validate.mockRestore();
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -52,39 +46,36 @@ describe("models.create", () => {
   });
 
   it("should return 403 on unauthorized request (different team)", async () => {
-    validate.mockImplementation(async () => sampleOtherUser);
+    let otherToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .post("/api/v1/models")
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", otherToken)
       .send({ version: "Some Model", systemId: sampleOwnedSystem.id });
     expect(res.status).toBe(403);
   });
 
   it("should return 200 on admin request", async () => {
-    validate.mockImplementation(async () => sampleAdmin);
-
     const res = await request(app)
       .post("/api/v1/models")
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", adminToken)
       .send({ version: "Some Model", systemId: sampleOwnedSystem.id });
     expect(res.status).toBe(200);
   });
 
-  it("should return 200 on admin request", async () => {
+  it("should return 200 on regular request", async () => {
     const res = await request(app)
       .post("/api/v1/models")
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ version: "Some Model", systemId: sampleOwnedSystem.id });
     expect(res.status).toBe(200);
   });
 
   it("should return 200 on every request and import model/threats/controls", async () => {
-    // modelGetById.mockImplementation(async () => {});
     // 1) Create model A
     const res = await request(app)
       .post("/api/v1/models")
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({
         version: "Some Model to be imported from",
         systemId: sampleOwnedSystem.id,
@@ -96,7 +87,7 @@ describe("models.create", () => {
     // Assuming componentId = "fe93572e-9d0c-4afe-b042-e02c1c45f704"
     const patchRes = await request(app)
       .patch(`/api/v1/models/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({
         version: "Some Model to be imported from",
         data: {
@@ -119,7 +110,7 @@ describe("models.create", () => {
 
     const modelRes = await request(app)
       .get(`/api/v1/models/${modelId}`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(modelRes.status).toBe(200);
     const model: Model = modelRes.body.model;
 
@@ -134,7 +125,7 @@ describe("models.create", () => {
       if (i > threatsAmount / 2) {
         const res2 = await request(app)
           .post(`/api/v1/models/${modelId}/threats`)
-          .set("Authorization", "bearer validToken")
+          .set("Authorization", token)
           .send({
             title: threatTitle,
             componentId: componentId,
@@ -144,7 +135,7 @@ describe("models.create", () => {
       } else {
         const res2 = await request(app)
           .post(`/api/v1/models/${modelId}/threats`)
-          .set("Authorization", "bearer validToken")
+          .set("Authorization", token)
           .send({
             title: threatTitle2,
             componentId: componentId2,
@@ -156,7 +147,7 @@ describe("models.create", () => {
 
     const resThreats = await request(app)
       .get(`/api/v1/models/${modelId}/threats`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(resThreats.status).toBe(200);
     const threats = resThreats.body.threats;
 
@@ -171,7 +162,7 @@ describe("models.create", () => {
       if (i > controlsAmount / 2) {
         const res4 = await request(app)
           .post(`/api/v1/models/${modelId}/controls`)
-          .set("Authorization", "bearer validToken")
+          .set("Authorization", token)
           .send({
             title: controlTitle,
             description: controlDescription,
@@ -181,7 +172,7 @@ describe("models.create", () => {
       } else {
         const res4 = await request(app)
           .post(`/api/v1/models/${modelId}/controls`)
-          .set("Authorization", "bearer validToken")
+          .set("Authorization", token)
           .send({
             title: controlTitle2,
             description: controlDescription2,
@@ -193,7 +184,7 @@ describe("models.create", () => {
 
     const resControls = await request(app)
       .get(`/api/v1/models/${modelId}/controls`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(resControls.status).toBe(200);
     const controls = resControls.body.controls;
 
@@ -203,7 +194,7 @@ describe("models.create", () => {
     for (let i = 0; i < mitigationsAmount; i++) {
       const res4 = await request(app)
         .post(`/api/v1/models/${modelId}/mitigations`)
-        .set("Authorization", "bearer validToken")
+        .set("Authorization", token)
         .send({
           threatId: threats[i].id,
           controlId: controls[i].id,
@@ -213,14 +204,14 @@ describe("models.create", () => {
 
     const resMitigations = await request(app)
       .get(`/api/v1/models/${modelId}/mitigations`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(resMitigations.status).toBe(200);
     const mitigations = resMitigations.body.mitigations;
 
     // 6) Create a new model B importing from model A
     const res5 = await request(app)
       .post("/api/v1/models")
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({
         version: "Some Model imported",
         systemId: sampleOwnedSystem.id,
@@ -231,7 +222,7 @@ describe("models.create", () => {
 
     const modelCopyRes = await request(app)
       .get(`/api/v1/models/${modelCopyId}`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(modelCopyRes.status).toBe(200);
     const modelCopy: Model = modelCopyRes.body.model;
 
@@ -265,7 +256,7 @@ describe("models.create", () => {
     // 6) Get copied threats
     const res6 = await request(app)
       .get(`/api/v1/models/${modelCopyId}/threats`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res6.status).toBe(200);
     expect(res6.body.threats.length).toBe(threatsAmount);
     const threatCopies = res6.body.threats;
@@ -273,7 +264,7 @@ describe("models.create", () => {
     // 7) Get copied controls
     const res7 = await request(app)
       .get(`/api/v1/models/${modelCopyId}/controls`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res7.status).toBe(200);
     expect(res7.body.controls.length).toBe(controlsAmount);
     const controlCopies = res7.body.threats;
@@ -281,7 +272,7 @@ describe("models.create", () => {
     // 8) Get copied mitigations
     const res8 = await request(app)
       .get(`/api/v1/models/${modelCopyId}/mitigations`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res8.status).toBe(200);
     expect(res8.body.mitigations.length).toBe(mitigationsAmount);
     const mitigationCopies = res8.body.mitigations;

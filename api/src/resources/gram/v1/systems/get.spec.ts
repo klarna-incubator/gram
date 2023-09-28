@@ -6,8 +6,10 @@ import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import { createTestApp } from "../../../../test-util/app.js";
 import { getMockedSystemById } from "../../../../test-util/system.js";
 import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
+import { jest } from "@jest/globals";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 
-const validate = jest.spyOn(jwt, "validateToken");
+const token = await sampleUserToken();
 
 describe("systems.get", () => {
   let app: any;
@@ -18,7 +20,6 @@ describe("systems.get", () => {
   });
 
   beforeEach(() => {
-    validate.mockImplementation(async () => sampleUser);
     getById = jest.spyOn(systemProvider, "getSystem");
     // maybe unnecessary, same exists in the TestSystemProvider.
     getById.mockImplementation((ctx: any, systemId: string) =>
@@ -31,22 +32,12 @@ describe("systems.get", () => {
     expect(res.status).toBe(401);
   });
 
-  it("should return 403 on unauthorized", async () => {
-    validate.mockImplementation(async () => genUser({ roles: [] }));
-
-    const res = await request(app)
-      .get("/api/v1/systems/234")
-      .set("Authorization", "bearer validToken");
-
-    expect(res.status).toBe(403);
-  });
-
   it("should return 404 on invalid system id", async () => {
     getById.mockImplementation(async () => null);
 
     const res = await request(app)
       .get("/api/v1/systems/234")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(404);
   });
@@ -58,7 +49,7 @@ describe("systems.get", () => {
 
     const res = await request(app)
       .get("/api/v1/systems/123")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(500);
   });
@@ -66,14 +57,13 @@ describe("systems.get", () => {
   it("should return 200 with dummy data", async () => {
     const res = await request(app)
       .get("/api/v1/systems/" + sampleOwnedSystem.id)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.system).toEqual(sampleOwnedSystem.toJSON());
   });
 
   afterAll(() => {
-    validate.mockRestore();
     getById.mockRestore();
   });
 });

@@ -4,7 +4,6 @@ import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
 import { UserProvider } from "@gram/core/dist/auth/UserProvider.js";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { sampleOtherTeam, sampleTeam } from "./sampleTeam.js";
-import { generateToken } from "@gram/core/dist/auth/jwt.js";
 
 export const sampleUser: UserToken = {
   sub: "test@abc.xyz",

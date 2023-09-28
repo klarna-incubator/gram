@@ -1,8 +1,7 @@
-import { jest } from "@jest/globals";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
 import express from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
+import { sampleUserToken } from "../test-util/sampleTokens.js";
 import { sampleUser } from "../test-util/sampleUser.js";
 import { authRequiredMiddleware, validateTokenMiddleware } from "./auth.js";
 
@@ -11,7 +10,7 @@ app.use(validateTokenMiddleware);
 app.get("/unprotected", (req, res) => res.end());
 app.get("/protected", authRequiredMiddleware, (req, res) => res.end());
 
-const validate = jest.spyOn(jwt, "validateToken");
+const token = await sampleUserToken();
 
 describe("auth middleware", () => {
   it("should return 200 on unprotected path", async () => {
@@ -39,34 +38,25 @@ describe("auth middleware", () => {
   });
 
   it("should return 401 on protected path with expired token (header)", async () => {
-    validate.mockImplementation(async (): Promise<UserToken> => {
-      throw new Error("expired");
-    });
+    const expiredToken = await jwt.generateToken({ sub: sampleUser.sub }, 0);
     const res = await request(app)
       .get("/protected")
-      .set("Authorization", "bearer expired_token");
+      .set("Authorization", "bearer " + expiredToken);
     expect(res.status).toBe(401);
   });
 
   it("should return 401 on protected path with expired token (cookie)", async () => {
-    validate.mockImplementation(async (): Promise<UserToken> => {
-      throw new Error("expired");
-    });
+    const expiredToken = await jwt.generateToken({ sub: sampleUser.sub }, 0);
     const res = await request(app)
       .get("/protected")
-      .set("Cookie", "bearerToken=expired_token");
+      .set("Cookie", "bearerToken=" + expiredToken);
     expect(res.status).toBe(401);
   });
 
   it("should return 200 on protected path with valid token (header)", async () => {
-    validate.mockImplementation(async () => sampleUser);
     const res = await request(app)
       .get("/protected")
-      .set("Authorization", "bearer expired_token");
+      .set("Authorization", token);
     expect(res.status).toBe(200);
   });
-});
-
-afterAll(() => {
-  validate.mockRestore();
 });

@@ -5,25 +5,22 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
 import { sampleAdmin, sampleUser } from "../../../../test-util/sampleUser.js";
+import {
+  sampleAdminToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
 
 describe("models.setTemplate", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
   let app: any;
   let dal: DataAccessLayer;
   let url: string;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleAdminToken();
     ({ app, dal } = await createTestApp());
     const modelId = await createSampleModel(dal);
     url = `/api/v1/models/${modelId}/set-template`;
-  });
-
-  beforeEach(() => {
-    validate.mockImplementation(async () => sampleAdmin);
-  });
-
-  afterAll(() => {
-    validate.mockRestore();
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -32,11 +29,11 @@ describe("models.setTemplate", () => {
   });
 
   it("should return 403 on unauthorized request (wrong role)", async () => {
-    validate.mockImplementation(async () => sampleUser);
+    const normieToken = await sampleUserToken();
 
     const res = await request(app)
       .patch(url)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", normieToken)
       .send({ isTemplate: true });
     expect(res.status).toBe(403);
   });
@@ -44,13 +41,13 @@ describe("models.setTemplate", () => {
   it("should return 200 on admin request", async () => {
     let res = await request(app)
       .patch(url)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ isTemplate: true });
     expect(res.status).toBe(200);
 
     res = await request(app)
       .patch(url)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ isTemplate: false });
     expect(res.status).toBe(200);
   });
@@ -58,7 +55,7 @@ describe("models.setTemplate", () => {
   it("should return 400 on bad request", async () => {
     const res = await request(app)
       .patch(url)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ isTemplate: "hej" });
     expect(res.status).toBe(400);
   });

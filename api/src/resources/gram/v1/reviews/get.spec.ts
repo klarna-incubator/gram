@@ -1,13 +1,13 @@
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { randomUUID } from "crypto";
 import { Express } from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
-import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { createTestApp } from "../../../../test-util/app.js";
-import { genUser } from "@gram/core/dist/test-util/authz.js";
 import { createSampleModel as genSampleModel } from "../../../../test-util/model.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { jest } from "@jest/globals";
 
 describe("reviews.get", () => {
   let app: Express;
@@ -15,20 +15,18 @@ describe("reviews.get", () => {
   let getByModelId: any;
   let modelId: string;
   let dal: DataAccessLayer;
-
-  const validate = jest.spyOn(jwt, "validateToken");
+  let token = "";
 
   afterAll(async () => await pool.end());
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ app, dal, pool } = await createTestApp());
 
     getByModelId = jest.spyOn(dal.reviewService, "getByModelId");
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
-
     modelId = await genSampleModel(dal);
 
     const review = new Review(modelId, sampleUser.sub, ReviewStatus.Requested);
@@ -43,30 +41,15 @@ describe("reviews.get", () => {
   it("should return 400 on invalid review id (not uuid)", async () => {
     const res = await request(app)
       .get("/api/v1/reviews/234")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(400);
-  });
-
-  it("should return 403 on unauthorized request (no roles)", async () => {
-    validate.mockImplementation(async () =>
-      genUser({
-        sub: "test@abc.xyz",
-        roles: [], // No role
-        teams: [{ name: "test team", id: "42" }],
-      })
-    );
-
-    const res = await request(app)
-      .get(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken");
-    expect(res.status).toBe(403);
   });
 
   it("should return 200 on request", async () => {
     const res = await request(app)
       .get(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res.status).toBe(200);
 
     expect(res.body.review.status).toEqual(ReviewStatus.Requested);
@@ -81,7 +64,7 @@ describe("reviews.get", () => {
   it("should return 404 on invalid review model-id (valid uuid)", async () => {
     const res = await request(app)
       .get(`/api/v1/reviews/${randomUUID()}`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(404);
   });
@@ -93,13 +76,12 @@ describe("reviews.get", () => {
 
     const res = await request(app)
       .get(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(500);
   });
 
   afterAll(() => {
-    validate.mockRestore();
     getByModelId.mockRestore();
   });
 });

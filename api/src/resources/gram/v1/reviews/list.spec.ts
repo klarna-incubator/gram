@@ -1,25 +1,24 @@
-import { randomUUID } from "crypto";
-import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { randomUUID } from "crypto";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
-import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
+import { jest } from "@jest/globals";
 
 describe("reviews.list", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
   let list: any;
   let app: any;
   let dal: DataAccessLayer;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ app, dal } = await createTestApp());
     list = jest.spyOn(dal.reviewService, "list");
   });
 
   beforeEach(() => {
-    validate.mockImplementation(async () => sampleUser);
-
     list.mockImplementation(async () => {
       const reviewA = new Review(
         randomUUID(),
@@ -47,7 +46,7 @@ describe("reviews.list", () => {
   it("should return 200 with no query parameter", async () => {
     const res = await request(app)
       .get("/api/v1/reviews")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
   });
@@ -61,7 +60,7 @@ describe("reviews.list", () => {
 
     const res = await request(app)
       .get("/api/v1/reviews?reviewed-by=some-reviewer")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(500);
   });
@@ -69,7 +68,7 @@ describe("reviews.list", () => {
   it("should return 200 with for reviewed-by", async () => {
     const res = await request(app)
       .get("/api/v1/reviews?reviewed-by=some-reviewer")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.items[0].modelId).toBe("id1");
@@ -77,7 +76,6 @@ describe("reviews.list", () => {
   });
 
   afterAll(() => {
-    validate.mockRestore();
     list.mockRestore();
   });
 });

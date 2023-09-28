@@ -1,19 +1,14 @@
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { createTestApp } from "../../../../test-util/app.js";
-import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 
 describe("system-compliance", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ app } = await createTestApp());
-  });
-
-  beforeEach(() => {
-    validate.mockImplementation(async () => sampleUser);
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -25,7 +20,7 @@ describe("system-compliance", () => {
   it("should work (return 200)", async () => {
     const res = await request(app)
       .get("/api/v1/reports/system-compliance")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
   });
@@ -33,7 +28,7 @@ describe("system-compliance", () => {
   it("should work with pagesize (return 200)", async () => {
     const res = await request(app)
       .get("/api/v1/reports/system-compliance?pagesize=10")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
   });
@@ -41,12 +36,8 @@ describe("system-compliance", () => {
   it("should work with pagesize and page (return 200)", async () => {
     const res = await request(app)
       .get("/api/v1/reports/system-compliance?pagesize=10&page=3")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
-  });
-
-  afterAll(() => {
-    validate.mockRestore();
   });
 });

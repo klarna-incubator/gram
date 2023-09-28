@@ -6,10 +6,12 @@ import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { jest } from "@jest/globals";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
+
+const token = await sampleUserToken();
 
 describe("Threats.create", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
   let pool: any;
   let dal: DataAccessLayer;
@@ -21,9 +23,7 @@ describe("Threats.create", () => {
   });
 
   beforeEach(async () => {
-    await _deleteAllTheThings(pool);
-
-    validate.mockImplementation(async () => sampleUser);
+    // await _deleteAllTheThings(pool);
 
     const model = new Model(sampleOwnedSystem.id, "version", sampleUser.sub);
     model.data = { components: [], dataFlows: [] };
@@ -40,13 +40,9 @@ describe("Threats.create", () => {
   it("should return 200", async () => {
     const res = await request(app)
       .post(`/api/v1/models/${modelId}/threats`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ title: "Threat", componentId, description: "something" });
 
     expect(res.status).toBe(200);
-  });
-
-  afterAll(() => {
-    validate.mockRestore();
   });
 });

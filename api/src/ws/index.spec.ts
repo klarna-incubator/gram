@@ -1,5 +1,4 @@
 import { jest } from "@jest/globals";
-import * as authorizationModule from "@gram/core/dist/auth/authorization.js";
 import { Permission } from "@gram/core/dist/auth/authorization.js";
 import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
@@ -12,7 +11,7 @@ import WebSocket from "ws";
 import * as ws from "./index.js";
 import { genUser } from "@gram/core/dist/test-util/authz.js";
 import { sampleOwnedSystem } from "../test-util/sampleOwnedSystem.js";
-import { ModelWebsocketServer } from "./model.js";
+import { ModelWebsocketServer, _permissionsInterface } from "./model.js";
 
 const receive = (client: WebSocket, t = 500) =>
   new Promise<any>((resolve, reject) => {
@@ -37,12 +36,11 @@ const connected = (client: WebSocket) =>
 
 describe("websocket protocol", () => {
   let dal: DataAccessLayer;
-  // const authenticate = jest.spyOn(jwt, "validateToken");
 
   let modelGetById: any;
   const getPermissionsForModel = jest.spyOn(
-    authorizationModule,
-    "getPermissionsForModel"
+    _permissionsInterface,
+    "getPermissions"
   );
 
   const app = express();
@@ -64,10 +62,6 @@ describe("websocket protocol", () => {
 
   beforeEach(() => {
     wssRegistry.clear();
-
-    // authenticate.mockImplementation(async (sub: string) => {
-    //   return genUser({ sub });
-    // });
 
     getPermissionsForModel.mockImplementation(async () => {
       return [Permission.Read, Permission.Write];
@@ -340,6 +334,7 @@ describe("websocket protocol", () => {
 
   it("should reject packets from users with no write permission", async () => {
     getPermissionsForModel.mockImplementation(async () => [Permission.Read]);
+
     const id = randomUUID();
     const server = new ModelWebsocketServer(
       new Model(id, "whatever", "hello"),
@@ -446,8 +441,3 @@ describe("websocket protocol", () => {
     ).toContain("Unexpected server response: 401");
   });
 });
-
-// describe("websocket server", () => {
-//   it("should not leave hanging connections on client non-clean exit", async () => {});
-//   it("should support a fair amount of clients and models concurrently", async () => {});
-// });

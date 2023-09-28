@@ -1,22 +1,23 @@
-import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
 import Model from "@gram/core/dist/data/models/Model.js";
 import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
+import { jest } from "@jest/globals";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import {
-  sampleOtherUser,
-  sampleUser,
-} from "../../../../test-util/sampleUser.js";
+  sampleOtherUserToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
 
 describe("system-property.get", () => {
   let modelGetById: any;
   let modelService: ModelDataService;
-  const validate = jest.spyOn(jwt, "validateToken");
 
   let app: any;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({
       app,
       dal: { modelService },
@@ -25,8 +26,6 @@ describe("system-property.get", () => {
   });
 
   beforeEach(() => {
-    validate.mockImplementation(async () => sampleUser);
-
     modelGetById.mockImplementation(async () => {
       const model = new Model(sampleOwnedSystem.id, "Version 1", "root");
       model.id = "mod1";
@@ -42,11 +41,11 @@ describe("system-property.get", () => {
   });
 
   it("should return 403 on unauthorized request (different team)", async () => {
-    validate.mockImplementation(async () => sampleOtherUser);
+    const otherToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .post("/api/v1/models")
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", otherToken)
       .send({ version: "Some Model", systemId: sampleOwnedSystem.id });
     expect(res.status).toBe(403);
   });
@@ -56,7 +55,7 @@ describe("system-property.get", () => {
 
     const res = await request(app)
       .get("/api/v1/system-properties/234")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(404);
   });
@@ -68,13 +67,12 @@ describe("system-property.get", () => {
 
     const res = await request(app)
       .get("/api/v1/system-properties/" + sampleOwnedSystem.id)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(500);
   });
 
   afterAll(() => {
-    validate.mockRestore();
     modelGetById.mockRestore();
   });
 });

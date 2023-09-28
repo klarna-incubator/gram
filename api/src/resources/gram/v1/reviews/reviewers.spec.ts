@@ -1,27 +1,23 @@
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Application } from "express";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
-import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
-import {
-  sampleReviewer,
-  sampleUser,
-} from "../../../../test-util/sampleUser.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
+import { sampleReviewer } from "../../../../test-util/sampleUser.js";
 
 describe("reviews.list", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: Application;
   let dal: DataAccessLayer;
   let modelId: string;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ app, dal } = await createTestApp());
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
     modelId = await createSampleModel(dal);
   });
 
@@ -33,7 +29,7 @@ describe("reviews.list", () => {
   it("should return 200 with no query parameter", async () => {
     const res = await request(app)
       .get(`/api/v1/reviews/reviewers`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.reviewers[0].sub).toEqual(sampleReviewer.sub);
@@ -42,13 +38,9 @@ describe("reviews.list", () => {
   it("should return 200 with modelId query parameter", async () => {
     const res = await request(app)
       .get(`/api/v1/reviews/reviewers?modelId=${modelId}`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.reviewers[0].sub).toEqual(sampleReviewer.sub);
-  });
-
-  afterAll(() => {
-    validate.mockRestore();
   });
 });

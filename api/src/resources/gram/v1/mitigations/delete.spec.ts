@@ -10,10 +10,9 @@ import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 
 describe("Mitigations.delete", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
   let pool: any;
   const email = "test@abc.xyz";
@@ -25,14 +24,14 @@ describe("Mitigations.delete", () => {
   let threat: Threat;
   let mitigation: Mitigation;
   let dal: DataAccessLayer;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ pool, app, dal } = await createTestApp());
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
-
     const model = new Model(sampleOwnedSystem.id, "version", email);
     model.data = { components: [], dataFlows: [] };
     modelId = await dal.modelService.create(model);
@@ -70,7 +69,7 @@ describe("Mitigations.delete", () => {
   it("should return 200 on delete", async () => {
     const res = await request(app)
       .delete(`/api/v1/models/${modelId}/mitigations`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ threatId, controlId });
 
     expect(res.status).toBe(200);
@@ -78,7 +77,6 @@ describe("Mitigations.delete", () => {
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     await _deleteAllTheThings(pool);
   });
 });

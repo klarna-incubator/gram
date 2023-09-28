@@ -1,9 +1,9 @@
 import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry.js";
 import MockAuthProvider from "@gram/core/dist/auth/mock/MockAuthProvider.js";
-import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
 import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { jest } from "@jest/globals";
 
 describe("token.get", () => {
   let app: any;
@@ -11,7 +11,6 @@ describe("token.get", () => {
   const getIdentity = jest.spyOn(dummyAuth, "getIdentity");
 
   beforeAll(async () => {
-    const pool = await createPostgresPool();
     ({ app } = await createTestApp());
     IdentityProviderRegistry.clear();
     IdentityProviderRegistry.set(dummyAuth.key, dummyAuth);

@@ -1,16 +1,19 @@
-import request from "supertest";
 import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
-import { sampleReviewer } from "../../../../test-util/sampleUser.js";
+import {
+  sampleOtherUserToken,
+  sampleReviewerToken,
+} from "../../../../test-util/sampleTokens.js";
 import { sampleOtherUser } from "../../../../test-util/sampleUser.js";
+import { jest } from "@jest/globals";
 
 describe("Reviews.decline", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
   const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   let app: any;
@@ -18,14 +21,14 @@ describe("Reviews.decline", () => {
   let dal: DataAccessLayer;
   let modelId: string;
   let review: Review;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleReviewerToken();
     ({ app, dal, pool } = await createTestApp());
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleReviewer);
-
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
 
@@ -44,11 +47,11 @@ describe("Reviews.decline", () => {
   });
 
   it("should return 403 on unauthorized requests (by role.user)", async () => {
-    validate.mockImplementation(async () => sampleOtherUser);
+    const otherUserToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/decline`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", otherUserToken);
 
     expect(res.status).toBe(403);
   });
@@ -56,7 +59,7 @@ describe("Reviews.decline", () => {
   it("should return 200 on succesful decline [without note] (by role.reviewer)", async () => {
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/decline`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();
@@ -65,7 +68,7 @@ describe("Reviews.decline", () => {
   it("should return 200 on succesful decline [with note] (by role.reviewer)", async () => {
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/decline`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ note: "I have to decline this review request" });
 
     expect(res.status).toBe(200);
@@ -77,7 +80,6 @@ describe("Reviews.decline", () => {
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     systemGetById.mockRestore();
 
     await _deleteAllTheThings(pool);

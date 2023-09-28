@@ -1,18 +1,17 @@
-import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { jest } from "@jest/globals";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
 import {
-  sampleOtherUser,
-  sampleUser,
-} from "../../../../test-util/sampleUser.js";
+  sampleOtherUserToken,
+  sampleUserToken,
+} from "../../../../test-util/sampleTokens.js";
 
 describe("Reviews.cancel", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
   const systemGetById = jest.spyOn(systemProvider, "getSystem");
 
   let app: any;
@@ -20,16 +19,14 @@ describe("Reviews.cancel", () => {
   let dal: DataAccessLayer;
   let modelId: string;
   let review: Review;
+  let token = "";
 
   beforeAll(async () => {
     ({ app, pool, dal } = await createTestApp());
+    token = await sampleUserToken();
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => {
-      return sampleUser;
-    });
-
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
 
@@ -48,13 +45,11 @@ describe("Reviews.cancel", () => {
   });
 
   it("should return 403 on authorized request (by user on different team)", async () => {
-    validate.mockImplementation(async () => {
-      return sampleOtherUser;
-    });
+    const otherUserToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/cancel`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", otherUserToken);
 
     expect(res.status).toBe(403);
   });
@@ -62,7 +57,7 @@ describe("Reviews.cancel", () => {
   it("should return 200 on successful cancel (by owner)", async () => {
     const res = await request(app)
       .post(`/api/v1/reviews/${modelId}/cancel`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.result).toBeTruthy();
@@ -72,7 +67,6 @@ describe("Reviews.cancel", () => {
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     systemGetById.mockRestore();
 
     await _deleteAllTheThings(pool);

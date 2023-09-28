@@ -4,20 +4,20 @@ import { systemProvider } from "@gram/core/dist/data/systems/systems.js";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { jest } from "@jest/globals";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
+
+const token = await sampleUserToken();
 
 describe("systems.list", () => {
   let app: any;
   let list: any;
-
-  const validate = jest.spyOn(jwt, "validateToken");
 
   beforeAll(async () => {
     ({ app } = await createTestApp());
   });
 
   beforeEach(() => {
-    validate.mockImplementation(async () => sampleUser);
-
     list = jest.spyOn(systemProvider, "listSystems");
     list.mockImplementation(async () => {
       return { systems: [sampleOwnedSystem], total: 1 };
@@ -32,14 +32,14 @@ describe("systems.list", () => {
   it("should return 400 with no filter query parameter", async () => {
     const res = await request(app)
       .get("/api/v1/systems")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res.status).toBe(400);
   });
 
   it("should return 400 with invalid filter query parameter", async () => {
     const res = await request(app)
       .get("/api/v1/systems?filter=123")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res.status).toBe(400);
   });
 
@@ -53,20 +53,19 @@ describe("systems.list", () => {
 
     const res = await request(app)
       .get("/api/v1/systems?filter=search")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res.status).toBe(500);
   });
 
   it("should return 200 with dummy results", async () => {
     const res = await request(app)
       .get("/api/v1/systems?filter=search")
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
     expect(res.status).toBe(200);
     expect(res.body.systems[0]).toEqual(sampleOwnedSystem);
   });
 
   afterAll(() => {
-    validate.mockRestore();
     list.mockRestore();
   });
 });
