@@ -37,4 +37,9 @@ ignore:
         reason: None Given
         expires: 2022-09-25T00:00:00.000Z
         created: 2022-09-15T14:33:27.920Z
+  SNYK-JS-ZOD-5925617:
+    - '*':
+        reason: vulnerable code not used
+        expires: 2023-10-29T13:18:44.407Z
+        created: 2023-09-29T13:18:44.415Z
 patch: {}
