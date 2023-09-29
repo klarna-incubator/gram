@@ -22,7 +22,6 @@ export class SystemPropertyHandler {
    * @param provider
    */
   registerSystemPropertyProvider(provider: SystemPropertyProvider) {
-    this.log.info(`registered SystemPropertyProvider ${provider.id}`);
     this.providers.push(provider);
 
     provider.definitions.map((d) => {
