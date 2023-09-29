@@ -15,7 +15,6 @@ import { config } from "@gram/core/dist/config/index.js";
 const log = log4js.getLogger("OIDCIdentityProvider");
 
 export class OIDCIdentityProvider implements IdentityProvider {
-  key = "oidc";
   issuer?: Issuer;
   client?: Client;
   redirectUrl: string;
@@ -26,9 +25,10 @@ export class OIDCIdentityProvider implements IdentityProvider {
     private clientId: Secret,
     private clientSecret: Secret,
     private sessionSecret: Secret,
-    private fieldForIdentitySub: string = "sub"
+    private fieldForIdentitySub: string = "sub",
+    public key: string = "oidc"
   ) {
-    this.redirectUrl = `${config.origin}/login/callback/oidc`;
+    this.redirectUrl = `${config.origin}/login/callback/${key}`;
 
     if (config.httpsProxy) {
       const agent = new HttpsProxyAgent({
@@ -104,7 +104,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
     const code_challenge = generators.codeChallenge(code_verifier);
     const state = generators.state();
 
-    const redirectUrl = this.client.authorizationUrl({
+    const frontendRedirectUrl = this.client.authorizationUrl({
       scope: "openid email profile groups",
       // resource: origin,
       code_challenge,
@@ -129,7 +129,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
       form: {
         type: "redirect",
         httpMethod: "POST",
-        redirectUrl,
+        redirectUrl: frontendRedirectUrl,
       },
       hideOnFrontend: false,
     };
