@@ -127,7 +127,8 @@ export const defaultConfig: GramConfiguration = {
       new EnvSecret("OIDC_CLIENT_ID"),
       new EnvSecret("OIDC_CLIENT_SECRET"),
       new EnvSecret("OIDC_SESSION_SECRET"),
-      "email"
+      "email",
+      "okta"
     );
 
     const ldap = new LDAPBasicAuthIdentityProvider(
