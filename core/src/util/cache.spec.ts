@@ -18,6 +18,7 @@ describe("cache", () => {
     c.set("key", "old stuff");
     jest.useFakeTimers().setSystemTime(Date.now() + 1000 * 60 * 60 * 3 + 2000);
     expect(c.get("key")).toBe(null);
+    expect(c.has("key")).toBe(false);
   });
 
   it("should not expire too early", () => {
