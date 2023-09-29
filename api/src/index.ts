@@ -11,6 +11,7 @@ import log4js from "log4js";
 import { notificationSender } from "@gram/core/dist/notifications/sender.js";
 import { attachWebsocketServer } from "./ws/index.js";
 import { config } from "@gram/core/dist/config/index.js";
+import { version } from "./util/version.js";
 
 const NOTIFICATION_INTERVAL = 1000 * 30; // 30 seconds
 
@@ -24,7 +25,7 @@ process.on("unhandledRejection", handleUnhandledError);
 process.on("uncaughtException", handleUnhandledError);
 
 const listen = async () => {
-  log.info(`Starting gram@${process.env.npm_package_version}`);
+  log.info(`Starting gram@${version}`);
   const dal = await bootstrap();
 
   // Create Express Apps
