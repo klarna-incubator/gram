@@ -111,7 +111,7 @@ export const defaultConfig: GramConfiguration = {
     dal: DataAccessLayer
   ): Promise<Providers> {
     const oidc = new OIDCIdentityProvider(
-      "https://klarna-dev-admin.oktapreview.com/",
+      (await new EnvSecret("OIDC_CLIENT_DISCOVER_URL").getValue()) as string,
       new EnvSecret("OIDC_CLIENT_ID"),
       new EnvSecret("OIDC_CLIENT_SECRET"),
       new EnvSecret("OIDC_SESSION_SECRET"),

@@ -91,6 +91,7 @@
       "JIRA_HOST": { "value": "/jira.host" },
       "JIRA_USER": { "secret": "/jira.user" },
       "JIRA_PASSWORD": { "secret": "/jira.password" },
+      "OIDC_CLIENT_DISCOVER_URL": { "value": "https://sso.klarna.net/" },
       "OIDC_SESSION_SECRET": { "secret": "/auth.oidc.session_secret" },
       "OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },
       "OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" }
