@@ -13,8 +13,11 @@ import {
 } from "@gram/core/dist/data/system-property/types.js";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { ProxyAgent } from "proxy-agent";
+import * as url from "url";
 
 const log = log4js.getLogger("HSFContextProvider");
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 async function assumeRole(
   awsRole: string,
