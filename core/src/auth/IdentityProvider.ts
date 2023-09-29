@@ -25,13 +25,6 @@ export type IdentityProviderParams = {
    * Unique key to identify the auth provider by programmatically.
    */
   key: string;
-  // /**
-  //  * Whether or not the frontend should display the auth mechanism on the frontend.
-  //  *
-  //  * If undefined or true, the auth provider will not be shown. So set to "false" for SSO etc, but "true" for
-  //  * e.g. API tokens.
-  //  */
-  // hideOnFrontend?: boolean;
   /**
    * Type of auth provider. If undefined, the frontend will not display the auth provider.
    */
