@@ -12,6 +12,8 @@ export const stagingConfig: GramConfiguration = {
   sentryDSN:
     "https://7755cd2515424f6cbcef6a4d43e54fdb@o24547.ingest.sentry.io/6023867",
 
+  httpsProxy: process.env.HTTPS_PROXY,
+
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
