@@ -18,11 +18,11 @@ export const stagingConfig: GramConfiguration = {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
     const hsf = {
-      bucket: "secdev-qliksense-exporter-production-source",
+      bucket: "secdev-qliksense-exporter-staging-source",
       key: "hsf-systems-daily.csv",
       awsRole:
-        "arn:aws:iam::715798949107:role/iam-sync/gram/c2c/gram/eu/production/gram.c2c_gram",
-      awsExternalId: "e2105a81-0156-4321-b757-4e3f20aaacac",
+        "arn:aws:iam::422554941857:role/iam-sync/gram/c2c/gram/eu/staging/gram.c2c_gram",
+      awsExternalId: "73fddbb9-a953-4f1c-9198-16a6113fe681",
     };
 
     const hsfProvider = new HSFContextProvider(
