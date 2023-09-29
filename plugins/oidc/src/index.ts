@@ -5,31 +5,30 @@ import {
 } from "@gram/core/dist/auth/IdentityProvider.js";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { InvalidInputError } from "@gram/core/dist/util/errors.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { HttpsProxyAgent } from "hpagent";
 import { Client, custom, generators, Issuer } from "openid-client";
 import { aes256gcm } from "./util.js";
 import { Secret } from "@gram/core/dist/config/Secret.js";
 import { config } from "@gram/core/dist/config/index.js";
 
-const log = getLogger("OIDCIdentityProvider");
+const log = log4js.getLogger("OIDCIdentityProvider");
 
 export class OIDCIdentityProvider implements IdentityProvider {
-  key = "oidc";
   issuer?: Issuer;
   client?: Client;
   redirectUrl: string;
   sessionCryptoKey: string = "";
 
   constructor(
-    private discoverUrl: string,
+    private discoverUrl: string | Secret,
     private clientId: Secret,
     private clientSecret: Secret,
     private sessionSecret: Secret,
-    private fieldForIdentitySub: string = "sub"
+    private fieldForIdentitySub: string = "sub",
+    public key: string = "oidc"
   ) {
-    this.redirectUrl = `${config.origin}/login/callback/oidc`;
+    this.redirectUrl = `${config.origin}/login/callback/${key}`;
 
     if (config.httpsProxy) {
       const agent = new HttpsProxyAgent({
@@ -47,7 +46,16 @@ export class OIDCIdentityProvider implements IdentityProvider {
   }
 
   async discover() {
-    this.issuer = await Issuer.discover(this.discoverUrl);
+    let url =
+      typeof this.discoverUrl === "string"
+        ? this.discoverUrl
+        : await this.discoverUrl.getValue();
+
+    if (!url) {
+      throw new Error("discoverUrl cannot be undefined");
+    }
+
+    this.issuer = await Issuer.discover(url);
     log.info(
       "Discovered issuer %s %O",
       this.issuer.issuer,
@@ -96,7 +104,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
     const code_challenge = generators.codeChallenge(code_verifier);
     const state = generators.state();
 
-    const redirectUrl = this.client.authorizationUrl({
+    const frontendRedirectUrl = this.client.authorizationUrl({
       scope: "openid email profile groups",
       // resource: origin,
       code_challenge,
@@ -121,7 +129,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
       form: {
         type: "redirect",
         httpMethod: "POST",
-        redirectUrl,
+        redirectUrl: frontendRedirectUrl,
       },
       hideOnFrontend: false,
     };

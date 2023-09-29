@@ -19,7 +19,7 @@ export function loadConfig() {
     throw new Error(`No configuration found for NODE_ENV=${env}`);
   }
   config = loadedConfig;
-  log.info("Configuration loaded.");
+  log.info(`Configuration "${env}" loaded.`);
 }
 
 let config: GramConfiguration;
