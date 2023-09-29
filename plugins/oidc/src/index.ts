@@ -94,7 +94,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
   async params(ctx: RequestContext): Promise<IdentityProviderParams> {
     if (!this.client) {
       log.warn("OIDC client not ready yet");
-      return { key: this.key, hideOnFrontend: true };
+      return { key: this.key };
     }
 
     const code_verifier = generators.codeVerifier();
@@ -131,7 +131,6 @@ export class OIDCIdentityProvider implements IdentityProvider {
         httpMethod: "POST",
         redirectUrl: frontendRedirectUrl,
       },
-      hideOnFrontend: false,
     };
   }
 

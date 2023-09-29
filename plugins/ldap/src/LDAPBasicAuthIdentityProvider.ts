@@ -33,7 +33,7 @@ export class LDAPBasicAuthIdentityProvider implements IdentityProvider {
   ) {}
 
   async params(): Promise<IdentityProviderParams> {
-    return { hideOnFrontend: true, key: this.key };
+    return { key: this.key };
   }
 
   async getIdentity(ctx: RequestContext): Promise<LoginResult> {

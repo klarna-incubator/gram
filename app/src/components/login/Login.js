@@ -36,7 +36,7 @@ export function Login() {
       )}
       {form === null &&
         authParams
-          ?.filter((p) => !p.hideOnFrontend || !p.form)
+          ?.filter((p) => p.form)
           ?.map((provider) => (
             <Box key={`login-${provider.provider}`}>
               <Button
