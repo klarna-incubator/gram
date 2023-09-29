@@ -5,8 +5,7 @@
 
   "compilerOptions": {
     "typeRoots": ["./src/@types"],
-    "outDir": "./dist",
-    "allowSyntheticDefaultImports": true
+    "outDir": "./dist"
   },
 
   "exclude": ["**/*.spec.ts"]

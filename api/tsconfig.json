@@ -3,8 +3,7 @@
 
   "compilerOptions": {
     "target": "ESNext",
-    "types": ["node", "jest"],
-    "allowSyntheticDefaultImports": true
+    "types": ["node", "jest"]
   },
 
   "include": ["src/"]
