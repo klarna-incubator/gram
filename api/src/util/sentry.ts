@@ -5,6 +5,7 @@ import { Express } from "express";
 import pkg from "log4js";
 const { getLogger } = pkg;
 import { config } from "@gram/core/dist/config/index.js";
+import { version } from "./version.js";
 
 const log = getLogger("sentry");
 
@@ -32,7 +33,7 @@ export function initSentry(app: Express) {
   }
 
   Sentry.init({
-    release: `gram@${process.env.npm_package_version}`,
+    release: `gram@${version}`,
     environment: process.env["NODE_ENV"],
     dsn: sentryDSN as string,
     integrations: [
