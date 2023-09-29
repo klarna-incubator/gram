@@ -105,6 +105,18 @@ export const defaultConfig: GramConfiguration = {
       name: "Github",
       path: "https://github.com/klarna-incubator/gram",
     },
+    {
+      name: "Feedback",
+      path: "https://docs.google.com/forms/d/e/1FAIpQLSfVTLCR_VHTzIhDZ8MRFLpfm58LNlf0zICS2brYMOok7LrURA/viewform?usp=sf_link",
+    },
+    {
+      name: "Docs",
+      path: "https://kep.klarna.net/docs/secure-development/threat_modeling/threat_modeling/",
+    },
+    {
+      name: "Support",
+      path: "https://klarna.slack.com/archives/C04RMEJ8VFD",
+    },
   ],
 
   bootstrapProviders: async function (
