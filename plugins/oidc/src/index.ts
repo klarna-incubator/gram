@@ -81,11 +81,11 @@ export class OIDCIdentityProvider implements IdentityProvider {
       response_types: ["code"],
     });
 
-    const key = await this.sessionSecret.getValue();
-    if (!key) {
+    const cryptoKey = await this.sessionSecret.getValue();
+    if (!cryptoKey) {
       throw new Error("No session secret configured for OIDC Auth Provider");
     }
-    this.sessionCryptoKey = key;
+    this.sessionCryptoKey = cryptoKey;
   }
 
   /**
@@ -145,6 +145,10 @@ export class OIDCIdentityProvider implements IdentityProvider {
 
     if (!ctx.currentRequest) {
       throw new Error("Request is undefined or null");
+    }
+
+    if (!ctx.currentRequest.cookies["oidc-code"]) {
+      throw new Error("oidc-code cookie is not set");
     }
 
     const [ct, iv, authTag] =
