@@ -1,8 +1,7 @@
 import type { Secret } from "./Secret.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 
-const log = getLogger("ExposedSecret");
+const log = log4js.getLogger("ExposedSecret");
 
 export class ExposedSecret implements Secret {
   constructor(public value: string) {

@@ -1,7 +1,6 @@
 import { EventEmitter } from "events";
 import { Pool, QueryResult } from "pg";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import {
   EngineSuggestedResult,
   SuggestionID,
@@ -51,7 +50,7 @@ function convertToSuggestionThreat(row: any) {
 export class SuggestionDataService extends EventEmitter {
   constructor(private pool: Pool, private dal: DataAccessLayer) {
     super();
-    this.log = getLogger("SuggestionDataService");
+    this.log = log4js.getLogger("SuggestionDataService");
   }
 
   log: any;

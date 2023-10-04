@@ -2,12 +2,11 @@ import { RewriteFrames } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 import { Express } from "express";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { config } from "@gram/core/dist/config/index.js";
 import { version } from "./version.js";
 
-const log = getLogger("sentry");
+const log = log4js.getLogger("sentry");
 
 // TODO: move to configuration
 const ALLOWED_HEADERS = [

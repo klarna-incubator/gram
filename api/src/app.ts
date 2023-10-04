@@ -4,8 +4,7 @@ import { errorWrap } from "./util/errorHandler.js";
 import path from "path";
 import { Role } from "@gram/core/dist/auth/models/Role.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { metricsMiddleware } from "./metrics/metrics.js";
 import {
   authRequiredMiddleware,
@@ -54,7 +53,7 @@ export async function createApp(dal: DataAccessLayer) {
   app.use(securityHeaders());
 
   const loggerMwOpts = {
-    logger: getLogger("auditHttp"),
+    logger: log4js.getLogger("auditHttp"),
     ...config.log.auditHttp,
   };
 

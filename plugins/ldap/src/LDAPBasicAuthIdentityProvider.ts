@@ -7,11 +7,10 @@ import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js
 import { InvalidInputError } from "@gram/core/dist/util/errors.js";
 import basicAuth from "basic-auth";
 import { initLdapClient } from "./lookup.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { LDAPClientSettings } from "./LDAPClientSettings.js";
 
-const log = getLogger("LDAPAuthProvider");
+const log = log4js.getLogger("LDAPAuthProvider");
 
 /**
  * This identity provider uses basic auth to authenticate users against an LDAP server.

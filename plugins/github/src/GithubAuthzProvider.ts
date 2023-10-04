@@ -1,5 +1,4 @@
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { App } from "octokit";
 import {
   AllPermissions,
@@ -12,7 +11,7 @@ import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js
 import { NotFoundError } from "@gram/core/dist/util/errors.js";
 import { Role } from "@gram/core/dist/auth/models/Role.js";
 
-const log = getLogger("GithubAuthzProvider");
+const log = log4js.getLogger("GithubAuthzProvider");
 
 export class GithubAuthzProvider implements AuthzProvider {
   constructor(private app: App) {}

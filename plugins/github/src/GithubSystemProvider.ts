@@ -1,5 +1,4 @@
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { App } from "octokit";
 import { SystemProperty } from "@gram/core/dist/data/system-property/types.js";
 import System from "@gram/core/dist/data/systems/System.js";
@@ -11,7 +10,7 @@ import {
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider.js";
 
-const log = getLogger("GithubSystemProvider");
+const log = log4js.getLogger("GithubSystemProvider");
 
 export class GithubSystemProvider implements SystemProvider {
   constructor(private app: App) {}

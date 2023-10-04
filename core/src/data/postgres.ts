@@ -1,10 +1,9 @@
 import pg from "pg";
 import metricsClient from "prom-client";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { config } from "../config/index.js";
 
-const log = getLogger("postgres");
+const log = log4js.getLogger("postgres");
 
 type Transaction<T> = (client: pg.PoolClient) => Promise<T>;
 

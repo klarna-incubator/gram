@@ -1,10 +1,9 @@
 import Cache from "@gram/core/dist/util/cache.js";
 import { Client, Entry, SearchOptions, SearchResult } from "ldapts";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { LDAPClientSettings } from "./LDAPClientSettings.js";
 
-const log = getLogger("ldapLookup");
+const log = log4js.getLogger("ldapLookup");
 
 export async function initLdapClient(ldapSettings: LDAPClientSettings) {
   const client = new Client({

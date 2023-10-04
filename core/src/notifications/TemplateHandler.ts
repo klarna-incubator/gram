@@ -1,12 +1,8 @@
 import { NotificationTemplateKey } from "../data/notifications/NotificationInput.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
 import {
   NotificationTemplate,
   NotificationVariables,
 } from "./NotificationTemplate.js";
-
-const log = getLogger("TemplateHandler");
 
 export class TemplateHandler {
   private templates: Map<NotificationTemplateKey, NotificationTemplate> =

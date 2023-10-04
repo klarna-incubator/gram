@@ -2,8 +2,7 @@ import { UserProvider } from "@gram/core/dist/auth/UserProvider.js";
 import { User } from "@gram/core/dist/auth/models/User.js";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { Entry } from "ldapts";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { LDAPClientSettings } from "./LDAPClientSettings.js";
 import { connectLdapClient, ldapQueryOne } from "./lookup.js";
 import { escapeFilterValue } from "./util.js";
@@ -16,7 +15,7 @@ export interface LDAPUserProviderSettings {
   attributesToUser: (ldapUser: Entry) => Promise<User>;
 }
 
-const log = getLogger("LDAPUserProvider");
+const log = log4js.getLogger("LDAPUserProvider");
 
 export class LDAPUserProvider implements UserProvider {
   constructor(public settings: LDAPUserProviderSettings) {}
