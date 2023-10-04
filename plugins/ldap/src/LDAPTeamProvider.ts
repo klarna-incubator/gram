@@ -73,6 +73,11 @@ export class LDAPTeamProvider implements TeamProvider {
         ldapUser,
         this.settings.userLookup.teamAttribute
       );
+
+      if (teamIds.length === 0) {
+        return [];
+      }
+
       const escapedTeamIds = teamIds.map((team) => escapeFilterValue(team));
       const teams = await this.lookup(ctx, escapedTeamIds);
       return teams;
