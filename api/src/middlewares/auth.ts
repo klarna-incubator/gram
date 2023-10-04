@@ -5,11 +5,10 @@
 import * as jwt from "@gram/core/dist/auth/jwt.js";
 import * as Sentry from "@sentry/node";
 import { NextFunction, Response } from "express";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { hasSentry } from "../util/sentry.js";
 
-const log = getLogger("authMw");
+const log = log4js.getLogger("authMw");
 
 export async function validateTokenMiddleware(
   req: any,

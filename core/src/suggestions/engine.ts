@@ -1,6 +1,5 @@
 import { DataAccessLayer } from "../data/dal.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import {
   EngineSuggestedResult,
   SourceSuggestedControl,
@@ -15,7 +14,7 @@ const SUGGESTION_DELAY =
 
 export class SuggestionEngine {
   public sources: SuggestionSource[] = [];
-  log = getLogger("SuggestionEngine");
+  log = log4js.getLogger("SuggestionEngine");
 
   // One timeout per ModelID: should be threadsafe because node runs singlethreaded ;))
   delayer = new Map<string, NodeJS.Timeout>();

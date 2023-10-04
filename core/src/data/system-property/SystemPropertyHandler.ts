@@ -1,5 +1,4 @@
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { RequestContext } from "../providers/RequestContext.js";
 import { SystemProperty, SystemPropertyValue } from "./types.js";
 import { SystemPropertyProvider } from "./SystemPropertyProvider.js";
@@ -9,7 +8,7 @@ export class SystemPropertyHandler {
     this.providers = [];
     this.properties = new Map();
     this.providedBy = new Map();
-    this.log = getLogger("SystemPropertyHandler");
+    this.log = log4js.getLogger("SystemPropertyHandler");
   }
 
   log: any;

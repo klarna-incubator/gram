@@ -7,11 +7,10 @@ import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js
 import { InvalidInputError } from "@gram/core/dist/util/errors.js";
 import basicAuth from "basic-auth";
 import { initLdapClient } from "./lookup.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { LDAPClientSettings } from "./LDAPClientSettings.js";
 
-const log = getLogger("LDAPAuthProvider");
+const log = log4js.getLogger("LDAPAuthProvider");
 
 /**
  * This identity provider uses basic auth to authenticate users against an LDAP server.
@@ -24,12 +23,16 @@ export class LDAPBasicAuthIdentityProvider implements IdentityProvider {
 
   /**
    *
-   * @param DNforUsername should be a function that formats a username into a DN for use in an LDAP bind.
+   * @param DNForUsername should be a function that formats a username into a DN for use in an LDAP bind.
    * e.g. (name) => `uid=${name},ou=Users`;
+   * @param SubForUsername optional function to map username to a different sub (id). Use this if your user lookup
+   * uses a different attribute.
    */
   constructor(
     private ldapSettings: LDAPClientSettings,
-    private DNforUsername: (username: string) => string
+    private DNForUsername: (username: string) => string,
+    private SubForUsername: (username: string) => string = (username) =>
+      username
   ) {}
 
   async params(): Promise<IdentityProviderParams> {
@@ -51,7 +54,7 @@ export class LDAPBasicAuthIdentityProvider implements IdentityProvider {
 
     const ldap = await initLdapClient(this.ldapSettings);
 
-    const dn = this.DNforUsername(name);
+    const dn = this.DNForUsername(name);
 
     try {
       await ldap.bind(dn, pass);
@@ -69,7 +72,7 @@ export class LDAPBasicAuthIdentityProvider implements IdentityProvider {
     return {
       status: "ok",
       identity: {
-        sub: name,
+        sub: this.SubForUsername(name),
       },
     };
   }

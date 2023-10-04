@@ -7,10 +7,9 @@ import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegis
 import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 
-const log = getLogger("getAuthToken");
+const log = log4js.getLogger("getAuthToken");
 
 export const getAuthToken =
   (dal: DataAccessLayer) => async (req: Request, res: Response) => {

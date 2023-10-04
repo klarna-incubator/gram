@@ -1,9 +1,8 @@
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { GramConfiguration } from "./GramConfiguration.js";
 import { configurationMap } from "./configMap.js";
 
-const log = getLogger("config");
+const log = log4js.getLogger("config");
 
 export function loadConfig() {
   let env = process.env.NODE_ENV;

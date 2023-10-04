@@ -1,8 +1,7 @@
 import pg from "pg";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 
-const log = getLogger("UtilsDataService");
+const log = log4js.getLogger("UtilsDataService");
 
 export async function _deleteAllTheThings(pool: pg.Pool) {
   if (process.env.NODE_ENV !== "test") {

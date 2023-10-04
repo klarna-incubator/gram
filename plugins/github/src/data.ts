@@ -1,7 +1,6 @@
 import { createDb, migrate } from "postgres-migrations";
 import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { config } from "@gram/core/src/config/index.js";
 
 export async function getDatabaseName() {
@@ -11,7 +10,7 @@ export async function getDatabaseName() {
 }
 
 export async function additionalMigrations() {
-  const log = getLogger("gh-migrate");
+  const log = log4js.getLogger("gh-migrate");
 
   const databaseName = await getDatabaseName();
   const host = (await config.postgres.host.getValue()) as string;

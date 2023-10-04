@@ -1,5 +1,4 @@
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { AuthzError } from "@gram/core/dist/auth/AuthzError.js";
 import {
   InvalidInputError,
@@ -7,7 +6,7 @@ import {
   NotFoundError,
 } from "@gram/core/dist/util/errors.js";
 
-const log = getLogger("app");
+const log = log4js.getLogger("app");
 
 export default function errorHandler(err: any, req: any, res: any, next: any) {
   if (err instanceof NotAuthenticatedError) {

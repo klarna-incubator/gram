@@ -1,12 +1,11 @@
 import { Message, SMTPClient } from "emailjs";
 import { Notification } from "../data/notifications/Notification.js";
-import pkg from "log4js";
-const { getLogger } = pkg;
+import log4js from "log4js";
 import { TemplateHandler } from "./TemplateHandler.js";
 import { sanitizeEmail } from "../util/sanitize.js";
 import { config } from "../config/index.js";
 
-const log = getLogger("email");
+const log = log4js.getLogger("email");
 
 /**
  * Sanitizes recipient names by removing special email characters.
