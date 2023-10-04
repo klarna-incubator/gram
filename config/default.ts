@@ -133,7 +133,8 @@ export const defaultConfig: GramConfiguration = {
 
     const ldap = new LDAPBasicAuthIdentityProvider(
       ldapSettings,
-      (name: string) => `uid=${name},ou=People,dc=internal,dc=machines`
+      (name: string) => `uid=${name},ou=People,dc=internal,dc=machines`,
+      (username: string) => `${username}@klarna.com`
     );
 
     const ldapAuthz = new LDAPGroupBasedAuthzProvider({
