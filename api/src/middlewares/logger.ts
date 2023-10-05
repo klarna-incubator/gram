@@ -6,7 +6,7 @@
 import { NextFunction, Response } from "express";
 import _ from "lodash";
 import { Logger } from "log4js";
-import { LogLine } from "@gram/core/dist/logger";
+import { LogLine } from "@gram/core/dist/logger/index.js";
 
 function applyFilters(
   obj: any,

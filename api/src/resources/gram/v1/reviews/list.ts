@@ -2,13 +2,12 @@
  * GET /api/v1/reviews
  * @exports {function} handler
  */
-import { lookupUsers } from "@gram/core/dist/auth/user";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { validStatus } from "@gram/core/dist/data/reviews/ReviewDataService";
-import { SystemPropertyFilter } from "@gram/core/dist/data/system-property/types";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { validStatus } from "@gram/core/dist/data/reviews/ReviewDataService.js";
+import { SystemPropertyFilter } from "@gram/core/dist/data/system-property/types.js";
 import { Request, Response } from "express";
-import { merge } from "lodash";
+import _ from "lodash";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
@@ -51,7 +50,7 @@ export default (dal: DataAccessLayer) =>
       dateOrder
     );
 
-    const reslookupUsers = await lookupUsers(
+    const reslookupUsers = await dal.userHandler.lookup(
       { currentRequest: req },
       reviews.items
         .filter((review) => review.requestedBy)
@@ -63,7 +62,7 @@ export default (dal: DataAccessLayer) =>
 
     const result = {
       total: reviews.total,
-      items: merge(reviews.items, employees), // This might not merge correctly if the list of users !=
+      items: _.merge(reviews.items, employees), // This might not merge correctly if the list of users !=
     };
 
     return res.json(result);

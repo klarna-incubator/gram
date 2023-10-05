@@ -1,14 +1,14 @@
-import { getLogger } from "../../logger";
-import { RequestContext } from "../providers/RequestContext";
-import { SystemProperty, SystemPropertyValue } from "./types";
-import { SystemPropertyProvider } from "./SystemPropertyProvider";
+import log4js from "log4js";
+import { RequestContext } from "../providers/RequestContext.js";
+import { SystemProperty, SystemPropertyValue } from "./types.js";
+import { SystemPropertyProvider } from "./SystemPropertyProvider.js";
 
 export class SystemPropertyHandler {
   constructor() {
     this.providers = [];
     this.properties = new Map();
     this.providedBy = new Map();
-    this.log = getLogger("SystemPropertyHandler");
+    this.log = log4js.getLogger("SystemPropertyHandler");
   }
 
   log: any;
@@ -21,7 +21,6 @@ export class SystemPropertyHandler {
    * @param provider
    */
   registerSystemPropertyProvider(provider: SystemPropertyProvider) {
-    this.log.info(`registered SystemPropertyProvider ${provider.id}`);
     this.providers.push(provider);
 
     provider.definitions.map((d) => {

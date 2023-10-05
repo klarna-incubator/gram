@@ -1,4 +1,4 @@
-import { ReviewStatus } from "./Review";
+import { ReviewStatus } from "./Review.js";
 
 export class ReviewSystemCompliance {
   constructor(

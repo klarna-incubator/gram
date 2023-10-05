@@ -4,13 +4,13 @@
  */
 
 import { Request, Response } from "express";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { ReviewSystemCompliance } from "@gram/core/dist/data/reviews/ReviewSystemCompliance";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { ReviewSystemCompliance } from "@gram/core/dist/data/reviews/ReviewSystemCompliance.js";
 import {
   SystemListFilter,
   SystemListResult,
   systemProvider,
-} from "@gram/core/dist/data/systems/systems";
+} from "@gram/core/dist/data/systems/systems.js";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {

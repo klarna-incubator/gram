@@ -2,12 +2,17 @@ import WebSocket from "ws";
 import {
   getPermissionsForModel,
   Permission,
-} from "@gram/core/dist/auth/authorization";
-import { UserToken } from "@gram/core/dist/auth/models/UserToken";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import { getLogger } from "@gram/core/dist/logger";
-import * as jwt from "@gram/core/dist/auth/jwt";
+} from "@gram/core/dist/auth/authorization.js";
+import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import log4js from "log4js";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+
+// Hack to easily mock the permissions for testing.
+export const _permissionsInterface = {
+  getPermissions: getPermissionsForModel,
+};
 
 export class ModelWebsocketServer {
   constructor(model: Model, dal: DataAccessLayer) {
@@ -15,7 +20,7 @@ export class ModelWebsocketServer {
     this.model = model;
     this.dal = dal;
     this.server = new WebSocket.Server({ noServer: true });
-    this.log = getLogger(`ModelWebsocketServer [${this.id}]`);
+    this.log = log4js.getLogger(`ModelWebsocketServer [${this.id}]`);
     this.bind();
   }
 
@@ -126,7 +131,11 @@ export class ModelWebsocketServer {
     try {
       const { token } = JSON.parse(data);
       const user = await jwt.validateToken(token);
-      const permissions = await getPermissionsForModel({}, this.model, user);
+      const permissions = await _permissionsInterface.getPermissions(
+        {},
+        this.model,
+        user
+      );
 
       if (!permissions.includes(Permission.Read)) {
         ws.send(JSON.stringify({ msg: "authorization failed" }));

@@ -3,14 +3,11 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { getLogger } from "log4js";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import Control from "@gram/core/dist/data/controls/Control";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
-import { validateUUID } from "@gram/core/dist/util/uuid";
-
-const log = getLogger("controls.create");
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import Control from "@gram/core/dist/data/controls/Control.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation.js";
+import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
 export function create(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

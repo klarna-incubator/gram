@@ -30,7 +30,7 @@
   "default": {
     "api_version": "v2",
     "minimum_instances": 1,
-    "container_size": "small",
+    "container_size": "xsmall",
     "canary_promotion": {
       "strategy": "CONFIRM",
       "timeout": 1200
@@ -79,22 +79,22 @@
       "POSTGRES_HOST": { "secret": "/data._providers.postgres.host" },
       "POSTGRES_USER": { "secret": "/data._providers.postgres.user" },
       "POSTGRES_PASSWORD": { "secret": "/data._providers.postgres.password" },
-      "POSTGRES_DB": { "secret": "/data._providers.postgres.database" },
+      "POSTGRES_DATABASE": { "secret": "/data._providers.postgres.database" },
       "POSTGRES_PORT": { "secret": "/data._providers.postgres.port" },
       "AUTH_SECRET": { "secret": "/auth.jwt.secret" },
-      "CSRF_SECRET": { "secret": "/jwt.secret.csrf" },
       "EMAIL_HOST": { "secret": "/notifications.providers.email.host" },
       "EMAIL_PORT": { "secret": "/notifications.providers.email.port" },
       "EMAIL_USER": { "secret": "/notifications.providers.email.user" },
       "EMAIL_PASSWORD": { "secret": "/notifications.providers.email.password" },
-      "AUTH_LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
-      "AUTH_LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
+      "LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
+      "LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
+      "JIRA_HOST": { "value": "/jira.host" },
       "JIRA_USER": { "secret": "/jira.user" },
       "JIRA_PASSWORD": { "secret": "/jira.password" },
-      "AUTH_GOOGLE_CLIENT_SECRET": { "secret": "/auth.google.client_secret" },
-      "AUTH_OIDC_SESSION_SECRET": { "secret": "/auth.oidc.session_secret" },
-      "AUTH_OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },
-      "AUTH_OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" }
+      "OIDC_CLIENT_DISCOVER_URL": { "value": "https://sso.klarna.net/" },
+      "OIDC_SESSION_SECRET": { "secret": "/auth.oidc.session_secret" },
+      "OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },
+      "OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" }
     }
   }
 }

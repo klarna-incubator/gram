@@ -1,47 +1,43 @@
 import * as Sentry from "@sentry/node";
-import config from "config";
-import cookieParser from "cookie-parser";
 import express from "express";
-import errorWrap from "express-async-error-wrapper";
+import { errorWrap } from "./util/errorHandler.js";
 import path from "path";
-import { Pool } from "pg";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { getLogger } from "@gram/core/dist/logger";
-import { metricsMiddleware } from "./metrics/metrics";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import log4js from "log4js";
+import { metricsMiddleware } from "./metrics/metrics.js";
 import {
   authRequiredMiddleware,
   validateTokenMiddleware,
-} from "./middlewares/auth";
-import { AuthzMiddleware } from "./middlewares/authz";
-import cacheMw from "./middlewares/cache";
-import loggerMw from "./middlewares/logger";
-import { securityHeaders } from "./middlewares/securityHeaders";
-import { AssetDir } from "@gram/core/dist/plugin";
-import crash from "./resources/gram/v1/admin/crash";
-import setRoles from "./resources/gram/v1/admin/setRoles";
-import { getBanner } from "./resources/gram/v1/banners/get";
-import { searchClasses } from "./resources/gram/v1/component-classes/search";
-import controlsV1 from "./resources/gram/v1/controls";
-import { getMenu } from "./resources/gram/v1/menu/get";
-import { mitigationsV1 } from "./resources/gram/v1/mitigations";
-import modelsV1 from "./resources/gram/v1/models";
-import { listSystemCompliance } from "./resources/gram/v1/reports/system-compliance";
-import reviewsV1 from "./resources/gram/v1/reviews";
-import suggestionsV1 from "./resources/gram/v1/suggestions";
-import systemPropertyRoutesV1 from "./resources/gram/v1/system-properties";
-import systemsV1 from "./resources/gram/v1/systems";
-import threatsV1 from "./resources/gram/v1/threats";
-import tokenV1 from "./resources/gram/v1/token";
-import userV1 from "./resources/gram/v1/user";
-import errorHandler from "./middlewares/errorHandler";
-import { initSentry } from "./util/sentry";
-import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval";
+} from "./middlewares/auth.js";
+import { AuthzMiddleware } from "./middlewares/authz.js";
+import cacheMw from "./middlewares/cache.js";
+import loggerMw from "./middlewares/logger.js";
+import { securityHeaders } from "./middlewares/securityHeaders.js";
+import { AssetDir } from "@gram/core/dist/Bootstrapper.js";
+import crash from "./resources/gram/v1/admin/crash.js";
+import setRoles from "./resources/gram/v1/admin/setRoles.js";
+import { getBanner } from "./resources/gram/v1/banners/get.js";
+import { searchClasses } from "./resources/gram/v1/component-classes/search.js";
+import controlsV1 from "./resources/gram/v1/controls/index.js";
+import { getMenu } from "./resources/gram/v1/menu/get.js";
+import { mitigationsV1 } from "./resources/gram/v1/mitigations/index.js";
+import modelsV1 from "./resources/gram/v1/models/index.js";
+import { listSystemCompliance } from "./resources/gram/v1/reports/system-compliance.js";
+import reviewsV1 from "./resources/gram/v1/reviews/index.js";
+import suggestionsV1 from "./resources/gram/v1/suggestions/index.js";
+import systemPropertyRoutesV1 from "./resources/gram/v1/system-properties/index.js";
+import systemsV1 from "./resources/gram/v1/systems/index.js";
+import threatsV1 from "./resources/gram/v1/threats/index.js";
+import tokenV1 from "./resources/gram/v1/token/index.js";
+import userV1 from "./resources/gram/v1/user/index.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import { initSentry } from "./util/sentry.js";
+import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval.js";
+import { config } from "@gram/core/dist/config/index.js";
+import cookieParser from "cookie-parser";
 
-async function createApp(pool: Pool) {
-  // Set up business logic handlers and services
-  const dal = new DataAccessLayer(pool);
-
+export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
   const app = express();
 
@@ -53,13 +49,12 @@ async function createApp(pool: Pool) {
 
   // JSON middleware to automatically parse incoming requests
   app.use(express.json());
-  app.use(securityHeaders());
   app.use(cookieParser());
+  app.use(securityHeaders());
 
-  const auditHttpLogOptions: object = config.get("log.auditHttp");
   const loggerMwOpts = {
-    logger: getLogger("auditHttp"),
-    ...auditHttpLogOptions,
+    logger: log4js.getLogger("auditHttp"),
+    ...config.log.auditHttp,
   };
 
   const authz = AuthzMiddleware({ dal });
@@ -77,9 +72,12 @@ async function createApp(pool: Pool) {
   const unauthenticatedRoutes = express.Router();
   unauthenticatedRoutes.get("/banners", errorWrap(getBanner(dal)));
   unauthenticatedRoutes.get("/menu", errorWrap(getMenu));
-  unauthenticatedRoutes.get("/auth/token", errorWrap(tokenV1.get));
-  unauthenticatedRoutes.get("/auth/params", errorWrap(tokenV1.params));
-  unauthenticatedRoutes.delete("/auth/token", errorWrap(tokenV1.delete));
+
+  const tokenRoutes = tokenV1(dal);
+  unauthenticatedRoutes.get("/auth/token", errorWrap(tokenRoutes.get));
+  unauthenticatedRoutes.post("/auth/token", errorWrap(tokenRoutes.get));
+  unauthenticatedRoutes.get("/auth/params", errorWrap(tokenRoutes.params));
+  unauthenticatedRoutes.delete("/auth/token", errorWrap(tokenRoutes.delete));
 
   // Authenticated routes
   const authenticatedRoutes = express.Router();
@@ -275,10 +273,5 @@ async function createApp(pool: Pool) {
   app.use(errorHandler);
 
   // Return dal here for help injecting mocks into testing later. Not the best solution but should work.
-  return {
-    app,
-    dal,
-  };
+  return app;
 }
-
-export default createApp;

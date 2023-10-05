@@ -1,19 +1,22 @@
 import { EventEmitter } from "events";
 import { Pool, QueryResult } from "pg";
-import { getLogger } from "../../logger";
-import { EngineSuggestedResult, SuggestionID } from "../../suggestions/models";
-import Control from "../controls/Control";
-import { convertToControl } from "../controls/ControlDataService";
-import { DataAccessLayer } from "../dal";
-import Mitigation from "../mitigations/Mitigation";
-import Threat from "../threats/Threat";
-import { convertToThreat } from "../threats/ThreatDataService";
+import log4js from "log4js";
+import {
+  EngineSuggestedResult,
+  SuggestionID,
+} from "../../suggestions/models.js";
+import Control from "../controls/Control.js";
+import { convertToControl } from "../controls/ControlDataService.js";
+import { DataAccessLayer } from "../dal.js";
+import Mitigation from "../mitigations/Mitigation.js";
+import Threat from "../threats/Threat.js";
+import { convertToThreat } from "../threats/ThreatDataService.js";
 import {
   isControl,
   SuggestedControl,
   SuggestedThreat,
   SuggestionStatus,
-} from "./Suggestion";
+} from "./Suggestion.js";
 
 function convertToSuggestionControl(row: any) {
   const control = new SuggestedControl(
@@ -47,7 +50,7 @@ function convertToSuggestionThreat(row: any) {
 export class SuggestionDataService extends EventEmitter {
   constructor(private pool: Pool, private dal: DataAccessLayer) {
     super();
-    this.log = getLogger("SuggestionDataService");
+    this.log = log4js.getLogger("SuggestionDataService");
   }
 
   log: any;

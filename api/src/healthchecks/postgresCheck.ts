@@ -1,8 +1,8 @@
 import physical from "express-physical";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { getLogger } from "@gram/core/dist/logger";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import log4js from "log4js";
 
-const log = getLogger("postgresCheck");
+const log = log4js.getLogger("postgresCheck");
 
 export async function postgresSimpleQueryCheck(dal: DataAccessLayer) {
   return async (done: any) => {

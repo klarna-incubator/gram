@@ -1,4 +1,4 @@
-import { Review } from "../reviews/Review";
+import { Review } from "../reviews/Review.js";
 
 type NotificationInputVariables = {
   review?: Review;
@@ -13,7 +13,8 @@ export type NotificationTemplateKey =
   | "review-meeting-requested-reminder"
   | "review-reviewer-changed"
   | "review-canceled"
-  | "review-declined";
+  | "review-declined"
+  | string;
 
 export type NotificationInput = {
   templateKey: NotificationTemplateKey;

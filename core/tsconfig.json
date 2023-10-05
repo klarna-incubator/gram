@@ -2,6 +2,10 @@
   "extends": "../tsconfig.json",
 
   "compilerOptions": {
-    "types": ["jest"]
-  }
+    "target": "ESNext",
+    "types": ["node", "jest"]
+    // "esModuleInterop": true
+  },
+
+  "include": ["src/"]
 }

@@ -2,14 +2,13 @@
  * Auth middleware
  * @exports auth
  */
-import { NextFunction, Request, Response } from "express";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { getLogger } from "@gram/core/dist/logger";
-import { hasSentry } from "../util/sentry";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
 import * as Sentry from "@sentry/node";
-import { GramRequest } from "@gram/core/dist/data/providers/RequestContext";
+import { NextFunction, Response } from "express";
+import log4js from "log4js";
+import { hasSentry } from "../util/sentry.js";
 
-const log = getLogger("authMw");
+const log = log4js.getLogger("authMw");
 
 export async function validateTokenMiddleware(
   req: any,

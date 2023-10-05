@@ -1,15 +1,14 @@
 import { EventEmitter } from "events";
-import { Pool } from "pg";
-import { getLogger } from "../../logger";
-import { DataAccessLayer } from "../dal";
-import { RequestContext } from "../providers/RequestContext";
+import pg from "pg";
+import log4js from "log4js";
+import { DataAccessLayer } from "../dal.js";
+import { RequestContext } from "../providers/RequestContext.js";
 import {
   SystemPropertyFilter,
   SystemPropertyValue,
-} from "../system-property/types";
-import { Review, ReviewStatus } from "./Review";
-import { reviewerProvider } from "./ReviewerProvider";
-import { ReviewSystemCompliance } from "./ReviewSystemCompliance";
+} from "../system-property/types.js";
+import { Review, ReviewStatus } from "./Review.js";
+import { ReviewSystemCompliance } from "./ReviewSystemCompliance.js";
 
 export function convertToReview(row: any): Review {
   const review = new Review(row.model_id, row.requested_by, row.status);
@@ -53,11 +52,11 @@ interface ReviewListResult {
 }
 
 export class ReviewDataService extends EventEmitter {
-  constructor(private pool: Pool, private dal: DataAccessLayer) {
+  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {
     super();
   }
 
-  log = getLogger("ReviewDataService");
+  log = log4js.getLogger("ReviewDataService");
 
   /**
    * Get the review object by modelId
@@ -292,8 +291,8 @@ export class ReviewDataService extends EventEmitter {
    */
   async create(review: Review) {
     const query = `
-     INSERT INTO reviews (model_id, requested_by, reviewed_by, status, note)
-     VALUES ($1::uuid, $2::varchar, $3::varchar, $4::varchar, $5::varchar)
+     INSERT INTO reviews (model_id, requested_by, reviewed_by, status, note, requested_at)
+     VALUES ($1::uuid, $2::varchar, $3::varchar, $4::varchar, $5::varchar, now())
      ON CONFLICT (model_id) DO 
         UPDATE SET requested_by = $2::varchar, reviewed_by = $3::varchar, status = $4::varchar, note = $5::varchar, 
         requested_at = now(), meeting_requested_at = null, meeting_requested_reminder_sent_count = 0, requested_reminder_sent_count = 0;
@@ -345,9 +344,10 @@ export class ReviewDataService extends EventEmitter {
   async decline(ctx: RequestContext, modelId: string, note?: string) {
     const oldReview = await this.getByModelId(modelId);
 
+    const fallback = await this.dal.reviewerHandler.getFallbackReviewer(ctx);
     const review = await this.update(modelId, {
       status: ReviewStatus.Requested, // TODO: handle ReviewStatus.Declined better. This assumes there is a fallback reviewer.
-      reviewedBy: (await reviewerProvider.getFallbackReviewer(ctx)).sub,
+      reviewedBy: fallback?.sub,
       note: note,
     });
 
@@ -469,7 +469,10 @@ export class ReviewDataService extends EventEmitter {
         fieldStatements.push(`approved_at = now()`);
       } else if (fields.status === ReviewStatus.MeetingRequested) {
         fieldStatements.push(`meeting_requested_at = now()`);
-      } else if (fields.status === ReviewStatus.Canceled) {
+      } else if (
+        fields.status === ReviewStatus.Canceled ||
+        fields.status === ReviewStatus.Requested
+      ) {
         fieldStatements.push(`requested_at = now()`);
       }
     }

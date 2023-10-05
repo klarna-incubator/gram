@@ -1,4 +1,4 @@
-import { getLogger } from "log4js";
+import log4js from "log4js";
 
 export type ComponentType = "process" | "datastore" | "external";
 export const ComponentTypes = ["process", "datastore", "external"];
@@ -35,7 +35,7 @@ export class ComponentClassHandler {
   constructor() {
     this.lookup = new Map();
     ComponentTypes.forEach((ct) => this.lookup.set(ct as ComponentType, []));
-    this.log = getLogger("ComponentClassHandler");
+    this.log = log4js.getLogger("ComponentClassHandler");
   }
 
   lookup: Map<ComponentType, ComponentClass[]>;

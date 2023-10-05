@@ -15,7 +15,7 @@
       "sla_impact": "IMMEDIATE"
     },
     {
-      "system_id": "smtp",
+      "system_id": "cgw",
       "sla_impact": "NO_IMPACT",
       "description": "Used for sending email notifications"
     },

@@ -1,4 +1,5 @@
-import Cache from "./cache";
+import { jest } from "@jest/globals";
+import Cache from "./cache.js";
 
 describe("cache", () => {
   it("should get/set", () => {
@@ -15,18 +16,15 @@ describe("cache", () => {
   it("should expire old values", () => {
     const c = new Cache<string, string>("test");
     c.set("key", "old stuff");
-    jest
-      .useFakeTimers("modern")
-      .setSystemTime(Date.now() + 1000 * 60 * 60 * 3 + 2000);
+    jest.useFakeTimers().setSystemTime(Date.now() + 1000 * 60 * 60 * 3 + 2000);
     expect(c.get("key")).toBe(null);
+    expect(c.has("key")).toBe(false);
   });
 
   it("should not expire too early", () => {
     const c = new Cache<string, string>("test");
     c.set("key", "still fresh");
-    jest
-      .useFakeTimers("modern")
-      .setSystemTime(Date.now() + 1000 * 60 * 60 * 2 + 2000);
+    jest.useFakeTimers().setSystemTime(Date.now() + 1000 * 60 * 60 * 2 + 2000);
     expect(c.get("key")).toBe("still fresh");
   });
 

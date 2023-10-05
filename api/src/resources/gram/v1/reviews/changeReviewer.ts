@@ -3,19 +3,20 @@
  * @exports {function} handler
  */
 import { Request, Response } from "express";
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { reviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const { modelId } = req.params;
     const { newReviewer } = req.body;
+    const ctx = { currentRequest: req };
 
     if (
       !newReviewer ||
-      (await reviewerProvider.lookup({ currentRequest: req }, [newReviewer]))
-        .length === 0
+      ((await dal.reviewerHandler.getFallbackReviewer(ctx))?.sub !==
+        newReviewer &&
+        (await dal.reviewerHandler.lookup(ctx, [newReviewer])).length === 0)
     ) {
       return res.sendStatus(400);
     }

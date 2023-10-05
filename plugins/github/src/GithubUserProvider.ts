@@ -1,9 +1,9 @@
 import { App, Octokit } from "octokit";
-import { User } from "@gram/core/dist/auth/models/User";
-import { UserProvider } from "@gram/core/dist/auth/UserProvider";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { getDatabaseName } from "./data";
+import { User } from "@gram/core/dist/auth/models/User.js";
+import { UserProvider } from "@gram/core/dist/auth/UserProvider.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { getDatabaseName } from "./data.js";
 
 export class GithubUserProvider implements UserProvider {
   constructor(private app: App) {}
@@ -47,7 +47,6 @@ export class GithubUserProvider implements UserProvider {
       return {
         sub: resp.data.login,
         name: resp.data.name,
-        teams: [],
         mail: res.rows[0].email,
       };
     } catch (err: any) {

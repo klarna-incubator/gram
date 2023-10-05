@@ -1,9 +1,4 @@
-import config from "config";
 import fetch from "node-fetch";
-
-const opts: any = {
-  baseUrl: config.get("data._providers.threatsaurus.baseUrl"),
-};
 
 interface ThreatsaurusIndex {
   [key: string]: string;
@@ -13,10 +8,10 @@ interface ThreatsaurusIndex {
  * List of all Threatsaurus supported techs
  * @returns
  */
-export async function fetchIndex(): Promise<ThreatsaurusIndex> {
-  const url = `${opts.baseUrl}/index.json`;
+export async function fetchIndex(baseUrl: string): Promise<ThreatsaurusIndex> {
+  const url = `${baseUrl}/index.json`;
   const res = await fetch(url);
-  return await res.json();
+  return (await res.json()) as ThreatsaurusIndex;
 }
 
 export interface ThreatsaurusThreat {
@@ -62,12 +57,13 @@ export interface ThreatsaurusSuggestions {
  * @returns
  */
 export async function fetchTech(
+  baseUrl: string,
   key: string
 ): Promise<null | ThreatsaurusSuggestions> {
-  const url = `${opts.baseUrl}/${key}`;
+  const url = `${baseUrl}/${key}`;
   const res = await fetch(url);
   if (res.status !== 200) {
     return null;
   }
-  return await res.json();
+  return (await res.json()) as ThreatsaurusSuggestions;
 }

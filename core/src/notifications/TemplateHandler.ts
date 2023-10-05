@@ -1,11 +1,8 @@
-import { NotificationTemplateKey } from "../data/notifications/NotificationInput";
-import { getLogger } from "../logger";
+import { NotificationTemplateKey } from "../data/notifications/NotificationInput.js";
 import {
   NotificationTemplate,
   NotificationVariables,
-} from "./NotificationTemplate";
-
-const log = getLogger("TemplateHandler");
+} from "./NotificationTemplate.js";
 
 export class TemplateHandler {
   private templates: Map<NotificationTemplateKey, NotificationTemplate> =
@@ -13,7 +10,6 @@ export class TemplateHandler {
 
   register(template: NotificationTemplate) {
     this.templates.set(template.key, template);
-    log.info(`Registered notification template: ${template.key}`);
   }
 
   render(key: NotificationTemplateKey, variables: NotificationVariables) {

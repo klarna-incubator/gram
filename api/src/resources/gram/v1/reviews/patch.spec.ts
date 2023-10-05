@@ -1,32 +1,28 @@
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { Review, ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { genUser } from "../../../../test-util/authz";
-import { createSampleModel } from "../../../../test-util/model";
-import { sampleOtherUser, sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { createSampleModel } from "../../../../test-util/model.js";
+import {
+  sampleOtherUserToken,
+  sampleReviewerToken,
+} from "../../../../test-util/sampleTokens.js";
 
 describe("Reviews.update", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
   let pool: any;
   let modelId: string;
   let review: Review;
   let dal: DataAccessLayer;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleReviewerToken();
     ({ app, dal, pool } = await createTestApp());
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () =>
-      genUser({ roles: [Role.Reviewer] })
-    );
-
     /** Set up test model needed for review **/
     modelId = await createSampleModel(dal);
 
@@ -49,18 +45,18 @@ describe("Reviews.update", () => {
   it("should return 400 on invalid fields", async () => {
     const res = await request(app)
       .patch(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ status: "approved" });
 
     expect(res.status).toBe(400);
   });
 
   it("should return 403 on authorized request (called by role.user)", async () => {
-    validate.mockImplementation(async () => sampleOtherUser);
+    const otherUserToken = await sampleOtherUserToken();
 
     const res = await request(app)
       .patch(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", otherUserToken)
       .send({ note: "new note", reviewedBy: "new reviewer" });
 
     expect(res.status).toBe(403);
@@ -69,7 +65,7 @@ describe("Reviews.update", () => {
   it("should return on updating note + reviewer (called by role.reviewer)", async () => {
     const res = await request(app)
       .patch(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ note: "new note", reviewedBy: "new reviewer" });
 
     expect(res.status).toBe(200);
@@ -80,7 +76,7 @@ describe("Reviews.update", () => {
   it("should return 200 on updating note", async () => {
     const res = await request(app)
       .patch(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ note: "A new note" });
 
     expect(res.status).toBe(200);
@@ -91,7 +87,7 @@ describe("Reviews.update", () => {
   it("should return 200 on updating reviewer (called by role.reviewer)", async () => {
     const res = await request(app)
       .patch(`/api/v1/reviews/${modelId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ reviewedBy: "new reviewer" });
 
     expect(res.status).toBe(200);
@@ -100,7 +96,6 @@ describe("Reviews.update", () => {
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     await _deleteAllTheThings(pool);
   });
 });

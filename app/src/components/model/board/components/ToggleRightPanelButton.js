@@ -6,8 +6,10 @@ import {
   togglePanel,
   TOGGLE_RIGHT_PANEL,
 } from "../../../../actions/model/togglePanel";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export const ToggleRightPanelButton = () => {
+  const selectedComponent = useSelectedComponent();
   const dispatch = useDispatch();
   const { rightPanelCollapsed } = useSelector(({ model }) => ({
     rightPanelCollapsed: model.rightPanelCollapsed,
@@ -19,7 +21,8 @@ export const ToggleRightPanelButton = () => {
     position: "relative",
     left: "-40px",
     width: "40px",
-    backgroundColor: "#121212",
+    height: "48px",
+    backgroundColor: selectedComponent ? "#272727" : "#121212",
     display: "block",
     borderBottomLeftRadius: "10px",
     "&:hover": {

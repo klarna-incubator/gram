@@ -1,12 +1,12 @@
-import { DataAccessLayer } from "../data/dal";
-import { getLogger } from "../logger";
+import { DataAccessLayer } from "../data/dal.js";
+import log4js from "log4js";
 import {
   EngineSuggestedResult,
   SourceSuggestedControl,
   SourceSuggestedThreat,
   SuggestionID,
   SuggestionSource,
-} from "./models";
+} from "./models.js";
 
 // Controls the delay before suggestions are fetched for a model.
 const SUGGESTION_DELAY =
@@ -14,21 +14,23 @@ const SUGGESTION_DELAY =
 
 export class SuggestionEngine {
   public sources: SuggestionSource[] = [];
-  log = getLogger("SuggestionEngine");
+  log = log4js.getLogger("SuggestionEngine");
 
   // One timeout per ModelID: should be threadsafe because node runs singlethreaded ;))
   delayer = new Map<string, NodeJS.Timeout>();
 
-  constructor(private dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer, public noListen: boolean = false) {
     dal.modelService.on("updated-for", ({ modelId }) => {
-      this.log.debug(`model ${modelId} was updated via api`);
-      // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
-      const timeout = this.delayer.get(modelId);
-      if (timeout) clearTimeout(timeout);
-      this.delayer.set(
-        modelId,
-        setTimeout(() => this.work(modelId), SUGGESTION_DELAY)
-      );
+      if (!this.noListen) {
+        this.log.debug(`model ${modelId} was updated via api`);
+        // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
+        const timeout = this.delayer.get(modelId);
+        if (timeout) clearTimeout(timeout);
+        this.delayer.set(
+          modelId,
+          setTimeout(() => this.work(modelId), SUGGESTION_DELAY)
+        );
+      }
     });
   }
 

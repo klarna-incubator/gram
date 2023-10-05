@@ -341,9 +341,9 @@ function UserChip({ user }) {
       label={user.name}
       icon={
         <>
-          {user?.slackId && (
+          {user?.slackUrl && (
             <IconButton
-              href={`slack://user?team=T024Q7ZC6&id=${user?.slackId}`} // TODO: remove hardcoded slack team ID here.
+              href={user?.slackUrl}
               target="_blank"
               rel="noreferrer"
               color="inherit"

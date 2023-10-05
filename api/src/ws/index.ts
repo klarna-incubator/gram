@@ -1,12 +1,12 @@
-import config from "config";
 import { IncomingMessage, Server } from "http";
 import url from "url";
 import WebSocket from "ws";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { getLogger } from "@gram/core/dist/logger";
-import { ModelWebsocketServer } from "./model";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import log4js from "log4js";
+import { ModelWebsocketServer } from "./model.js";
+import { config } from "@gram/core/dist/config/index.js";
 
-const log = getLogger("wss");
+const log = log4js.getLogger("wss");
 const wssRegistry = new Map<string, ModelWebsocketServer>();
 
 function validateRequestOrigin(request: IncomingMessage) {
@@ -16,7 +16,7 @@ function validateRequestOrigin(request: IncomingMessage) {
     origin = origin.substring(0, origin.length - 1);
   }
 
-  const corsOrigin = config.get("origin");
+  const corsOrigin = config.origin;
   let validOrigin = false;
   if (Array.isArray(corsOrigin)) {
     validOrigin = corsOrigin.includes(origin);

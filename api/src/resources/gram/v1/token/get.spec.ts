@@ -1,9 +1,9 @@
-import AuthProviderRegistry from "@gram/core/dist/auth/AuthProviderRegistry";
-import MockAuthProvider from "@gram/core/dist/auth/mock";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
+import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry.js";
+import MockAuthProvider from "@gram/core/dist/auth/mock/MockAuthProvider.js";
 import request from "supertest";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { jest } from "@jest/globals";
 
 describe("token.get", () => {
   let app: any;
@@ -11,16 +11,15 @@ describe("token.get", () => {
   const getIdentity = jest.spyOn(dummyAuth, "getIdentity");
 
   beforeAll(async () => {
-    const pool = await createPostgresPool();
     ({ app } = await createTestApp());
-    AuthProviderRegistry.clear();
-    AuthProviderRegistry.set(dummyAuth.key, dummyAuth);
+    IdentityProviderRegistry.clear();
+    IdentityProviderRegistry.set(dummyAuth.key, dummyAuth);
   });
 
   beforeEach(() => {
     getIdentity.mockImplementation(async () => ({
       status: "ok",
-      token: sampleUser,
+      identity: sampleUser,
     }));
   });
 

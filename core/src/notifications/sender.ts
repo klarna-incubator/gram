@@ -1,15 +1,16 @@
 import { SMTPClient } from "emailjs";
-import { NotificationDataService } from "../data/notifications/NotificationDataService";
-import { getLogger } from "../logger";
-import secrets from "../secrets";
-import { send } from "./email";
-import { TemplateHandler } from "./TemplateHandler";
+import { NotificationDataService } from "../data/notifications/NotificationDataService.js";
+import log4js from "log4js";
+import { send } from "./email.js";
+import { TemplateHandler } from "./TemplateHandler.js";
+import { config } from "../config/index.js";
 
-const log = getLogger("NotificationSender");
+const log = log4js.getLogger("NotificationSender");
 
 export async function notificationSender(
   notificationService: NotificationDataService,
-  templateHandler: TemplateHandler
+  templateHandler: TemplateHandler,
+  sendFunction?: any
 ) {
   const notifications = await notificationService.pollNewNotifications();
 
@@ -18,15 +19,14 @@ export async function notificationSender(
     return;
   }
 
-  const host = await secrets.get("notifications.providers.email.host");
+  const host = await config.notifications.providers.email.host.getValue();
+
   const port = parseInt(
-    await secrets.getOrDefault("notifications.providers.email.port", "25")
+    (await config.notifications.providers.email.port.getValue()) || "25"
   );
-  const user = await secrets.get("notifications.providers.email.user");
-  const password = await secrets.getOrDefault(
-    "notifications.providers.email.password",
-    undefined
-  );
+  const user = await config.notifications.providers.email.user.getValue();
+  const password =
+    await config.notifications.providers.email.password.getValue();
 
   const client = new SMTPClient({
     user,
@@ -40,7 +40,15 @@ export async function notificationSender(
     notifications.map(async (notification) => {
       const result = { id: notification.id, success: false };
       try {
-        result.success = await send(client, templateHandler, notification);
+        if (sendFunction) {
+          result.success = await sendFunction(
+            client,
+            templateHandler,
+            notification
+          );
+        } else {
+          result.success = await send(client, templateHandler, notification);
+        }
       } catch (err: any) {
         log.error(
           `Failed to send notification ${notification.id}: SMTP Error Code: ${err?.code}. See https://github.com/eleith/emailjs/blob/main/smtp/error.ts`

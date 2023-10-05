@@ -1,12 +1,10 @@
 import * as Sentry from "@sentry/node";
 import express from "express";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { createHealthChecks } from "./healthchecks";
-import { metricsMiddleware } from "./metrics/metrics";
-import errorHandler from "./middlewares/errorHandler";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const version = require("../package.json").version;
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createHealthChecks } from "./healthchecks/index.js";
+import { metricsMiddleware } from "./metrics/metrics.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import { version } from "./util/version.js";
 
 export function createControlApp(dal: DataAccessLayer) {
   const app = express();
@@ -17,7 +15,7 @@ export function createControlApp(dal: DataAccessLayer) {
   app.get("/service-metadata", (_req, res) => {
     return res.json({
       service_name: "gram",
-      service_version: version,
+      service_version: `${version}`,
       description: "Threat modeling",
       owner: "Secure Development",
       tags: ["threat-modeling", "appsec", "security"],

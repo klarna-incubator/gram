@@ -1,0 +1,198 @@
+import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js";
+
+const classes: ComponentClass[] = [
+  {
+    id: "ea102762-b8dc-41d5-bd27-62cd8fdd8b8d",
+    name: "Kubernetes Cluster Role Binding",
+    componentType: "any",
+    icon: "/assets/kubernetes/Cluster-Role-Binding.svg",
+  },
+  {
+    id: "40a5de93-f90c-471c-afd2-b37458de43b4",
+    name: "Kubernetes Cluster Role",
+    componentType: "any",
+    icon: "/assets/kubernetes/Cluster-Role.svg",
+  },
+  {
+    id: "35775fed-22af-4699-bde4-305715c7797d",
+    name: "Kubernetes Config Map",
+    componentType: "any",
+    icon: "/assets/kubernetes/Config-Map.svg",
+  },
+  {
+    id: "f808ffc6-3760-4f60-a944-33245c39aace",
+    name: "Kubernetes Control Plane",
+    componentType: "any",
+    icon: "/assets/kubernetes/Control-Plane.svg",
+  },
+  {
+    id: "12d73ccc-0c83-44e8-af2b-eeec7b0a86f1",
+    name: "Kubernetes CronJob",
+    componentType: "any",
+    icon: "/assets/kubernetes/CronJob.svg",
+  },
+  {
+    id: "cb8986eb-1c71-45c8-ae5d-f12fc3ac0706",
+    name: "Kubernetes Custom Resource Definition",
+    componentType: "any",
+    icon: "/assets/kubernetes/Custom-Resource-Definition.svg",
+  },
+  {
+    id: "6def01dc-ae8d-4627-8595-c2ac3230d2a1",
+    name: "Kubernetes DaemonSet",
+    componentType: "any",
+    icon: "/assets/kubernetes/DaemonSet.svg",
+  },
+  {
+    id: "eebbc194-cc11-4a44-b96d-01220647b9ef",
+    name: "Kubernetes Deployment",
+    componentType: "any",
+    icon: "/assets/kubernetes/Deployment.svg",
+  },
+  {
+    id: "836f9fd9-10ac-4b72-bf8b-9efbd33e068b",
+    name: "Kubernetes Endpoint",
+    componentType: "any",
+    icon: "/assets/kubernetes/Endpoint.svg",
+  },
+  {
+    id: "37ed345c-9929-49aa-9551-d77c3d6c71e2",
+    name: "Kubernetes Group",
+    componentType: "any",
+    icon: "/assets/kubernetes/Group.svg",
+  },
+  {
+    id: "55b264f3-4c5e-467c-ba49-ecb013b83720",
+    name: "Kubernetes Horizontal Pod Autoscaling",
+    componentType: "any",
+    icon: "/assets/kubernetes/Horizontal-Pod-Autoscaling.svg",
+  },
+  {
+    id: "24169671-c4a6-4826-a6e8-3d7b300a957a",
+    name: "Kubernetes Ingress",
+    componentType: "any",
+    icon: "/assets/kubernetes/Ingress.svg",
+  },
+  {
+    id: "6fbd2ba4-e78b-4ed4-8909-e1f042a2daca",
+    name: "Kubernetes Job",
+    componentType: "any",
+    icon: "/assets/kubernetes/Job.svg",
+  },
+  {
+    id: "f0386dde-86d9-4af4-a4f9-71af1369326d",
+    name: "Kubernetes Limits",
+    componentType: "any",
+    icon: "/assets/kubernetes/Limits.svg",
+  },
+  {
+    id: "fd024715-f962-408f-883b-fe94ead01d53",
+    name: "Kubernetes Namespace",
+    componentType: "any",
+    icon: "/assets/kubernetes/Namespace.svg",
+  },
+  {
+    id: "60bfff20-fd64-4a1b-b604-04893b0ef63b",
+    name: "Kubernetes Network Policy",
+    componentType: "any",
+    icon: "/assets/kubernetes/Network-Policy.svg",
+  },
+  {
+    id: "faeecf39-9404-4760-be10-7b243a1688c5",
+    name: "Kubernetes Node",
+    componentType: "any",
+    icon: "/assets/kubernetes/Node.svg",
+  },
+  {
+    id: "89fbc7cb-b99f-4993-b03a-899148516c14",
+    name: "Kubernetes Persistent Volume Claim",
+    componentType: "any",
+    icon: "/assets/kubernetes/Persistent-Volume-Claim.svg",
+  },
+  {
+    id: "36480ebe-165b-47fe-86d4-fb3280eb5274",
+    name: "Kubernetes Persistent Volume",
+    componentType: "any",
+    icon: "/assets/kubernetes/Persistent-Volume.svg",
+  },
+  {
+    id: "8e0aa200-0ff1-45b9-a353-a37acbdf0e3e",
+    name: "Kubernetes Pod Security Policies",
+    componentType: "any",
+    icon: "/assets/kubernetes/Pod-Security-Policies.svg",
+  },
+  {
+    id: "396f7390-c958-4b97-8a73-923935fd5542",
+    name: "Kubernetes Pod",
+    componentType: "any",
+    icon: "/assets/kubernetes/Pod.svg",
+  },
+  {
+    id: "848cf876-a84c-478a-9658-bd0544fc98a0",
+    name: "Kubernetes ReplicaSet",
+    componentType: "any",
+    icon: "/assets/kubernetes/ReplicaSet.svg",
+  },
+  {
+    id: "a3a1c6e5-2eb4-46bd-b1d8-eb0a12efbcfe",
+    name: "Kubernetes Resource Quota",
+    componentType: "any",
+    icon: "/assets/kubernetes/Resource-Quota.svg",
+  },
+  {
+    id: "ea481045-209d-4efe-9296-9b0975519943",
+    name: "Kubernetes Role Binding",
+    componentType: "any",
+    icon: "/assets/kubernetes/Role-Binding.svg",
+  },
+  {
+    id: "977cbb4d-bcf7-4a01-a7a4-a10a28d277bc",
+    name: "Kubernetes Role",
+    componentType: "any",
+    icon: "/assets/kubernetes/Role.svg",
+  },
+  {
+    id: "d99abdcb-5747-4636-92c8-4f3f90b4a8bd",
+    name: "Kubernetes Secret",
+    componentType: "any",
+    icon: "/assets/kubernetes/Secret.svg",
+  },
+  {
+    id: "f388b0ab-4c37-4ef2-8e2c-cca9e777eeb1",
+    name: "Kubernetes Service Account",
+    componentType: "any",
+    icon: "/assets/kubernetes/Service-Account.svg",
+  },
+  {
+    id: "e1c85525-d683-44c0-8b61-2b7e4433e269",
+    name: "Kubernetes Service",
+    componentType: "any",
+    icon: "/assets/kubernetes/Service.svg",
+  },
+  {
+    id: "2f1ec9bc-498b-49fe-8f88-5d7270094620",
+    name: "Kubernetes StatefulSet",
+    componentType: "any",
+    icon: "/assets/kubernetes/StatefulSet.svg",
+  },
+  {
+    id: "76ef0a04-a856-4146-82f0-b457c622ecfb",
+    name: "Kubernetes Storage Class",
+    componentType: "any",
+    icon: "/assets/kubernetes/Storage-Class.svg",
+  },
+  {
+    id: "7498a42a-b542-429f-a40e-cf09d6dd999e",
+    name: "Kubernetes User",
+    componentType: "any",
+    icon: "/assets/kubernetes/User.svg",
+  },
+  {
+    id: "5ce74af3-bf0a-4f8b-97d0-a9e18c051a20",
+    name: "Kubernetes Volume",
+    componentType: "any",
+    icon: "/assets/kubernetes/Volume.svg",
+  },
+];
+
+export default classes;

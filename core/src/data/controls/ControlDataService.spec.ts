@@ -1,18 +1,18 @@
 import { randomUUID } from "crypto";
-import { Pool } from "pg";
-import { DataAccessLayer } from "../dal";
-import Mitigation from "../mitigations/Mitigation";
-import Model from "../models/Model";
-import { createPostgresPool } from "../postgres";
-import Threat from "../threats/Threat";
-import { _deleteAllTheThings } from "../utils";
-import Control from "./Control";
-import { ControlDataService } from "./ControlDataService";
+import pg from "pg";
+import { DataAccessLayer } from "../dal.js";
+import Mitigation from "../mitigations/Mitigation.js";
+import Model from "../models/Model.js";
+import { createPostgresPool } from "../postgres.js";
+import Threat from "../threats/Threat.js";
+import { _deleteAllTheThings } from "../utils.js";
+import Control from "./Control.js";
+import { ControlDataService } from "./ControlDataService.js";
 
 describe("ControlDataService implementation", () => {
   let data: ControlDataService;
   let dal: DataAccessLayer;
-  let pool: Pool;
+  let pool: pg.Pool;
   let model: Model;
 
   beforeAll(async () => {

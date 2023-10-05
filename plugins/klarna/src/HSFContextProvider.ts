@@ -1,33 +1,39 @@
-import { ChainableTemporaryCredentials, Credentials, S3, STS } from "aws-sdk";
+import aws from "aws-sdk";
 import { execSync } from "child_process";
-import config from "config";
 import fs from "fs";
-import proxy from "proxy-agent";
-import { uniqueId } from "lodash";
+import _ from "lodash";
 import readline from "readline";
 import { Readable } from "stream";
-import { getLogger } from "@gram/core/dist/logger";
-import { isDevelopment } from "@gram/core/dist/util/env";
-import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
+import log4js from "log4js";
+import { isDevelopment } from "@gram/core/dist/util/env.js";
+import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider.js";
 import {
   SystemProperty,
   SystemPropertyValue,
-} from "@gram/core/dist/data/system-property/types";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
+} from "@gram/core/dist/data/system-property/types.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { ProxyAgent } from "proxy-agent";
+import * as url from "url";
 
-const log = getLogger("HSFContextProvider");
+const log = log4js.getLogger("HSFContextProvider");
 
-async function assumeRole(): Promise<Credentials> {
-  const params: STS.AssumeRoleRequest = {
-    RoleArn: config.get("data._providers.hsf.awsRole") as string,
-    RoleSessionName: `gram-hsf-access-${uniqueId(Date.now().toString())}`,
-    ExternalId: config.get("data._providers.hsf.awsExternalId") as string,
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+
+async function assumeRole(
+  awsRole: string,
+  awsExternalId: string,
+  beCursed: boolean
+): Promise<aws.Credentials> {
+  const params: aws.STS.AssumeRoleRequest = {
+    RoleArn: awsRole, //config.get("data._providers.hsf.awsRole") as string,
+    RoleSessionName: `gram-hsf-access-${_.uniqueId(Date.now().toString())}`,
+    ExternalId: awsExternalId, //config.get("data._providers.hsf.awsExternalId") as string,
   };
 
-  let masterCredentials: Credentials | undefined; // Credentials to inherit from
+  let masterCredentials: aws.Credentials | undefined; // Credentials to inherit from
   if (
     isDevelopment() &&
-    config.get("data._providers.hsf.doCursedThing") === true
+    beCursed //config.get("data._providers.hsf.doCursedThing") === true
   ) {
     // Cursed workaround to assume role in a development environment. This uses the staging c2c container
     // to assume the role. Normally, you should not need to do this, and can use mocked data instead.
@@ -42,23 +48,21 @@ async function assumeRole(): Promise<Credentials> {
     let res = execSync(cmd).toString();
     res = res.split("\n").slice(1).join("\n");
     const jsoned = JSON.parse(res);
-    masterCredentials = new Credentials({
+    masterCredentials = new aws.Credentials({
       accessKeyId: jsoned.AccessKeyId,
       secretAccessKey: jsoned.SecretAccessKey,
       sessionToken: jsoned.Token,
     });
   }
   // Assume role the normal way. This should work from C2C.
-  const creds = new ChainableTemporaryCredentials({
+  const creds = new aws.ChainableTemporaryCredentials({
     params,
     stsConfig: {
       region: process.env.AWS_REGION,
       httpOptions: {
         // STS is not whitelisted by C2C, so we need to use the proxy to access it.
         // https://stash.int.klarna.net/projects/DEVSERV/repos/docs/pull-requests/1985/diff#content/documentation/c2c-platform/05_explanations/c2c_networking.md
-        agent: process.env.HTTP_PROXY
-          ? proxy(process.env.HTTP_PROXY)
-          : undefined,
+        agent: process.env.HTTP_PROXY ? new ProxyAgent() : undefined,
       },
     },
     masterCredentials,
@@ -80,12 +84,17 @@ export class HSFContextProvider implements SystemPropertyProvider {
   hsfset: Set<string>;
   refreshInterval?: NodeJS.Timeout;
 
-  constructor() {
+  constructor(
+    hsfBucket: string,
+    hsfKey: string,
+    awsRole: string,
+    awsExternalId: string
+  ) {
     this.hsfset = new Set();
-    this.load();
+    this.load(hsfBucket, hsfKey, awsRole, awsExternalId);
     if (process.env.NODE_ENV !== "test") {
       this.refreshInterval = setInterval(
-        () => this.load(),
+        () => this.load(hsfBucket, hsfKey, awsRole, awsExternalId),
         HSF_REFRESH_TIME_MS
       );
     }
@@ -126,24 +135,22 @@ export class HSFContextProvider implements SystemPropertyProvider {
     return [item];
   }
 
-  async load() {
-    const configKeys = [
-      "data._providers.hsf.bucket",
-      "data._providers.hsf.key",
-      "data._providers.hsf.awsRole",
-      "data._providers.hsf.awsExternalId",
-    ];
-
+  async load(
+    hsfBucket: string,
+    hsfKey: string,
+    awsRole: string,
+    awsExternalId: string
+  ) {
     try {
       let stream: Readable;
-      if (configKeys.reduce((p, key) => p && config.has(key), true)) {
+      if (hsfBucket) {
         const s3Params = {
-          Bucket: config.get("data._providers.hsf.bucket") as string,
-          Key: config.get("data._providers.hsf.key") as string,
+          Bucket: hsfBucket,
+          Key: hsfKey,
         };
 
-        const credentials = await assumeRole();
-        const s3 = new S3({
+        const credentials = await assumeRole(awsRole, awsExternalId, false);
+        const s3 = new aws.S3({
           credentials,
           region: process.env.AWS_REGION,
         });

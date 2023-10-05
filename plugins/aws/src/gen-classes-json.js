@@ -4,8 +4,10 @@
  */
 
 const fs = require("fs");
-const { join } = require("path");
+const { join, resolve } = require("path");
 const { v4 } = require("uuid");
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 const assetDir = join(__dirname, "assets");
 const folders = fs.readdirSync(assetDir).filter((f) => f.includes("Arch"));

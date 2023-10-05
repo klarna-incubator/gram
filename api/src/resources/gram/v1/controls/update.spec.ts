@@ -1,17 +1,19 @@
+import { jest } from "@jest/globals";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import Control from "@gram/core/dist/data/controls/Control";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import Threat from "@gram/core/dist/data/threats/Threat";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import * as jwt from "@gram/core/dist/auth/jwt.js";
+import Control from "@gram/core/dist/data/controls/Control.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import Threat from "@gram/core/dist/data/threats/Threat.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import { sampleUser } from "../../../../test-util/sampleUser.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
+
+const token = await sampleUserToken();
 
 describe("Controls.update", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
   let pool: any;
   let dal: DataAccessLayer;
@@ -27,8 +29,6 @@ describe("Controls.update", () => {
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
-
     const model = new Model(sampleOwnedSystem.id, "version", email);
     model.data = { components: [], dataFlows: [] };
     modelId = await dal.modelService.create(model);
@@ -63,7 +63,7 @@ describe("Controls.update", () => {
   it("should return 200 on updating name", async () => {
     const res = await request(app)
       .patch(`/api/v1/models/${modelId}/controls/${controlId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ title: "Control 2" });
 
     expect(res.status).toBe(200);
@@ -74,7 +74,7 @@ describe("Controls.update", () => {
   it("should return 200 on updating description and inPlace", async () => {
     const res = await request(app)
       .patch(`/api/v1/models/${modelId}/controls/${controlId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ description: "control description...d", inPlace: true });
 
     expect(res.status).toBe(200);
@@ -85,7 +85,7 @@ describe("Controls.update", () => {
   it("should return 200 on inplace toggle", async () => {
     const res = await request(app)
       .patch(`/api/v1/models/${modelId}/controls/${controlId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ inPlace: true });
 
     expect(res.status).toBe(200);
@@ -96,7 +96,7 @@ describe("Controls.update", () => {
   it("should return 200 but not modify on invalid fields", async () => {
     const res = await request(app)
       .patch(`/api/v1/models/${modelId}/controls/${controlId}`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ __proto__: "evil" });
 
     expect(res.status).toBe(200);
@@ -105,6 +105,5 @@ describe("Controls.update", () => {
 
   afterAll(async () => {
     await _deleteAllTheThings(pool);
-    validate.mockRestore();
   });
 });

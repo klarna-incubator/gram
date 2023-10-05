@@ -1,16 +1,13 @@
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import Threat from "@gram/core/dist/data/threats/Threat.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import Threat from "@gram/core/dist/data/threats/Threat";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 
 describe("Controls.create", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
   let pool: any;
   let dal: DataAccessLayer;
@@ -19,14 +16,14 @@ describe("Controls.create", () => {
   const componentId = "fe93572e-9d0c-4afe-b042-e02c1c45f704";
   let modelId: string;
   let threatId: string;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     ({ pool, app, dal } = await createTestApp());
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
-
     const model = new Model(sampleOwnedSystem.id, "version", email);
     model.data = { components: [], dataFlows: [] };
     modelId = await dal.modelService.create(model);
@@ -51,14 +48,13 @@ describe("Controls.create", () => {
   it("should return 200", async () => {
     const res = await request(app)
       .post(`/api/v1/models/${modelId}/controls`)
-      .set("Authorization", "bearer validToken")
+      .set("Authorization", token)
       .send({ title: "Control", description: "desc", componentId });
 
     expect(res.status).toBe(200);
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     await _deleteAllTheThings(pool);
   });
 });

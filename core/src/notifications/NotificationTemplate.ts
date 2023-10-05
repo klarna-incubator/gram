@@ -1,6 +1,6 @@
 import Handlebars from "handlebars";
-import { DataAccessLayer } from "../data/dal";
-import { NotificationTemplateKey } from "../data/notifications/NotificationInput";
+import { DataAccessLayer } from "../data/dal.js";
+import { NotificationTemplateKey } from "../data/notifications/NotificationInput.js";
 
 export type NotificationVariables = {
   recipients: EmailRecipient[];

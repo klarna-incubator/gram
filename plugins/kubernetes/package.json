@@ -1,9 +1,10 @@
 {
   "name": "@gram/kubernetes",
   "version": "3.0.0",
+  "type": "module",
   "description": "Kubernetes icons for Gram",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -17,5 +18,6 @@
   "dependencies": {
     "@gram/core": "*"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {}
 }

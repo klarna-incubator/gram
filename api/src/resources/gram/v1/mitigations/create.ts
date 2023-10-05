@@ -2,12 +2,12 @@
  * POST /api/v1/models/{modelId}/mitigation
  * @exports {function} handler
  */
-import { Permission } from "@gram/core/dist/auth/authorization";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
-import { validateUUID } from "@gram/core/dist/util/uuid";
+import { Permission } from "@gram/core/dist/auth/authorization.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation.js";
+import { validateUUID } from "@gram/core/dist/util/uuid.js";
 import { Request, Response } from "express";
-import { ensureControlAndThreatPermission } from "./util";
+import { ensureControlAndThreatPermission } from "./util.js";
 
 export function create(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {

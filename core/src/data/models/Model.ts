@@ -1,4 +1,4 @@
-import { ComponentClass } from "../component-classes";
+import { ComponentClass } from "../component-classes/index.js";
 
 export interface DataFlow {
   id: string;
@@ -129,7 +129,7 @@ export default class Model {
   isTemplate?: boolean;
 
   constructor(
-    public systemId: string,
+    public systemId: string | null,
     public version: string,
     public createdBy: string
   ) {

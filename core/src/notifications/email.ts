@@ -1,22 +1,11 @@
 import { Message, SMTPClient } from "emailjs";
-import { Notification } from "../data/notifications/Notification";
-import { getLogger } from "../logger";
-import { TemplateHandler } from "./TemplateHandler";
-import config from "config";
-import { sanitizeEmail } from "../util/sanitize";
+import { Notification } from "../data/notifications/Notification.js";
+import log4js from "log4js";
+import { TemplateHandler } from "./TemplateHandler.js";
+import { sanitizeEmail } from "../util/sanitize.js";
+import { config } from "../config/index.js";
 
-const log = getLogger("email");
-
-const senderName = config.has("notifications.providers.email.sender-name")
-  ? (config.get("notifications.providers.email.sender-name") as string)
-  : "Gram";
-
-// Allow overriding recipient email for debug purposes.
-const overrideMail = config.has(
-  "notifications.providers.email.override-recipient"
-)
-  ? (config.get("notifications.providers.email.override-recipient") as string)
-  : false;
+const log = log4js.getLogger("email");
 
 /**
  * Sanitizes recipient names by removing special email characters.
@@ -41,6 +30,12 @@ export async function send(
     notification.templateKey,
     notification.variables
   );
+
+  const senderName = config.notifications.providers.email.senderName || "Gram";
+
+  // Allow overriding recipient email for debug purposes.
+  const overrideMail =
+    config.notifications.providers.email.overrideRecipient || false;
 
   const msg: Message = new Message({
     text: content.body,

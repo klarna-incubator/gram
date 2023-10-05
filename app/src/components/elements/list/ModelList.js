@@ -43,13 +43,11 @@ export function ModelList({
                   secondary={
                     <>
                       <span>
-                        {model.systemId &&
-                          model.systemId !==
-                            "00000000-0000-0000-0000-000000000000" && (
-                            <>
-                              <SystemName systemId={model.systemId} /> &nbsp;
-                            </>
-                          )}
+                        {model.systemId && (
+                          <>
+                            <SystemName systemId={model.systemId} /> &nbsp;
+                          </>
+                        )}
                       </span>
                       <span style={{ float: "right" }}>
                         <ModelComplianceBadge {...model} />

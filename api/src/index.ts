@@ -1,30 +1,21 @@
-// This allows TypeScript to detect our global value
-// Sentry needs this: https://docs.sentry.io/platforms/node/typescript/
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface Global {
-      __rootdir__: string;
-    }
-  }
-}
+import { initConfig } from "@gram/config";
+initConfig(); // Must do this before loading config
+import { configureLogging } from "@gram/core/dist/logger/index.js";
+configureLogging();
 
-global.__rootdir__ = __dirname || process.cwd();
-// End of Sentry stuff
-
-import config from "config";
 import http from "http";
-import createApp from "./app";
-import { createControlApp } from "./controlApp";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import { getLogger } from "@gram/core/dist/logger";
-import { notificationSender } from "@gram/core/dist/notifications/sender";
-import { bootstrapPlugins } from "./bootstrap";
-import { attachWebsocketServer } from "./ws";
+import { createApp } from "./app.js";
+import { createControlApp } from "./controlApp.js";
+import { bootstrap } from "@gram/core/dist/bootstrap.js";
+import log4js from "log4js";
+import { notificationSender } from "@gram/core/dist/notifications/sender.js";
+import { attachWebsocketServer } from "./ws/index.js";
+import { config } from "@gram/core/dist/config/index.js";
+import { version } from "./util/version.js";
 
 const NOTIFICATION_INTERVAL = 1000 * 30; // 30 seconds
 
-const log = getLogger("api");
+const log = log4js.getLogger("api");
 
 // Catch and log unhandled errors
 const handleUnhandledError = (err: Error) => {
@@ -34,26 +25,24 @@ process.on("unhandledRejection", handleUnhandledError);
 process.on("uncaughtException", handleUnhandledError);
 
 const listen = async () => {
-  log.info(`Starting gram@${process.env.npm_package_version}`);
-  const pool = await createPostgresPool();
-  log.info("postgres connection established");
+  log.info(`Starting gram@${version}`);
+  const dal = await bootstrap();
 
   // Create Express Apps
-  const { app, dal } = await createApp(pool);
+  const app = await createApp(dal);
   const controlApp = createControlApp(dal);
 
   // Bootstrap packs with custom functionality / addons
-  await bootstrapPlugins(app, dal);
 
   // Set up HTTP servers and start listening
-  const appPort = config.get("appPort");
+  const appPort = config.appPort;
   const appServer = http.createServer(app);
   // Attach websocket handler
   attachWebsocketServer(appServer, dal);
   await appServer.listen(appPort);
   log.info(`appServer - listening to ${appPort}`);
 
-  const controlPort = config.get("controlPort");
+  const controlPort = config.controlPort;
   const controlServer = http.createServer(controlApp);
   await controlServer.listen(controlPort);
   log.info(`controlServer - listening to ${controlPort}`);

@@ -1,14 +1,14 @@
-import { DataAccessLayer } from "../data/dal";
-import { NotificationDataService } from "../data/notifications/NotificationDataService";
-import { NotificationInput } from "../data/notifications/NotificationInput";
-import { createPostgresPool } from "../data/postgres";
-import { send } from "./email";
-import { PlaintextHandlebarsNotificationTemplate } from "./NotificationTemplate";
-import { notificationSender } from "./sender";
-import { TemplateHandler } from "./TemplateHandler";
+import { jest } from "@jest/globals";
+import { DataAccessLayer } from "../data/dal.js";
+import { NotificationDataService } from "../data/notifications/NotificationDataService.js";
+import { NotificationInput } from "../data/notifications/NotificationInput.js";
+import { createPostgresPool } from "../data/postgres.js";
+import { PlaintextHandlebarsNotificationTemplate } from "./NotificationTemplate.js";
+import { notificationSender } from "./sender.js";
+import { TemplateHandler } from "./TemplateHandler.js";
+import { Mock } from "jest-mock";
 
-jest.mock("./email");
-const mockedSend = jest.mocked(send);
+const mockedSend = jest.fn();
 
 describe("notification sender", () => {
   let notificationService: NotificationDataService;
@@ -41,50 +41,70 @@ describe("notification sender", () => {
 
   describe("notificationSender", () => {
     it("should mark notifications as sent", async () => {
-      mockedSend.mockImplementation(async () => true);
+      (mockedSend as Mock).mockImplementation(async () => true);
 
       const nid = await notificationService.queue(sampleNotification);
-      await notificationSender(notificationService, templateHandler);
+      await notificationSender(
+        notificationService,
+        templateHandler,
+        mockedSend
+      );
 
       const notification = await notificationService.getNotification(nid);
       expect(notification.status).toBe("sent");
     });
 
     it("should mark notifications that returned false as failed", async () => {
-      mockedSend.mockImplementation(async () => false);
+      (mockedSend as Mock).mockImplementation(async () => false);
 
       const nid = await notificationService.queue(sampleNotification);
-      await notificationSender(notificationService, templateHandler);
+      await notificationSender(
+        notificationService,
+        templateHandler,
+        mockedSend
+      );
 
       const notification = await notificationService.getNotification(nid);
       expect(notification.status).toBe("failed");
     });
 
     it("should mark notifications that errored as failed", async () => {
-      mockedSend.mockImplementation(async () => {
+      (mockedSend as Mock).mockImplementation(async () => {
         throw new Error("kaboom");
       });
 
       const nid = await notificationService.queue(sampleNotification);
-      await notificationSender(notificationService, templateHandler);
+      await notificationSender(
+        notificationService,
+        templateHandler,
+        mockedSend
+      );
 
       const notification = await notificationService.getNotification(nid);
       expect(notification.status).toBe("failed");
     });
 
     it("should run ok with no notifications queued", async () => {
-      const mockFn = mockedSend.mockImplementation(async () => true);
-      await notificationSender(notificationService, templateHandler);
+      const mockFn = (mockedSend as Mock).mockImplementation(async () => true);
+      await notificationSender(
+        notificationService,
+        templateHandler,
+        mockedSend
+      );
       expect(mockFn.mock.calls.length).toBe(0);
     });
 
     it("should only send once", async () => {
-      const mockFn = mockedSend.mockImplementation(async () => true);
+      const mockFn = (mockedSend as Mock).mockImplementation(async () => true);
 
       await notificationService.queue(sampleNotification);
-      await notificationSender(notificationService, templateHandler);
-      await notificationSender(notificationService, templateHandler);
-      await notificationSender(notificationService, templateHandler);
+      for (let i = 0; i < 3; i++) {
+        await notificationSender(
+          notificationService,
+          templateHandler,
+          mockedSend
+        );
+      }
 
       expect(mockFn.mock.calls.length).toBe(1);
     });
@@ -92,10 +112,10 @@ describe("notification sender", () => {
 
   afterEach(() => {
     notificationService._truncate();
-    mockedSend.mockReset();
+    (mockedSend as Mock).mockReset();
   });
 
   afterAll(() => {
-    mockedSend.mockRestore();
+    (mockedSend as Mock).mockRestore();
   });
 });

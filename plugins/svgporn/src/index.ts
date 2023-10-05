@@ -1,7 +1,8 @@
-import { join } from "path";
-import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
-import { ComponentClass } from "@gram/core/dist/data/component-classes";
-import classes from "./classes.json";
+import { AssetFolder } from "@gram/core/dist/config/AssetFolder.js";
+import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js";
+import { join } from "node:path";
+import classes from "./classes.js";
+import * as url from "url";
 
 const toComponentClass = (c: any): ComponentClass => {
   return {
@@ -12,9 +13,11 @@ const toComponentClass = (c: any): ComponentClass => {
   };
 };
 
-export default class SVGPornPlugin implements Plugin {
-  async bootstrap(reg: PluginRegistrator): Promise<void> {
-    reg.registerAssets("svgporn", join(__dirname, "logos"));
-    reg.registerComponentClasses(classes.map((c) => toComponentClass(c)));
-  }
-}
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+
+export const SVGPornAssets: AssetFolder = {
+  name: "svgporn",
+  folderPath: join(__dirname, "logos"),
+};
+
+export const SVGPornComponentClasses = classes.map((c) => toComponentClass(c));

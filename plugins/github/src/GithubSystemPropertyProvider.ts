@@ -1,14 +1,14 @@
-import { getLogger } from "@gram/core/dist/logger";
+import log4js from "log4js";
 import { App } from "octokit";
 import {
   SystemProperty,
   SystemPropertyValue,
-} from "@gram/core/dist/data/system-property/types";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { GithubSystemProvider } from "./GithubSystemProvider";
-import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider";
+} from "@gram/core/dist/data/system-property/types.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { GithubSystemProvider } from "./GithubSystemProvider.js";
+import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider.js";
 
-const log = getLogger("GithubSystemProvider");
+const log = log4js.getLogger("GithubSystemProvider");
 
 export class GithubSystemPropertyProvider implements SystemPropertyProvider {
   constructor(private app: App, private sysProvider: GithubSystemProvider) {}
@@ -17,32 +17,32 @@ export class GithubSystemPropertyProvider implements SystemPropertyProvider {
 
   definitions: SystemProperty[] = [
     {
+      type: "readonly",
       id: "url",
-      batchFilterable: false,
       label: "URL",
       description: "Github repository url",
     },
     {
       id: "language",
-      batchFilterable: false,
+      type: "readonly",
       label: "language",
       description: "Programming language detected",
     },
     {
       id: "private",
-      batchFilterable: true,
+      type: "readonly",
       label: "Private",
       description: "Is the repo private?",
     },
     {
       id: "fork",
-      batchFilterable: true,
+      type: "readonly",
       label: "Fork",
       description: "Is the repo a fork?",
     },
     {
       id: "stars",
-      batchFilterable: false,
+      type: "readonly",
       label: "Stars",
       description: "How many stars the repo has",
     },
@@ -63,35 +63,30 @@ export class GithubSystemPropertyProvider implements SystemPropertyProvider {
         description: "Github repository url",
         value: "https://github.com/" + repoName,
         displayInList: false,
-        batchFilterable: false,
       },
       {
         id: "language",
         label: "Language",
         value: repo.language || "unknown",
         displayInList: false,
-        batchFilterable: false,
       },
       {
         id: "private",
         label: "Private",
         value: repo.private.toString(),
         displayInList: true,
-        batchFilterable: true,
       },
       {
         id: "fork",
         label: "Fork",
         value: repo.fork.toString(),
         displayInList: true,
-        batchFilterable: true,
       },
       {
         id: "stars",
         label: "Stars",
         value: repo.stargazers_count,
         displayInList: false,
-        batchFilterable: false,
       },
     ];
   }
@@ -113,7 +108,7 @@ export class GithubSystemPropertyProvider implements SystemPropertyProvider {
     }
 
     const installations = await this.sysProvider.getInstallations(ctx);
-    q += installations.map((inst) => `user:${inst.account?.login}`).join(" ");
+    q += installations.map((inst) => `user:${inst.account?.name}`).join(" ");
 
     // This will struggle when there are many repos..
     let page = 0;

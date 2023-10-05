@@ -1,8 +1,8 @@
 import { NextFunction, Response } from "express";
-import { Role } from "@gram/core/dist/auth/models/Role";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { GramRequest } from "@gram/core/dist/data/providers/RequestContext";
-import { CurrentAuthz } from "@gram/core/dist/auth/CurrentAuthz";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { GramRequest } from "@gram/core/dist/data/providers/RequestContext.js";
+import { CurrentAuthz } from "@gram/core/dist/auth/CurrentAuthz.js";
 
 export interface AuthzMiddlewareOptions {
   dal: DataAccessLayer;

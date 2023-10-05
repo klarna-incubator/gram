@@ -1,5 +1,5 @@
-import { Role } from "../auth/models/Role";
-import { UserToken } from "../auth/models/UserToken";
+import { Role } from "../auth/models/Role.js";
+import { UserToken } from "../auth/models/UserToken.js";
 
 export class Checks {
   user: UserToken;

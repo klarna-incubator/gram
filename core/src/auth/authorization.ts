@@ -1,12 +1,13 @@
-import { DataAccessLayer } from "../data/dal";
-import Model from "../data/models/Model";
-import { RequestContext } from "../data/providers/RequestContext";
-import { NotFoundError } from "../util/errors";
-import { AuthzError } from "./AuthzError";
-import { AuthzProvider } from "./AuthzProvider";
-import { Reviewer } from "./models/Reviewer";
-import { Role } from "./models/Role";
-import { UserToken } from "./models/UserToken";
+import { DataAccessLayer } from "../data/dal.js";
+import Model from "../data/models/Model.js";
+import { RequestContext } from "../data/providers/RequestContext.js";
+import { NotFoundError } from "../util/errors.js";
+import { AuthzError } from "./AuthzError.js";
+import { AuthzProvider } from "./AuthzProvider.js";
+import { DefaultAuthzProvider } from "./DefaultAuthzProvider.js";
+import { DummyAuthzProvider } from "./DummyAuthzProvider.js";
+import { Role } from "./models/Role.js";
+import { UserToken } from "./models/UserToken.js";
 
 export const AllRoles = [Role.User, Role.Reviewer, Role.Admin];
 
@@ -24,41 +25,13 @@ export const AllPermissions = [
   Permission.Review,
 ];
 
-export interface Identity {
-  id: string;
-}
-
-/**
- * Default authorization provider, for now just throws errors.
- * Implementing orgs should add their own rules here.
- */
-class DefaultAuthzProvider implements AuthzProvider {
-  key = "default";
-  err = "Method not implemented.";
-
-  getPermissionsForSystem(
-    ctx: RequestContext,
-    systemId: string,
-    user: UserToken
-  ): Promise<Permission[]> {
-    throw new Error(this.err);
-  }
-  getPermissionsForStandaloneModel(
-    ctx: RequestContext,
-    model: Model,
-    user: UserToken
-  ): Promise<Permission[]> {
-    throw new Error(this.err);
-  }
-}
-
-export let authzProvider: AuthzProvider = new DefaultAuthzProvider();
+export let authzProvider: AuthzProvider = new DummyAuthzProvider();
 export function setAuthorizationProvider(newAuthzProvider: AuthzProvider) {
   authzProvider = newAuthzProvider;
 }
 
 /**
- * Get a user's permissions for a system. Performs a lookup against Jira, so use sparingly.
+ * Get a user's permissions for a system.
  *
  * @param systemId
  * @param userTeams

@@ -1,0 +1,24 @@
+{
+  "name": "@gram/magiclink",
+  "type": "module",
+  "version": "4.2.0",
+  "description": "Pack with local auth provider",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "migrate-database": "ts-node src/migrate.ts",
+    "lint": "prettier --check .",
+    "lint-fix": "prettier -l . --write"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^4.2.0",
+    "pg": "^8.11.0"
+  },
+  "private": true
+}

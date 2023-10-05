@@ -1,20 +1,21 @@
-import { Pool } from "pg";
+import { jest } from "@jest/globals";
+import pg from "pg";
 import { randomUUID } from "crypto";
-import { DataAccessLayer } from "../dal";
-import { createPostgresPool } from "../postgres";
-import { _deleteAllTheThings } from "../utils";
-import { Review, ReviewStatus } from "./Review";
-import { ReviewDataService } from "./ReviewDataService";
-import { createSampleModel } from "../../test-util/model";
-import { setReviewerProvider } from "./ReviewerProvider";
-import { testReviewerProvider } from "../../test-util/sampleReviewer";
+import { DataAccessLayer } from "../dal.js";
+import { createPostgresPool } from "../postgres.js";
+import { _deleteAllTheThings } from "../utils.js";
+import { Review, ReviewStatus } from "./Review.js";
+import { ReviewDataService } from "./ReviewDataService.js";
+import { createSampleModel } from "../../test-util/model.js";
+import { testReviewerProvider } from "../../test-util/sampleReviewer.js";
+import { SpiedFunction, SpyInstance } from "jest-mock";
 
 describe("ReviewDataService implementation", () => {
-  let pool: Pool;
+  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let data: ReviewDataService;
   let modelId: string;
-  let notificationQueue: jest.SpyInstance;
+  let notificationQueue: SpiedFunction<any>;
 
   beforeAll(async () => {
     pool = await createPostgresPool();
@@ -22,7 +23,7 @@ describe("ReviewDataService implementation", () => {
     data = new ReviewDataService(pool, dal);
     notificationQueue = jest.spyOn(dal.notificationService, "queue");
     await _deleteAllTheThings(pool);
-    setReviewerProvider(testReviewerProvider);
+    dal.reviewerHandler.setReviewerProvider(testReviewerProvider);
   });
 
   beforeEach(async () => {
@@ -72,6 +73,17 @@ describe("ReviewDataService implementation", () => {
     it("should return null value by default", async () => {
       const review = await data.getByModelId(randomUUID());
       expect(review).toBe(null);
+    });
+  });
+
+  describe("create", () => {
+    it("should set requested_at", async () => {
+      const review = new Review(modelId, "some-user", ReviewStatus.Requested);
+      review.note = "Good review";
+      await data.create(review);
+
+      const fetched = await data.getByModelId(modelId);
+      expect(fetched?.requestedAt).toBeTruthy();
     });
   });
 

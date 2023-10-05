@@ -1,9 +1,9 @@
 import { randomUUID } from "crypto";
-import { Pool } from "pg";
-import { createPostgresPool, GramConnectionPool } from "./postgres";
+import pg from "pg";
+import { createPostgresPool, GramConnectionPool } from "./postgres.js";
 
 describe("postgres pool", () => {
-  let pool: GramConnectionPool | Pool | null = null;
+  let pool: GramConnectionPool | pg.Pool | null = null;
   afterEach(() => {
     pool && pool.end();
     pool = null;

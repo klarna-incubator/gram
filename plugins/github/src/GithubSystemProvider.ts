@@ -1,16 +1,16 @@
-import { getLogger } from "@gram/core/dist/logger";
+import log4js from "log4js";
 import { App } from "octokit";
-import { SystemProperty } from "@gram/core/dist/data/system-property/types";
-import System from "@gram/core/dist/data/systems/System";
+import { SystemProperty } from "@gram/core/dist/data/system-property/types.js";
+import System from "@gram/core/dist/data/systems/System.js";
 import {
   SystemListFilter,
   SystemListInput,
   SystemListResult,
-} from "@gram/core/dist/data/systems/systems";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider";
+} from "@gram/core/dist/data/systems/systems.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider.js";
 
-const log = getLogger("GithubSystemProvider");
+const log = log4js.getLogger("GithubSystemProvider");
 
 export class GithubSystemProvider implements SystemProvider {
   constructor(private app: App) {}
@@ -20,31 +20,31 @@ export class GithubSystemProvider implements SystemProvider {
   definitions: SystemProperty[] = [
     {
       id: "url",
-      batchFilterable: false,
+      type: "readonly",
       label: "URL",
       description: "Github repository url",
     },
     {
       id: "language",
-      batchFilterable: false,
+      type: "readonly",
       label: "language",
       description: "Programming language detected",
     },
     {
       id: "private",
-      batchFilterable: true,
+      type: "readonly",
       label: "Private",
       description: "Is the repo private?",
     },
     {
       id: "fork",
-      batchFilterable: true,
+      type: "readonly",
       label: "Fork",
       description: "Is the repo a fork?",
     },
     {
       id: "stars",
-      batchFilterable: false,
+      type: "readonly",
       label: "Stars",
       description: "How many stars the repo has",
     },
@@ -67,7 +67,7 @@ export class GithubSystemProvider implements SystemProvider {
     }
 
     const installations = await this.getInstallations(ctx);
-    q += installations.map((inst) => `user:${inst.account?.login}`).join(" ");
+    q += installations.map((inst) => `user:${inst.account?.name}`).join(" ");
 
     // This will struggle when there are many repos..
     let page = 0;
@@ -209,7 +209,7 @@ export class GithubSystemProvider implements SystemProvider {
       const q =
         input.opts.search +
         " in:name fork:true " +
-        installations.map((inst) => `user:${inst.account?.login}`).join(" ");
+        installations.map((inst) => `user:${inst.account?.name}`).join(" ");
       const searchResp = await octo.request(
         "GET /search/repositories{?q,sort,order,per_page,page}",
         {

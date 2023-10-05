@@ -1,19 +1,16 @@
+import Control from "@gram/core/dist/data/controls/Control.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Mitigation from "@gram/core/dist/data/mitigations/Mitigation.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import Threat from "@gram/core/dist/data/threats/Threat.js";
+import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt";
-import Control from "@gram/core/dist/data/controls/Control";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Mitigation from "@gram/core/dist/data/mitigations/Mitigation";
-import Model from "@gram/core/dist/data/models/Model";
-import { createPostgresPool } from "@gram/core/dist/data/postgres";
-import Threat from "@gram/core/dist/data/threats/Threat";
-import { _deleteAllTheThings } from "@gram/core/dist/data/utils";
-import { createTestApp } from "../../../../test-util/app";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem";
-import { sampleUser } from "../../../../test-util/sampleUser";
+import { createTestApp } from "../../../../test-util/app.js";
+import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
+import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 
 describe("Controls.list", () => {
-  const validate = jest.spyOn(jwt, "validateToken");
-
   let app: any;
   let pool: any;
   let dal: DataAccessLayer;
@@ -22,15 +19,15 @@ describe("Controls.list", () => {
   let modelId: string;
   let threatId: string;
   let controlId: string;
+  let token = "";
 
   beforeAll(async () => {
+    token = await sampleUserToken();
     pool = await createPostgresPool();
     ({ app, dal } = await createTestApp());
   });
 
   beforeEach(async () => {
-    validate.mockImplementation(async () => sampleUser);
-
     const model = new Model(sampleOwnedSystem.id, "version", email);
     model.data = { components: [], dataFlows: [] };
     modelId = await dal.modelService.create(model);
@@ -66,14 +63,13 @@ describe("Controls.list", () => {
   it("should return 200 and a list of controls", async () => {
     const res = await request(app)
       .get(`/api/v1/models/${modelId}/mitigations`)
-      .set("Authorization", "bearer validToken");
+      .set("Authorization", token);
 
     expect(res.status).toBe(200);
     expect(res.body.mitigations.length).toBe(1);
   });
 
   afterAll(async () => {
-    validate.mockRestore();
     await _deleteAllTheThings(pool);
   });
 });

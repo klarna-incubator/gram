@@ -1,23 +1,22 @@
-import config from "config";
-import { Reviewer } from "@gram/core/dist/auth/models/Reviewer";
-import { User } from "@gram/core/dist/auth/models/User";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import Model from "@gram/core/dist/data/models/Model";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { ReviewerProvider } from "@gram/core/dist/data/reviews/ReviewerProvider";
-import { getLogger } from "@gram/core/dist/logger";
-import { HSFContextProvider } from "./HSFContextProvider";
+import { Reviewer } from "@gram/core/dist/auth/models/Reviewer.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import {
-  getDomain,
-  getUser,
-  LDAPUser,
-  listLDAPGroupMembers,
-} from "./ldap/lookup";
-import { OctaneSystemProvider } from "./system/OctaneSystemProvider";
+  LDAPGroupBasedReviewerProvider,
+  connectLdapClient,
+  escapeFilterValue,
+  ldapQuery,
+} from "@gram/ldap";
+import { LDAPGroupBasedReviewerProviderSettings } from "@gram/ldap/dist/LDAPGroupBasedReviewerProvider.js";
+import log4js from "log4js";
+import { HSFContextProvider } from "./HSFContextProvider.js";
+import { getDomainMembers } from "./ldap.js";
+import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
 
-const log = getLogger("KlarnaReviewerProvider");
+const log = log4js.getLogger("KlarnaReviewerProvider");
 
-const calendarLink =
+const secdevCalendarLink =
   "https://calendar.google.com/calendar/u/0/selfsched?sstoken=UUdBOVg2MXlrZ0k1fGRlZmF1bHR8YTQ2YzFlODRlMDk1OGI0YTkxYjY2ZjE5MzljNWQxYzU";
 
 export const fallbackReviewer: Reviewer = {
@@ -25,8 +24,7 @@ export const fallbackReviewer: Reviewer = {
   mail: "secure-development@klarna.com",
   name: "Secure Development",
   recommended: false,
-  teams: [],
-  calendarLink,
+  calendarLink: secdevCalendarLink,
 };
 
 const calendarEventTitle = "Threat Modeling Session for <system>";
@@ -39,50 +37,38 @@ const calendarEventDescription = `
 https://kep.klarna.net/docs/secure-development/threat_modeling/threat_modeling/
 `;
 
-export class KlarnaReviewerProvider implements ReviewerProvider {
+export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
   key = "ldap";
   secDevRoundRobinCounter = 0;
 
   private secdevMembers: Set<string> = new Set();
-  private secdevReviewers: LDAPUser[] = [];
+  private secdevReviewers: Reviewer[] = [];
   private dslMembers: Set<string> = new Set();
-  private reviewers: LDAPUser[] = [];
+  private reviewers: Reviewer[] = [];
 
   constructor(
     private dal: DataAccessLayer,
     private systemProvider: OctaneSystemProvider,
-    private hsf: HSFContextProvider
+    private hsf: HSFContextProvider,
+    private ldapProviderSettings: Omit<
+      LDAPGroupBasedReviewerProviderSettings,
+      "fallbackReviewer"
+    >
   ) {
-    this.loadReviewers();
+    super({ ...ldapProviderSettings, fallbackReviewer });
+    this.preloadReviewers();
   }
 
-  async getFallbackReviewer(): Promise<Reviewer> {
-    return fallbackReviewer;
-  }
-
-  public async loadSecDev(): Promise<void> {
-    const members = await listLDAPGroupMembers("access.secure-development");
-    if (!Array.isArray(members) || members.length == 0) {
-      log.warn("Got empty secdev group - going to skip this result..");
-      return;
-    }
-    this.secdevMembers = new Set(members.map((u) => u.sub));
-    log.info(`Loaded ${this.secdevMembers.size} secdev members`);
-  }
-
-  public async loadDSL(): Promise<void> {
-    const members = await listLDAPGroupMembers("domain.security.leads");
-    if (!Array.isArray(members) || members.length == 0) {
-      log.warn("Got empty dsl group - going to skip this result..");
-      return;
-    }
-    this.dslMembers = new Set(members.map((u) => u.sub));
-    log.info(`Loaded ${this.dslMembers.size} DSL members`);
-  }
-
+  /**
+   * Overrides the calendar of the reviewer with a google calendar link going to their
+   * personal account. This assumes the email given is a google account.
+   *
+   * @param u
+   * @returns
+   */
   private overrideCalendar(u: Reviewer): Reviewer {
     if (this.secdevMembers.has(u.sub)) {
-      return { ...u, calendarLink };
+      return { ...u, calendarLink: secdevCalendarLink };
     }
     const date = new Date();
     date.setDate(date.getDate() + 7);
@@ -108,38 +94,56 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     };
   }
 
-  async lookup(ctx: RequestContext, userIds: string[]): Promise<Reviewer[]> {
-    const users = (
-      await Promise.all(userIds.map(async (uid) => await getUser(uid)))
-    ).filter((u) => u) as User[];
-    users.forEach((u) => log.debug(u));
-    const reviewers = users.map((u) => this.overrideCalendar(u as Reviewer));
+  private async listLDAPGroupMembers(groupId: string): Promise<string[]> {
+    const ldap = await connectLdapClient(this.settings.ldapSettings);
 
-    if (userIds.includes(fallbackReviewer.sub)) {
-      reviewers.push(fallbackReviewer);
+    try {
+      const entries = await ldapQuery(
+        ldap,
+        this.settings.groupLookup.searchBase,
+        {
+          scope: "sub",
+          filter: `(&(memberOfGroupId=${escapeFilterValue(
+            groupId
+          )})(kreditorEnabledUser=TRUE))`,
+          attributes: [],
+        }
+      );
+
+      return entries.searchEntries.map((e) => e["mail"] as string);
+    } finally {
+      await ldap.unbind();
     }
-
-    return reviewers;
   }
 
-  async loadReviewers(): Promise<void> {
+  public async loadSecDev(): Promise<void> {
+    const members = await this.listLDAPGroupMembers(
+      "access.secure-development"
+    );
+    if (!Array.isArray(members) || members.length == 0) {
+      log.warn("Got empty secdev group - going to skip this result..");
+      return;
+    }
+    this.secdevMembers = new Set(members);
+    log.info(`Loaded ${this.secdevMembers.size} secdev members`);
+  }
+
+  public async loadDSL(): Promise<void> {
+    const members = await this.listLDAPGroupMembers("domain.security.leads");
+    if (!Array.isArray(members) || members.length == 0) {
+      log.warn("Got empty dsl group - going to skip this result..");
+      return;
+    }
+    this.dslMembers = new Set(members);
+    log.info(`Loaded ${this.dslMembers.size} DSL members`);
+  }
+
+  async preloadReviewers(): Promise<void> {
     await this.loadSecDev();
     await this.loadDSL();
 
-    const reviewerGroups: string[] = config.get(
-      "auth.providerOpts.ldap.roleMap.reviewer"
-    );
-
-    let reviewersFromLdap = (
-      await Promise.all(
-        reviewerGroups.map(
-          async (reviewerGroup) => await listLDAPGroupMembers(reviewerGroup)
-        )
-      )
-    ).reduce((p, c) => c.concat(p), []);
-
     const unique = new Set();
-    const newReviewers = reviewersFromLdap
+    const newReviewers = (await this._getReviewers({}))
       .filter((r) => {
         if (unique.has(r.sub)) {
           return false;
@@ -148,7 +152,8 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
         return true;
       })
       // Add special case for Lucas Berner as he is in SecDev but should not be assigned reviews.
-      .filter((r) => r.sub !== "lucas.berner@klarna.com");
+      .filter((r) => r.sub !== "lucas.berner@klarna.com")
+      .map((r) => this.overrideCalendar({ ...r, mail: r.sub }));
 
     if (newReviewers.length > 0) {
       this.reviewers = newReviewers;
@@ -156,21 +161,30 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
         this.secdevMembers.has(r.sub)
       );
     }
-
-    log.info(`Loaded ${reviewersFromLdap.length} reviewers from ldap`);
+    log.info(`Loaded ${this.reviewers.length} reviewers from ldap`);
   }
 
-  async getReviewers(): Promise<Reviewer[]> {
-    const reviewers: Reviewer[] = this.reviewers
-      .map((r) => ({
-        ...r,
-        recommended: false,
-        teams: [],
-      }))
-      .map((r) => this.overrideCalendar(r as Reviewer));
-
+  async _getReviewers(ctx: RequestContext): Promise<Reviewer[]> {
+    let reviewers = await super.getReviewers(ctx);
     reviewers.push(fallbackReviewer);
     return reviewers;
+  }
+
+  async getReviewers(ctx: RequestContext): Promise<Reviewer[]> {
+    return this.reviewers;
+  }
+
+  async getDomainMembers(klarnaProjectCode: string) {
+    console.log(klarnaProjectCode);
+    const client = await connectLdapClient(
+      this.ldapProviderSettings.ldapSettings
+    );
+
+    try {
+      return await getDomainMembers(client, klarnaProjectCode);
+    } finally {
+      client.unbind();
+    }
   }
 
   async getReviewersForModel(
@@ -181,46 +195,49 @@ export class KlarnaReviewerProvider implements ReviewerProvider {
     let recommend = (dn: string) => false;
 
     // Check if the system is HSF
-    const hsfProp = await this.hsf.provideSystemProperties(
-      ctx,
-      model.systemId,
-      false
-    );
+    const hsfProp = model.systemId
+      ? await this.hsf.provideSystemProperties(ctx, model.systemId, false)
+      : [];
 
     // Recommend reviewer based on the reviewer being in the same domain as
     // the system.
-    const system = await this.systemProvider.getOctaneSystem(model.systemId);
+    const system = model.systemId
+      ? await this.systemProvider.getOctaneSystem(model.systemId)
+      : null;
+
     const domain = system?.team?.domain;
 
     if (domain?.accountability_code !== undefined) {
-      const ldapDomain = await getDomain(domain.accountability_code);
+      // TODO: Special case: use domain reviewer group if there's one for that domain.
+
+      // Otherwise compare domain of system to reviewer.
+      const members = new Set(
+        await this.getDomainMembers(domain.accountability_code)
+      );
       // Create recommendation function based on system domain
-      recommend = (dn: string) =>
-        ldapDomain ? ldapDomain.memberCns.includes(dn) : false;
+      recommend = (mail: string) => {
+        return members.has(mail);
+      };
     }
 
     // Map recommendations based on DSLs / Sec Champions
     const isHSF = hsfProp.length > 0 && hsfProp[0].value !== "false";
-    const reviewers: Reviewer[] = this.reviewers
+    const reviewers = this.reviewers
       .filter(
         // Only list SecDev / DSL as reviewers for HSF systems
         (r) =>
           !isHSF || this.secdevMembers.has(r.sub) || this.dslMembers.has(r.sub)
       )
-
       .map((r) => ({
         ...r,
-        recommended: recommend(r.dn),
-        teams: [],
-      }))
-      .map((r) => this.overrideCalendar(r as Reviewer));
+        recommended: recommend(r.sub),
+        mail: r.sub,
+      }));
 
-    const secdev: Reviewer = {
+    reviewers.push({
       ...fallbackReviewer,
-      // Recommend SecDev if no other reviewer is recommended
       recommended: !reviewers.reduce((p, c) => p || c.recommended, false),
-    };
-    reviewers.push(secdev);
+    });
 
     return reviewers;
   }

@@ -1,11 +1,11 @@
-import System from "@gram/core/dist/data/systems/System";
+import System from "@gram/core/dist/data/systems/System.js";
 import {
   SystemListInput,
   SystemListResult,
-} from "@gram/core/dist/data/systems/systems";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext";
-import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider";
-import { sampleOwnedSystem } from "./sampleOwnedSystem";
+} from "@gram/core/dist/data/systems/systems.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider.js";
+import { sampleOwnedSystem } from "./sampleOwnedSystem.js";
 
 const systems = [sampleOwnedSystem];
 

@@ -39,7 +39,7 @@ const Introduction = () => (
   <>
     <Typography>
       This tutorial will show you how to use the diagramming interface of Gram.
-      {/* //TODO */}
+      {/* //TODO replace contact blurb */}
       If you have any questions or feedback, feel free to reach out to us in{" "}
       <Link target="_none" to="">
         #team-ea-secure-development

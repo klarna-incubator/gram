@@ -1,8 +1,8 @@
-import { getLogger } from "@gram/core/dist/logger";
-import { DataAccessLayer } from "@gram/core/dist/data/dal";
-import { ReviewStatus } from "@gram/core/dist/data/reviews/Review";
-import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService";
-import { fallbackReviewer } from "./KlarnaReviewerProvider";
+import log4js from "log4js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
+import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService.js";
+import { fallbackReviewer } from "./KlarnaReviewerProvider.js";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;
 const REQUESTED_REMIND_AFTER_X_DAYS = 14;
@@ -15,9 +15,9 @@ function differenceInDays(dateToCompare: Date) {
   return diffDays;
 }
 
-export class KlarnaCronJob {
-  log = getLogger("klarnaCronJob");
+const log = log4js.getLogger("klarnaCronJob");
 
+export class KlarnaCronJob {
   constructor(private dal: DataAccessLayer) {}
 
   async sendRemindersForMeetingRequested() {
@@ -81,9 +81,7 @@ export class KlarnaCronJob {
       ])
     ).rows;
 
-    this.log.info(
-      `Found ${reviews.length} reviews that need a requested reminder.`
-    );
+    log.info(`Found ${reviews.length} reviews that need a requested reminder.`);
 
     const nids: number[] = [];
     for (const reviewRow of reviews) {
@@ -108,7 +106,7 @@ export class KlarnaCronJob {
 
       nids.push(nid);
     }
-    this.log.info(`Sent reminders with notification ids [${nids}]`);
+    log.info(`Sent reminders with notification ids [${nids}]`);
   }
 
   async reassignOverdueReviews() {
@@ -129,7 +127,7 @@ export class KlarnaCronJob {
       ])
     ).rows;
 
-    this.log.info(`Found ${reviews.length} reviews that need reassignment.`);
+    log.info(`Found ${reviews.length} reviews that need reassignment.`);
 
     for (const reviewRow of reviews) {
       const review = convertToReview(reviewRow);
@@ -140,7 +138,7 @@ export class KlarnaCronJob {
       );
     }
 
-    this.log.info(
+    log.info(
       `Reassigned ${reviews.length} reviews to ${fallbackReviewer.name}`
     );
   }

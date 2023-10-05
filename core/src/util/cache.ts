@@ -1,6 +1,6 @@
-import { getLogger } from "../logger";
+import log4js from "log4js";
 
-const log = getLogger("cache");
+const log = log4js.getLogger("cache");
 
 const THREE_HOURS_IN_MS = 1000 * 60 * 60 * 3;
 
@@ -35,7 +35,7 @@ export default class Cache<K, T> {
   }
 
   has(key: K): boolean {
-    return this.cache.has(key);
+    return !!this.get(key);
   }
 
   set(key: K, value: T) {

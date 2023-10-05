@@ -1,5 +1,5 @@
-import { RequestContext } from "../providers/RequestContext";
-import { SystemProperty, SystemPropertyValue } from "./types";
+import { RequestContext } from "../providers/RequestContext.js";
+import { SystemProperty, SystemPropertyValue } from "./types.js";
 
 export interface SystemPropertyProvider {
   /**

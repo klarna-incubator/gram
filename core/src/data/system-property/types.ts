@@ -1,4 +1,4 @@
-import { RequestContext } from "../providers/RequestContext";
+import { RequestContext } from "../providers/RequestContext.js";
 
 export interface SystemPropertyValue extends SystemPropertyBase {
   /**

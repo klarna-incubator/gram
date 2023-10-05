@@ -25,7 +25,7 @@ export function ChangeReviewer({ modelId }) {
   const dispatch = useDispatch();
 
   const { data: review } = useGetReviewQuery({ modelId });
-  const [newReviewer, setNewReviewer] = useState(review?.reviewer.sub);
+  const [newReviewer, setNewReviewer] = useState(review?.reviewer?.sub);
 
   const [
     changeReviewer,
@@ -81,7 +81,9 @@ export function ChangeReviewer({ modelId }) {
         {isError && (
           <>
             <Typography variant="h6">Something went wrong :(</Typography>
-            <Typography variant="caption">Error: {error}</Typography>
+            <Typography variant="caption">
+              Error: {JSON.stringify(error)}
+            </Typography>
           </>
         )}
       </DialogContent>

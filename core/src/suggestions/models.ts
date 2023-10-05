@@ -1,5 +1,5 @@
-import Model from "../data/models/Model";
-import { InvalidInputError } from "../util/errors";
+import Model from "../data/models/Model.js";
+import { InvalidInputError } from "../util/errors.js";
 
 export interface Suggestion {
   // Should be semi-static, to avoid duplicate suggestions on the same component.
@@ -22,7 +22,6 @@ export interface Suggestion {
 
   /**
    * Description that summarizes the control. Link to documentation if more than a few sentences is needed.
-   * TODO: add reference link to model?
    */
   description: string;
 }

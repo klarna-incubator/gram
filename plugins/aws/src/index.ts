@@ -1,11 +1,13 @@
-import { join } from "path";
-import { Plugin, PluginRegistrator } from "@gram/core/dist/plugin";
-import classes from "./classes.json";
-import { isComponentClass } from "@gram/core/dist/data/component-classes";
+import { AssetFolder } from "@gram/core/dist/config/AssetFolder.js";
+import { isComponentClass } from "@gram/core/dist/data/component-classes/index.js";
+import { join } from "node:path";
+import * as url from "url";
+import classes from "./classes.js";
 
-export default class AWSPlugin implements Plugin {
-  async bootstrap(reg: PluginRegistrator): Promise<void> {
-    reg.registerAssets("aws", join(__dirname, "assets"));
-    reg.registerComponentClasses((classes as any[]).filter(isComponentClass));
-  }
-}
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+
+export const AWSComponentClasses = (classes as any[]).filter(isComponentClass);
+export const AWSAssets: AssetFolder = {
+  name: "aws",
+  folderPath: join(__dirname, "assets"),
+};

@@ -1,7 +1,10 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["src/**/*"],
+
   "compilerOptions": {
-    "types": ["jest"]
-  }
+    "target": "ESNext",
+    "types": ["node", "jest"]
+  },
+
+  "include": ["src/"]
 }

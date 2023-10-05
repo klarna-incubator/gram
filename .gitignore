@@ -1,5 +1,4 @@
 .vscode
 node_modules
-config/development.json
-.octane-systems.json
 dist
+.env

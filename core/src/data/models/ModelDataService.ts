@@ -5,11 +5,11 @@
  */
 
 import { randomUUID } from "crypto";
-import EventEmitter from "events";
-import { Pool } from "pg";
-import { getLogger } from "../../logger";
-import { DataAccessLayer } from "../dal";
-import Model, { ModelData } from "./Model";
+import { EventEmitter } from "node:events";
+import pg from "pg";
+import log4js from "log4js";
+import { DataAccessLayer } from "../dal.js";
+import Model, { ModelData } from "./Model.js";
 
 function convertToModel(row: any) {
   const model = new Model(row.system_id, row.version, row.created_by);
@@ -37,13 +37,13 @@ export interface ModelListOptions {
 }
 
 export class ModelDataService extends EventEmitter {
-  constructor(pool: Pool, private dal: DataAccessLayer) {
+  constructor(pool: pg.Pool, private dal: DataAccessLayer) {
     super();
     this.pool = pool;
-    this.log = getLogger("ModelDataService");
+    this.log = log4js.getLogger("ModelDataService");
   }
 
-  private pool: Pool;
+  private pool: pg.Pool;
   log: any;
 
   /**
@@ -67,9 +67,7 @@ export class ModelDataService extends EventEmitter {
       params = [opts.user];
       whereClause = "WHERE m.created_by = $1::varchar";
       systemClause =
-        opts.withSystems === false
-          ? "AND m.system_id = '00000000-0000-0000-0000-000000000000'"
-          : "";
+        opts.withSystems === false ? "AND m.system_id is NULL" : "";
       orderClause = "ORDER BY m.updated_at DESC;";
     }
 
@@ -79,14 +77,12 @@ export class ModelDataService extends EventEmitter {
       joinClause = "INNER JOIN user_activity ua ON m.id = ua.model_id";
       groupClause = "GROUP BY m.id, r.status, r.approved_at";
       systemClause =
-        opts.withSystems === false
-          ? "AND m.system_id = '00000000-0000-0000-0000-000000000000'"
-          : "";
+        opts.withSystems === false ? "AND m.system_id is NULL" : "";
       orderClause = "ORDER BY MAX(ua.created_at) DESC;";
     }
 
     if (filter === "system") {
-      params = [opts.systemId || "00000000-0000-0000-0000-000000000000"];
+      params = [opts.systemId as string];
       whereClause = "WHERE m.system_id = $1::varchar";
       orderClause = "ORDER BY m.updated_at DESC;";
     }

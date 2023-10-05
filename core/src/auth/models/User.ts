@@ -1,4 +1,4 @@
-import { Team } from "./Team";
+import { Team } from "./Team.js";
 
 export type User = {
   sub: string;
@@ -6,6 +6,5 @@ export type User = {
 
   // Optional attributes
   mail?: string;
-  slackId?: string;
-  teams: Team[];
+  slackUrl?: string;
 };
