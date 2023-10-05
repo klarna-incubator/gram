@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/klarna-incubator/gram/compare/v4.1.0...v4.2.0) (2023-10-05)
+
+### Bug Fixes
+
+- correctly hide login buttons for identity providers when form is not set ([cacc7e7](https://github.com/klarna-incubator/gram/commit/cacc7e7f2167e195d306ade0d72a57f741445119))
+- LDAPTeamProvider return empty array if no teams on the user ([ce75437](https://github.com/klarna-incubator/gram/commit/ce75437dac1ef382c6ec1805d18328ad07d54b23))
+
+### Features
+
+- add optional function for LDAPBasicAuthIdentityProvider to provide different userid in case it differs from dn ([b94bb7f](https://github.com/klarna-incubator/gram/commit/b94bb7f7abf73b57372625516e3c08cd49b4ea2a))
+
 # [4.1.0](https://github.com/klarna-incubator/gram/compare/v4.0.3...v4.1.0) (2023-09-28)
 
 ### Bug Fixes
