@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/klarna/gram/compare/v4.1.0...v4.2.0) (2023-10-05)
+
+### Bug Fixes
+
+- cache.has should not return true when an item has expired ([174ab4f](https://github.com/klarna/gram/commit/174ab4f5d39007bdffdd144babfab86c6b86b42c))
+- correctly hide login buttons for identity providers when form is not set ([cacc7e7](https://github.com/klarna/gram/commit/cacc7e7f2167e195d306ade0d72a57f741445119))
+
 # [4.1.0](https://github.com/klarna/gram/compare/v4.0.3...v4.1.0) (2023-09-28)
 
 ### Bug Fixes
