@@ -160,7 +160,7 @@ export const defaultConfig: GramConfiguration = {
       searchFilter: (sub: string) => {
         return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
       },
-      attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
+      attributes: ["displayName", "mail"],
       attributesToUser: async (ldapUser) => {
         const user: User = {
           sub: ldapUser["mail"].toString(),
@@ -182,9 +182,9 @@ export const defaultConfig: GramConfiguration = {
         }),
         searchBase: LDAPTeamSearchBase,
         searchFilter: (teamIds) => {
-          return `(|${teamIds.map(
-            (teamId) => `(klarnaProjectCode=${teamId})`
-          )})`;
+          return `(|${teamIds
+            .map((teamId) => `(klarnaProjectCode=${teamId})`)
+            .join("")})`;
         },
       },
       userLookup: {
@@ -192,7 +192,7 @@ export const defaultConfig: GramConfiguration = {
         searchFilter: (sub) => {
           return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
         },
-        teamAttribute: "klarnaProjectCode",
+        teamAttribute: "klarnaAccountableCode",
       },
     });
 
