@@ -321,7 +321,7 @@ export const defaultConfig: GramConfiguration = {
       authzProvider: ldapAuthz,
       userProvider: ldapUserProvider,
       teamProvider: ldapTeamProvider,
-      suggestionSources: [new ThreatLibSuggestionProvider(), threatsaurus],
+      suggestionSources: [threatsaurus],
     };
   },
 };
