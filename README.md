@@ -64,6 +64,17 @@ See our [changelog](CHANGELOG.md).
 <!-- ## Thanks to -->
 <!-- TODO: need to grab these from old repo somehow + ideally automate -->
 
+## Contributors 🌟
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 ## License ⚖️
 
 Copyright © 2023 Klarna Bank AB
