@@ -88,7 +88,7 @@
       "EMAIL_PASSWORD": { "secret": "/notifications.providers.email.password" },
       "LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
       "LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
-      "JIRA_HOST": { "value": "/jira.host" },
+      "JIRA_HOST": { "secret": "/jira.host" },
       "JIRA_USER": { "secret": "/jira.user" },
       "JIRA_PASSWORD": { "secret": "/jira.password" },
       "OIDC_CLIENT_DISCOVER_URL": { "value": "https://sso.klarna.net/" },
