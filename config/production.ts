@@ -1,9 +1,8 @@
-import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
-import { LDAPUserSearchBase, defaultConfig, ldapSettings } from "./default.js";
-import { HSFContextProvider } from "@gram/klarna";
-import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
-import { LDAPGroupBasedAuthzProvider } from "@gram/ldap";
 import { Role } from "@gram/core/dist/auth/models/Role.js";
+import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
+import { LDAPGroupBasedAuthzProvider } from "@gram/ldap";
+import { LDAPUserSearchBase, ldapSettings } from "./default.js";
+import { defaultConfig } from "./default.js";
 
 export const productionConfig: GramConfiguration = {
   ...defaultConfig,
@@ -18,29 +17,6 @@ export const productionConfig: GramConfiguration = {
 
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
-
-    const hsf = {
-      bucket: "secdev-qliksense-exporter-production-source",
-      key: "hsf-systems-daily.csv",
-      awsRole:
-        "arn:aws:iam::715798949107:role/iam-sync/gram/c2c/gram/eu/production/gram.c2c_gram",
-      awsExternalId: "e2105a81-0156-4321-b757-4e3f20aaacac",
-    };
-
-    const hsfProvider = new HSFContextProvider(
-      hsf.bucket,
-      hsf.key,
-      hsf.awsRole,
-      hsf.awsExternalId
-    );
-
-    providers.systemPropertyProviders?.push(hsfProvider);
-
-    const threatsaurus = new ThreatsaurusSuggestionSource(
-      "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
-    );
-
-    providers.suggestionSources?.push(threatsaurus);
 
     // Fix LDAP Access Groups used by production
     const ldapAuthz = new LDAPGroupBasedAuthzProvider({
