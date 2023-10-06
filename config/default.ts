@@ -34,6 +34,7 @@ import { AzureComponentClasses, AzureAssets } from "@gram/azure";
 import { CNCFComponentClasses, CNCFAssets } from "@gram/cncf";
 import { KubernetesComponentClasses, KubernetesAssets } from "@gram/kubernetes";
 import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -198,8 +199,19 @@ export const defaultConfig: GramConfiguration = {
 
     const systemProvider = new OctaneSystemProvider();
 
-    // Will used mocked data when supplied empty params
-    const hsfProvider = new HSFContextProvider("", "", "", "");
+    const hsf = {
+      bucket: process.env["HSF_S3_BUCKET"] as string,
+      key: process.env["HSF_S3_KEY"] as string,
+      awsRole: process.env["HSF_AWS_ROLE"] as string,
+      awsExternalId: process.env["HSF_AWS_EXTERNAL_ID"] as string,
+    };
+
+    const hsfProvider = new HSFContextProvider(
+      hsf.bucket,
+      hsf.key,
+      hsf.awsRole,
+      hsf.awsExternalId
+    );
 
     const ngovProvider = new NGOVSystemContextProvider(systemProvider);
 
@@ -213,7 +225,9 @@ export const defaultConfig: GramConfiguration = {
           groupFilters: [
             "(&(memberOfGroupId=access.secure-development)(kreditorEnabledUser=TRUE))",
             "(&(memberOfGroupId=domain.security.leads)(kreditorEnabledUser=TRUE))",
-            "(&(memberOfGroupId=access.1288598.stag.reviewers)(kreditorEnabledUser=TRUE))",
+            process.env["NODE_ENV"] == "production"
+              ? "(&(memberOfGroupId=access.1288598.prod.reviewers)(kreditorEnabledUser=TRUE))"
+              : "(&(memberOfGroupId=access.1288598.stag.reviewers)(kreditorEnabledUser=TRUE))",
             "(&(memberOfGroupId=security-champions)(kreditorEnabledUser=TRUE))",
           ],
           attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
@@ -245,6 +259,10 @@ export const defaultConfig: GramConfiguration = {
         },
         ldapSettings,
       }
+    );
+
+    const threatsaurus = new ThreatsaurusSuggestionSource(
+      process.env["THREATSAURUS_URL"] as string
     );
 
     // Hook for Reviews to create Risk Tickets
@@ -299,11 +317,11 @@ export const defaultConfig: GramConfiguration = {
       notificationTemplates: [...defaultNotifications],
       reviewerProvider,
       systemProvider,
-      systemPropertyProviders: [ngovProvider],
+      systemPropertyProviders: [hsfProvider, ngovProvider],
       authzProvider: ldapAuthz,
       userProvider: ldapUserProvider,
       teamProvider: ldapTeamProvider,
-      suggestionSources: [new ThreatLibSuggestionProvider()],
+      suggestionSources: [new ThreatLibSuggestionProvider(), threatsaurus],
     };
   },
 };

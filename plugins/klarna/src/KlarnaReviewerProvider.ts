@@ -198,6 +198,7 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
     const hsfProp = model.systemId
       ? await this.hsf.provideSystemProperties(ctx, model.systemId, false)
       : [];
+    const isHSF = hsfProp.length > 0 && hsfProp[0].value !== "false";
 
     // Recommend reviewer based on the reviewer being in the same domain as
     // the system.
@@ -221,7 +222,6 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
     }
 
     // Map recommendations based on DSLs / Sec Champions
-    const isHSF = hsfProp.length > 0 && hsfProp[0].value !== "false";
     const reviewers = this.reviewers
       .filter(
         // Only list SecDev / DSL as reviewers for HSF systems
