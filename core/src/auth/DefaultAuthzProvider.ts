@@ -25,7 +25,10 @@ export class DefaultAuthzProvider implements AuthzProvider {
      * Reviewers may review any model
      */
     if (user.roles.find((r) => r === Role.Reviewer)) {
-      permissions.push(Permission.Read, Permission.Review);
+      /**
+       * TODO: give write permission only if reviewer is assigned to the model.
+       */
+      permissions.push(Permission.Read, Permission.Write, Permission.Review);
     }
 
     /**
@@ -59,14 +62,19 @@ export class DefaultAuthzProvider implements AuthzProvider {
 
     if (user.roles.find((r) => r === Role.Admin)) return AllPermissions;
 
+    /**
+     * Standalone models are mainly used for training. To avoid authz issues here we allow most things
+     * by most users. Ideally here there should be some sharing system.
+     */
+
     const permissions: Permission[] = [];
 
     if (user.roles.find((r) => r === Role.Reviewer)) {
-      permissions.push(Permission.Read, Permission.Review);
+      permissions.push(Permission.Read, Permission.Review, Permission.Write);
     }
 
     if (user.roles.find((r) => r === Role.User)) {
-      permissions.push(Permission.Read);
+      permissions.push(Permission.Read, Permission.Write);
     }
 
     if (model.createdBy === user.sub) {

@@ -1,4 +1,7 @@
 # Gram
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
@@ -63,6 +66,41 @@ See our [changelog](CHANGELOG.md).
 
 <!-- ## Thanks to -->
 <!-- TODO: need to grab these from old repo somehow + ideally automate -->
+
+## Contributors 🌟
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://ruel.me/"><img src="https://avatars.githubusercontent.com/u/480039?v=4?s=100" width="100px;" alt="Ruel"/><br /><sub><b>Ruel</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=ruel" title="Code">💻</a> <a href="#projectManagement-ruel" title="Project Management">📆</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://joakim.uddholm.com/"><img src="https://avatars.githubusercontent.com/u/298627?v=4?s=100" width="100px;" alt="Joakim Uddholm"/><br /><sub><b>Joakim Uddholm</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=Tethik" title="Code">💻</a> <a href="#projectManagement-Tethik" title="Project Management">📆</a> <a href="#talk-Tethik" title="Talks">📢</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/idoo"><img src="https://avatars.githubusercontent.com/u/738921?v=4?s=100" width="100px;" alt="Ivan Verevkin"/><br /><sub><b>Ivan Verevkin</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=idoo" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://ar.linkedin.com/in/lucas-berner-89865339"><img src="https://avatars.githubusercontent.com/u/7293607?v=4?s=100" width="100px;" alt="Luke Berner"/><br /><sub><b>Luke Berner</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=lukeber4" title="Code">💻</a> <a href="#projectManagement-lukeber4" title="Project Management">📆</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://franka.tech/"><img src="https://avatars.githubusercontent.com/u/2796920?v=4?s=100" width="100px;" alt="Franka"/><br /><sub><b>Franka</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=vsmart" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ErikBavenstrand"><img src="https://avatars.githubusercontent.com/u/19384305?v=4?s=100" width="100px;" alt="Erik Båvenstrand"/><br /><sub><b>Erik Båvenstrand</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=ErikBavenstrand" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kuramsai"><img src="https://avatars.githubusercontent.com/u/6891487?v=4?s=100" width="100px;" alt="Sai Kiran Goud"/><br /><sub><b>Sai Kiran Goud</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=kuramsai" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Tyouxik"><img src="https://avatars.githubusercontent.com/u/65331057?v=4?s=100" width="100px;" alt="Tyouxik"/><br /><sub><b>Tyouxik</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=Tyouxik" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://klarna.github.io/"><img src="https://avatars.githubusercontent.com/u/394540?v=4?s=100" width="100px;" alt="Klarna"/><br /><sub><b>Klarna</b></sub></a><br /><a href="#financial-klarna" title="Financial">💵</a> <a href="#business-klarna" title="Business development">💼</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## License ⚖️
 
