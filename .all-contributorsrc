@@ -1,4 +1,102 @@
 {
   "projectName": "gram",
-  "projectOwner": "klarna-incubator"
+  "projectOwner": "klarna-incubator",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "ruel",
+      "name": "Ruel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/480039?v=4",
+      "profile": "https://ruel.me/",
+      "contributions": [
+        "code",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "Tethik",
+      "name": "Joakim Uddholm",
+      "avatar_url": "https://avatars.githubusercontent.com/u/298627?v=4",
+      "profile": "https://joakim.uddholm.com/",
+      "contributions": [
+        "code",
+        "projectManagement",
+        "talk"
+      ]
+    },
+    {
+      "login": "idoo",
+      "name": "Ivan Verevkin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/738921?v=4",
+      "profile": "https://github.com/idoo",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "lukeber4",
+      "name": "Luke Berner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7293607?v=4",
+      "profile": "https://ar.linkedin.com/in/lucas-berner-89865339",
+      "contributions": [
+        "code",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "vsmart",
+      "name": "Franka",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2796920?v=4",
+      "profile": "https://franka.tech/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ErikBavenstrand",
+      "name": "Erik Båvenstrand",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19384305?v=4",
+      "profile": "https://github.com/ErikBavenstrand",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "kuramsai",
+      "name": "Sai Kiran Goud",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6891487?v=4",
+      "profile": "https://github.com/kuramsai",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Tyouxik",
+      "name": "Tyouxik",
+      "avatar_url": "https://avatars.githubusercontent.com/u/65331057?v=4",
+      "profile": "https://github.com/Tyouxik",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "klarna",
+      "name": "Klarna",
+      "avatar_url": "https://avatars.githubusercontent.com/u/394540?v=4",
+      "profile": "https://klarna.github.io/",
+      "contributions": [
+        "financial",
+        "business"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
 }
