@@ -36,7 +36,6 @@
     "@gram/ldap": "*",
     "@gram/oidc": "*",
     "@gram/svgporn": "*",
-    "@gram/threatlib": "*",
     "@gram/threatsaurus": "*",
     "dotenv": "^16.3.1",
     "node-cron": "^3.0.2"
