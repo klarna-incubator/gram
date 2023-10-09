@@ -1,7 +1,7 @@
 {
   "name": "@gram/oidc",
   "type": "module",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "Pack with oidc auth provider",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.2.1",
+    "@gram/core": "^4.3.0",
     "hpagent": "^1.2.0",
     "openid-client": "^5.4.3"
   },

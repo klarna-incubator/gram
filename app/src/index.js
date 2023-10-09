@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
+import { BrowserTracing } from "@sentry/browser";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -13,7 +13,7 @@ if (process.env.REACT_APP_SENTRY_DSN) {
   Sentry.init({
     release: `gram_app@${process.env.REACT_APP_VERSION}`,
     dsn: process.env.REACT_APP_SENTRY_DSN,
-    integrations: [new Integrations.BrowserTracing()],
+    integrations: [new BrowserTracing()],
 
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
