@@ -4,7 +4,7 @@
   "version": "4.2.0",
   "command": {
     "version": {
-      "allowBranch": "master",
+      "allowBranch": "main",
       "conventionalCommits": true
     }
   }
