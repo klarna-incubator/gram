@@ -28,11 +28,14 @@
     "node": "18"
   },
   "dependencies": {
-    "@gram/aws": "^4.2.1",
-    "@gram/core": "^4.2.1",
-    "@gram/magiclink": "^4.2.1",
-    "@gram/svgporn": "^4.2.1",
-    "@gram/threatlib": "^4.2.1",
+    "@gram/aws": "*",
+    "@gram/azure": "*",
+    "@gram/cncf": "*",
+    "@gram/core": "*",
+    "@gram/kubernetes": "*",
+    "@gram/magiclink": "*",
+    "@gram/svgporn": "*",
+    "@gram/threatlib": "*",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {

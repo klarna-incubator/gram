@@ -1,4 +1,6 @@
 import { AWSAssets, AWSComponentClasses } from "@gram/aws";
+import { AzureAssets, AzureComponentClasses } from "@gram/azure";
+import { CNCFAssets, CNCFComponentClasses } from "@gram/cncf";
 import { Reviewer } from "@gram/core/dist/auth/models/Reviewer.js";
 import { User } from "@gram/core/dist/auth/models/User.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
@@ -8,6 +10,7 @@ import type {
 } from "@gram/core/dist/config/GramConfiguration.js";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import System from "@gram/core/dist/data/systems/System.js";
+import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
   MagicLinkEmail,
   MagicLinkIdentityProvider,
@@ -147,8 +150,20 @@ export const defaultConfig: GramConfiguration = {
     ];
 
     return {
-      assetFolders: [AWSAssets, SVGPornAssets],
-      componentClasses: [...AWSComponentClasses, ...SVGPornComponentClasses],
+      assetFolders: [
+        AWSAssets,
+        AzureAssets,
+        CNCFAssets,
+        KubernetesAssets,
+        SVGPornAssets,
+      ],
+      componentClasses: [
+        ...AWSComponentClasses,
+        ...AzureComponentClasses,
+        ...CNCFComponentClasses,
+        ...KubernetesComponentClasses,
+        ...SVGPornComponentClasses,
+      ],
       identityProviders: [magicLink],
       notificationTemplates: [MagicLinkEmail(), ...defaultNotifications],
       reviewerProvider: new StaticReviewerProvider(
