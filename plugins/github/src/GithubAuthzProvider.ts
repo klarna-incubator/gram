@@ -74,10 +74,9 @@ export class GithubAuthzProvider implements AuthzProvider {
     user: UserToken
   ): Promise<Permission[]> {
     if (model.createdBy === user.sub) {
-      return AllPermissions;
-    } else {
-      return [Permission.Read];
+      return [Permission.Read, Permission.Write, Permission.Delete];
     }
+    return [Permission.Read];
   }
   key: string = "passthrough";
 }
