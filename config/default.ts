@@ -98,7 +98,7 @@ export const defaultConfig: GramConfiguration = {
 
   allowedSrc: {
     img: ["https:"],
-    connect: [],
+    connect: ["o24547.ingest.sentry.io"],
   },
 
   menu: [
