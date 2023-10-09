@@ -1,0 +1,23 @@
+{
+  "name": "@gram/azure",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "Azure icons for Gram",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "*"
+  },
+  "private": true,
+  "devDependencies": {}
+}
