@@ -30,8 +30,8 @@ export const developmentConfig: GramConfiguration = {
         port: new ExposedSecret("25"),
         password: new ExposedSecret(""),
         user: new ExposedSecret(""),
-        // overrideRecipient: "your-email"
-        // senderName: "[Development] Gram",
+        overrideRecipient: "secure-development@klarna.com",
+        senderName: "[Development] Gram",
       },
     },
   },
