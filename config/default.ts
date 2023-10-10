@@ -1,6 +1,8 @@
-import cron from "node-cron";
 import { AWSAssets, AWSComponentClasses } from "@gram/aws";
+import { AzureAssets, AzureComponentClasses } from "@gram/azure";
+import { CNCFAssets, CNCFComponentClasses } from "@gram/cncf";
 import { Reviewer } from "@gram/core/dist/auth/models/Reviewer.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
 import { User } from "@gram/core/dist/auth/models/User.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
 import type {
@@ -9,32 +11,29 @@ import type {
 } from "@gram/core/dist/config/GramConfiguration.js";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import {
+  HSFContextProvider,
+  KlarnaAssets,
+  KlarnaComponentClasses,
+  KlarnaCronJob,
+  KlarnaReviewerProvider,
+  NGOVSystemContextProvider,
+  OctaneSystemProvider,
+  hookIntoReviewApproval,
+} from "@gram/klarna";
+import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
+import {
   LDAPBasicAuthIdentityProvider,
   LDAPCache,
   LDAPGroupBasedAuthzProvider,
   LDAPTeamProvider,
   LDAPUserProvider,
 } from "@gram/ldap";
+import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings.js";
 import { OIDCIdentityProvider } from "@gram/oidc";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
-import { ThreatLibSuggestionProvider } from "@gram/threatlib";
-import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings.js";
-import defaultNotifications from "./notifications/index.js";
-import {
-  KlarnaReviewerProvider,
-  OctaneSystemProvider,
-  NGOVSystemContextProvider,
-  HSFContextProvider,
-  KlarnaCronJob,
-  KlarnaAssets,
-  KlarnaComponentClasses,
-  hookIntoReviewApproval,
-} from "@gram/klarna";
-import { AzureComponentClasses, AzureAssets } from "@gram/azure";
-import { CNCFComponentClasses, CNCFAssets } from "@gram/cncf";
-import { KubernetesComponentClasses, KubernetesAssets } from "@gram/kubernetes";
-import { Role } from "@gram/core/dist/auth/models/Role.js";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
+import cron from "node-cron";
+import defaultNotifications from "./notifications/index.js";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -98,7 +97,7 @@ export const defaultConfig: GramConfiguration = {
 
   allowedSrc: {
     img: ["https:"],
-    connect: [],
+    connect: ["o24547.ingest.sentry.io"],
   },
 
   menu: [

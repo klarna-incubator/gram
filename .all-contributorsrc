@@ -95,8 +95,19 @@
         "financial",
         "business"
       ]
+    },
+    {
+      "login": "gadiener",
+      "name": "Gabriele",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8479033?v=4",
+      "profile": "https://it.linkedin.com/in/gdiener",
+      "contributions": [
+        "plugin",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "linkToUsage": false
+  "linkToUsage": false,
+  "commitType": "docs"
 }

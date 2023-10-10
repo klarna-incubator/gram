@@ -57,6 +57,10 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
   ) {
     super({ ...ldapProviderSettings, fallbackReviewer });
     this.preloadReviewers();
+
+    this.dal.reviewService.on("updated-for", ({ modelId }) =>
+      this.onReviewUpdated(modelId)
+    );
   }
 
   /**
