@@ -1,7 +1,4 @@
 # Gram
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
@@ -17,7 +14,7 @@ Gram is Klarna's own [threat model][owasp-tm] diagramming tool developed interna
 - `core/` contains the backend library; most data related logic lies here
 - `config/` contains the configuration.
 - `api/` contains the backend web API
-- `plugins/` contains backend plugins, which when installed into api allows for customization
+- `plugins/` contains backend plugins, which when installed into config allows for customization
 
 ## Development Setup 💻
 
