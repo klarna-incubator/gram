@@ -52,6 +52,9 @@ export function MitigationChip(props) {
         label={title}
         onDelete={() => onDelete()}
         onClick={(e) => {
+          if (!scrollToId) {
+            return;
+          }
           if (e.target.type !== "checkbox") {
             isControl
               ? scrollToId(controlId, TAB.CONTROLS)
