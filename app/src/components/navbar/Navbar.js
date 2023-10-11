@@ -48,6 +48,8 @@ export function Navbar() {
       }`,
       count: user?.sub && isSuccess ? reviews?.total : 0,
       requiresAuth: true,
+      visible:
+        user?.roles.includes("reviewer") || user?.roles.includes("admin"),
     },
     ...menuPages,
   ];
