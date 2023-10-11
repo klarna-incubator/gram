@@ -11,3 +11,5 @@ export const sampleOtherTeam: Team = {
   name: "other team",
   email: "bb",
 };
+
+export const teams = [sampleTeam, sampleOtherTeam];

@@ -14,6 +14,7 @@ import { useListSystemsQuery } from "../../../api/gram/system";
 import { SystemComplianceBadge } from "../../elements/SystemComplianceBadge";
 import Loading from "../../loading";
 import "../Systems.css";
+import { useGetTeamQuery } from "../../../api/gram/team";
 
 export function TeamSystemsPageList({
   teamName,
@@ -26,17 +27,14 @@ export function TeamSystemsPageList({
 
   const opts = { filter: "team", teamId, pagesize, page };
   const { data, isLoading, isFetching } = useListSystemsQuery(opts);
-
-  // Because too lazy to write a new endpoint to fetch team name.
-  const dynamicTeamName =
-    data && data.systems.length > 0 && data.systems[0].owners.length > 0
-      ? data.systems[0].owners[0].name
-      : "Team";
+  const { data: team } = useGetTeamQuery({ teamId });
 
   return (
     <Card sx={{ width, marginTop: "25px" }}>
       <CardContent>
-        <Typography variant="h5">{teamName || dynamicTeamName}</Typography>
+        <Typography variant="h5">
+          <Link to={`/team/${teamId}`}>{team?.name}</Link>
+        </Typography>
 
         <List sx={{ height: listHeight, overflow: "auto" }}>
           {isLoading || isFetching ? (

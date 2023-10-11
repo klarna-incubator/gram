@@ -23,6 +23,8 @@ import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider.js";
 import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider.js";
 import { StaticSystemProvider } from "./providers/static/StaticSystemProvider.js";
 import { StaticUserProvider } from "./providers/static/StaticUserProvider.js";
+import { Team } from "@gram/core/dist/auth/models/Team.js";
+import { StaticTeamProvider } from "./providers/static/StaticTeamProvider.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -132,19 +134,38 @@ export const defaultConfig: GramConfiguration = {
       slackUrl: "",
     };
 
+    const sampleTeams: Team[] = [
+      {
+        id: "frontend",
+        name: "Frontend Team",
+        email: "frontend@localhost",
+      },
+      {
+        id: "backend",
+        name: "Backend Team",
+        email: "backend@localhost",
+      },
+    ];
+
+    const teamMap: Map<string, string[]> = new Map([
+      ["user@localhost", ["frontend"]],
+      ["reviewer@localhost", ["backend"]],
+      ["admin@localhost", ["backend", "frontend"]],
+    ]);
+
     const sampleSystems: System[] = [
       new System(
         "web",
         "Website",
         "Website",
-        [],
+        [sampleTeams[0]],
         "The main website of the org"
       ),
       new System(
         "order-api",
         "Order API",
         "Order API",
-        [],
+        [sampleTeams[1]],
         "Backend API for receiving orders"
       ),
     ];
@@ -178,6 +199,7 @@ export const defaultConfig: GramConfiguration = {
       userProvider: new StaticUserProvider(sampleUsers),
       systemProvider: new StaticSystemProvider(sampleSystems),
       suggestionSources: [new ThreatLibSuggestionProvider()],
+      teamProvider: new StaticTeamProvider(sampleTeams, teamMap),
     };
   },
 };

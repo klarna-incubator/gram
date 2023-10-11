@@ -32,6 +32,7 @@ import threatsV1 from "./resources/gram/v1/threats/index.js";
 import tokenV1 from "./resources/gram/v1/token/index.js";
 import userV1 from "./resources/gram/v1/user/index.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import { getTeam } from "./resources/gram/v1/team/get.js";
 import { initSentry } from "./util/sentry.js";
 import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval.js";
 import { config } from "@gram/core/dist/config/index.js";
@@ -219,6 +220,9 @@ export async function createApp(dal: DataAccessLayer) {
     cache,
     errorWrap(systemPropertyRoutes.properties)
   );
+
+  // Team
+  authenticatedRoutes.get("/teams/:id", cache, errorWrap(getTeam(dal)));
 
   // Component Classes
   authenticatedRoutes.get(

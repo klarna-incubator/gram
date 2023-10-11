@@ -31,3 +31,8 @@ div#systems .visualize:focus {
 div#systems .visualize:hover:after {
   content: "Visualize All Systems";
 }
+
+h5 a {
+  color: #eee;
+  text-decoration: none;
+}
