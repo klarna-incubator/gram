@@ -1,15 +1,4 @@
-import {
-  AppBar,
-  Avatar,
-  Badge,
-  Box,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Avatar, Badge, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -42,14 +31,11 @@ export function Navbar() {
     {
       name: "Reviews",
       path: `/reviews?statuses=requested${
-        user?.roles.includes("reviewer")
-          ? "&reviewedBy=" + encodeURIComponent(user?.sub)
-          : ""
+        user?.roles.includes("reviewer") ? "&reviewedBy=" + encodeURIComponent(user?.sub) : ""
       }`,
       count: user?.sub && isSuccess ? reviews?.total : 0,
       requiresAuth: true,
-      visible:
-        user?.roles.includes("reviewer") || user?.roles.includes("admin"),
+      visible: user?.roles.includes("reviewer") || user?.roles.includes("admin"),
     },
     ...menuPages,
   ];
@@ -101,6 +87,14 @@ export function Navbar() {
             marginRight: "auto",
           }}
         >
+          <img
+            style={{
+              paddingRight: "5px",
+              marginRight: "5px",
+            }}
+            src="/gram_logo.svg"
+            height="48"
+          />
           <Typography
             variant="h5"
             noWrap
@@ -129,18 +123,9 @@ export function Navbar() {
           }}
         >
           {pages
-            .filter(
-              (p) =>
-                p.visible !== false &&
-                (!p.requiresAuth || (p.requiresAuth && authenticated))
-            )
+            .filter((p) => p.visible !== false && (!p.requiresAuth || (p.requiresAuth && authenticated)))
             .map((page) => (
-              <Badge
-                key={page.name}
-                badgeContent={page.count}
-                color="primary"
-                overlap="circular"
-              >
+              <Badge key={page.name} badgeContent={page.count} color="primary" overlap="circular">
                 {!page.path.startsWith("/") ? (
                   <Button
                     type="submit"
@@ -178,11 +163,7 @@ export function Navbar() {
         </Box>
         {authenticated && user ? (
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton
-              disableRipple
-              onClick={(e) => handleOpenUserMenu(e)}
-              sx={{ p: 0 }}
-            >
+            <IconButton disableRipple onClick={(e) => handleOpenUserMenu(e)} sx={{ p: 0 }}>
               <Avatar alt={user.name} src={user.picture} />
             </IconButton>
             <Menu
@@ -221,9 +202,7 @@ export function Navbar() {
             to="/login"
             sx={{
               color: (theme) =>
-                window.location.pathname === "/login"
-                  ? theme.palette.common.gramPink
-                  : theme.palette.text.primary,
+                window.location.pathname === "/login" ? theme.palette.common.gramPink : theme.palette.text.primary,
               "&:hover": {
                 backgroundColor: "transparent",
               },

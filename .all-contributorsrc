@@ -105,6 +105,15 @@
         "plugin",
         "code"
       ]
+    },
+    {
+      "login": "MissMuffin",
+      "name": "MissMuffin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2961854?v=4",
+      "profile": "https://github.com/MissMuffin",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
