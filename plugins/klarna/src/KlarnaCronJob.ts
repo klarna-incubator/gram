@@ -44,8 +44,10 @@ export class KlarnaCronJob {
             type: "crontab",
             value: crontab,
           },
-          checkinMargin: 1,
-          maxRuntime: 1,
+          /* Number of minutes before a check-in is considered missed. */
+          checkinMargin: 2,
+          /* Number of a minutes before an in-progress check-in is marked timed out. */
+          maxRuntime: 5,
         }
       );
       try {
