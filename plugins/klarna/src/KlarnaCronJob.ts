@@ -196,7 +196,7 @@ export class KlarnaCronJob {
     systemProvider: OctaneSystemProvider
   ) {
     // runs every day at 06:00 AM
-    this.scheduleJob("reminder-meeting-requested", "10 14 * * *", async () =>
+    this.scheduleJob("reminder-meeting-requested", "0 6 * * *", async () =>
       this.sendRemindersForMeetingRequested()
     );
     this.scheduleJob("reminder-review-requested", "0 6 * * *", async () =>
