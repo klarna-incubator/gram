@@ -63,7 +63,6 @@ export class KlarnaCronJob {
           monitorSlug,
           status: "error",
         });
-        Sentry.captureException(err);
         log.error(err);
       }
     });
