@@ -16,6 +16,12 @@ exports[`Navbar renders Navbar 1`] = `
             href="/"
             tabindex="0"
           >
+            <img
+              alt="Gram logo"
+              height="48"
+              src="/gram_logo.svg"
+              style="padding-right: 5px; margin-right: 5px;"
+            />
             <span
               class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-19js6tk-MuiTypography-root"
             >
@@ -68,6 +74,12 @@ exports[`Navbar renders Navbar 1`] = `
           href="/"
           tabindex="0"
         >
+          <img
+            alt="Gram logo"
+            height="48"
+            src="/gram_logo.svg"
+            style="padding-right: 5px; margin-right: 5px;"
+          />
           <span
             class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-19js6tk-MuiTypography-root"
           >
