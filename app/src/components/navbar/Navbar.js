@@ -92,6 +92,7 @@ export function Navbar() {
               paddingRight: "5px",
               marginRight: "5px",
             }}
+            alt="Gram logo"
             src="/gram_logo.svg"
             height="48"
           />
