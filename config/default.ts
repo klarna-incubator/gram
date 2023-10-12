@@ -32,7 +32,6 @@ import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings.js";
 import { OIDCIdentityProvider } from "@gram/oidc";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
-import cron from "node-cron";
 import defaultNotifications from "./notifications/index.js";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
@@ -274,26 +273,8 @@ export const defaultConfig: GramConfiguration = {
       new EnvSecret("JIRA_PASSWORD")
     );
 
-    // cron jobs
-    cron.schedule("0 6 * * *", async () => {
-      // runs every day at 06:00 AM
-      const cronJobs = new KlarnaCronJob(dal);
-      await cronJobs.sendRemindersForMeetingRequested();
-      await cronJobs.sendRemindersForRequested();
-      await cronJobs.reassignOverdueReviews();
-    });
-
-    cron.schedule("*/30 * * * *", async () => {
-      // runs every 30 minutes
-      await reviewerProvider.preloadReviewers();
-    });
-
-    cron.schedule("*/10 * * * *", async () => {
-      // runs every 30 minutes
-      systemProvider.loadSystems();
-    });
-
-    cron.schedule("*/30 * * * *", async () => LDAPCache.expire());
+    const klarnaCronJob = new KlarnaCronJob(dal);
+    klarnaCronJob.bootstrap(reviewerProvider, systemProvider);
 
     return {
       assetFolders: [
