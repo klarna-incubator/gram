@@ -49,12 +49,12 @@ export class KlarnaCronJob {
         }
       );
       try {
+        await jobFunction();
         Sentry.captureCheckIn({
           checkInId,
           monitorSlug,
           status: "ok",
         });
-        await jobFunction();
       } catch (err) {
         Sentry.captureCheckIn({
           checkInId,
