@@ -226,8 +226,8 @@ export class KlarnaCronJob {
       LDAPCache.expire()
     );
 
-    this.scheduleJob("error-on-purpose", "*/5 * * * *", async () => {
-      throw new Error("Kaboom");
-    });
+    // this.scheduleJob("error-on-purpose", "*/5 * * * *", async () => {
+    //   throw new Error("Kaboom");
+    // });
   }
 }

@@ -23,7 +23,6 @@ import {
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
   LDAPBasicAuthIdentityProvider,
-  LDAPCache,
   LDAPGroupBasedAuthzProvider,
   LDAPTeamProvider,
   LDAPUserProvider,
