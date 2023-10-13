@@ -8,6 +8,11 @@ import Threat from "../threats/Threat.js";
 import { _deleteAllTheThings } from "../utils.js";
 import Model from "./Model.js";
 import { ModelDataService, ModelFilter } from "./ModelDataService.js";
+import {
+  genSuggestedControl,
+  genSuggestedThreat,
+} from "../../test-util/suggestions.js";
+import { sampleUser } from "../../test-util/sampleUser.js";
 
 describe("ModelDataService implementation", () => {
   let data: ModelDataService;
@@ -263,6 +268,9 @@ describe("ModelDataService implementation", () => {
         "erik"
       );
       threat1.id = await dal.threatService.create(threat1);
+      await dal.threatService.update(model.id!, threat1.id!, {
+        isActionItem: true,
+      });
       const control1 = new Control(
         "counter tampering",
         "sumting",
@@ -297,6 +305,33 @@ describe("ModelDataService implementation", () => {
       const res2 = await dal.mitigationService.create(mitigation2);
       expect(res2).toBeTruthy();
 
+      // Suggestions
+      const threatSuggestion = genSuggestedThreat(component2Id);
+      await dal.suggestionService.bulkInsert(model.id!, {
+        threats: [threatSuggestion],
+        controls: [
+          genSuggestedControl({
+            componentId: component2Id,
+            mitigates: [{ partialThreatId: threatSuggestion.id.partialId }],
+          }),
+        ],
+      });
+      const threatSuggestionsOriginal =
+        await dal.suggestionService.listThreatSuggestions(model.id!);
+      const controlSuggestionsOriginal =
+        await dal.suggestionService.listControlSuggestions(model.id!);
+
+      await dal.suggestionService.acceptSuggestion(
+        model.id!,
+        threatSuggestionsOriginal[0].id,
+        sampleUser.sub
+      );
+      await dal.suggestionService.acceptSuggestion(
+        model.id!,
+        controlSuggestionsOriginal[0].id,
+        sampleUser.sub
+      );
+
       const modelCopy = new Model(systemId, "nr2", "erik");
       const modelCopyId = await data.copy(model.id!, modelCopy);
       expect(modelCopyId).toBeTruthy();
@@ -327,6 +362,16 @@ describe("ModelDataService implementation", () => {
         ],
       });
 
+      // Suggestions
+      const threatSuggestions =
+        await dal.suggestionService.listThreatSuggestions(modelCopyId!);
+      expect(threatSuggestions.length).toBe(1);
+      expect(threatSuggestions[0].componentId).toBe(component2CopyId);
+      const controlSuggestions =
+        await dal.suggestionService.listControlSuggestions(modelCopyId!);
+      expect(controlSuggestions.length).toBe(1);
+      expect(controlSuggestions[0].componentId).toBe(component2CopyId);
+
       const threatsCopy = await dal.threatService.list(resModelCopy!.id!);
 
       const today = new Date(Date.now());
@@ -336,141 +381,121 @@ describe("ModelDataService implementation", () => {
         today.getDate(),
         today.getHours()
       );
-      expect(threatsCopy.length).toEqual(2);
+      expect(threatsCopy.length).toEqual(3); // 3rd mitigation is the suggested control/threat
 
-      const firstThreatCopy =
-        threatsCopy[0].componentId === component1CopyId
-          ? threatsCopy[0]
-          : threatsCopy[1];
-      const secondThreatCopy =
-        threatsCopy[0].componentId === component1CopyId
-          ? threatsCopy[1]
-          : threatsCopy[0];
+      const suggestedThreat = threatsCopy.find((t) => t.suggestionId);
+      expect(suggestedThreat).toBeTruthy();
 
-      const threats1CopyId =
-        threatsCopy[0].componentId === component1CopyId
-          ? threatsCopy[0].id
-          : threatsCopy[1].id;
-      const threats2CopyId =
-        threatsCopy[0].componentId === component1CopyId
-          ? threatsCopy[1].id
-          : threatsCopy[0].id;
+      const firstThreatCopy = threatsCopy.find(
+        (t) => t.title === threat1.title
+      );
+      const secondThreatCopy = threatsCopy.find(
+        (t) => t.title === threat2.title
+      );
 
-      expect(firstThreatCopy.toJSON()).toBeDefined();
-      expect(firstThreatCopy.id).toBe(threats1CopyId);
-      expect(firstThreatCopy.modelId).toBe(resModelCopy!.id);
-      expect(firstThreatCopy.componentId).toBe(component1CopyId);
-      expect(firstThreatCopy.title).toBe("tampering");
-      expect(firstThreatCopy.createdBy).toBe("erik");
-      expect(firstThreatCopy.suggestionId).toBe(undefined);
-      expect(firstThreatCopy.description).toBe("act of something");
-      expect(firstThreatCopy.createdAt).toBeLessThan(Date.now() + 1000);
-      expect(firstThreatCopy.createdAt).toBeGreaterThan(yesterday.getTime());
-      expect(firstThreatCopy.updatedAt).toBeLessThan(Date.now() + 1000);
-      expect(firstThreatCopy.updatedAt).toBeGreaterThan(yesterday.getTime());
+      expect(firstThreatCopy?.toJSON()).toBeDefined();
+      expect(firstThreatCopy?.modelId).toBe(resModelCopy!.id);
+      expect(firstThreatCopy?.componentId).toBe(component1CopyId);
+      expect(firstThreatCopy?.title).toBe("tampering");
+      expect(firstThreatCopy?.isActionItem).toBe(true);
+      expect(firstThreatCopy?.createdBy).toBe("erik");
+      expect(firstThreatCopy?.suggestionId).toBe(undefined);
+      expect(firstThreatCopy?.description).toBe("act of something");
+      expect(firstThreatCopy?.createdAt).toBeLessThan(Date.now() + 1000);
+      expect(firstThreatCopy?.createdAt).toBeGreaterThan(yesterday.getTime());
+      expect(firstThreatCopy?.updatedAt).toBeLessThan(Date.now() + 1000);
+      expect(firstThreatCopy?.updatedAt).toBeGreaterThan(yesterday.getTime());
 
-      expect(secondThreatCopy.toJSON()).toBeDefined();
-      expect(secondThreatCopy.id).toBe(threats2CopyId);
-      expect(secondThreatCopy.modelId).toBe(resModelCopy!.id);
-      expect(secondThreatCopy.componentId).toBe(component2CopyId);
-      expect(secondThreatCopy.title).toBe("tampering2");
-      expect(secondThreatCopy.createdBy).toBe("erik2");
-      expect(secondThreatCopy.description).toBe("act of something2");
-      expect(secondThreatCopy.suggestionId).toBe(undefined);
-      expect(secondThreatCopy.createdAt).toBeLessThan(Date.now() + 1000);
-      expect(secondThreatCopy.createdAt).toBeGreaterThan(yesterday.getTime());
-      expect(secondThreatCopy.updatedAt).toBeLessThan(Date.now() + 1000);
-      expect(secondThreatCopy.updatedAt).toBeGreaterThan(yesterday.getTime());
+      expect(secondThreatCopy?.toJSON()).toBeDefined();
+      expect(secondThreatCopy?.modelId).toBe(resModelCopy!.id);
+      expect(secondThreatCopy?.componentId).toBe(component2CopyId);
+      expect(secondThreatCopy?.title).toBe("tampering2");
+      expect(secondThreatCopy?.createdBy).toBe("erik2");
+      expect(secondThreatCopy?.description).toBe("act of something2");
+      expect(secondThreatCopy?.suggestionId).toBe(undefined);
+      expect(secondThreatCopy?.createdAt).toBeLessThan(Date.now() + 1000);
+      expect(secondThreatCopy?.createdAt).toBeGreaterThan(yesterday.getTime());
+      expect(secondThreatCopy?.updatedAt).toBeLessThan(Date.now() + 1000);
+      expect(secondThreatCopy?.updatedAt).toBeGreaterThan(yesterday.getTime());
 
       const controlsCopy = await dal.controlService.list(resModelCopy!.id!);
 
-      expect(controlsCopy.length).toEqual(2);
+      const suggestedControl = controlsCopy.find((t) => t.suggestionId);
+      expect(suggestedControl).toBeTruthy();
 
-      const firstControlCopy =
-        controlsCopy[0].componentId === component1CopyId
-          ? controlsCopy[0]
-          : controlsCopy[1];
-      const secondControlCopy =
-        controlsCopy[0].componentId === component1CopyId
-          ? controlsCopy[1]
-          : controlsCopy[0];
+      expect(controlsCopy.length).toEqual(3);
 
-      const controls1CopyId =
-        controlsCopy[0].componentId === component1CopyId
-          ? controlsCopy[0].id
-          : controlsCopy[1].id;
-      const controls2CopyId =
-        controlsCopy[0].componentId === component1CopyId
-          ? controlsCopy[1].id
-          : controlsCopy[0].id;
+      const firstControlCopy = controlsCopy.find(
+        (c) => c.title === control1.title
+      );
+      const secondControlCopy = controlsCopy.find(
+        (c) => c.title === control2.title
+      );
 
-      expect(firstControlCopy.toJSON()).toBeDefined();
-      expect(firstControlCopy.id).toBe(controls1CopyId);
-      expect(firstControlCopy.modelId).toBe(resModelCopy!.id);
-      expect(firstControlCopy.componentId).toBe(component1CopyId);
-      expect(firstControlCopy.title).toBe("counter tampering");
-      expect(firstControlCopy.inPlace).toBe(true);
-      expect(firstControlCopy.createdBy).toBe("erik");
-      expect(firstControlCopy.suggestionId).toBe(undefined);
-      expect(firstControlCopy.description).toBe("sumting");
-      expect(firstControlCopy.createdAt).toBeLessThan(Date.now() + 1000);
-      expect(firstControlCopy.createdAt).toBeGreaterThan(yesterday.getTime());
-      expect(firstControlCopy.updatedAt).toBeLessThan(Date.now() + 1000);
-      expect(firstControlCopy.updatedAt).toBeGreaterThan(yesterday.getTime());
+      expect(firstControlCopy?.toJSON()).toBeDefined();
+      expect(firstControlCopy?.modelId).toBe(resModelCopy!.id);
+      expect(firstControlCopy?.componentId).toBe(component1CopyId);
+      expect(firstControlCopy?.title).toBe("counter tampering");
+      expect(firstControlCopy?.inPlace).toBe(true);
+      expect(firstControlCopy?.createdBy).toBe("erik");
+      expect(firstControlCopy?.suggestionId).toBe(undefined);
+      expect(firstControlCopy?.description).toBe("sumting");
+      expect(firstControlCopy?.createdAt).toBeLessThan(Date.now() + 1000);
+      expect(firstControlCopy?.createdAt).toBeGreaterThan(yesterday.getTime());
+      expect(firstControlCopy?.updatedAt).toBeLessThan(Date.now() + 1000);
+      expect(firstControlCopy?.updatedAt).toBeGreaterThan(yesterday.getTime());
 
-      expect(secondControlCopy.toJSON()).toBeDefined();
-      expect(secondControlCopy.id).toBe(controls2CopyId);
-      expect(secondControlCopy.modelId).toBe(resModelCopy!.id);
-      expect(secondControlCopy.componentId).toBe(component2CopyId);
-      expect(secondControlCopy.title).toBe("counter tampering2");
-      expect(secondControlCopy.createdBy).toBe("erik2");
-      expect(secondControlCopy.inPlace).toBe(false);
-      expect(secondControlCopy.description).toBe("sumting2");
-      expect(secondControlCopy.suggestionId).toBe(undefined);
-      expect(secondControlCopy.createdAt).toBeLessThan(Date.now() + 1000);
-      expect(secondControlCopy.createdAt).toBeGreaterThan(yesterday.getTime());
-      expect(secondControlCopy.updatedAt).toBeLessThan(Date.now() + 1000);
-      expect(secondControlCopy.updatedAt).toBeGreaterThan(yesterday.getTime());
+      expect(secondControlCopy?.toJSON()).toBeDefined();
+      expect(secondControlCopy?.modelId).toBe(resModelCopy!.id);
+      expect(secondControlCopy?.componentId).toBe(component2CopyId);
+      expect(secondControlCopy?.title).toBe("counter tampering2");
+      expect(secondControlCopy?.createdBy).toBe("erik2");
+      expect(secondControlCopy?.inPlace).toBe(false);
+      expect(secondControlCopy?.description).toBe("sumting2");
+      expect(secondControlCopy?.suggestionId).toBe(undefined);
+      expect(secondControlCopy?.createdAt).toBeLessThan(Date.now() + 1000);
+      expect(secondControlCopy?.createdAt).toBeGreaterThan(yesterday.getTime());
+      expect(secondControlCopy?.updatedAt).toBeLessThan(Date.now() + 1000);
+      expect(secondControlCopy?.updatedAt).toBeGreaterThan(yesterday.getTime());
 
       const mitigationsCopy = await dal.mitigationService.list(
         resModelCopy!.id!
       );
+      console.log(mitigationsCopy);
 
-      expect(mitigationsCopy.length).toEqual(2);
+      expect(mitigationsCopy.length).toEqual(3);
 
-      const firstMitigationCopy =
-        mitigationsCopy[0].threatId === threats1CopyId
-          ? mitigationsCopy[0]
-          : mitigationsCopy[1];
-
-      const secondMitigationCopy =
-        mitigationsCopy[0].threatId === threats1CopyId
-          ? mitigationsCopy[1]
-          : mitigationsCopy[0];
-
-      expect(firstMitigationCopy.toJSON()).toBeDefined();
-      expect(firstMitigationCopy.threatId).toBe(threats1CopyId);
-      expect(firstMitigationCopy.controlId).toBe(controls1CopyId);
-      expect(firstMitigationCopy.createdBy).toBe("erik");
-      expect(firstMitigationCopy.createdAt).toBeLessThan(Date.now() + 1000);
-      expect(firstMitigationCopy.createdAt).toBeGreaterThan(
-        yesterday.getTime()
-      );
-      expect(firstMitigationCopy.updatedAt).toBeLessThan(Date.now() + 1000);
-      expect(firstMitigationCopy.updatedAt).toBeGreaterThan(
-        yesterday.getTime()
+      const firstMitigationCopy = mitigationsCopy.find(
+        (m) => m.threatId === firstThreatCopy?.id
       );
 
-      expect(secondMitigationCopy.toJSON()).toBeDefined();
-      expect(secondMitigationCopy.threatId).toBe(threats2CopyId);
-      expect(secondMitigationCopy.controlId).toBe(controls2CopyId);
-      expect(secondMitigationCopy.createdBy).toBe("erik2");
-      expect(secondMitigationCopy.createdAt).toBeLessThan(Date.now() + 1000);
-      expect(secondMitigationCopy.createdAt).toBeGreaterThan(
+      const secondMitigationCopy = mitigationsCopy.find(
+        (m) => m.threatId === secondThreatCopy?.id
+      );
+
+      expect(firstMitigationCopy?.toJSON()).toBeDefined();
+      expect(firstMitigationCopy?.threatId).toBe(firstThreatCopy?.id);
+      expect(firstMitigationCopy?.controlId).toBe(firstControlCopy?.id);
+      expect(firstMitigationCopy?.createdBy).toBe("erik");
+      expect(firstMitigationCopy?.createdAt).toBeLessThan(Date.now() + 1000);
+      expect(firstMitigationCopy?.createdAt).toBeGreaterThan(
         yesterday.getTime()
       );
-      expect(secondMitigationCopy.updatedAt).toBeLessThan(Date.now() + 1000);
-      expect(secondMitigationCopy.updatedAt).toBeGreaterThan(
+      expect(firstMitigationCopy?.updatedAt).toBeLessThan(Date.now() + 1000);
+      expect(firstMitigationCopy?.updatedAt).toBeGreaterThan(
+        yesterday.getTime()
+      );
+
+      expect(secondMitigationCopy?.toJSON()).toBeDefined();
+      expect(secondMitigationCopy?.threatId).toBe(secondThreatCopy?.id);
+      expect(secondMitigationCopy?.controlId).toBe(secondControlCopy?.id);
+      expect(secondMitigationCopy?.createdBy).toBe("erik2");
+      expect(secondMitigationCopy?.createdAt).toBeLessThan(Date.now() + 1000);
+      expect(secondMitigationCopy?.createdAt).toBeGreaterThan(
+        yesterday.getTime()
+      );
+      expect(secondMitigationCopy?.updatedAt).toBeLessThan(Date.now() + 1000);
+      expect(secondMitigationCopy?.updatedAt).toBeGreaterThan(
         yesterday.getTime()
       );
     });

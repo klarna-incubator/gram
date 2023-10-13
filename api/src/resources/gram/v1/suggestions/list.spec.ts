@@ -8,7 +8,7 @@ import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
 import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
-import { genSuggestedControl } from "../../../../test-util/suggestions.js";
+import { genSuggestedControl } from "@gram/core/dist/test-util/suggestions.js";
 
 describe("Suggestions.list", () => {
   const systemGetById = jest.spyOn(systemProvider, "getSystem");
@@ -47,7 +47,7 @@ describe("Suggestions.list", () => {
     const control = genSuggestedControl();
 
     await dal.suggestionService.bulkInsert(modelId, {
-      sourceSlug: "",
+      sourceSlugToClear: "",
       controls: [control],
       threats: [],
     });

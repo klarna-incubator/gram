@@ -167,7 +167,10 @@ export class ModelDataService extends EventEmitter {
    * @param {string | null} srcModelId - Source model for create new model
    * @returns {string}
    */
-  async create(model: Model, createdFrom: string | null = null) {
+  async create(
+    model: Model,
+    createdFrom: string | null = null
+  ): Promise<string> {
     const query = `
      INSERT INTO models (system_id, version, data, created_by, created_from)
      VALUES ($1::varchar, $2::varchar, $3::json, $4::varchar, $5)
@@ -193,32 +196,54 @@ export class ModelDataService extends EventEmitter {
       return null;
     }
 
-    const uuid: { [key: string]: string } = {};
+    const uuid: Map<string, string> = new Map();
     targetModel.data.components = srcModel.data.components.map((c) => {
       const newId = randomUUID();
-      uuid[c.id] = newId;
+      uuid.set(c.id, newId);
       return { ...c, id: newId };
     });
 
     targetModel.data.dataFlows = srcModel.data.dataFlows.map((c) => {
       const newId = randomUUID();
-      uuid[c.id] = newId;
+      uuid.set(c.id, newId);
+      const startComponentId = uuid.get(c.startComponent.id);
+      const endComponentId = uuid.get(c.endComponent.id);
+      if (!startComponentId || !endComponentId) {
+        throw new Error(
+          `Failed to rebind dataflow component ids ${JSON.stringify({
+            srcModelId,
+            targetModelId: targetModel.id,
+            originalStartComponentId: c.startComponent.id,
+            originalEndComponentId: c.endComponent.id,
+            startComponentId,
+            endComponentId,
+          })}`
+        );
+      }
       return {
         ...c,
         id: newId,
-        startComponent: { id: uuid[c.startComponent.id] },
-        endComponent: { id: uuid[c.endComponent.id] },
+        startComponent: { id: startComponentId },
+        endComponent: { id: endComponentId },
       };
     });
 
-    uuid[srcModel.id!] = await this.create(targetModel, srcModelId);
+    const targetModelId = await this.create(targetModel, srcModelId);
+    uuid.set(srcModel.id!, targetModelId);
+
+    await this.dal.suggestionService.copySuggestions(
+      srcModel.id!,
+      targetModelId,
+      uuid
+    );
+
     const threats = await this.dal.threatService.list(srcModel.id!);
     const controls = await this.dal.controlService.list(srcModel.id!);
     const mitigations = await this.dal.mitigationService.list(srcModel.id!);
 
     const queryThreats = `
         INSERT INTO threats ( 
-        id, model_id, component_id, title, description, created_by, suggestion_id
+        id, model_id, component_id, title, description, created_by, suggestion_id, is_action_item
         )
         SELECT $1::uuid as id,
               $2::uuid as model_id,
@@ -226,9 +251,10 @@ export class ModelDataService extends EventEmitter {
               title,
               description,
               created_by,
-              suggestion_id
+              $4::text as suggestion_id,
+              is_action_item
         FROM threats 
-        WHERE id = $4::uuid
+        WHERE id = $5::uuid
         AND deleted_at IS NULL;
       `;
 
@@ -243,9 +269,9 @@ export class ModelDataService extends EventEmitter {
               description,
               in_place,
               created_by,
-              suggestion_id
+              $4::text as suggestion_id
         FROM controls 
-        WHERE id = $4::uuid
+        WHERE id = $5::uuid
         AND deleted_at IS NULL;
       `;
 
@@ -265,43 +291,52 @@ export class ModelDataService extends EventEmitter {
     const client = await this.pool.connect();
     try {
       await client.query("BEGIN");
+
       for (const threat of threats) {
-        uuid[threat.id!] = randomUUID();
+        uuid.set(threat.id!, randomUUID());
         await client.query(queryThreats, [
-          uuid[threat.id!],
-          uuid[srcModel.id!],
-          uuid[threat.componentId],
+          uuid.get(threat.id!),
+          uuid.get(srcModel.id!),
+          uuid.get(threat.componentId),
+          threat.suggestionId
+            ? uuid.get(threat.componentId) + "/" + threat.suggestionId.partialId
+            : null,
           threat.id,
         ]);
       }
 
       for (const control of controls) {
-        uuid[control.id!] = randomUUID();
+        uuid.set(control.id!, randomUUID());
         await client.query(queryControls, [
-          uuid[control.id!],
-          uuid[srcModel.id!],
-          uuid[control.componentId],
+          uuid.get(control.id!),
+          uuid.get(srcModel.id!),
+          uuid.get(control.componentId),
+          control.suggestionId
+            ? uuid.get(control.componentId) +
+              "/" +
+              control.suggestionId.partialId
+            : null,
           control.id,
         ]);
       }
 
       for (const mitigation of mitigations) {
         await client.query(queryMitigations, [
-          uuid[mitigation.threatId],
-          uuid[mitigation.controlId],
+          uuid.get(mitigation.threatId),
+          uuid.get(mitigation.controlId),
           mitigation.threatId,
           mitigation.controlId,
         ]);
       }
       await client.query("COMMIT");
-      this.emit("updated-for", { modelId: uuid[srcModel.id!] });
+      this.emit("updated-for", { modelId: uuid.get(srcModel.id!) });
     } catch (e) {
       await client.query("ROLLBACK");
       this.log.error("Failed to copy model", e);
     } finally {
       client.release();
     }
-    return uuid[srcModel.id!];
+    return uuid.get(srcModel.id!) as string;
   }
 
   /**

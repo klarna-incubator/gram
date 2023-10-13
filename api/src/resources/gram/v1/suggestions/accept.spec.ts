@@ -12,7 +12,7 @@ import {
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../../../../test-util/suggestions.js";
+} from "@gram/core/dist/test-util/suggestions.js";
 import { sampleUser } from "../../../../test-util/sampleUser.js";
 
 const suggestion = genSuggestedControl();
@@ -64,7 +64,7 @@ describe("Suggestions.accept", () => {
     const control = genSuggestedControl();
 
     await dal.suggestionService.bulkInsert(modelId, {
-      sourceSlug: "",
+      sourceSlugToClear: "",
       controls: [control],
       threats: [],
     });
@@ -86,7 +86,7 @@ describe("Suggestions.accept", () => {
     const threat = genSuggestedThreat();
 
     await dal.suggestionService.bulkInsert(modelId, {
-      sourceSlug: "",
+      sourceSlugToClear: "",
       controls: [],
       threats: [threat],
     });

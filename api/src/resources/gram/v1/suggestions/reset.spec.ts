@@ -16,7 +16,7 @@ import {
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../../../../test-util/suggestions.js";
+} from "@gram/core/dist/test-util/suggestions.js";
 
 describe("Suggestions.reset", () => {
   const systemGetById = jest.spyOn(systemProvider, "getSystem");
@@ -77,7 +77,7 @@ describe("Suggestions.reset", () => {
     const control = genSuggestedControl();
 
     await dal.suggestionService.bulkInsert(modelId, {
-      sourceSlug: "",
+      sourceSlugToClear: "",
       controls: [control],
       threats: [],
     });
@@ -99,7 +99,7 @@ describe("Suggestions.reset", () => {
     const threat = genSuggestedThreat();
 
     await dal.suggestionService.bulkInsert(modelId, {
-      sourceSlug: "",
+      sourceSlugToClear: "",
       controls: [],
       threats: [threat],
     });
