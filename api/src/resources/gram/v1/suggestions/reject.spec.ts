@@ -15,7 +15,7 @@ import {
 import {
   genSuggestedControl,
   genSuggestedThreat,
-} from "../../../../test-util/suggestions.js";
+} from "@gram/core/dist/test-util/suggestions.js";
 import { jest } from "@jest/globals";
 
 describe("Suggestions.reject", () => {
@@ -79,7 +79,7 @@ describe("Suggestions.reject", () => {
     const control = genSuggestedControl();
 
     await dal.suggestionService.bulkInsert(modelId, {
-      sourceSlug: "",
+      sourceSlugToClear: "",
       controls: [control],
       threats: [],
     });
@@ -101,7 +101,7 @@ describe("Suggestions.reject", () => {
     const threat = genSuggestedThreat();
 
     await dal.suggestionService.bulkInsert(modelId, {
-      sourceSlug: "",
+      sourceSlugToClear: "",
       controls: [],
       threats: [threat],
     });

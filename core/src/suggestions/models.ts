@@ -82,17 +82,16 @@ export interface SuggestionSource {
 
 export interface EngineSuggestedControl extends SourceSuggestedControl {
   id: SuggestionID;
+  source: string;
 }
 
 export interface EngineSuggestedThreat extends SourceSuggestedThreat {
   id: SuggestionID;
+  source: string;
 }
 
 export interface EngineSuggestedResult {
-  /**
-   * The identifier for the SuggestionSource that was used for this result.
-   */
-  sourceSlug: string;
+  sourceSlugToClear?: string;
 
   controls: EngineSuggestedControl[];
   threats: EngineSuggestedThreat[];
