@@ -6,6 +6,7 @@ import {
   LockOpenRounded,
   Cancel as CancelIcon,
   LockRounded as LockClosedRounded,
+  AssignmentTurnedIn,
 } from "@mui/icons-material";
 import {
   Box,
@@ -49,6 +50,7 @@ const ReviewContent = (review) => {
       description: "",
       buttons: [
         EditNoteButton,
+        ViewActionItemsButton,
         ApproveButton,
         RequestMeetingButton,
         ReassignReviewButton,
@@ -66,7 +68,7 @@ const ReviewContent = (review) => {
       description: `Approved by ${review?.reviewer?.name} on ${new Date(
         review?.approved_at
       ).toLocaleDateString()} and valid until ${validUntil.toLocaleDateString()}. To update this model, create a new model based on this one and have it reviewed again.`,
-      buttons: [EditNoteButton],
+      buttons: [EditNoteButton, ViewActionItemsButton],
       components: [],
       color: hasExpired ? "error" : aboutToExpire ? "warning" : "success",
     },
@@ -84,6 +86,7 @@ const ReviewContent = (review) => {
         : "",
       buttons: [
         EditNoteButton,
+        ViewActionItemsButton,
         ApproveButton,
         BookMeetingButton,
         ReassignReviewButton,
@@ -148,6 +151,29 @@ function CancelReviewButton({ permissions, modelId }) {
       }
     >
       Cancel Review
+    </Button>
+  );
+}
+
+function ViewActionItemsButton({ modelId }) {
+  const dispatch = useDispatch();
+
+  return (
+    <Button
+      startIcon={<AssignmentTurnedIn />}
+      color="inherit"
+      variant="outlined"
+      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
+      onClick={() =>
+        dispatch(
+          modalActions.open({
+            type: MODALS.ViewActionItems.name,
+            props: { modelId },
+          })
+        )
+      }
+    >
+      Action Items
     </Button>
   );
 }

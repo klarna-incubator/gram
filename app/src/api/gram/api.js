@@ -16,6 +16,7 @@ export const api = createApi({
     "Suggestions",
     "System",
     "Templates",
+    "Team",
     "Threats",
     "User",
   ],

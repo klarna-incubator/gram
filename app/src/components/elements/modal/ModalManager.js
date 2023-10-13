@@ -10,6 +10,7 @@ import { ChangeReviewer } from "../../model/modals/ChangeReviewer";
 import { Tutorial } from "../../model/tutorial/Tutorial";
 import { CancelReview } from "../../reviews/modals/CancelReview";
 import { DeclineReview } from "../../reviews/modals/DeclineReview";
+import { ViewActionItems } from "../../model/modals/ViewActionItems";
 
 export const MODALS = {
   ChangeReviewer,
@@ -22,6 +23,7 @@ export const MODALS = {
   DeleteSelected,
   DeclineReview,
   CancelReview,
+  ViewActionItems,
 };
 
 export function ModalManager() {

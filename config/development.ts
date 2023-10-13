@@ -15,7 +15,7 @@ export const developmentConfig: GramConfiguration = {
   },
 
   postgres: {
-    host: new ExposedSecret("localhost"),
+    host: new ExposedSecret("127.0.0.1"),
     user: new ExposedSecret("gram"),
     password: new ExposedSecret("somethingsecret"),
     database: new ExposedSecret("gram"),

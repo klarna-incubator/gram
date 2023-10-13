@@ -1,7 +1,4 @@
 # Gram
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
@@ -17,7 +14,7 @@ Gram is Klarna's own [threat model][owasp-tm] diagramming tool developed interna
 - `core/` contains the backend library; most data related logic lies here
 - `config/` contains the configuration.
 - `api/` contains the backend web API
-- `plugins/` contains backend plugins, which when installed into api allows for customization
+- `plugins/` contains backend plugins, which when installed into config allows for customization
 
 ## Development Setup 💻
 
@@ -87,6 +84,7 @@ See our [changelog](CHANGELOG.md).
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Tyouxik"><img src="https://avatars.githubusercontent.com/u/65331057?v=4?s=100" width="100px;" alt="Tyouxik"/><br /><sub><b>Tyouxik</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=Tyouxik" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://klarna.github.io/"><img src="https://avatars.githubusercontent.com/u/394540?v=4?s=100" width="100px;" alt="Klarna"/><br /><sub><b>Klarna</b></sub></a><br /><a href="#financial-klarna" title="Financial">💵</a> <a href="#business-klarna" title="Business development">💼</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://it.linkedin.com/in/gdiener"><img src="https://avatars.githubusercontent.com/u/8479033?v=4?s=100" width="100px;" alt="Gabriele"/><br /><sub><b>Gabriele</b></sub></a><br /><a href="#plugin-gadiener" title="Plugin/utility libraries">🔌</a> <a href="https://github.com/klarna-incubator/gram/commits?author=gadiener" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/MissMuffin"><img src="https://avatars.githubusercontent.com/u/2961854?v=4?s=100" width="100px;" alt="MissMuffin"/><br /><sub><b>MissMuffin</b></sub></a><br /><a href="#design-MissMuffin" title="Design">🎨</a></td>
     </tr>
   </tbody>
 </table>

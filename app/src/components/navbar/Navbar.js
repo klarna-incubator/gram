@@ -48,6 +48,8 @@ export function Navbar() {
       }`,
       count: user?.sub && isSuccess ? reviews?.total : 0,
       requiresAuth: true,
+      visible:
+        user?.roles.includes("reviewer") || user?.roles.includes("admin"),
     },
     ...menuPages,
   ];
@@ -99,6 +101,15 @@ export function Navbar() {
             marginRight: "auto",
           }}
         >
+          <img
+            style={{
+              paddingRight: "5px",
+              marginRight: "5px",
+            }}
+            alt="Gram logo"
+            src="/gram_logo.svg"
+            height="48"
+          />
           <Typography
             variant="h5"
             noWrap
