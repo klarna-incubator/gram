@@ -32,8 +32,8 @@ const SampleSuggestionSource = (
   name,
   slug: name,
   suggest: async () => ({
-    controls,
-    threats,
+    controls: controls.map((c) => ({ ...c, source: name })),
+    threats: threats.map((c) => ({ ...c, source: name })),
   }),
 });
 
@@ -98,7 +98,7 @@ describe("SuggestionEngine", () => {
     engine.register(SampleSuggestionSource("sample"));
     const result = await (await engine.suggest(modelId))[0];
     expect(result.controls.map((r) => ({ ...r, id: undefined }))).toEqual([
-      { ...suggestedControl, id: undefined },
+      { ...suggestedControl, id: undefined, source: "sample" },
     ]);
   });
 
@@ -107,7 +107,7 @@ describe("SuggestionEngine", () => {
     const result = await (await engine.suggest(modelId))[0];
     expect(result.controls).toHaveLength(0);
     expect(result.threats.map((r) => ({ ...r, id: undefined }))).toEqual([
-      { ...suggestedThreat, id: undefined },
+      { ...suggestedThreat, id: undefined, source: "sample" },
     ]);
   });
 
@@ -115,7 +115,7 @@ describe("SuggestionEngine", () => {
     engine.register(SampleSuggestionSource("sample"));
     const result = await (await engine.suggest(modelId))[0];
     expect(result.controls.map((r) => ({ ...r, id: undefined }))).toEqual([
-      { ...suggestedControl, id: undefined },
+      { ...suggestedControl, id: undefined, source: "sample" },
     ]);
     expect(result.threats).toHaveLength(0);
   });
@@ -136,12 +136,14 @@ describe("SuggestionEngine", () => {
         id: new SuggestionID(
           `${suggestedControl.componentId}/sample1/control/${suggestedControl.slug}`
         ),
+        source: "sample1",
       },
       {
         ...suggestedControl,
         id: new SuggestionID(
           `${suggestedControl.componentId}/sample2/control/${suggestedControl.slug}`
         ),
+        source: "sample2",
       },
     ]);
   });

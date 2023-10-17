@@ -44,7 +44,7 @@ describe("SuggestionDataService implementation", () => {
   describe("bulkInsert", () => {
     it("should be able to insert empty threats and controls", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [],
         threats: [],
       };
@@ -53,7 +53,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should be able to insert multiple threats and controls", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [...new Array(50)].map(genSuggestedControl),
         threats: [...new Array(50)].map(genSuggestedThreat),
       };
@@ -69,7 +69,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should remove unused suggestions that are no longer included in the batch, but keep ones that have been added/rejected", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [...new Array(50)].map(genSuggestedControl),
         threats: [...new Array(50)].map(genSuggestedThreat),
       };
@@ -96,8 +96,8 @@ describe("SuggestionDataService implementation", () => {
           )
       );
 
-      const suggestionsAfter = {
-        sourceSlug: "test",
+      const suggestionsAfter: EngineSuggestedResult = {
+        sourceSlugToClear: "test",
         controls: suggestions.controls.slice(0, 25),
         threats: suggestions.threats.slice(0, 25),
       };
@@ -119,7 +119,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should not have different sources interfering with each others' batches", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [...new Array(50)].map(genSuggestedControl),
         threats: [...new Array(50)].map(genSuggestedThreat),
       };
@@ -141,14 +141,14 @@ describe("SuggestionDataService implementation", () => {
 
     it("should not have different models interfering with each others' batches", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [...new Array(3)].map(genSuggestedControl),
         threats: [...new Array(4)].map(genSuggestedThreat),
       };
       await dal.suggestionService.bulkInsert(modelId, suggestions);
 
       const suggestionsAfter: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [genSuggestedControl()],
         threats: [],
       };
@@ -168,7 +168,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should insert control suggestions with empty mitigations", async () => {
       const suggestionsAfter: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [genSuggestedControl()],
         threats: [],
       };
@@ -191,11 +191,13 @@ describe("SuggestionDataService implementation", () => {
       const partialThreatIds = suggestThreats.map((t: any) =>
         t.id.val.split("/").slice(1).join("/")
       );
-      const suggestControl = genSuggestedControl(
-        partialThreatIds.map((partialThreatId: string) => ({ partialThreatId }))
-      );
+      const suggestControl = genSuggestedControl({
+        mitigates: partialThreatIds.map((partialThreatId: string) => ({
+          partialThreatId,
+        })),
+      });
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [suggestControl],
         threats: suggestThreats,
       };
@@ -218,7 +220,7 @@ describe("SuggestionDataService implementation", () => {
   describe("listControlSuggestions", () => {
     it("should return an empty list if no suggestions", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [],
         threats: [],
       };
@@ -230,7 +232,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should return a list", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [...new Array(50)].map(() => genSuggestedControl()),
         threats: [],
       };
@@ -245,7 +247,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should return the correct list", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [...new Array(50)].map(() => genSuggestedControl()),
         threats: [],
       };
@@ -265,7 +267,7 @@ describe("SuggestionDataService implementation", () => {
   describe("listThreatSuggestions", () => {
     it("should return an empty list if no suggestions", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [],
         threats: [],
       };
@@ -277,7 +279,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should return a list", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [],
         threats: [...new Array(50)].map(() => genSuggestedThreat()),
       };
@@ -302,11 +304,15 @@ describe("SuggestionDataService implementation", () => {
     });
     it("should return true if suggestion is control or threat", async () => {
       const suggestThreat = genSuggestedThreat();
-      const suggestControl = genSuggestedControl([
-        { partialThreatId: suggestThreat.id.val.split("/").slice(1).join("/") },
-      ]);
+      const suggestControl = genSuggestedControl({
+        mitigates: [
+          {
+            partialThreatId: suggestThreat.id.val.split("/").slice(1).join("/"),
+          },
+        ],
+      });
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [suggestControl],
         threats: [suggestThreat],
       };
@@ -346,13 +352,13 @@ describe("SuggestionDataService implementation", () => {
 
     it("should create mitigation(s) if relevant threat exists", async () => {
       const suggestThreats = [...Array(5)].map(genSuggestedThreat);
-      const suggestControl = genSuggestedControl(
-        suggestThreats.map((suggestThreat) => ({
+      const suggestControl = genSuggestedControl({
+        mitigates: suggestThreats.map((suggestThreat) => ({
           partialThreatId: suggestThreat.id.val.split("/").slice(1).join("/"),
-        }))
-      );
+        })),
+      });
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [suggestControl],
         threats: suggestThreats,
       };
@@ -399,14 +405,17 @@ describe("SuggestionDataService implementation", () => {
 
     it("should NOT create mitigation if relevant threat does NOT exists", async () => {
       const suggestThreat = genSuggestedThreat();
-      const suggestControl = genSuggestedControl([
-        {
-          partialThreatId:
-            suggestThreat.id.val.split("/").slice(1).join("/") + "not-the-same",
-        },
-      ]);
+      const suggestControl = genSuggestedControl({
+        mitigates: [
+          {
+            partialThreatId:
+              suggestThreat.id.val.split("/").slice(1).join("/") +
+              "not-the-same",
+          },
+        ],
+      });
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [suggestControl],
         threats: [suggestThreat],
       };
@@ -445,13 +454,15 @@ describe("SuggestionDataService implementation", () => {
 
     it("should NOT list deleted threats from partialId", async () => {
       const suggestThreat = genSuggestedThreat();
-      const suggestControl = genSuggestedControl([
-        {
-          partialThreatId: suggestThreat.id.val.split("/").slice(1).join("/"),
-        },
-      ]);
+      const suggestControl = genSuggestedControl({
+        mitigates: [
+          {
+            partialThreatId: suggestThreat.id.val.split("/").slice(1).join("/"),
+          },
+        ],
+      });
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [suggestControl],
         threats: [suggestThreat],
       };
@@ -488,7 +499,7 @@ describe("SuggestionDataService implementation", () => {
 
     it("should be able to set all statuses", async () => {
       const suggestions: EngineSuggestedResult = {
-        sourceSlug: "test",
+        sourceSlugToClear: "test",
         controls: [genSuggestedControl()],
         threats: [genSuggestedThreat()],
       };

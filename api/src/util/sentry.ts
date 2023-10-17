@@ -1,9 +1,7 @@
-import { RewriteFrames } from "@sentry/integrations";
+import { config } from "@gram/core/dist/config/index.js";
 import * as Sentry from "@sentry/node";
-import * as Tracing from "@sentry/tracing";
 import { Express } from "express";
 import log4js from "log4js";
-import { config } from "@gram/core/dist/config/index.js";
 import { version } from "./version.js";
 
 const log = log4js.getLogger("sentry");
@@ -37,12 +35,12 @@ export function initSentry(app: Express) {
     dsn: sentryDSN as string,
     integrations: [
       // Sentry.Integrations.Http is not here due to error when used with c2c proxy :/
-      //
+      // new Sentry.Integrations.Express({ app }),
       // enable Express.js middleware tracing
-      new Tracing.Integrations.Express({ app }),
-      new RewriteFrames({
-        root: global.__rootdir__,
-      }),
+      new Sentry.Integrations.Express({ app }),
+      // new SetnryRewriteFrames({
+      //   root: global.__rootdir__,
+      // }),
     ],
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.

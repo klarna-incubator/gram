@@ -73,10 +73,12 @@ export class SuggestionEngine {
           controls: result.controls.map((s) => ({
             ...s,
             id: generateSuggestionId(source.slug, s),
+            source: source.slug,
           })),
           threats: result.threats.map((s) => ({
             ...s,
             id: generateSuggestionId(source.slug, s),
+            source: source.slug,
           })),
         };
       } catch (error: any) {

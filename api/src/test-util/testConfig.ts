@@ -5,12 +5,13 @@ import type {
   GramConfiguration,
   Providers,
 } from "@gram/core/dist/config/GramConfiguration.js";
+import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import classes from "./classes.js";
 import { testReviewerProvider } from "./sampleReviewer.js";
+import { TestTeamProvider } from "./TestTeamProvider.js";
 import { testUserProvider } from "./sampleUser.js";
 import { testSystemProvider } from "./system.js";
-import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js";
-import classes from "./classes.js";
 
 export const testConfig: GramConfiguration = {
   appPort: 8080,
@@ -98,6 +99,7 @@ export const testConfig: GramConfiguration = {
       userProvider: testUserProvider,
       systemProvider: testSystemProvider,
       suggestionSources: [],
+      teamProvider: new TestTeamProvider(),
     };
   },
 };

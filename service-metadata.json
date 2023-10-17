@@ -59,6 +59,7 @@
   },
   "default": {
     "api_version": "v2",
+    "automated_maintenance_redeployment": { "enabled": true },
     "minimum_instances": 1,
     "container_size": "xsmall",
     "canary_promotion": {

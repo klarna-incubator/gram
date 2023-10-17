@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/klarna/gram/compare/v4.3.0...v4.4.0) (2023-10-16)
+
+### Bug Fixes
+
+- correctly copy threat action item marking and suggestion link when copying a threat model ([e9c48a1](https://github.com/klarna/gram/commit/e9c48a1d9124a30dd3ad2551e867a5040c852fb3)), closes [#29](https://github.com/klarna/gram/issues/29)
+
+### Features
+
+- add StaticTeamProvider to default config with some sample teams ([93839d8](https://github.com/klarna/gram/commit/93839d82c43857ae0b19186b2baa353a97c70714))
+
 # [4.3.0](https://github.com/klarna/gram/compare/v4.2.1...v4.3.0) (2023-10-09)
 
 **Note:** Version bump only for package @gram/api

@@ -56,6 +56,48 @@ export class SuggestionDataService extends EventEmitter {
   log: any;
 
   /**
+   * Copy suggestions from one model to anothger
+   * @param fromModelId
+   * @param toModelId
+   * @param uuidMap map used to translate component ids
+   * @returns
+   */
+  async copySuggestions(
+    fromModelId: string,
+    toModelId: string,
+    uuidMap: Map<string, string>
+  ) {
+    // This will be slow for large threat models
+    const threatSuggestions = await this.listThreatSuggestions(fromModelId);
+    const controlSuggestions = await this.listControlSuggestions(fromModelId);
+
+    if (controlSuggestions.length === 0 && threatSuggestions.length === 0) {
+      return;
+    }
+
+    await this.bulkInsert(toModelId, {
+      threats: threatSuggestions.map((ts) => ({
+        ...ts,
+        id: new SuggestionID(
+          uuidMap.get(ts.componentId) + "/" + ts.id.partialId
+        ),
+        componentId: uuidMap.get(ts.componentId) as string,
+        modelId: toModelId,
+        slug: ts.id.partialId,
+      })),
+      controls: controlSuggestions.map((cs) => ({
+        ...cs,
+        id: new SuggestionID(
+          uuidMap.get(cs.componentId) + "/" + cs.id.partialId
+        ),
+        componentId: uuidMap.get(cs.componentId) as string,
+        modelId: toModelId,
+        slug: cs.id.partialId,
+      })),
+    });
+  }
+
+  /**
    * Insert a list of Threat and Control Suggestions, intended to be used by the SuggestionEngine.
    * @param modelId
    * @param suggestions
@@ -93,11 +135,16 @@ export class SuggestionDataService extends EventEmitter {
       await client.query("BEGIN");
 
       // Clear previous batches from this source
-      await client.query(deleteControlsQuery, [
-        suggestions.sourceSlug,
-        modelId,
-      ]);
-      await client.query(deleteThreatsQuery, [suggestions.sourceSlug, modelId]);
+      if (suggestions.sourceSlugToClear) {
+        await client.query(deleteControlsQuery, [
+          suggestions.sourceSlugToClear,
+          modelId,
+        ]);
+        await client.query(deleteThreatsQuery, [
+          suggestions.sourceSlugToClear,
+          modelId,
+        ]);
+      }
 
       let bulkThreats: Promise<QueryResult<any>>[] = [];
       if (suggestions.threats.length > 0) {
@@ -110,7 +157,7 @@ export class SuggestionDataService extends EventEmitter {
             threat.title,
             threat.description,
             threat.reason,
-            suggestions.sourceSlug,
+            threat.source,
           ])
         );
       }
@@ -127,7 +174,7 @@ export class SuggestionDataService extends EventEmitter {
             control.description,
             control.reason,
             JSON.stringify(control.mitigates),
-            suggestions.sourceSlug,
+            control.source,
           ])
         );
       }

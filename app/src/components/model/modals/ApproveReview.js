@@ -1,5 +1,4 @@
 import { ThumbUpRounded as ThumbUpRoundedIcon } from "@mui/icons-material";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import {
   Box,
   Button,
@@ -20,13 +19,11 @@ import {
   useApproveReviewMutation,
   useGetReviewQuery,
 } from "../../../api/gram/review";
-import { useListThreatsQuery } from "../../../api/gram/threats";
 import { modalActions } from "../../../redux/modalSlice";
 import { ColorSlider } from "../../elements/ColorSlider";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
 import { PERMISSIONS } from "../constants";
-import { useComponent } from "../hooks/useComponent";
-import { Threat } from "../panels/right/Threat";
+import { ActionItemList } from "./ActionItemList";
 
 function LikelihoodSlider({ onChange }) {
   const marks = [
@@ -107,21 +104,6 @@ function ImpactSlider({ onChange }) {
   );
 }
 
-function ComponentActionItem({ componentId, threats }) {
-  const component = useComponent(componentId);
-
-  return (
-    <Box sx={{ paddingBottom: "10px" }}>
-      <Typography>{component.name}</Typography>
-      {threats.map((th) => (
-        <>
-          <Threat threat={th} readOnly={true} />
-        </>
-      ))}
-    </Box>
-  );
-}
-
 export function ApproveReview({ modelId }) {
   const dispatch = useDispatch();
 
@@ -134,19 +116,6 @@ export function ApproveReview({ modelId }) {
   const { data: permissions, isLoading: permissionsIsLoading } =
     useGetModelPermissionsQuery({ modelId });
   const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
-
-  const { data: threats } = useListThreatsQuery({ modelId });
-
-  const actionItems = threats?.threats
-    ? Object.keys(threats?.threats)
-        .map((componentId) => ({
-          componentId,
-          threats: threats?.threats[componentId].filter(
-            (th) => th.isActionItem
-          ),
-        }))
-        .filter(({ threats }) => threats && threats.length > 0)
-    : [];
 
   const [
     approveReview,
@@ -209,41 +178,7 @@ export function ApproveReview({ modelId }) {
 
             <br />
             <Divider textAlign="left">Action Items</Divider>
-            {actionItems.length > 0 && (
-              <>
-                <DialogContentText>
-                  The following threats will be added as Risk Actions to
-                  mitigate.
-                </DialogContentText>
-                <br />
-                {actionItems.map(({ componentId, threats }) => (
-                  <ComponentActionItem
-                    componentId={componentId}
-                    threats={threats}
-                  />
-                ))}
-              </>
-            )}
-            {actionItems.length === 0 && (
-              <>
-                <DialogContentText className="dimmer">
-                  No threats have been marked as action items.
-                </DialogContentText>
-                <DialogContentText>
-                  <Typography className="dimmer">
-                    Hint: You can use the{" "}
-                    <AssignmentTurnedInIcon
-                      sx={{
-                        fontSize: 20,
-                        color: "#666",
-                      }}
-                    />{" "}
-                    button on threats in the threat tab to mark them as an
-                    action item.
-                  </Typography>
-                </DialogContentText>
-              </>
-            )}
+            <ActionItemList />
 
             <br />
             <Divider textAlign="left">Summary</Divider>

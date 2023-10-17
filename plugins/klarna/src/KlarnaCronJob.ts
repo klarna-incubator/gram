@@ -2,7 +2,14 @@ import log4js from "log4js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService.js";
-import { fallbackReviewer } from "./KlarnaReviewerProvider.js";
+import {
+  KlarnaReviewerProvider,
+  fallbackReviewer,
+} from "./KlarnaReviewerProvider.js";
+import * as Sentry from "@sentry/node";
+import cron from "node-cron";
+import { OctaneSystemProvider } from "./index.js";
+import { LDAPCache } from "@gram/ldap/dist/index.js";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;
 const REQUESTED_REMIND_AFTER_X_DAYS = 14;
@@ -19,6 +26,48 @@ const log = log4js.getLogger("klarnaCronJob");
 
 export class KlarnaCronJob {
   constructor(private dal: DataAccessLayer) {}
+
+  async scheduleJob(
+    monitorSlug: string,
+    crontab: string,
+    jobFunction: Function
+  ) {
+    cron.schedule(crontab, async () => {
+      const checkInId = Sentry.captureCheckIn(
+        {
+          monitorSlug,
+          status: "in_progress",
+        },
+        {
+          schedule: {
+            // Specify your schedule options here
+            type: "crontab",
+            value: crontab,
+          },
+          /* Number of minutes before a check-in is considered missed. */
+          checkinMargin: 2,
+          /* Number of a minutes before an in-progress check-in is marked timed out. */
+          maxRuntime: 5,
+        }
+      );
+      try {
+        await jobFunction();
+        Sentry.captureCheckIn({
+          checkInId,
+          monitorSlug,
+          status: "ok",
+        });
+      } catch (err) {
+        Sentry.captureCheckIn({
+          checkInId,
+          monitorSlug,
+          status: "error",
+        });
+        log.error(err);
+      }
+    });
+    log.info(`${monitorSlug} cronjob schedule for ${crontab}`);
+  }
 
   async sendRemindersForMeetingRequested() {
     const query = `SELECT * from reviews 
@@ -141,5 +190,44 @@ export class KlarnaCronJob {
     log.info(
       `Reassigned ${reviews.length} reviews to ${fallbackReviewer.name}`
     );
+  }
+
+  async bootstrap(
+    reviewerProvider: KlarnaReviewerProvider,
+    systemProvider: OctaneSystemProvider
+  ) {
+    // runs every day at 06:00 AM
+    this.scheduleJob("reminder-meeting-requested", "0 6 * * *", async () =>
+      this.sendRemindersForMeetingRequested()
+    );
+    this.scheduleJob("reminder-review-requested", "0 6 * * *", async () =>
+      this.sendRemindersForRequested()
+    );
+    this.scheduleJob("overdue-review-reassignment", "0 6 * * *", async () =>
+      this.reassignOverdueReviews()
+    );
+
+    // runs every 30 minutes
+    this.scheduleJob(
+      "preload-reviewers",
+      "*/30 * * * *",
+      async () => await reviewerProvider.preloadReviewers()
+    );
+
+    // runs every 10 minutes
+    this.scheduleJob(
+      "load-systems",
+      "*/10 * * * *",
+      async () => await systemProvider.loadSystems()
+    );
+
+    // runs every 30 minutes
+    this.scheduleJob("ldapcache-expire", "*/30 * * * *", async () =>
+      LDAPCache.expire()
+    );
+
+    // this.scheduleJob("error-on-purpose", "*/5 * * * *", async () => {
+    //   throw new Error("Kaboom");
+    // });
   }
 }
