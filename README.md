@@ -2,6 +2,7 @@
 
 [![Build Status][ci-image]][ci-url]
 [![License][license-image]][license-url]
+[![Discord][discord-image]][discord-url]
 [![Developed at Klarna][klarna-image]][klarna-url]
 
 Gram is Klarna's own [threat model][owasp-tm] diagramming tool developed internally by Klarna's Secure Development team. It is a webapp for engineers to collaboratively create threat models for their systems, providing a easy-to-understand way to document a system as a dataflow diagram with threats/controls attached.
@@ -72,6 +73,8 @@ For license details, see the [LICENSE](LICENSE) file in the root of this project
 [ci-url]: https://github.com/klarna-incubator/gram/actions?query=branch%3Amaster
 [license-image]: https://img.shields.io/badge/license-Apache%202-blue?style=flat-square
 [license-url]: http://www.apache.org/licenses/LICENSE-2.0
+[discord-image]: https://badgen.net/badge/icon/discord?icon=discord&label
+[discord-url]: https://discord.gg/8TFdB8rUfG
 [klarna-image]: https://img.shields.io/badge/%20-Developed%20at%20Klarna-black?style=flat-square&labelColor=ffb3c7&logo=klarna&logoColor=black
 [klarna-url]: https://klarna.github.io
 [owasp-tm]: https://owasp.org/www-community/Threat_Modeling
