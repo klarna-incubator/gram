@@ -1,22 +1,22 @@
 services:
   development-database:
     container_name: gram-postgres
-    image: postgres:12
+    image: postgres:15
     # restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: somethingsecret
       POSTGRES_USER: gram
     ports:
-      - 127.0.0.1:5432:5432
+      - 5432:5432
   test-database:
     container_name: gram-test-postgres
-    image: postgres:12
+    image: postgres:15
     # restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: somethingsecretfortesting
       POSTGRES_USER: gram-test
     ports:
-      - 127.0.0.1:5433:5432
+      - 5433:5432
 networks:
   default:
     name: gram-development

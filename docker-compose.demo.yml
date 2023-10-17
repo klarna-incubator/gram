@@ -1,6 +1,6 @@
 services:
   database:
-    image: postgres:12
+    image: postgres:15
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: somethingsecret
