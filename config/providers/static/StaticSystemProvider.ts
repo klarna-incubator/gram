@@ -38,13 +38,9 @@ export class StaticSystemProvider implements SystemProvider {
     switch (input.filter) {
       // Filters by team
       case SystemListFilter.Team:
-        result.systems = this.systems
-          .filter((s) => s.owners.map((o) => o.id).includes(input.opts.teamId))
-          .slice(
-            pagination.page * pagination.pageSize,
-            (pagination.page + 1) * pagination.pageSize
-          );
-        result.total = result.systems.length;
+        result.systems = this.systems.filter((s) =>
+          s.owners.map((o) => o.id).includes(input.opts.teamId)
+        );
         break;
 
       // Filters by a list of system ids
@@ -52,25 +48,25 @@ export class StaticSystemProvider implements SystemProvider {
         result.systems = input.opts.ids
           .map((id) => this.systemMap.get(id))
           .filter((s) => !!s) as System[];
-        result.total = result.systems.length;
         break;
 
       // Filter by system name
       case SystemListFilter.Search:
         const searchText = input.opts.search.toLowerCase();
-        result.systems = this.systems
-          .filter(
-            (s) =>
-              s.shortName.toLowerCase().includes(searchText) ||
-              s.displayName.toLowerCase().includes(searchText) ||
-              s.id.toLowerCase().includes(searchText)
-          )
-          .slice(
-            pagination.page * pagination.pageSize,
-            (pagination.page + 1) * pagination.pageSize
-          );
-        result.total = result.systems.length;
+        result.systems = this.systems.filter(
+          (s) =>
+            s.shortName.toLowerCase().includes(searchText) ||
+            s.displayName.toLowerCase().includes(searchText) ||
+            s.id.toLowerCase().includes(searchText)
+        );
+        break;
     }
+
+    result.total = result.systems.length;
+    result.systems = result.systems.slice(
+      pagination.page * pagination.pageSize,
+      (pagination.page + 1) * pagination.pageSize
+    );
 
     return result;
   }
