@@ -16,27 +16,23 @@ import Loading from "../../loading";
 import "../Systems.css";
 import { useGetTeamQuery } from "../../../api/gram/team";
 
-export function TeamSystemsPageList({
-  teamName,
-  teamId,
-  pagesize = 10,
-  listHeight = "500px",
-  width = "45%",
-}) {
+export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
   const [page, setPage] = useState(0);
 
   const opts = { filter: "team", teamId, pagesize, page };
   const { data, isLoading, isFetching } = useListSystemsQuery(opts);
   const { data: team } = useGetTeamQuery({ teamId });
+  const pageCount =
+    data?.total && data?.pageSize ? Math.ceil(data?.total / data?.pageSize) : 0;
 
   return (
-    <Card sx={{ width, marginTop: "25px" }}>
+    <Card sx={{ height: "100%" }}>
       <CardContent>
         <Typography variant="h5">
           <Link to={`/team/${teamId}`}>{team?.name}</Link>
         </Typography>
 
-        <List sx={{ height: listHeight, overflow: "auto" }}>
+        <List sx={{ height: "500px", overflow: "auto" }}>
           {isLoading || isFetching ? (
             <Loading />
           ) : data.systems ? (
@@ -56,9 +52,9 @@ export function TeamSystemsPageList({
         </List>
       </CardContent>
       <CardActions>
-        {!isLoading && (
+        {!isLoading && pageCount > 1 && (
           <Pagination
-            count={Math.ceil(data.total / data.pageSize)}
+            count={pageCount}
             page={
               page + 1
             } /* hack here to translate between APIs zero-pagination vs MUIs one-pagination */
