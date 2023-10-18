@@ -64,7 +64,7 @@ export const defaultConfig: GramConfiguration = {
     password: new EnvSecret("POSTGRES_PASSWORD"),
     database: new EnvSecret("POSTGRES_DATABASE"),
     port: new EnvSecret("POSTGRES_PORT"),
-    ssl: true,
+    ssl: process.env.POSTGRES_DISABLE_SSL === undefined ? true : false,
   },
 
   notifications: {
@@ -135,7 +135,7 @@ export const defaultConfig: GramConfiguration = {
       (username: string) => `${username}@klarna.com`
     );
 
-    const ldapAuthz = new LDAPGroupBasedAuthzProvider({
+    const ldapAuthz = new LDAPGroupBasedAuthzProvider(dal, {
       ldapSettings,
       groupAttribute: "memberOfGroupId",
       groupToRoleMap: new Map([
