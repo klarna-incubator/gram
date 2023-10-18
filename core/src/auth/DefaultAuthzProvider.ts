@@ -1,5 +1,7 @@
+import { DataAccessLayer } from "../data/dal.js";
 import Model from "../data/models/Model.js";
 import { RequestContext } from "../data/providers/RequestContext.js";
+import { ReviewStatus } from "../data/reviews/Review.js";
 import { systemProvider } from "../data/systems/systems.js";
 import { AuthzProvider } from "./AuthzProvider.js";
 import { AllPermissions, Permission } from "./authorization.js";
@@ -7,6 +9,8 @@ import { Role } from "./models/Role.js";
 import { UserToken } from "./models/UserToken.js";
 
 export class DefaultAuthzProvider implements AuthzProvider {
+  constructor(protected dal: DataAccessLayer) {}
+
   async getPermissionsForSystem(
     ctx: RequestContext,
     systemId: string,
@@ -54,34 +58,54 @@ export class DefaultAuthzProvider implements AuthzProvider {
     model: Model,
     user: UserToken
   ): Promise<Permission[]> {
+    const review = await this.dal.reviewService.getByModelId(model.id!);
     if (model.systemId) {
-      return this.getPermissionsForSystem(ctx, model.systemId, user);
+      let systemPermissions = await this.getPermissionsForSystem(
+        ctx,
+        model.systemId,
+        user
+      );
+      if (review?.status === ReviewStatus.Approved) {
+        systemPermissions = systemPermissions.filter(
+          (p) => p !== Permission.Write
+        );
+      }
+      return systemPermissions;
     }
 
     if (user.roles.length === 0) return [];
 
-    if (user.roles.find((r) => r === Role.Admin)) return AllPermissions;
+    const permissions: Set<Permission> = new Set();
+
+    if (user.roles.find((r) => r === Role.Admin)) {
+      AllPermissions.forEach((p) => permissions.add(p));
+    }
 
     /**
      * Standalone models are mainly used for training. To avoid authz issues here we allow most things
      * by most users. Ideally here there should be some sharing system.
      */
-
-    const permissions: Permission[] = [];
-
     if (user.roles.find((r) => r === Role.Reviewer)) {
-      permissions.push(Permission.Read, Permission.Review, Permission.Write);
+      [Permission.Read, Permission.Review, Permission.Write].forEach((p) =>
+        permissions.add(p)
+      );
     }
 
     if (user.roles.find((r) => r === Role.User)) {
-      permissions.push(Permission.Read, Permission.Write);
+      [Permission.Read, Permission.Write].forEach((p) => permissions.add(p));
     }
 
     if (model.createdBy === user.sub) {
-      permissions.push(Permission.Read, Permission.Write, Permission.Delete);
+      [Permission.Read, Permission.Write, Permission.Delete].forEach((p) =>
+        permissions.add(p)
+      );
     }
 
-    return permissions;
+    if (review?.status === ReviewStatus.Approved) {
+      permissions.delete(Permission.Write);
+    }
+
+    return [...permissions];
   }
 
   async getRolesForUser(sub: string): Promise<Role[]> {

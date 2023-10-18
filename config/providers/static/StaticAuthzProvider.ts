@@ -1,14 +1,16 @@
 import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider.js";
 import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
 export class StaticAuthzProvider extends DefaultAuthzProvider {
   key: string = "static";
   constructor(
+    dal: DataAccessLayer,
     public users: string[],
     public reviewers: string[],
     public admins: string[]
   ) {
-    super();
+    super(dal);
   }
 
   async getRolesForUser(sub: string): Promise<Role[]> {

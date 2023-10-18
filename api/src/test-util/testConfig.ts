@@ -95,7 +95,7 @@ export const testConfig: GramConfiguration = {
       componentClasses: classes.map(toComponentClass),
       identityProviders: [new DummyIdentityProvider()],
       reviewerProvider: testReviewerProvider,
-      authzProvider: new DefaultAuthzProvider(),
+      authzProvider: new DefaultAuthzProvider(dal),
       userProvider: testUserProvider,
       systemProvider: testSystemProvider,
       suggestionSources: [],

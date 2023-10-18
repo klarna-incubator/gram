@@ -4,7 +4,6 @@ import { RequestContext } from "../data/providers/RequestContext.js";
 import { NotFoundError } from "../util/errors.js";
 import { AuthzError } from "./AuthzError.js";
 import { AuthzProvider } from "./AuthzProvider.js";
-import { DefaultAuthzProvider } from "./DefaultAuthzProvider.js";
 import { DummyAuthzProvider } from "./DummyAuthzProvider.js";
 import { Role } from "./models/Role.js";
 import { UserToken } from "./models/UserToken.js";

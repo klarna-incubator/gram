@@ -4,6 +4,7 @@ import { Role } from "@gram/core/dist/auth/models/Role.js";
 import { LDAPClientSettings } from "./LDAPClientSettings.js";
 import { connectLdapClient, ldapQueryOne } from "./lookup.js";
 import { escapeFilterValue, getAttributeAsArray } from "./util.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
 export interface LDAPAuthzProviderSettings {
   ldapSettings: LDAPClientSettings;
@@ -22,8 +23,11 @@ export class LDAPGroupBasedAuthzProvider
   extends DefaultAuthzProvider
   implements AuthzProvider
 {
-  constructor(public settings: LDAPAuthzProviderSettings) {
-    super();
+  constructor(
+    dal: DataAccessLayer,
+    public settings: LDAPAuthzProviderSettings
+  ) {
+    super(dal);
   }
 
   async getRolesForUser(sub: string): Promise<Role[]> {

@@ -192,6 +192,7 @@ export const defaultConfig: GramConfiguration = {
         fallbackReviewer
       ),
       authzProvider: new StaticAuthzProvider(
+        dal,
         [sampleUsers[0].sub],
         [sampleUsers[1].sub],
         [sampleUsers[2].sub]

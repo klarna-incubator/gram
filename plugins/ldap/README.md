@@ -6,6 +6,7 @@ Plugin for different providers using LDAP. Warning: these may require some extra
 - **LDAPGroupBasedAuthzProvider** - Performs lookups on logged in users and maps roles via groups.
 - **LDAPUserProvider** - Uses LDAP to provide information on users.
 - **LDAPGroupBasedReviewerProvider** - Provides reviewers based on one or more groups
+- **LDAPTeamProvider** - Provides teams based on mapping attributes to teams
 
 ## Configuration
 
