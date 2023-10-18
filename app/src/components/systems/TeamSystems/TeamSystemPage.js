@@ -1,10 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetUserQuery } from "../../../api/gram/auth";
 import { useTitle } from "../../../hooks/useTitle";
-import "../Systems.css";
 import { TeamSystemsPageList } from "./TeamSystemsPageList";
+import { TeamHeader } from "./TeamHeader";
 
 export function TeamSystemsPage() {
   const { teamId } = useParams("/team/:teamId");
@@ -20,23 +20,31 @@ export function TeamSystemsPage() {
   useTitle("Team");
 
   return (
-    <Box id="systems" className="container">
-      {!teamId && <Typography variant={"h4"}>Your Team Systems</Typography>}
+    <div className="container">
+      {!teamId ? (
+        <>
+          <Typography variant={"h5"}>Your Team Systems</Typography>
+          <Typography className="dimmed">
+            Systems belonging to your team(s)
+          </Typography>
+        </>
+      ) : (
+        <TeamHeader teamId={teamId} />
+      )}
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}
+      <Grid
+        container
+        spacing={2}
+        alignItems="stretch"
+        sx={{ marginTop: "9px" }}
       >
         {/* Some employees have more than one team */}
         {teams.map((tid) => (
-          <TeamSystemsPageList key={tid} teamId={tid} />
+          <Grid item xs={4} sx={{ display: "flex", flexDirection: "column" }}>
+            <TeamSystemsPageList key={tid} teamId={tid} />
+          </Grid>
         ))}
-      </div>
-    </Box>
+      </Grid>
+    </div>
   );
 }
