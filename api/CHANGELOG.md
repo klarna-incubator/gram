@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.1](https://github.com/klarna/gram/compare/v4.4.0...v4.4.1) (2023-10-18)
+
+### Bug Fixes
+
+- get docker-compose demo working again - improve docs and setup ([ea95a5d](https://github.com/klarna/gram/commit/ea95a5d050e1ffa0194b441d6d6712a8d5688695))
+
 # [4.4.0](https://github.com/klarna/gram/compare/v4.3.0...v4.4.0) (2023-10-16)
 
 ### Bug Fixes
