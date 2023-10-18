@@ -1,10 +1,15 @@
+version: "3.1"
+
 services:
   database:
+    container_name: gram-demo-postgres
     image: postgres:12
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: somethingsecret
       POSTGRES_USER: gram
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     # ports <dont enable this unless you change passwords to something secure>:
     #   - 127.0.0.1:5432:5432
   gram:
@@ -15,17 +20,21 @@ services:
       POSTGRES_HOST: database
       POSTGRES_USER: gram
       POSTGRES_PASSWORD: somethingsecret
-      POSTGRES_DB: gram
+      POSTGRES_DATABASE: gram
       POSTGRES_PORT: 5432
-      SERVICE_STAGE: default # i.e. prod/staging for non-demo purposes
+      POSTGRES_DISABLE_SSL: "true"
+      NODE_ENV: staging # i.e. production/staging for non-demo purposes
       AUTH_SECRET: <some long secret used to sign auth tokens>
-      GITHUB_APPID: <> # TODO: find a good way to have these optional/dynamic secrets.
-      GITHUB_CLIENTID: <>
-      GITHUB_CLIENTSECRET: <>
-      GITHUB_PRIVATEKEY: <>
+      # EMAIL_HOST: ""
+      # EMAIL_PORT: ""
+      # EMAIL_PASSWORD: ""
+      # EMAIL_USER: ""
     ports:
       - 127.0.0.1:4726:8080
 
 networks:
   default:
     name: gram-demo
+
+volumes:
+  pgdata:

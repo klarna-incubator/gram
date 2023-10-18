@@ -5,7 +5,7 @@
 # ADD app .
 
 # Build the react app
-FROM node:16-alpine
+FROM node:18-alpine
 
 WORKDIR /home/gram
 

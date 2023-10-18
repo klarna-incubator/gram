@@ -44,7 +44,7 @@ export const defaultConfig: GramConfiguration = {
     password: new EnvSecret("POSTGRES_PASSWORD"),
     database: new EnvSecret("POSTGRES_DATABASE"),
     port: new EnvSecret("POSTGRES_PORT"),
-    ssl: true,
+    ssl: process.env.POSTGRES_DISABLE_SSL === undefined ? true : false,
   },
 
   notifications: {
