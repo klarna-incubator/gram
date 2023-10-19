@@ -31,6 +31,10 @@ export function SystemProperties({ modelId }) {
     return <ErrorLine message={error.message} />;
   }
 
+  if (!properties || properties.length === 0) {
+    return <></>;
+  }
+
   return (
     <Card elevation={2}>
       <CardContent>

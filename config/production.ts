@@ -19,7 +19,7 @@ export const productionConfig: GramConfiguration = {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
     // Fix LDAP Access Groups used by production
-    const ldapAuthz = new LDAPGroupBasedAuthzProvider({
+    const ldapAuthz = new LDAPGroupBasedAuthzProvider(dal, {
       ldapSettings,
       groupAttribute: "memberOfGroupId",
       groupToRoleMap: new Map([

@@ -8,42 +8,30 @@ exports[`Home renders Home 1`] = `
       <div
         class="container"
       >
-        <h1
-          class="with-bottom-padding"
-          id="intro"
-        >
-          <span
-            class="dimmed"
-          >
-            Welcome back,
-          </span>
-           
-        </h1>
         <div
-          class="row"
+          class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
         >
           <div
-            class="column"
+            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1hn59hz-MuiGrid-root"
           >
-            <h2>
-              Recent Models
-            </h2>
-            <div
-              class="spacer"
-            />
+            <h5
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+            >
+              Recent Threat Models
+            </h5>
             <p
-              class="dimmed"
+              class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
             >
               Threat models you recently interacted with
             </p>
             <div
-              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1icxk2q-MuiPaper-root-MuiCard-root"
+              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1q9beb5-MuiPaper-root-MuiCard-root"
             >
               <div
                 class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
               >
                 <ul
-                  class="MuiList-root MuiList-padding css-s9wdm0-MuiList-root"
+                  class="MuiList-root MuiList-padding css-1tk8qjb-MuiList-root"
                 >
                   <div
                     class="MuiListItemText-root css-tlelie-MuiListItemText-root"
@@ -66,42 +54,30 @@ exports[`Home renders Home 1`] = `
     <div
       class="container"
     >
-      <h1
-        class="with-bottom-padding"
-        id="intro"
-      >
-        <span
-          class="dimmed"
-        >
-          Welcome back,
-        </span>
-         
-      </h1>
       <div
-        class="row"
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
       >
         <div
-          class="column"
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1hn59hz-MuiGrid-root"
         >
-          <h2>
-            Recent Models
-          </h2>
-          <div
-            class="spacer"
-          />
+          <h5
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+          >
+            Recent Threat Models
+          </h5>
           <p
-            class="dimmed"
+            class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
           >
             Threat models you recently interacted with
           </p>
           <div
-            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1icxk2q-MuiPaper-root-MuiCard-root"
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1q9beb5-MuiPaper-root-MuiCard-root"
           >
             <div
               class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
             >
               <ul
-                class="MuiList-root MuiList-padding css-s9wdm0-MuiList-root"
+                class="MuiList-root MuiList-padding css-1tk8qjb-MuiList-root"
               >
                 <div
                   class="MuiListItemText-root css-tlelie-MuiListItemText-root"

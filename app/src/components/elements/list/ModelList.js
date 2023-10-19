@@ -17,17 +17,15 @@ export function ModelList({
   models = [],
   error,
   isLoading,
-  listHeight = "500px",
-  width = "45%",
   errorMessage = "Error loading data",
   emptyMessage = "No models exist",
 }) {
   return (
-    <Card sx={{ width, marginTop: "25px" }}>
+    <Card sx={{ height: "100%", marginTop: "25px" }}>
       <CardContent>
         {isLoading && <Loading />}
         {error && <ErrorLine message={errorMessage} />}
-        <List sx={{ height: listHeight, overflow: "auto" }}>
+        <List sx={{ overflow: "auto" }}>
           {(!models || models.length === 0) && (
             <ListItemText primary={emptyMessage} />
           )}
