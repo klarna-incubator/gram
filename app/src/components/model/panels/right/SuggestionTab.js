@@ -24,7 +24,13 @@ export function SuggestionTab() {
 
   const { data: suggestions } = useListSuggestionsQuery(modelId);
 
-  const threatSuggestions = suggestions?.threatsMap[selectedComponent.id] || [];
+  const threatSuggestions = (
+    suggestions?.threatsMap[selectedComponent.id] || []
+  )
+    // Hack for now to remove repetitive stride suggestions from the list.
+    // Will address this later as we do a major update to how suggestions work.
+    .filter((s) => s.source !== "stride");
+
   const controlSuggestions =
     suggestions?.controlsMap[selectedComponent.id] || [];
 
