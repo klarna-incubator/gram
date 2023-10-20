@@ -2,7 +2,14 @@ import {
   KeyboardArrowDownRounded,
   KeyboardArrowUpRounded,
 } from "@mui/icons-material";
-import { Badge, Box, Collapse, IconButton, Paper } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Collapse,
+  IconButton,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useListSuggestionsQuery } from "../../../../api/gram/suggestions";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
@@ -20,6 +27,14 @@ export function SuggestionTab() {
   const threatSuggestions = suggestions?.threatsMap[selectedComponent.id] || [];
   const controlSuggestions =
     suggestions?.controlsMap[selectedComponent.id] || [];
+
+  const nSuggestions =
+    threatSuggestions.filter(
+      (t) => t.status === "new" || t.status === "rejected"
+    ).length +
+    controlSuggestions.filter(
+      (t) => t.status === "new" || t.status === "rejected"
+    ).length;
 
   const readOnly = useReadOnly();
 
@@ -46,6 +61,12 @@ export function SuggestionTab() {
           colorScheme: (theme) => theme.palette.mode,
         }}
       >
+        {nSuggestions === 0 && (
+          <Typography align="center" color={"#777"} marginTop={"50%"}>
+            No new suggestions
+          </Typography>
+        )}
+
         {threatSuggestions
           .filter((t) => t.status === "new")
           .map((t) => (

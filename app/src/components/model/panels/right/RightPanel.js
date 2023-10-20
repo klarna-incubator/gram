@@ -70,57 +70,57 @@ export function RightPanel() {
     }
   }, [selectedId]);
 
+  if (rightPanelCollapsed) {
+    return <></>;
+  }
+
   return (
-    <>
-      {rightPanelCollapsed === false && (
-        <Box>
-          <ToggleRightPanelButton />
-          <Drawer
-            id="panel-right"
-            sx={{
-              width,
-              minWidth,
-              flexShrink: 0,
-              "& .MuiDrawer-paper": {
-                width,
-                minWidth,
-                boxSizing: "border-box",
-              },
-            }}
-            variant="permanent"
-            anchor="right"
-          >
-            <Toolbar />
-            {selectedComponent?.type === "ds" ||
-            selectedComponent?.type === "proc" ? (
-              <>
-                <RightTabsHeader tab={tab} setTab={setTab} />
-                <TabPanel value={tab} index={TAB.SUGGESTIONS}>
-                  <SuggestionTab />
-                </TabPanel>
-                <TabPanel value={tab} index={TAB.THREATS}>
-                  <ThreatTab scrollToId={scrollToId} selectedId={selectedId} />
-                </TabPanel>
-                <TabPanel value={tab} index={TAB.CONTROLS}>
-                  <ControlTab
-                    threats={threats}
-                    controls={controls}
-                    controlsMap={controlsMap}
-                    modelId={modelId}
-                    componentId={selectedComponent?.id}
-                    scrollToId={scrollToId}
-                    selectedId={selectedId}
-                  />
-                </TabPanel>
-              </>
-            ) : (
-              <Typography align="center" color={"#777"} marginTop={"50%"}>
-                No component selected
-              </Typography>
-            )}
-          </Drawer>
-        </Box>
-      )}
-    </>
+    <Box>
+      <ToggleRightPanelButton />
+      <Drawer
+        id="panel-right"
+        sx={{
+          width,
+          minWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width,
+            minWidth,
+            boxSizing: "border-box",
+          },
+        }}
+        variant="permanent"
+        anchor="right"
+      >
+        <Toolbar />
+        {selectedComponent?.type === "ds" ||
+        selectedComponent?.type === "proc" ? (
+          <>
+            <RightTabsHeader tab={tab} setTab={setTab} />
+            <TabPanel value={tab} index={TAB.SUGGESTIONS}>
+              <SuggestionTab />
+            </TabPanel>
+            <TabPanel value={tab} index={TAB.THREATS}>
+              <ThreatTab scrollToId={scrollToId} selectedId={selectedId} />
+            </TabPanel>
+            <TabPanel value={tab} index={TAB.CONTROLS}>
+              <ControlTab
+                threats={threats}
+                controls={controls}
+                controlsMap={controlsMap}
+                modelId={modelId}
+                componentId={selectedComponent?.id}
+                scrollToId={scrollToId}
+                selectedId={selectedId}
+              />
+            </TabPanel>
+          </>
+        ) : (
+          <Typography align="center" color={"#777"} marginTop={"50%"}>
+            No component selected
+          </Typography>
+        )}
+      </Drawer>
+    </Box>
   );
 }
