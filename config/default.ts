@@ -25,6 +25,7 @@ import { StaticSystemProvider } from "./providers/static/StaticSystemProvider.js
 import { StaticUserProvider } from "./providers/static/StaticUserProvider.js";
 import { Team } from "@gram/core/dist/auth/models/Team.js";
 import { StaticTeamProvider } from "./providers/static/StaticTeamProvider.js";
+import { StrideSuggestionProvider } from "@gram/stride";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -199,7 +200,10 @@ export const defaultConfig: GramConfiguration = {
       ),
       userProvider: new StaticUserProvider(sampleUsers),
       systemProvider: new StaticSystemProvider(sampleSystems),
-      suggestionSources: [new ThreatLibSuggestionProvider()],
+      suggestionSources: [
+        new ThreatLibSuggestionProvider(),
+        new StrideSuggestionProvider(),
+      ],
       teamProvider: new StaticTeamProvider(sampleTeams, teamMap),
     };
   },

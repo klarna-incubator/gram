@@ -10,13 +10,12 @@ import {
   useCreateMitigationMutation,
   useListMitigationsQuery,
 } from "../../../../api/gram/mitigations";
-import { useGetModelPermissionsQuery } from "../../../../api/gram/model";
+
 import {
   useDeleteThreatMutation,
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
-import { PERMISSIONS } from "../../constants";
 import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
 import { EditableSelect } from "./EditableSelect";
@@ -43,8 +42,6 @@ export function Threat({
   const threatsMap = mitigations?.threatsMap || {};
 
   const readOnly = useReadOnly() || propReadOnly;
-  const { data: permissions } = useGetModelPermissionsQuery({ modelId });
-  const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
 
   const linkedControls = controls.filter((c) =>
     threatsMap[threat.id]?.includes(c.id)
