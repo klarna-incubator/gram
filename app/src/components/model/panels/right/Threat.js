@@ -131,27 +131,25 @@ export function Threat({
                 }}
                 color={threatColor}
               />
-              {reviewAllowed && (
-                <Tooltip title="Mark as action item">
-                  <IconButton
-                    onClick={() =>
-                      updateThreat({
-                        id: threat.id,
-                        modelId: threat.modelId,
-                        isActionItem: !threat.isActionItem,
-                      })
-                    }
-                    disabled={readOnly}
-                  >
-                    <AssignmentTurnedInIcon
-                      sx={{
-                        fontSize: 20,
-                        color: threat.isActionItem ? "#fff" : "#666",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Tooltip title="Mark as action item">
+                <IconButton
+                  onClick={() =>
+                    updateThreat({
+                      id: threat.id,
+                      modelId: threat.modelId,
+                      isActionItem: !threat.isActionItem,
+                    })
+                  }
+                  disabled={readOnly}
+                >
+                  <AssignmentTurnedInIcon
+                    sx={{
+                      fontSize: 20,
+                      color: threat.isActionItem ? "#fff" : "#666",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
               <EditableTypography
                 text={title}
                 placeholder="Title"
