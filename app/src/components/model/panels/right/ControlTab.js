@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
+import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { useSelectedComponentControls } from "../../hooks/useSelectedComponentControls";
 import { Control } from "./Control";
@@ -11,11 +11,7 @@ export function ControlTab(props) {
   const { scrollToId, selectedId } = props;
   const [createControl] = useCreateControlMutation();
 
-  const { modelId } = useSelector(({ model }) => {
-    return {
-      modelId: model.id,
-    };
-  });
+  const modelId = useModelID();
   const component = useSelectedComponent();
   const controls = useSelectedComponentControls();
 

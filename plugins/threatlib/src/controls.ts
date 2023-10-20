@@ -43,7 +43,7 @@ const cspHeaders: ThreatLibControlSuggestion = {
   slug: "csp-headers",
   title: "Content Security Policy Headers",
   description: `Configure Content Security Policy headers on your webbapplication to harden against XSS.`,
-  mitigates: ["xss"],
+  mitigates: ["xss", "non-existent"],
 
   condition: (model: Model, component: Component) => {
     return !!component.classes?.find((c) =>
@@ -64,7 +64,9 @@ export function mapControls(
     .filter((c) => c.condition(model, component))
     .map((c) => ({
       ...c,
-      mitigates: c.mitigates.map((m) => ({ partialThreatId: m })),
+      mitigates: c.mitigates.map((m) => ({
+        partialThreatId: m.includes("/") ? m : `threatlib/threat/${m}`,
+      })),
       componentId: component.id,
     }));
 }

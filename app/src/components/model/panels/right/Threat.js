@@ -21,6 +21,11 @@ import { useModelID } from "../../hooks/useModelID";
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
+import {
+  useAcceptSuggestionMutation,
+  useListSuggestionsQuery,
+} from "../../../../api/gram/suggestions";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export function Threat({
   threat,
@@ -29,13 +34,28 @@ export function Threat({
   readOnly: propReadOnly,
 }) {
   const modelId = useModelID();
+  const selectedComponent = useSelectedComponent();
   const [deleteThreat] = useDeleteThreatMutation();
   const [updateThreat] = useUpdateThreatMutation();
   const [createControl] = useCreateControlMutation();
   const [createMitigation] = useCreateMitigationMutation();
+  const [acceptSuggestion] = useAcceptSuggestionMutation();
 
   const [title, setTitle] = useState(threat.title);
   const [description, setDescription] = useState(threat.description);
+
+  const partialThreatId = threat.suggestionId
+    ? threat.suggestionId.split("/").splice(1).join("/")
+    : "";
+  const { data: suggestions } = useListSuggestionsQuery(modelId);
+  const controlSuggestions = (
+    suggestions?.controlsMap[selectedComponent.id] || []
+  ).filter(
+    (s) =>
+      partialThreatId &&
+      s.status === "new" &&
+      s.mitigates.find((m) => m.partialThreatId === partialThreatId)
+  );
 
   const controls = useComponentControls(threat.componentId);
   const { data: mitigations } = useListMitigationsQuery({ modelId });
@@ -72,11 +92,18 @@ export function Threat({
   }
 
   function onSelectExisting(control) {
-    createMitigation({
-      modelId: threat.modelId,
-      threatId: threat.id,
-      controlId: control.id,
-    });
+    if (control.mitigates) {
+      acceptSuggestion({
+        modelId: modelId,
+        suggestionId: control.id,
+      });
+    } else {
+      createMitigation({
+        modelId: threat.modelId,
+        threatId: threat.id,
+        controlId: control.id,
+      });
+    }
   }
 
   const controlIds = threatsMap[threat.id];
@@ -223,9 +250,12 @@ export function Threat({
         {!readOnly && (
           <EditableSelect
             placeholder="Add Control"
-            options={controls.filter(
-              (c) => !linkedControls.map((l) => l.id).includes(c.id)
-            )}
+            options={[
+              ...controlSuggestions,
+              ...controls.filter(
+                (c) => !linkedControls.map((l) => l.id).includes(c.id)
+              ),
+            ]}
             selectExisting={onSelectExisting}
             createNew={createControlWithMitigation}
           />
