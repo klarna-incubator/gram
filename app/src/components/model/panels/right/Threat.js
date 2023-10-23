@@ -44,12 +44,13 @@ export function Threat({
   const [title, setTitle] = useState(threat.title);
   const [description, setDescription] = useState(threat.description);
 
-  const partialThreatId = threat.suggestionId
+  const partialThreatId = threat?.suggestionId
     ? threat.suggestionId.split("/").splice(1).join("/")
     : "";
   const { data: suggestions } = useListSuggestionsQuery(modelId);
+
   const controlSuggestions = (
-    suggestions?.controlsMap[selectedComponent.id] || []
+    suggestions?.controlsMap[selectedComponent?.id] || []
   ).filter(
     (s) =>
       partialThreatId &&
