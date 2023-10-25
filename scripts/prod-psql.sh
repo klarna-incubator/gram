@@ -9,7 +9,7 @@ AWS_ACCOUNT_ID=715798949107
 ROLE=gram.IdP_admin
 DURATION=900
 
-RDSHOST=gram-production-database.cludl8iseytr.eu-west-1.rds.amazonaws.com
+RDSHOST=gram-production-database-cluster.cluster-cludl8iseytr.eu-west-1.rds.amazonaws.com
 USERNAME=gram.IdP_admin
 DBNAME=gram
 

@@ -9,7 +9,8 @@ AWS_ACCOUNT_ID=422554941857
 ROLE=gram.IdP_admin
 DURATION=900
 
-RDSHOST=gram-staging-database.ctfvbr0ed3wr.eu-west-1.rds.amazonaws.com
+#RDSHOST=gram-staging-database.ctfvbr0ed3wr.eu-west-1.rds.amazonaws.com
+RDSHOST=gram-staging-database-cluster.cluster-ctfvbr0ed3wr.eu-west-1.rds.amazonaws.com
 USERNAME=gram.IdP_admin
 DBNAME=gram
 
