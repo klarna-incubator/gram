@@ -76,6 +76,7 @@ export function ThreatTab(props) {
               threat={threat}
               scrollToId={scrollToId}
               selected={selectedId === threat.id}
+              hideSeverityDescription={true}
             />
           </div>
         ))}

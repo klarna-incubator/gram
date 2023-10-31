@@ -6,7 +6,7 @@ import Mitigation from "../mitigations/Mitigation.js";
 import Model from "../models/Model.js";
 import { createPostgresPool } from "../postgres.js";
 import { _deleteAllTheThings } from "../utils.js";
-import Threat from "./Threat.js";
+import Threat, { ThreatSeverity } from "./Threat.js";
 import { ThreatDataService } from "./ThreatDataService.js";
 
 describe("ThreatDataService implementation", () => {
@@ -355,6 +355,7 @@ describe("ThreatDataService implementation", () => {
       const updated = await data.update(model.id!, threat.id!, {
         title: "newtitle",
         description: "baddesc",
+        severity: ThreatSeverity.High,
       });
       expect(updated).toBeInstanceOf(Threat);
       if (updated instanceof Threat) {
@@ -366,6 +367,7 @@ describe("ThreatDataService implementation", () => {
         expect(updated!.createdBy).toBe("createdBy");
         expect(updated!.suggestionId).toBe(undefined);
         expect(updated!.description).toBe("baddesc");
+        expect(updated!.severity).toBe(ThreatSeverity.High);
       }
     });
   });

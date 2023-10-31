@@ -3,7 +3,16 @@ import {
   ClearRounded as ClearRoundedIcon,
 } from "@mui/icons-material";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import { Box, Card, CardContent, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  IconButton,
+  Paper,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
 import {
@@ -26,12 +35,16 @@ import {
   useListSuggestionsQuery,
 } from "../../../../api/gram/suggestions";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { SeveritySlider } from "../../modals/SeveritySlider";
+import { CollapsePaper } from "../../../elements/CollapsePaper";
 
 export function Threat({
   threat,
   scrollToId,
   selected,
-  readOnly: propReadOnly,
+  hideDelete,
+  hideAddControl,
+  hideSeverityDescription,
 }) {
   const modelId = useModelID();
   const selectedComponent = useSelectedComponent();
@@ -62,11 +75,13 @@ export function Threat({
   const { data: mitigations } = useListMitigationsQuery({ modelId });
   const threatsMap = mitigations?.threatsMap || {};
 
-  const readOnly = useReadOnly() || propReadOnly;
+  const readOnly = useReadOnly();
 
   const linkedControls = controls.filter((c) =>
     threatsMap[threat.id]?.includes(c.id)
   );
+
+  const [severity, setSeverity] = useState(threat.severity || "low");
 
   //TODO clean this up, not the correct way to use useEffect imo
   useEffect(() => {
@@ -163,6 +178,7 @@ export function Threat({
                       id: threat.id,
                       modelId: threat.modelId,
                       isActionItem: !threat.isActionItem,
+                      severity: severity,
                     })
                   }
                   disabled={readOnly}
@@ -188,7 +204,7 @@ export function Threat({
                 }}
               />
 
-              {!readOnly && (
+              {!readOnly && !hideDelete && (
                 <Tooltip title="Delete Threat">
                   <IconButton
                     onClick={() =>
@@ -248,7 +264,7 @@ export function Threat({
           </Box>
         )}
 
-        {!readOnly && (
+        {!readOnly && !hideAddControl && (
           <EditableSelect
             placeholder="Add Control"
             options={[
@@ -260,6 +276,34 @@ export function Threat({
             selectExisting={onSelectExisting}
             createNew={createControlWithMitigation}
           />
+        )}
+
+        {threat.isActionItem && (
+          <CollapsePaper
+            title={"Assessment"}
+            defaultExpanded={true}
+            sx={{ marginTop: "10px" }}
+          >
+            <Stack spacing={1} sx={{ padding: "5px" }}>
+              <Paper elevation={24} sx={{ padding: "5px" }}>
+                <Typography variant="caption">Severity</Typography>
+                <SeveritySlider
+                  hideDescription={hideSeverityDescription}
+                  onChange={(v) => {
+                    updateThreat({
+                      id: threat.id,
+                      modelId: threat.modelId,
+                      severity: v,
+                    });
+                    setSeverity(v);
+                  }}
+                  disabled={readOnly}
+                  defaultValue={severity}
+                  valueLabelDisplay="off"
+                />
+              </Paper>
+            </Stack>
+          </CollapsePaper>
         )}
       </CardContent>
     </Card>

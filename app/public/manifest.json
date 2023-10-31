@@ -3,7 +3,7 @@
   "name": "Gram - Threat Modelling",
   "icons": [
     {
-      "src": "icon/gram_logo.svg",
+      "src": "gram_logo.svg",
       "sizes": "any"
     }
   ],

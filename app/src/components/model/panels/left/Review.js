@@ -1,20 +1,17 @@
 import {
+  Cancel as CancelIcon,
   DescriptionRounded as DescriptionRoundedIcon,
+  LockRounded as LockClosedRounded,
+  LockOpenRounded,
   ThumbUpRounded as ThumbUpRoundedIcon,
   TodayRounded as TodayRoundedIcon,
   VisibilityRounded as VisibilityRoundedIcon,
-  LockOpenRounded,
-  Cancel as CancelIcon,
-  LockRounded as LockClosedRounded,
-  AssignmentTurnedIn,
 } from "@mui/icons-material";
 import {
   Box,
   Button,
   Card,
   CardContent,
-  Chip,
-  IconButton,
   Skeleton,
   Tooltip,
   Typography,
@@ -26,11 +23,10 @@ import { useGetModelPermissionsQuery } from "../../../../api/gram/model";
 import { useGetReviewQuery } from "../../../../api/gram/review";
 import { useReviewExpiration } from "../../../../hooks/useReviewExpiration";
 import { modalActions } from "../../../../redux/modalSlice";
+import { UserChip } from "../../../elements/UserChip";
 import { MODALS } from "../../../elements/modal/ModalManager";
 import { PERMISSIONS } from "../../constants";
 import { useModelID } from "../../hooks/useModelID";
-import EmailIcon from "@mui/icons-material/Email";
-import ChatIcon from "@mui/icons-material/Chat";
 
 const ReviewContent = (review) => {
   const { hasExpired, validUntil, aboutToExpire } = useReviewExpiration(
@@ -50,7 +46,6 @@ const ReviewContent = (review) => {
       description: "",
       buttons: [
         EditNoteButton,
-        ViewActionItemsButton,
         ApproveButton,
         RequestMeetingButton,
         ReassignReviewButton,
@@ -68,7 +63,7 @@ const ReviewContent = (review) => {
       description: `Approved by ${review?.reviewer?.name} on ${new Date(
         review?.approved_at
       ).toLocaleDateString()} and valid until ${validUntil.toLocaleDateString()}. To update this model, create a new model based on this one and have it reviewed again.`,
-      buttons: [EditNoteButton, ViewActionItemsButton],
+      buttons: [EditNoteButton],
       components: [],
       color: hasExpired ? "error" : aboutToExpire ? "warning" : "success",
     },
@@ -86,7 +81,6 @@ const ReviewContent = (review) => {
         : "",
       buttons: [
         EditNoteButton,
-        ViewActionItemsButton,
         ApproveButton,
         BookMeetingButton,
         ReassignReviewButton,
@@ -151,29 +145,6 @@ function CancelReviewButton({ permissions, modelId }) {
       }
     >
       Cancel Review
-    </Button>
-  );
-}
-
-function ViewActionItemsButton({ modelId }) {
-  const dispatch = useDispatch();
-
-  return (
-    <Button
-      startIcon={<AssignmentTurnedIn />}
-      color="inherit"
-      variant="outlined"
-      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
-      onClick={() =>
-        dispatch(
-          modalActions.open({
-            type: MODALS.ViewActionItems.name,
-            props: { modelId },
-          })
-        )
-      }
-    >
-      Action Items
     </Button>
   );
 }
@@ -353,45 +324,6 @@ function ReviewReviewedBy(props) {
         </>
       )}
     </>
-  );
-}
-
-function UserChip({ user }) {
-  return (
-    <Chip
-      size="small"
-      sx={{
-        color: (theme) => theme.palette.review.text,
-      }}
-      variant="outlined"
-      label={user.name}
-      icon={
-        <>
-          {user?.slackUrl && (
-            <IconButton
-              href={user?.slackUrl}
-              target="_blank"
-              rel="noreferrer"
-              color="inherit"
-              size="small"
-            >
-              <ChatIcon />
-            </IconButton>
-          )}
-          {user?.mail && (
-            <IconButton
-              href={`mailto:${user?.mail}`}
-              target="_blank"
-              rel="noreferrer"
-              color="inherit"
-              size="small"
-            >
-              <EmailIcon />
-            </IconButton>
-          )}
-        </>
-      }
-    />
   );
 }
 

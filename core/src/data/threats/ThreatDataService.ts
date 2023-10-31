@@ -10,7 +10,7 @@ import log4js from "log4js";
 import { SuggestionID } from "../../suggestions/models.js";
 import { DataAccessLayer } from "../dal.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
-import Threat from "./Threat.js";
+import Threat, { ThreatSeverity } from "./Threat.js";
 
 export function convertToThreat(row: any): Threat {
   const threat = new Threat(
@@ -25,6 +25,7 @@ export function convertToThreat(row: any): Threat {
   threat.createdAt = row.created_at * 1000;
   threat.updatedAt = row.updated_at * 1000;
   threat.isActionItem = row.is_action_item || false;
+  threat.severity = row.severity;
   return threat;
 }
 
@@ -90,7 +91,8 @@ export class ThreatDataService extends EventEmitter {
         created_by,
         extract(epoch from created_at) as created_at,
         extract(epoch from updated_at) as updated_at,
-        is_action_item
+        is_action_item,
+        severity
       FROM threats
       WHERE id = $1::uuid
       AND deleted_at IS NULL
@@ -122,7 +124,8 @@ export class ThreatDataService extends EventEmitter {
         extract(epoch from created_at) as created_at,
         extract(epoch from updated_at) as updated_at,
         suggestion_id,
-        is_action_item
+        is_action_item,
+        severity
       FROM threats
       WHERE model_id = $1::uuid 
       AND deleted_at IS NULL
@@ -149,7 +152,8 @@ export class ThreatDataService extends EventEmitter {
       extract(epoch from created_at) as created_at,
       extract(epoch from updated_at) as updated_at,
       suggestion_id,
-      is_action_item
+      is_action_item,
+      severity
     FROM threats
     WHERE model_id = $1::uuid and is_action_item = true
     AND deleted_at IS NULL
@@ -172,7 +176,12 @@ export class ThreatDataService extends EventEmitter {
   async update(
     modelId: string,
     id: string,
-    fields: { title?: string; description?: string; isActionItem?: boolean }
+    fields: {
+      title?: string;
+      description?: string;
+      isActionItem?: boolean;
+      severity?: ThreatSeverity;
+    }
   ) {
     const fieldStatements = [];
     const params = [];
@@ -187,6 +196,10 @@ export class ThreatDataService extends EventEmitter {
     if (fields.isActionItem !== undefined) {
       params.push(fields.isActionItem);
       fieldStatements.push(`is_action_item = $${params.length}::boolean`);
+    }
+    if (fields.severity !== undefined) {
+      params.push(fields.severity);
+      fieldStatements.push(`severity = $${params.length}::varchar`);
     }
 
     if (params.length === 0) return false;

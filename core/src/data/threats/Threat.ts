@@ -1,5 +1,13 @@
 import { SuggestionID } from "../../suggestions/models.js";
 
+export enum ThreatSeverity {
+  Informative = "informative",
+  Low = "low",
+  Medium = "medium",
+  High = "high",
+  Critical = "critical",
+}
+
 /**
  * Class definition for threat
  */
@@ -9,6 +17,7 @@ export default class Threat {
   updatedAt: number;
   deletedAt?: number;
   isActionItem?: boolean;
+  severity?: ThreatSeverity;
 
   constructor(
     public title: string,
@@ -35,6 +44,7 @@ export default class Threat {
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,
       isActionItem: this.isActionItem,
+      severity: this.severity,
     };
   }
 }
