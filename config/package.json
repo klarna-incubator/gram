@@ -30,6 +30,8 @@
   "dependencies": {
     "@gram/klarna": "*",
     "@gram/threatsaurus": "*",
+    "@gram/oidc": "*",
+    "@gram/ldap": "*",
     "@gram/aws": "^4.5.1",
     "@gram/azure": "^4.5.1",
     "@gram/cncf": "^4.5.1",
