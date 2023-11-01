@@ -9,6 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -20,98 +21,14 @@ import {
   useGetReviewQuery,
 } from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
-import { ColorSlider } from "../../elements/ColorSlider";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
 import { PERMISSIONS } from "../constants";
-import { ActionItemList } from "./ActionItemList";
-
-function LikelihoodSlider({ onChange }) {
-  const marks = [
-    {
-      label: "Rare",
-      description: `➢ This will probably never happen/recur
-➢ Every 25 years`,
-    },
-    {
-      label: "Unlikely",
-      description: `➢ This is not likely to happen/recur but could
-➢ Every 10 years`,
-    },
-    {
-      label: "Occasional",
-      description: `➢ This is unexpected to happen/recur but is certainly possible to occur
-➢ Every 5 years`,
-    },
-    {
-      label: "Likely",
-      description: `➢ This will probably happen/recur but is not a persisting issue.
-➢ Every 3 years`,
-    },
-    {
-      label: "Almost certain",
-      description: `➢ This will undoubtedly happen/recur
-➢ Every year`,
-    },
-  ];
-
-  return (
-    <>
-      <ColorSlider
-        defaultValue={1}
-        marks={marks}
-        onChange={(e) => onChange(marks[e.target.value])}
-      />
-    </>
-  );
-}
-
-function ImpactSlider({ onChange }) {
-  const marks = [
-    {
-      label: "Very low",
-      description: `➢ Users can not interact with the service <1h
-➢ No regulatory sanctions/fines`,
-    },
-    {
-      label: "Low",
-      description: `➢ Users can not interact with the service <1-4h          
-➢ Incident reviewed by authorities but dismissed`,
-    },
-    {
-      label: "Medium",
-      description: `➢ Users can not interact with the service <4-10h
-➢ Incident reviewed by authorities and regulatory warning`,
-    },
-    {
-      label: "High",
-      description: `➢ Users can not interact with the service <10-16h  
-➢ Incident reviewed by authorities and sanctions/fines imposed`,
-    },
-    {
-      label: "Very high",
-      description: `➢ Users can not interact with the service >16h          
-➢ Incident reviewed by authorities and sanctions/fines threaten operations / Loss of licence`,
-    },
-  ];
-
-  return (
-    <ColorSlider
-      defaultValue={1}
-      step={null} // restricts to only these steps
-      marks={marks}
-      onChange={(e) => onChange(marks[e.target.value])}
-    />
-  );
-}
+import { ActionItemList } from "../panels/left/ActionItemList";
 
 export function ApproveReview({ modelId }) {
   const dispatch = useDispatch();
 
   const { data: review } = useGetReviewQuery({ modelId });
-  const [extras, setExtras] = useState({
-    impact: "Low",
-    likelihood: "Unlikely",
-  });
 
   const { data: permissions, isLoading: permissionsIsLoading } =
     useGetModelPermissionsQuery({ modelId });
@@ -145,44 +62,18 @@ export function ApproveReview({ modelId }) {
       <DialogContent sx={{ paddingTop: "0" }}>
         {(isUninitialized || isLoading) && (
           <>
-            <Divider textAlign="left">Risk Evaluation</Divider>
-            {/* <DialogContentText>
-              Every system threat model is connected to a risk ticket. When you
-              approve this threat model, it will be automatically created for
-              you (if the model is connected to a system).
-            </DialogContentText> */}
-            {/* <br /> */}
-            <DialogContentText>
-              Based on the threat model, set the risk value as your estimate of
-              the overall risk of all threats/controls found in the threat
-              model.
-            </DialogContentText>
-
-            <br />
-
-            <Typography>Impact</Typography>
-            <ImpactSlider
-              onChange={(value) =>
-                setExtras({ ...extras, impact: value.label })
-              }
-            />
-
-            <br />
-
-            <Typography>Likelihood</Typography>
-            <LikelihoodSlider
-              onChange={(value) =>
-                setExtras({ ...extras, likelihood: value.label })
-              }
-            />
-
-            <br />
             <Divider textAlign="left">Action Items</Divider>
-            <ActionItemList />
-
+            <Typography>
+              Assess the severity of each threat based on what the impact of a
+              vulnerability could be and the current level of mitigation against
+              the threat.
+            </Typography>
+            <br />
+            <Paper sx={{ padding: "15px" }}>
+              <ActionItemList automaticallyExpanded={true} />
+            </Paper>
             <br />
             <Divider textAlign="left">Summary</Divider>
-
             <DialogContentText>
               Do you have any further recommendations to the owning team? Your
               notes here will be forwarded via email.
@@ -236,7 +127,7 @@ export function ApproveReview({ modelId }) {
         </Button>
         {(isUninitialized || isLoading) && (
           <Button
-            onClick={() => approveReview({ modelId, note: localNote, extras })}
+            onClick={() => approveReview({ modelId, note: localNote })}
             disabled={isLoading || permissionsIsLoading || !reviewAllowed}
             variant="contained"
           >

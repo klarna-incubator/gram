@@ -11,7 +11,7 @@ export function LeftTabsHeader(props) {
     <AppBar position="static">
       <Grow in={true}>
         <Tabs
-          value={component ? tab : TAB.SYSTEM}
+          value={tab}
           onChange={(e, v) => setTab(v)}
           textColor="inherit"
           variant="fullWidth"
@@ -21,8 +21,11 @@ export function LeftTabsHeader(props) {
             },
           }}
         >
-          <Tab disableRipple label="SYSTEM" />
-          {component && <Tab disableRipple label="COMPONENT" />}
+          <Tab disableRipple label="SYSTEM" value={TAB.SYSTEM} />
+          <Tab disableRipple label="ACTION ITEMS" value={TAB.ACTION_ITEMS} />
+          {component && (
+            <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
+          )}
         </Tabs>
       </Grow>
     </AppBar>

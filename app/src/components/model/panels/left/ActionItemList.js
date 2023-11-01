@@ -1,37 +1,42 @@
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import { Box, DialogContentText, Typography } from "@mui/material";
-import { useListThreatsQuery } from "../../../api/gram/threats";
-import { useComponent } from "../hooks/useComponent";
-import { Threat } from "../panels/right/Threat";
-import { useModelID } from "../hooks/useModelID";
+import { Box, DialogContentText, Stack, Typography } from "@mui/material";
+import { CollapsePaper } from "../../../elements/CollapsePaper";
+import { useActionItems } from "../../hooks/useActionItems";
+import { useComponent } from "../../hooks/useComponent";
+import { Threat } from "../right/Threat";
 
-function ComponentActionItem({ componentId, threats }) {
+function ComponentActionItem({
+  componentId,
+  threats,
+  defaultExpanded = false,
+}) {
   const component = useComponent(componentId);
 
   return (
     <Box sx={{ paddingBottom: "10px" }}>
-      <Typography>{component.name}</Typography>
-      {threats.map((th) => (
-        <Threat threat={th} readOnly={true} />
-      ))}
+      <CollapsePaper
+        title={component.name}
+        count={threats.length}
+        defaultExpanded={defaultExpanded}
+      >
+        <Stack spacing={2}>
+          {threats.map((th, i) => (
+            <Threat
+              key={`action-item-${i}`}
+              threat={th}
+              hideDelete={true}
+              hideAddControl={true}
+              hideSeverityDescription={false}
+            />
+          ))}
+        </Stack>
+      </CollapsePaper>
     </Box>
   );
 }
 
-export function ActionItemList() {
-  const modelId = useModelID();
-  const { data: threats } = useListThreatsQuery({ modelId });
-
-  const actionItems = threats?.threats
-    ? Object.keys(threats?.threats)
-        .map((componentId) => ({
-          componentId,
-          threats: threats?.threats[componentId].filter(
-            (th) => th.isActionItem
-          ),
-        }))
-        .filter(({ threats }) => threats && threats.length > 0)
-    : [];
+export function ActionItemList({ automaticallyExpanded = false }) {
+  const actionItems = useActionItems();
 
   return (
     <>
@@ -40,9 +45,14 @@ export function ActionItemList() {
           <DialogContentText>
             The following threats are marked as action items.
           </DialogContentText>
+
           <br />
           {actionItems.map(({ componentId, threats }) => (
-            <ComponentActionItem componentId={componentId} threats={threats} />
+            <ComponentActionItem
+              componentId={componentId}
+              threats={threats}
+              defaultExpanded={automaticallyExpanded}
+            />
           ))}
         </>
       )}

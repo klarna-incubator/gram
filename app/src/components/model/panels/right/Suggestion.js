@@ -81,15 +81,21 @@ export function Suggestion(props) {
                 >
                   Mitigates:
                 </Typography>
-                {suggestion.mitigates.map((m) => (
-                  <Chip
-                    label={
-                      threatSuggestions.find((t) =>
-                        t.id.includes(m.partialThreatId)
-                      )?.title
-                    }
-                  />
-                ))}
+                {suggestion.mitigates
+                  .filter((m) =>
+                    threatSuggestions.find((t) =>
+                      t.id.includes(m.partialThreatId)
+                    )
+                  )
+                  .map((m) => (
+                    <Chip
+                      label={
+                        threatSuggestions.find((t) =>
+                          t.id.includes(m.partialThreatId)
+                        )?.title
+                      }
+                    />
+                  ))}
               </>
             )}
             {suggestion.reason && (

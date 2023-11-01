@@ -1,4 +1,5 @@
 export const TAB = {
   SYSTEM: 0,
-  COMPONENT: 1,
+  ACTION_ITEMS: 1,
+  COMPONENT: 2,
 };

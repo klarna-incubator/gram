@@ -1,36 +1,37 @@
 import {
+  Cancel as CancelIcon,
   DescriptionRounded as DescriptionRoundedIcon,
+  KeyboardArrowDown,
+  LockRounded as LockClosedRounded,
+  LockOpenRounded,
   ThumbUpRounded as ThumbUpRoundedIcon,
   TodayRounded as TodayRoundedIcon,
   VisibilityRounded as VisibilityRoundedIcon,
-  LockOpenRounded,
-  Cancel as CancelIcon,
-  LockRounded as LockClosedRounded,
-  AssignmentTurnedIn,
 } from "@mui/icons-material";
 import {
   Box,
   Button,
   Card,
   CardContent,
-  Chip,
-  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Skeleton,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Fragment } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useGetUserQuery } from "../../../../api/gram/auth";
 import { useGetModelPermissionsQuery } from "../../../../api/gram/model";
 import { useGetReviewQuery } from "../../../../api/gram/review";
 import { useReviewExpiration } from "../../../../hooks/useReviewExpiration";
 import { modalActions } from "../../../../redux/modalSlice";
+import { UserChip } from "../../../elements/UserChip";
 import { MODALS } from "../../../elements/modal/ModalManager";
 import { PERMISSIONS } from "../../constants";
 import { useModelID } from "../../hooks/useModelID";
-import EmailIcon from "@mui/icons-material/Email";
-import ChatIcon from "@mui/icons-material/Chat";
 
 const ReviewContent = (review) => {
   const { hasExpired, validUntil, aboutToExpire } = useReviewExpiration(
@@ -41,7 +42,8 @@ const ReviewContent = (review) => {
     default: {
       title: "Threat model not reviewed",
       description: 'Press the "Request Review" button below to get started!',
-      buttons: [RequestReviewButton],
+      buttons: [],
+      button: RequestReviewButton,
       components: [],
       color: "error",
     },
@@ -49,8 +51,6 @@ const ReviewContent = (review) => {
       title: "Threat model under review",
       description: "",
       buttons: [
-        EditNoteButton,
-        ViewActionItemsButton,
         ApproveButton,
         RequestMeetingButton,
         ReassignReviewButton,
@@ -68,14 +68,15 @@ const ReviewContent = (review) => {
       description: `Approved by ${review?.reviewer?.name} on ${new Date(
         review?.approved_at
       ).toLocaleDateString()} and valid until ${validUntil.toLocaleDateString()}. To update this model, create a new model based on this one and have it reviewed again.`,
-      buttons: [EditNoteButton, ViewActionItemsButton],
+      buttons: [],
       components: [],
       color: hasExpired ? "error" : aboutToExpire ? "warning" : "success",
     },
     canceled: {
       title: "Threat model not reviewed",
       description: 'Press the "Request Review" button below to get started!',
-      buttons: [RequestReviewButton],
+      buttons: [],
+      button: RequestReviewButton,
       components: [],
       color: "error",
     },
@@ -85,8 +86,6 @@ const ReviewContent = (review) => {
         ? `Please use the link below to schedule a threat modelling session with ${review?.reviewer?.name}.`
         : "",
       buttons: [
-        EditNoteButton,
-        ViewActionItemsButton,
         ApproveButton,
         BookMeetingButton,
         ReassignReviewButton,
@@ -98,7 +97,7 @@ const ReviewContent = (review) => {
   };
 };
 
-function ReassignReviewButton({ permissions, modelId }) {
+function ReassignReviewButton({ permissions, modelId, handleClose }) {
   const dispatch = useDispatch();
 
   if (
@@ -109,26 +108,29 @@ function ReassignReviewButton({ permissions, modelId }) {
   }
 
   return (
-    <Button
-      startIcon={<VisibilityRoundedIcon />}
+    <MenuItem
       color="inherit"
       variant="outlined"
-      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
-      onClick={() =>
+      // sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
+      onClick={() => {
         dispatch(
           modalActions.open({
             type: MODALS.ChangeReviewer.name,
             props: { modelId },
           })
-        )
-      }
+        );
+        handleClose();
+      }}
     >
-      Change Reviewer
-    </Button>
+      <ListItemIcon>
+        <VisibilityRoundedIcon />
+      </ListItemIcon>
+      <ListItemText>Change Reviewer</ListItemText>
+    </MenuItem>
   );
 }
 
-function CancelReviewButton({ permissions, modelId }) {
+function CancelReviewButton({ permissions, modelId, handleClose }) {
   const dispatch = useDispatch();
 
   if (!permissions.includes(PERMISSIONS.WRITE)) {
@@ -136,45 +138,25 @@ function CancelReviewButton({ permissions, modelId }) {
   }
 
   return (
-    <Button
-      startIcon={<CancelIcon />}
+    <MenuItem
       color="inherit"
       variant="outlined"
-      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
-      onClick={() =>
+      // sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
+      onClick={() => {
         dispatch(
           modalActions.open({
             type: MODALS.CancelReview.name,
             props: { modelId },
           })
-        )
-      }
+        );
+        handleClose();
+      }}
     >
-      Cancel Review
-    </Button>
-  );
-}
-
-function ViewActionItemsButton({ modelId }) {
-  const dispatch = useDispatch();
-
-  return (
-    <Button
-      startIcon={<AssignmentTurnedIn />}
-      color="inherit"
-      variant="outlined"
-      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
-      onClick={() =>
-        dispatch(
-          modalActions.open({
-            type: MODALS.ViewActionItems.name,
-            props: { modelId },
-          })
-        )
-      }
-    >
-      Action Items
-    </Button>
+      <ListItemIcon>
+        <CancelIcon />
+      </ListItemIcon>
+      <ListItemText>Cancel Review</ListItemText>
+    </MenuItem>
   );
 }
 
@@ -188,14 +170,14 @@ function RequestReviewButton({ permissions, modelId }) {
       color="inherit"
       variant="outlined"
       sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
-      onClick={() =>
+      onClick={() => {
         dispatch(
           modalActions.open({
             type: MODALS.RequestReview.name,
             props: { modelId },
           })
-        )
-      }
+        );
+      }}
     >
       Request Review
     </Button>
@@ -219,10 +201,14 @@ function ReadOnlyLockIcon(isLoading, review) {
   );
 }
 
-function EditNoteButton({ permissions, modelId, review }) {
+function EditNoteButton({ permissions, modelId, review, handleClose }) {
   const dispatch = useDispatch();
 
-  const editOrView = permissions.includes(PERMISSIONS.REVIEW) ? "Edit" : "View";
+  const editOrView = permissions.includes(PERMISSIONS.REVIEW)
+    ? review && review.note.trim().length === 0
+      ? "Add"
+      : "Edit"
+    : "View";
 
   return (
     <Button
@@ -233,20 +219,20 @@ function EditNoteButton({ permissions, modelId, review }) {
       }
       color="inherit"
       variant="outlined"
-      onClick={() =>
+      onClick={() => {
         dispatch(
           modalActions.open({ type: MODALS.EditNote.name, props: { modelId } })
-        )
-      }
+        );
+      }}
       sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
+      disableRipple
     >
-      {editOrView}
-      {review && review.note.trim().length === 0 && " (empty)"} Note
+      {editOrView} Note
     </Button>
   );
 }
 
-function ApproveButton({ permissions, review, modelId }) {
+function ApproveButton({ permissions, review, modelId, handleClose }) {
   const dispatch = useDispatch();
   const { data: user } = useGetUserQuery();
 
@@ -258,26 +244,27 @@ function ApproveButton({ permissions, review, modelId }) {
   }
 
   return (
-    <Button
-      startIcon={<ThumbUpRoundedIcon />}
-      color="inherit"
-      variant="outlined"
-      onClick={() =>
+    <MenuItem
+      onClick={() => {
         dispatch(
           modalActions.open({
             type: MODALS.ApproveReview.name,
             props: { modelId },
           })
-        )
-      }
-      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
+        );
+        handleClose();
+      }}
+      disableRipple
     >
-      Approve
-    </Button>
+      <ListItemIcon>
+        <ThumbUpRoundedIcon />
+      </ListItemIcon>
+      <ListItemText>Approve Review</ListItemText>
+    </MenuItem>
   );
 }
 
-function RequestMeetingButton({ permissions, review, modelId }) {
+function RequestMeetingButton({ permissions, review, modelId, handleClose }) {
   const dispatch = useDispatch();
   const { data: user } = useGetUserQuery();
 
@@ -289,31 +276,33 @@ function RequestMeetingButton({ permissions, review, modelId }) {
   }
 
   return (
-    <Button
-      startIcon={<TodayRoundedIcon />}
+    <MenuItem
       color="inherit"
       variant="outlined"
-      onClick={() =>
+      onClick={() => {
         dispatch(
           modalActions.open({
             type: MODALS.RequestMeeting.name,
             props: { modelId },
           })
-        )
-      }
-      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
+        );
+        handleClose();
+      }}
+      // sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
     >
-      Request Meeting
-    </Button>
+      <ListItemIcon>
+        <TodayRoundedIcon />
+      </ListItemIcon>
+      <ListItemText>Request Meeting</ListItemText>
+    </MenuItem>
   );
 }
 
-function BookMeetingButton({ permissions, review }) {
+function BookMeetingButton({ permissions, review, handleClose }) {
   if (!review?.reviewer?.calendarLink) return <></>;
 
   return (
-    <Button
-      startIcon={<TodayRoundedIcon />}
+    <MenuItem
       disabled={!permissions.includes(PERMISSIONS.WRITE)}
       color="inherit"
       variant="outlined"
@@ -321,8 +310,11 @@ function BookMeetingButton({ permissions, review }) {
       href={review.reviewer.calendarLink}
       sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
     >
-      Schedule Meeting
-    </Button>
+      <ListItemIcon>
+        <TodayRoundedIcon />
+      </ListItemIcon>
+      <ListItemText>Schedule Meeting</ListItemText>
+    </MenuItem>
   );
 }
 
@@ -333,7 +325,7 @@ function ReviewRequestedBy(props) {
     <>
       {review?.requester && (
         <>
-          <Typography variant="caption">Requested by</Typography>
+          <Typography variant="caption">Requested by</Typography>&nbsp;
           <UserChip user={review?.requester} />
         </>
       )}
@@ -348,50 +340,11 @@ function ReviewReviewedBy(props) {
     <>
       {review?.reviewer && (
         <>
-          <Typography variant="caption">Assigned to</Typography>
+          <Typography variant="caption">Assigned to</Typography>&nbsp;
           <UserChip user={review?.reviewer} />
         </>
       )}
     </>
-  );
-}
-
-function UserChip({ user }) {
-  return (
-    <Chip
-      size="small"
-      sx={{
-        color: (theme) => theme.palette.review.text,
-      }}
-      variant="outlined"
-      label={user.name}
-      icon={
-        <>
-          {user?.slackUrl && (
-            <IconButton
-              href={user?.slackUrl}
-              target="_blank"
-              rel="noreferrer"
-              color="inherit"
-              size="small"
-            >
-              <ChatIcon />
-            </IconButton>
-          )}
-          {user?.mail && (
-            <IconButton
-              href={`mailto:${user?.mail}`}
-              target="_blank"
-              rel="noreferrer"
-              color="inherit"
-              size="small"
-            >
-              <EmailIcon />
-            </IconButton>
-          )}
-        </>
-      }
-    />
   );
 }
 
@@ -411,6 +364,15 @@ export function Review() {
   const reviewStatus = reviewError ? "default" : review?.status;
 
   const content = ReviewContent(review)[reviewStatus];
+
+  const [anchorEl, setAnchorEl] = useState();
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Card
@@ -443,9 +405,9 @@ export function Review() {
             ) : (
               <>
                 {content.components.map((Component) => (
-                  <Fragment key={Component.name}>
+                  <Box key={Component.name}>
                     <Component review={review} content={content} />
-                  </Fragment>
+                  </Box>
                 ))}
               </>
             )}
@@ -469,14 +431,45 @@ export function Review() {
               </>
             ) : (
               <>
-                {content.buttons.map((Button) => (
-                  <Button
-                    key={Button.name}
+                <EditNoteButton
+                  permissions={permissions}
+                  review={review}
+                  modelId={modelId}
+                />
+
+                {content.button && (
+                  <content.button
                     permissions={permissions}
                     review={review}
                     modelId={modelId}
                   />
-                ))}
+                )}
+
+                {content.buttons.length > 0 && (
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="inherit"
+                      onClick={handleClick}
+                      endIcon={<KeyboardArrowDown />}
+                      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
+                    >
+                      Update
+                    </Button>
+
+                    <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                      {content.buttons.map((Action) => (
+                        <Action
+                          key={Action.name}
+                          permissions={permissions}
+                          review={review}
+                          modelId={modelId}
+                          handleClose={handleClose}
+                        />
+                      ))}
+                    </Menu>
+                  </>
+                )}
               </>
             )}
           </Box>

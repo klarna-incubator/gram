@@ -32,6 +32,7 @@ import { OIDCIdentityProvider } from "@gram/oidc";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import defaultNotifications from "./notifications/index.js";
+import { StrideSuggestionProvider } from "@gram/stride";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -300,7 +301,7 @@ export const defaultConfig: GramConfiguration = {
       authzProvider: ldapAuthz,
       userProvider: ldapUserProvider,
       teamProvider: ldapTeamProvider,
-      suggestionSources: [threatsaurus],
+      suggestionSources: [threatsaurus, new StrideSuggestionProvider()],
     };
   },
 };

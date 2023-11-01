@@ -5,7 +5,7 @@ import { useState } from "react";
 const baseMarks = [
   {
     value: 0,
-    color: "green",
+    color: "grey",
   },
   {
     value: 1,
@@ -25,35 +25,49 @@ const baseMarks = [
   },
 ];
 
-export function ColorSlider({ marks, defaultValue, onChange }) {
+export function ColorSlider({
+  marks,
+  defaultValue,
+  onChange,
+  hideDescription,
+  ...props
+}) {
   const joinedMarks = marks.map((m, i) => ({
     ...(baseMarks.length > i ? baseMarks[i] : {}),
     ...m,
   }));
 
-  const defaultMark = joinedMarks.find((m) => m.value === defaultValue);
+  const defaultMark = joinedMarks.find((m) => m.textValue === defaultValue);
   const [selectedMark, setSelectedMark] = useState(defaultMark);
 
   return (
     <>
       <Box sx={{ paddingLeft: "30px", paddingRight: "30px" }}>
         <Slider
-          defaultValue={defaultValue}
+          value={selectedMark.value}
           step={null} // restricts to only these steps
           marks={joinedMarks}
           min={0}
           max={4}
-          valueLabelDisplay="off"
+          valueLabelFormat={(v, i) => joinedMarks[i].label}
           onChange={(e) => {
-            setSelectedMark(
-              joinedMarks.find((m) => m.value === e.target.value)
-            );
-            return onChange(e);
+            const mark = joinedMarks.find((m) => m.value === e.target.value);
+            setSelectedMark(mark);
+            return onChange(mark);
           }}
-          sx={{ color: selectedMark?.color || "primary" }}
+          sx={{
+            color: selectedMark?.color || "primary",
+            ".MuiSlider-markLabel": {
+              fontSize: "9px",
+            },
+            "&.Mui-disabled .MuiSlider-track": {
+              color: selectedMark?.color || "primary",
+            },
+          }}
+          {...props}
         />
       </Box>
-      {selectedMark?.description && (
+      {!hideDescription && selectedMark?.description && (
         <Typography
           sx={{ "white-space": "pre-wrap" }}
           variant="caption"
