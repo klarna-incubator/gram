@@ -8,7 +8,6 @@ import { TAB } from "./constants";
 import { LeftFooter } from "./Footer";
 import { LeftTabsHeader } from "./LeftTabsHeader";
 import { SystemTab } from "./SystemTab";
-import { ActionItemList } from "./ActionItemList";
 import { ActionItemTab } from "./ActionItemTab";
 
 function TabPanel(props) {
@@ -44,11 +43,7 @@ export function LeftPanel() {
   }));
 
   useEffect(() => {
-    if (!component) {
-      setTab(TAB.SYSTEM);
-    } else {
-      setTab(TAB.COMPONENT);
-    }
+    setTab(component ? TAB.COMPONENT : TAB.SYSTEM);
   }, [component]);
 
   return (
