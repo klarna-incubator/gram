@@ -21,7 +21,7 @@ export default function UserModels() {
 
   return (
     <div id="models" className="container">
-      <Typography variant={"h4"}>Your Models</Typography>
+      <Typography variant={"h5"}>Your Models</Typography>
       <p className="dimmed with-bottom-padding">
         These models are bound to your account and not bound to a specific
         system. You can still share them with other users though.
