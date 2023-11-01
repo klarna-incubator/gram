@@ -18,12 +18,13 @@ import { PERMISSIONS } from "./constants";
 import "./Model.css";
 import { LeftPanel } from "./panels/left/LeftPanel";
 import { RightPanel } from "./panels/right/RightPanel";
+import { ErrorPage } from "../elements/ErrorPage";
 
 export function Model() {
   const dispatch = useDispatch();
 
   const { id } = useParams("/model/:id");
-  const { data: model } = useGetModelQuery(id);
+  const { data: model, isError, error } = useGetModelQuery(id);
 
   useEffect(() => {
     model && dispatch(loadModel(model));
@@ -50,11 +51,10 @@ export function Model() {
 
   // if write permission sync model changes (patch component) to the backend
   useModelSync();
-  // useEffect(() => {
-  //   if (id && writeAllowed) {
-  //     return store.subscribe(useModelSyncListener(store, dispatch));
-  //   }
-  // }, [store, id, writeAllowed]);
+
+  if (isError) {
+    return <ErrorPage code={error.originalStatus} />;
+  }
 
   if (model?.id !== id) return <LoadingPage isLoading={true} />;
 

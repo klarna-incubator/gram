@@ -8,7 +8,7 @@ import {
 } from "../../api/gram/system";
 import { useTitle } from "../../hooks/useTitle";
 import { ModelList } from "../elements/list/ModelList";
-import ErrorPage from "../error-page";
+import { ErrorPage } from "../elements/ErrorPage";
 import Loading from "../loading";
 import { PERMISSIONS } from "../model/constants";
 import "./System.css";
@@ -19,7 +19,12 @@ export function System() {
 
   const { data: permissions, isLoading: isLoadingPermissions } =
     useGetSystemPermissionsQuery({ systemId });
-  const { data: system, isLoading: isLoadingSystem } = useGetSystemQuery({
+  const {
+    data: system,
+    isLoading: isLoadingSystem,
+    isError,
+    error,
+  } = useGetSystemQuery({
     systemId,
   });
   const { data: models, isLoading: isLoadingModels } = useListModelsQuery({
@@ -27,7 +32,7 @@ export function System() {
     systemId,
   });
 
-  useTitle(isLoadingSystem ? "Loading..." : "System: " + system.displayName);
+  useTitle(isLoadingSystem ? "Loading..." : "System: " + system?.displayName);
 
   if (isLoadingPermissions || isLoadingSystem) {
     return (
@@ -36,6 +41,10 @@ export function System() {
         <Loading />
       </div>
     );
+  }
+
+  if (isError) {
+    return <ErrorPage code={error.originalStatus} />;
   }
 
   if (!permissions.includes(PERMISSIONS.READ)) {

@@ -6,7 +6,6 @@ import {
   useListModelsQuery,
 } from "../../api/gram/model";
 import { useGetSystemQuery } from "../../api/gram/system";
-import ErrorLine from "../error-line";
 import Loading from "../loading";
 import "./New.css";
 import InputLabel from "@mui/material/InputLabel";
@@ -17,6 +16,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import { ErrorLine } from "../elements/ErrorLine";
 
 export function NewWizard() {
   const [version, setVersion] = useState(

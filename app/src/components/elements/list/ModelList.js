@@ -1,5 +1,4 @@
 import React from "react";
-import ErrorLine from "../../error-line";
 import Loading from "../../loading";
 import {
   Card,
@@ -12,6 +11,7 @@ import { Link } from "react-router-dom";
 import { SystemName } from "../../reviews/SystemName";
 import { DateLabel } from "../DateLabel";
 import { ModelComplianceBadge } from "../ModelComplianceBadge";
+import { ErrorLine } from "../ErrorLine";
 
 export function ModelList({
   models = [],
