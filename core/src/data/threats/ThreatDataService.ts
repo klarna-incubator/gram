@@ -133,10 +133,6 @@ export class ThreatDataService extends EventEmitter {
     `;
     const res = await this.pool.query(query, [modelId]);
 
-    if (res.rows.length === 0) {
-      return [];
-    }
-
     return res.rows.map((record) => convertToThreat(record));
   }
 

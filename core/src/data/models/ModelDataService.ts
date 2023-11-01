@@ -243,7 +243,7 @@ export class ModelDataService extends EventEmitter {
 
     const queryThreats = `
         INSERT INTO threats ( 
-        id, model_id, component_id, title, description, created_by, suggestion_id, is_action_item
+        id, model_id, component_id, title, description, created_by, suggestion_id, is_action_item, severity, created_at
         )
         SELECT $1::uuid as id,
               $2::uuid as model_id,
@@ -252,7 +252,9 @@ export class ModelDataService extends EventEmitter {
               description,
               created_by,
               $4::text as suggestion_id,
-              is_action_item
+              is_action_item,
+              severity,
+              created_at
         FROM threats 
         WHERE id = $5::uuid
         AND deleted_at IS NULL;
@@ -260,7 +262,7 @@ export class ModelDataService extends EventEmitter {
 
     const queryControls = `
         INSERT INTO controls ( 
-        id, model_id, component_id, title, description, in_place, created_by, suggestion_id
+        id, model_id, component_id, title, description, in_place, created_by, suggestion_id, created_at
         )
         SELECT $1::uuid as id ,
               $2::uuid as model_id,
@@ -269,7 +271,8 @@ export class ModelDataService extends EventEmitter {
               description,
               in_place,
               created_by,
-              $4::text as suggestion_id
+              $4::text as suggestion_id,
+              created_at
         FROM controls 
         WHERE id = $5::uuid
         AND deleted_at IS NULL;
