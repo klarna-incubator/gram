@@ -3,38 +3,43 @@ version: v1.25.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   SNYK-JS-RAMDA-1582370:
-    - '*':
-        reason: 'unused code, no patch available'
+    - "*":
+        reason: "unused code, no patch available"
         expires: 2023-07-01T00:00:00.000Z
         created: 2022-03-15T12:52:30.453Z
   SNYK-JS-MINIMIST-2429795:
-    - '*':
-        reason: 'No patch available, low severity'
+    - "*":
+        reason: "No patch available, low severity"
         expires: 2022-04-01T00:00:00.000Z
         created: 2022-03-22T08:07:38.733Z
   SNYK-JS-NODEFORGE-2430339:
-    - '*':
+    - "*":
         reason: No patch available. Code not used
         expires: 2022-04-01T00:00:00.000Z
         created: 2022-03-22T08:09:33.307Z
   SNYK-JS-NODEFORGE-2430337:
-    - '*':
+    - "*":
         reason: No patch available. Code not used
         expires: 2022-04-01T00:00:00.000Z
         created: 2022-03-22T08:10:07.822Z
   SNYK-JS-NODEFORGE-2430341:
-    - '*':
+    - "*":
         reason: No patch available. Code not used
         expires: 2022-04-01T00:00:00.000Z
         created: 2022-03-22T08:10:21.229Z
   SNYK-JS-ASYNC-2441827:
-    - '*':
+    - "*":
         reason: unused code path
         expires: 2022-05-26T08:37:37.333Z
         created: 2022-04-26T08:37:37.357Z
   SNYK-JS-CSURF-3021144:
-    - '*':
+    - "*":
         reason: None Given
         expires: 2022-09-25T00:00:00.000Z
         created: 2022-09-15T14:33:27.920Z
+  SNYK-JS-ZOD-5925617:
+    - "*":
+        reason: None Given
+        expires: 2024-09-25T00:00:00.000Z
+        created: 2023-11-01T14:33:27.920Z
 patch: {}
