@@ -16,9 +16,34 @@ import {
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
-export function Suggestion(props) {
-  const { suggestion, rejected, readOnly, isControl } = props;
+function SuggestionMitigations({ suggestion, threatSuggestions }) {
+  const threatsMitigated = suggestion?.mitigates?.filter((m) =>
+    threatSuggestions.find((t) => t.id.includes(m.partialThreatId))
+  );
 
+  if (!threatsMitigated || threatsMitigated.length === 0) {
+    return null;
+  }
+
+  return (
+    <Box>
+      <Typography variant="caption" color="text.secondary">
+        Mitigates:
+      </Typography>
+      <br />
+      {threatsMitigated.map((m) => (
+        <Chip
+          label={
+            threatSuggestions.find((t) => t.id.includes(m.partialThreatId))
+              ?.title
+          }
+        />
+      ))}
+    </Box>
+  );
+}
+
+export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
   const modelId = useModelID();
   const selectedComponent = useSelectedComponent();
   const { data: suggestions } = useListSuggestionsQuery(modelId);
@@ -68,47 +93,10 @@ export function Suggestion(props) {
                 {suggestion.description}
               </Typography>
             )}
-            {suggestion.mitigates && (
-              <>
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{
-                    paddingBottom: "10px",
-                    lineHeight: "1.45",
-                    fontSize: "0.75rem",
-                  }}
-                >
-                  Mitigates:
-                </Typography>
-                {suggestion.mitigates
-                  .filter((m) =>
-                    threatSuggestions.find((t) =>
-                      t.id.includes(m.partialThreatId)
-                    )
-                  )
-                  .map((m) => (
-                    <Chip
-                      label={
-                        threatSuggestions.find((t) =>
-                          t.id.includes(m.partialThreatId)
-                        )?.title
-                      }
-                    />
-                  ))}
-              </>
-            )}
-            {suggestion.reason && (
-              <Tooltip title={suggestion.reason}>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ textDecoration: "underline" }}
-                >
-                  Why was this suggested?
-                </Typography>
-              </Tooltip>
-            )}
+            <SuggestionMitigations
+              threatSuggestions={threatSuggestions}
+              suggestion={suggestion}
+            />
 
             <Box
               display="flex"
