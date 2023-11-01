@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/klarna/gram/compare/v4.4.1...v4.5.0) (2023-11-01)
+
+### Bug Fixes
+
+- ensure suggestion status is copied during import to avoid duplicate suggestions ([380e616](https://github.com/klarna/gram/commit/380e6160f67ab38ec78bd55f94efd569504ee1a3))
+- threats/controls order being rearranged on imported models. ([fa0d30e](https://github.com/klarna/gram/commit/fa0d30e1f6aacdd7da218f36cf0af6971aa9e19a))
+
 ## [4.4.1](https://github.com/klarna/gram/compare/v4.4.0...v4.4.1) (2023-10-18)
 
 **Note:** Version bump only for package @gram/core
