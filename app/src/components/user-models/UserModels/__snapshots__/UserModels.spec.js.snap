@@ -9,11 +9,11 @@ exports[`UserModels renders 1`] = `
         class="container"
         id="models"
       >
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        <h5
+          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           Your Models
-        </h4>
+        </h5>
         <p
           class="dimmed with-bottom-padding"
         >
@@ -65,11 +65,11 @@ exports[`UserModels renders 1`] = `
       class="container"
       id="models"
     >
-      <h4
-        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+      <h5
+        class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
       >
         Your Models
-      </h4>
+      </h5>
       <p
         class="dimmed with-bottom-padding"
       >
