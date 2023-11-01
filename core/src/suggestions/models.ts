@@ -1,4 +1,5 @@
 import Model from "../data/models/Model.js";
+import { SuggestionStatus } from "../data/suggestions/Suggestion.js";
 import { InvalidInputError } from "../util/errors.js";
 
 export interface Suggestion {
@@ -83,11 +84,13 @@ export interface SuggestionSource {
 export interface EngineSuggestedControl extends SourceSuggestedControl {
   id: SuggestionID;
   source: string;
+  status?: SuggestionStatus;
 }
 
 export interface EngineSuggestedThreat extends SourceSuggestedThreat {
   id: SuggestionID;
   source: string;
+  status?: SuggestionStatus;
 }
 
 export interface EngineSuggestedResult {

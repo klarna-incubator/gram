@@ -47,13 +47,12 @@ function convertToSuggestionThreat(row: any) {
   return threat;
 }
 
+const log = log4js.getLogger("SuggestionDataService");
+
 export class SuggestionDataService extends EventEmitter {
   constructor(private pool: Pool, private dal: DataAccessLayer) {
     super();
-    this.log = log4js.getLogger("SuggestionDataService");
   }
-
-  log: any;
 
   /**
    * Copy suggestions from one model to anothger
@@ -103,7 +102,7 @@ export class SuggestionDataService extends EventEmitter {
    * @param suggestions
    */
   async bulkInsert(modelId: string, suggestions: EngineSuggestedResult) {
-    this.log.debug(
+    log.debug(
       `Got suggestions from engine: ${JSON.stringify(suggestions, null, 2)}`
     );
 
@@ -152,7 +151,7 @@ export class SuggestionDataService extends EventEmitter {
           client.query(threatQuery, [
             threat.id.val,
             modelId,
-            SuggestionStatus.New,
+            threat.status || SuggestionStatus.New,
             threat.componentId,
             threat.title,
             threat.description,
@@ -168,7 +167,7 @@ export class SuggestionDataService extends EventEmitter {
           client.query(controlQuery, [
             control.id.val,
             modelId,
-            SuggestionStatus.New,
+            control.status || SuggestionStatus.New,
             control.componentId,
             control.title,
             control.description,
@@ -181,7 +180,7 @@ export class SuggestionDataService extends EventEmitter {
       const queries = bulkThreats.concat(bulkControls);
       await Promise.all(queries);
       await client.query("COMMIT");
-      this.log.debug(
+      log.debug(
         `inserted ${bulkThreats.length} suggested threats, ${bulkControls.length} suggested controls.`
       );
       this.emit("updated-for", {
@@ -189,7 +188,7 @@ export class SuggestionDataService extends EventEmitter {
       });
     } catch (e) {
       await client.query("ROLLBACK");
-      this.log.error("Failed to insert suggestions", e);
+      log.error("Failed to insert suggestions", e);
     } finally {
       client.release();
     }
@@ -324,7 +323,7 @@ export class SuggestionDataService extends EventEmitter {
     const suggestion = await this.getById(modelId, suggestionId);
 
     if (suggestion === null) {
-      this.log.debug(`suggestion ${suggestionId.val} not found`);
+      log.debug(`suggestion ${suggestionId.val} not found`);
       return false;
     }
 
@@ -335,7 +334,7 @@ export class SuggestionDataService extends EventEmitter {
         SuggestionStatus.Accepted
       ))
     ) {
-      this.log.debug(
+      log.debug(
         `was not able to set suggestion ${suggestionId.val} to accepted`
       );
       return false;
