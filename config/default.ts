@@ -264,14 +264,14 @@ export const defaultConfig: GramConfiguration = {
     );
 
     // Hook for Reviews to create Risk Tickets
-    await hookIntoReviewApproval(
-      dal,
-      systemProvider,
-      new EnvSecret("JIRA_HOST"),
-      new EnvSecret("JIRA_TOKEN"),
-      new EnvSecret("JIRA_USER"),
-      new EnvSecret("JIRA_PASSWORD")
-    );
+    // await hookIntoReviewApproval(
+    //   dal,
+    //   systemProvider,
+    //   new EnvSecret("JIRA_HOST"),
+    //   new EnvSecret("JIRA_TOKEN"),
+    //   new EnvSecret("JIRA_USER"),
+    //   new EnvSecret("JIRA_PASSWORD")
+    // );
 
     const klarnaCronJob = new KlarnaCronJob(dal);
     klarnaCronJob.bootstrap(reviewerProvider, systemProvider);
