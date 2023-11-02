@@ -25,7 +25,7 @@ export function TeamSystemsPage() {
         <>
           <Typography variant={"h5"}>Your Team Systems</Typography>
           <Typography className="dimmed">
-            Systems belonging to your team(s)
+            Systems belonging to your team{teams.length > 1 ? "s" : ""}
           </Typography>
         </>
       ) : (
@@ -40,7 +40,7 @@ export function TeamSystemsPage() {
       >
         {/* Some employees have more than one team */}
         {teams.map((tid) => (
-          <Grid item xs={4} sx={{ display: "flex", flexDirection: "column" }}>
+          <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
             <TeamSystemsPageList key={tid} teamId={tid} />
           </Grid>
         ))}

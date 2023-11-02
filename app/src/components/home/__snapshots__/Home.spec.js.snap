@@ -12,7 +12,7 @@ exports[`Home renders Home 1`] = `
           class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
         >
           <div
-            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1hn59hz-MuiGrid-root"
+            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1ud07ce-MuiGrid-root"
           >
             <h5
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -58,7 +58,7 @@ exports[`Home renders Home 1`] = `
         class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
       >
         <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1hn59hz-MuiGrid-root"
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1ud07ce-MuiGrid-root"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"

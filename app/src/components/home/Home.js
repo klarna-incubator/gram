@@ -21,7 +21,12 @@ export default function Home() {
   return (
     <div className="container">
       <Grid container spacing={2} alignItems="stretch">
-        <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
+        <Grid
+          item
+          xs={6}
+          maxHeight="80vh"
+          sx={{ display: "flex", flexDirection: "column" }}
+        >
           <Typography variant="h5">Recent Threat Models</Typography>
           <Typography className="dimmed">
             Threat models you recently interacted with
