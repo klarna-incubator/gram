@@ -118,6 +118,12 @@ export const defaultConfig: GramConfiguration = {
     },
   ],
 
+  contact: {
+    name: "Secure Development Team",
+    email: "secure-development@klarna.com",
+    slackUrl: "https://klarna.enterprise.slack.com/archives/C01FZM386J1",
+  },
+
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {

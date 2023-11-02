@@ -34,17 +34,17 @@ import indicatorSecureImg from "./img/secure.svg";
 import suggestions from "./img/suggestions.gif";
 import indicatorUnknownImg from "./img/unknown.svg";
 import indicatorVulnerableImg from "./img/vulnerable.svg";
+import actionItemImg from "./img/actionItem.gif";
+import { ContactChip } from "../../elements/ContactChip";
 
 const Introduction = () => (
   <>
     <Typography>
       This tutorial will show you how to use the diagramming interface of Gram.
-      {/* //TODO replace contact blurb */}
-      If you have any questions or feedback, feel free to reach out to us in{" "}
-      <Link target="_none" to="">
-        #team-ea-secure-development
-      </Link>{" "}
-      on slack.
+    </Typography>
+    <Typography>
+      If you have any questions or feedback, feel free to reach out to{" "}
+      <ContactChip />
     </Typography>
   </>
 );
@@ -272,6 +272,20 @@ const FindingThreats = () => (
   </>
 );
 
+const ActionItems = () => (
+  <>
+    <Typography>
+      To keep track of which threats should be addressed, you can mark them as
+      an <b>action item</b>.
+    </Typography>
+    <Typography>
+      When marking a threat as an action item, you also need to mark the
+      severity of the threat. This helps prioritize and set the urgency of when
+      this threat should be mitigated.
+    </Typography>
+  </>
+);
+
 const CreatingControls = () => (
   <>
     <Typography>
@@ -453,12 +467,8 @@ const FinalWindow = () => (
     <Typography>
       This concludes the basic tutorial. We hope it was useful!
     </Typography>
-    {/* //TODO replace contact blurb */}
     <Typography>
-      If you have questions, feel free to reach out us in{" "}
-      <Link target="_none" to="">
-        #team-ea-secure-development
-      </Link>
+      If you have questions, feel free to reach out to <ContactChip />
     </Typography>
   </>
 );
@@ -584,6 +594,16 @@ const steps = [
     media: {
       image: suggestions,
       alt: "the process of accepting suggestions",
+    },
+    highlighted: ["#panel-right"],
+    position: "center",
+  },
+  {
+    title: "Action items",
+    body: ActionItems,
+    media: {
+      image: actionItemImg,
+      alt: "",
     },
     highlighted: ["#panel-right"],
     position: "center",

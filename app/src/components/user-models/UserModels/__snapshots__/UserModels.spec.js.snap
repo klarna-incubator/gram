@@ -7,54 +7,75 @@ exports[`UserModels renders 1`] = `
     <div>
       <div
         class="container"
-        id="models"
       >
-        <h5
-          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-        >
-          Your Models
-        </h5>
-        <p
-          class="dimmed with-bottom-padding"
-        >
-          These models are bound to your account and not bound to a specific system. You can still share them with other users though.
-        </p>
         <div
-          class="row space-between"
-        >
-          <button
-            class="standard"
-          >
-            Create New Model
-          </button>
-        </div>
-        <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1q9beb5-MuiPaper-root-MuiCard-root"
+          class="MuiGrid-root MuiGrid-container css-11lq3yg-MuiGrid-root"
         >
           <div
-            class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1osj8n2-MuiGrid-root"
           >
-            <div
-              class="loading"
+            <h5
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              <div />
-              <div />
-              <div />
-              <div />
+              Your Models
+            </h5>
+            <p
+              class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
+            >
+              These models are bound to your account and not bound to a specific system.
+            </p>
+            <br />
+            <div
+              class="MuiBox-root css-0"
+            >
+              <a
+                href="/model/new"
+              >
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+                  tabindex="0"
+                  type="button"
+                >
+                  Create New Model
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  />
+                </button>
+              </a>
             </div>
-            <ul
-              class="MuiList-root MuiList-padding css-1tk8qjb-MuiList-root"
+            <br />
+            <hr
+              class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+            />
+            <div
+              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1q9beb5-MuiPaper-root-MuiCard-root"
             >
               <div
-                class="MuiListItemText-root css-tlelie-MuiListItemText-root"
+                class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
               >
-                <span
-                  class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
+                <div
+                  class="loading"
                 >
-                  No models exist
-                </span>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </div>
+                <ul
+                  class="MuiList-root MuiList-padding css-1tk8qjb-MuiList-root"
+                >
+                  <div
+                    class="MuiListItemText-root css-tlelie-MuiListItemText-root"
+                  >
+                    <span
+                      class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
+                    >
+                      No models exist
+                    </span>
+                  </div>
+                </ul>
               </div>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -63,54 +84,75 @@ exports[`UserModels renders 1`] = `
   "container": <div>
     <div
       class="container"
-      id="models"
     >
-      <h5
-        class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-      >
-        Your Models
-      </h5>
-      <p
-        class="dimmed with-bottom-padding"
-      >
-        These models are bound to your account and not bound to a specific system. You can still share them with other users though.
-      </p>
       <div
-        class="row space-between"
-      >
-        <button
-          class="standard"
-        >
-          Create New Model
-        </button>
-      </div>
-      <div
-        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1q9beb5-MuiPaper-root-MuiCard-root"
+        class="MuiGrid-root MuiGrid-container css-11lq3yg-MuiGrid-root"
       >
         <div
-          class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1osj8n2-MuiGrid-root"
         >
-          <div
-            class="loading"
+          <h5
+            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
           >
-            <div />
-            <div />
-            <div />
-            <div />
+            Your Models
+          </h5>
+          <p
+            class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
+          >
+            These models are bound to your account and not bound to a specific system.
+          </p>
+          <br />
+          <div
+            class="MuiBox-root css-0"
+          >
+            <a
+              href="/model/new"
+            >
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+                tabindex="0"
+                type="button"
+              >
+                Create New Model
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </a>
           </div>
-          <ul
-            class="MuiList-root MuiList-padding css-1tk8qjb-MuiList-root"
+          <br />
+          <hr
+            class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+          />
+          <div
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1q9beb5-MuiPaper-root-MuiCard-root"
           >
             <div
-              class="MuiListItemText-root css-tlelie-MuiListItemText-root"
+              class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
             >
-              <span
-                class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
+              <div
+                class="loading"
               >
-                No models exist
-              </span>
+                <div />
+                <div />
+                <div />
+                <div />
+              </div>
+              <ul
+                class="MuiList-root MuiList-padding css-1tk8qjb-MuiList-root"
+              >
+                <div
+                  class="MuiListItemText-root css-tlelie-MuiListItemText-root"
+                >
+                  <span
+                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
+                  >
+                    No models exist
+                  </span>
+                </div>
+              </ul>
             </div>
-          </ul>
+          </div>
         </div>
       </div>
     </div>
