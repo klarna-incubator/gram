@@ -91,6 +91,16 @@ export interface GramConfiguration {
   };
 
   /**
+   * Optional contact details to the team or person managing this Gram installation.
+   * See it as the support email for your security team in your org.
+   */
+  contact?: {
+    name: string;
+    email?: string;
+    slackUrl?: string;
+  };
+
+  /**
    * Used for CSP policy.
    */
   allowedSrc: {

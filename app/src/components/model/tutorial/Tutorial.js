@@ -35,17 +35,16 @@ import suggestions from "./img/suggestions.gif";
 import indicatorUnknownImg from "./img/unknown.svg";
 import indicatorVulnerableImg from "./img/vulnerable.svg";
 import actionItemImg from "./img/actionItem.gif";
+import { ContactChip } from "../../elements/ContactChip";
 
 const Introduction = () => (
   <>
     <Typography>
       This tutorial will show you how to use the diagramming interface of Gram.
-      {/* //TODO replace contact blurb */}
-      If you have any questions or feedback, feel free to reach out to us in{" "}
-      <Link target="_none" to="">
-        #team-ea-secure-development
-      </Link>{" "}
-      on slack.
+    </Typography>
+    <Typography>
+      If you have any questions or feedback, feel free to reach out to{" "}
+      <ContactChip />
     </Typography>
   </>
 );
@@ -468,12 +467,8 @@ const FinalWindow = () => (
     <Typography>
       This concludes the basic tutorial. We hope it was useful!
     </Typography>
-    {/* //TODO replace contact blurb */}
     <Typography>
-      If you have questions, feel free to reach out us in{" "}
-      <Link target="_none" to="">
-        #team-ea-secure-development
-      </Link>
+      If you have questions, feel free to reach out to <ContactChip />
     </Typography>
   </>
 );

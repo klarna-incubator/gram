@@ -37,6 +37,7 @@ import { initSentry } from "./util/sentry.js";
 import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval.js";
 import { config } from "@gram/core/dist/config/index.js";
 import cookieParser from "cookie-parser";
+import { getContact } from "./resources/gram/v1/contact/get.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -73,6 +74,7 @@ export async function createApp(dal: DataAccessLayer) {
   const unauthenticatedRoutes = express.Router();
   unauthenticatedRoutes.get("/banners", errorWrap(getBanner(dal)));
   unauthenticatedRoutes.get("/menu", errorWrap(getMenu));
+  unauthenticatedRoutes.get("/contact", errorWrap(getContact));
 
   const tokenRoutes = tokenV1(dal);
   unauthenticatedRoutes.get("/auth/token", errorWrap(tokenRoutes.get));

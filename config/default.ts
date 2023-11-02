@@ -86,6 +86,12 @@ export const defaultConfig: GramConfiguration = {
     },
   ],
 
+  contact: {
+    name: "Security Team",
+    email: undefined,
+    slackUrl: undefined,
+  },
+
   additionalMigrations: [MagicLinkMigrations],
 
   bootstrapProviders: async function (
