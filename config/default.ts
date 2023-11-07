@@ -32,6 +32,7 @@ import { OIDCIdentityProvider } from "@gram/oidc";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import defaultNotifications from "./notifications/index.js";
+import { StrideSuggestionProvider } from "@gram/stride";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -116,6 +117,12 @@ export const defaultConfig: GramConfiguration = {
       path: "https://klarna.slack.com/archives/C04RMEJ8VFD",
     },
   ],
+
+  contact: {
+    name: "Secure Development Team",
+    email: "secure-development@klarna.com",
+    slackUrl: "https://klarna.enterprise.slack.com/archives/C01FZM386J1",
+  },
 
   bootstrapProviders: async function (
     dal: DataAccessLayer
@@ -263,14 +270,14 @@ export const defaultConfig: GramConfiguration = {
     );
 
     // Hook for Reviews to create Risk Tickets
-    await hookIntoReviewApproval(
-      dal,
-      systemProvider,
-      new EnvSecret("JIRA_HOST"),
-      new EnvSecret("JIRA_TOKEN"),
-      new EnvSecret("JIRA_USER"),
-      new EnvSecret("JIRA_PASSWORD")
-    );
+    // await hookIntoReviewApproval(
+    //   dal,
+    //   systemProvider,
+    //   new EnvSecret("JIRA_HOST"),
+    //   new EnvSecret("JIRA_TOKEN"),
+    //   new EnvSecret("JIRA_USER"),
+    //   new EnvSecret("JIRA_PASSWORD")
+    // );
 
     const klarnaCronJob = new KlarnaCronJob(dal);
     klarnaCronJob.bootstrap(reviewerProvider, systemProvider);
@@ -300,7 +307,7 @@ export const defaultConfig: GramConfiguration = {
       authzProvider: ldapAuthz,
       userProvider: ldapUserProvider,
       teamProvider: ldapTeamProvider,
-      suggestionSources: [threatsaurus],
+      suggestionSources: [threatsaurus, new StrideSuggestionProvider()],
     };
   },
 };

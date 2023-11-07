@@ -3,52 +3,85 @@ import {
   ClearRounded as ClearRoundedIcon,
 } from "@mui/icons-material";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import { Box, Card, CardContent, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  IconButton,
+  Paper,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
 import {
   useCreateMitigationMutation,
   useListMitigationsQuery,
 } from "../../../../api/gram/mitigations";
-import { useGetModelPermissionsQuery } from "../../../../api/gram/model";
+
 import {
   useDeleteThreatMutation,
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
-import { PERMISSIONS } from "../../constants";
 import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
+import {
+  useAcceptSuggestionMutation,
+  useListSuggestionsQuery,
+} from "../../../../api/gram/suggestions";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { SeveritySlider } from "../../modals/SeveritySlider";
+import { CollapsePaper } from "../../../elements/CollapsePaper";
 
 export function Threat({
   threat,
   scrollToId,
   selected,
-  readOnly: propReadOnly,
+  hideDelete,
+  hideAddControl,
+  hideSeverityDescription,
 }) {
   const modelId = useModelID();
+  const selectedComponent = useSelectedComponent();
   const [deleteThreat] = useDeleteThreatMutation();
   const [updateThreat] = useUpdateThreatMutation();
   const [createControl] = useCreateControlMutation();
   const [createMitigation] = useCreateMitigationMutation();
+  const [acceptSuggestion] = useAcceptSuggestionMutation();
 
   const [title, setTitle] = useState(threat.title);
   const [description, setDescription] = useState(threat.description);
+
+  const partialThreatId = threat?.suggestionId
+    ? threat.suggestionId.split("/").splice(1).join("/")
+    : "";
+  const { data: suggestions } = useListSuggestionsQuery(modelId);
+
+  const controlSuggestions = (
+    suggestions?.controlsMap[selectedComponent?.id] || []
+  ).filter(
+    (s) =>
+      partialThreatId &&
+      s.status === "new" &&
+      s.mitigates.find((m) => m.partialThreatId === partialThreatId)
+  );
 
   const controls = useComponentControls(threat.componentId);
   const { data: mitigations } = useListMitigationsQuery({ modelId });
   const threatsMap = mitigations?.threatsMap || {};
 
-  const readOnly = useReadOnly() || propReadOnly;
-  const { data: permissions } = useGetModelPermissionsQuery({ modelId });
-  const reviewAllowed = permissions?.includes(PERMISSIONS.REVIEW);
+  const readOnly = useReadOnly();
 
   const linkedControls = controls.filter((c) =>
     threatsMap[threat.id]?.includes(c.id)
   );
+
+  const [severity, setSeverity] = useState(threat.severity || "low");
 
   //TODO clean this up, not the correct way to use useEffect imo
   useEffect(() => {
@@ -75,11 +108,18 @@ export function Threat({
   }
 
   function onSelectExisting(control) {
-    createMitigation({
-      modelId: threat.modelId,
-      threatId: threat.id,
-      controlId: control.id,
-    });
+    if (control.mitigates) {
+      acceptSuggestion({
+        modelId: modelId,
+        suggestionId: control.id,
+      });
+    } else {
+      createMitigation({
+        modelId: threat.modelId,
+        threatId: threat.id,
+        controlId: control.id,
+      });
+    }
   }
 
   const controlIds = threatsMap[threat.id];
@@ -131,27 +171,26 @@ export function Threat({
                 }}
                 color={threatColor}
               />
-              {reviewAllowed && (
-                <Tooltip title="Mark as action item">
-                  <IconButton
-                    onClick={() =>
-                      updateThreat({
-                        id: threat.id,
-                        modelId: threat.modelId,
-                        isActionItem: !threat.isActionItem,
-                      })
-                    }
-                    disabled={readOnly}
-                  >
-                    <AssignmentTurnedInIcon
-                      sx={{
-                        fontSize: 20,
-                        color: threat.isActionItem ? "#fff" : "#666",
-                      }}
-                    />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Tooltip title="Mark as action item">
+                <IconButton
+                  onClick={() =>
+                    updateThreat({
+                      id: threat.id,
+                      modelId: threat.modelId,
+                      isActionItem: !threat.isActionItem,
+                      severity: severity,
+                    })
+                  }
+                  disabled={readOnly}
+                >
+                  <AssignmentTurnedInIcon
+                    sx={{
+                      fontSize: 20,
+                      color: threat.isActionItem ? "#fff" : "#666",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
               <EditableTypography
                 text={title}
                 placeholder="Title"
@@ -165,7 +204,7 @@ export function Threat({
                 }}
               />
 
-              {!readOnly && (
+              {!readOnly && !hideDelete && (
                 <Tooltip title="Delete Threat">
                   <IconButton
                     onClick={() =>
@@ -225,15 +264,46 @@ export function Threat({
           </Box>
         )}
 
-        {!readOnly && (
+        {!readOnly && !hideAddControl && (
           <EditableSelect
             placeholder="Add Control"
-            options={controls.filter(
-              (c) => !linkedControls.map((l) => l.id).includes(c.id)
-            )}
+            options={[
+              ...controlSuggestions,
+              ...controls.filter(
+                (c) => !linkedControls.map((l) => l.id).includes(c.id)
+              ),
+            ]}
             selectExisting={onSelectExisting}
             createNew={createControlWithMitigation}
           />
+        )}
+
+        {threat.isActionItem && (
+          <CollapsePaper
+            title={"Assessment"}
+            defaultExpanded={true}
+            sx={{ marginTop: "10px" }}
+          >
+            <Stack spacing={1} sx={{ padding: "5px" }}>
+              <Paper elevation={24} sx={{ padding: "5px" }}>
+                <Typography variant="caption">Severity</Typography>
+                <SeveritySlider
+                  hideDescription={hideSeverityDescription}
+                  onChange={(v) => {
+                    updateThreat({
+                      id: threat.id,
+                      modelId: threat.modelId,
+                      severity: v,
+                    });
+                    setSeverity(v);
+                  }}
+                  disabled={readOnly}
+                  defaultValue={severity}
+                  valueLabelDisplay="off"
+                />
+              </Paper>
+            </Stack>
+          </CollapsePaper>
         )}
       </CardContent>
     </Card>

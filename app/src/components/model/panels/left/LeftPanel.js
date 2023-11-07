@@ -5,9 +5,10 @@ import { useSelector } from "react-redux";
 import { ToggleLeftPanelButton } from "../../board/components/ToggleLeftPanelButton";
 import { ComponentTab } from "./ComponentTab";
 import { TAB } from "./constants";
-import { Footer } from "./Footer";
+import { LeftFooter } from "./Footer";
 import { LeftTabsHeader } from "./LeftTabsHeader";
 import { SystemTab } from "./SystemTab";
+import { ActionItemTab } from "./ActionItemTab";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,11 +43,7 @@ export function LeftPanel() {
   }));
 
   useEffect(() => {
-    if (!component) {
-      setTab(TAB.SYSTEM);
-    } else {
-      setTab(TAB.COMPONENT);
-    }
+    setTab(component ? TAB.COMPONENT : TAB.SYSTEM);
   }, [component]);
 
   return (
@@ -74,12 +71,15 @@ export function LeftPanel() {
             <TabPanel value={tab} index={TAB.SYSTEM}>
               <SystemTab />
             </TabPanel>
+            <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
+              <ActionItemTab />
+            </TabPanel>
             {component && (
               <TabPanel value={tab} index={TAB.COMPONENT}>
                 <ComponentTab />
               </TabPanel>
             )}
-            <Footer />
+            <LeftFooter />
           </Drawer>
         </Box>
       )}

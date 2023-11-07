@@ -13,7 +13,7 @@ import { getAuthToken } from "./api/gram/util/authToken";
 import "./App.css";
 import AdminPage from "./components/admin/AdminPage";
 import { ModalManager } from "./components/elements/modal/ModalManager";
-import ErrorPage from "./components/error-page";
+import { ErrorPage } from "./components/elements/ErrorPage";
 import Home from "./components/home/Home";
 import { Login } from "./components/login/Login";
 import { LoginCallback } from "./components/login/LoginCallback";

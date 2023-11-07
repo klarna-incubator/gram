@@ -1,7 +1,7 @@
 import { Card, CardContent, Skeleton, Typography } from "@mui/material";
 import { uniqueId } from "lodash";
 import { useGetSystemPropertiesQuery } from "../../../../api/gram/system-properties";
-import ErrorLine from "../../../error-line";
+import { ErrorLine } from "../../../elements/ErrorLine";
 
 export function SystemProperties({ modelId }) {
   const {

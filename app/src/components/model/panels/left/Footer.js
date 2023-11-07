@@ -2,6 +2,7 @@ import {
   DeleteRounded as DeleteRoundedIcon,
   HelpRounded as HelpRoundedIcon,
 } from "@mui/icons-material";
+// import IosShareIcon from "@mui/icons-material/IosShare";
 import { Box, IconButton, Paper, Tooltip, tooltipClasses } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +13,7 @@ import { MODALS } from "../../../elements/modal/ModalManager";
 import { PERMISSIONS } from "../../constants";
 import { useModelID } from "../../hooks/useModelID";
 
-export function Footer() {
+export function LeftFooter() {
   const dispatch = useDispatch();
 
   const emptyDiagram = useSelector(
@@ -51,6 +52,11 @@ export function Footer() {
             <DeleteRoundedIcon />
           </IconButton>
         </Tooltip>
+        {/* <Tooltip title="Export">
+          <IconButton>
+            <IosShareIcon />
+          </IconButton>
+        </Tooltip> */}
         <Tooltip
           title="Tutorial"
           open={tooltipOpen}
