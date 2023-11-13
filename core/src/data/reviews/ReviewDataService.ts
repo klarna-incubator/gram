@@ -9,6 +9,7 @@ import {
 } from "../system-property/types.js";
 import { Review, ReviewStatus } from "./Review.js";
 import { ReviewSystemCompliance } from "./ReviewSystemCompliance.js";
+import { GramConnectionPool } from "../postgres.js";
 
 export function convertToReview(row: any): Review {
   const review = new Review(row.model_id, row.requested_by, row.status);
@@ -52,9 +53,12 @@ interface ReviewListResult {
 }
 
 export class ReviewDataService extends EventEmitter {
-  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer) {
     super();
+    this.pool = dal.pool;
   }
+
+  private pool: GramConnectionPool;
 
   log = log4js.getLogger("ReviewDataService");
 

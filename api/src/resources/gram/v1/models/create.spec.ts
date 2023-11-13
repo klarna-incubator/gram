@@ -1,17 +1,9 @@
-import { jest } from "@jest/globals";
-import pg from "pg";
-import request from "supertest";
-import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import Model, { Component } from "@gram/core/dist/data/models/Model.js";
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
-import {
-  sampleAdmin,
-  sampleOtherUser,
-  sampleUser,
-} from "../../../../test-util/sampleUser.js";
 import {
   sampleAdminToken,
   sampleOtherUserToken,
@@ -23,7 +15,6 @@ describe("models.create", () => {
   const componentId2 = "fe93572e-9d0c-4afe-b042-e02c1c459999";
   const dataFlowId = "fe93572e-9d0c-4afe-b042-e02c1cstonks";
   let app: any;
-  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let token = "";
   let adminToken = "";
@@ -31,11 +22,11 @@ describe("models.create", () => {
   beforeAll(async () => {
     adminToken = await sampleAdminToken();
     token = await sampleUserToken();
-    ({ app, dal, pool } = await createTestApp());
+    ({ app, dal } = await createTestApp());
   });
 
   beforeEach(async () => {
-    await _deleteAllTheThings(pool);
+    await _deleteAllTheThings(dal.pool);
   });
 
   it("should return 401 on un-authenticated request", async () => {

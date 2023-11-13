@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto";
-import pg from "pg";
 import Control from "../controls/Control.js";
 import { DataAccessLayer } from "../dal.js";
 import Model from "../models/Model.js";
@@ -12,25 +11,24 @@ import { MitigationDataService } from "./MitigationDataService.js";
 describe("MitigationDataService implementation", () => {
   let data: MitigationDataService;
   let dal: DataAccessLayer;
-  let pool: pg.Pool;
+
   let model: Model;
 
   beforeAll(async () => {
-    pool = await createPostgresPool();
-    data = new MitigationDataService(pool);
+    const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
-    await _deleteAllTheThings(pool);
+    data = new MitigationDataService(dal);
   });
 
   beforeEach(async () => {
-    await _deleteAllTheThings(pool);
+    await _deleteAllTheThings(dal);
     model = new Model("some-system-id", "some-version", "root");
     model.data = { components: [], dataFlows: [] };
     model.id = await dal.modelService.create(model);
   });
 
   afterAll(async () => {
-    await pool.end();
+    await dal.pool.end();
   });
 
   describe("getById mitigation", () => {

@@ -46,13 +46,12 @@ const ErroringSuggestionSource: SuggestionSource = {
 };
 
 describe("SuggestionEngine", () => {
-  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let modelId: string;
   let engine: SuggestionEngine;
 
   beforeAll(async () => {
-    pool = await createPostgresPool();
+    const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
     engine = new SuggestionEngine(dal, true);
   });
@@ -63,7 +62,7 @@ describe("SuggestionEngine", () => {
   });
 
   afterAll(async () => {
-    await pool.end();
+    await dal.pool.end();
   });
 
   it("should handle suggestionsource errors gracefully", async () => {

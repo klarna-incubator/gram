@@ -16,7 +16,7 @@ describe("postgres pool", () => {
     try {
       await pool.query("invalid sql :)");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       errd = true;
     }
     expect(errd).toBeTruthy();
@@ -59,7 +59,7 @@ describe("postgres pool", () => {
     try {
       await pool.runTransaction(async (client) => {
         try {
-          console.log("during transaction");
+          // console.log("during transaction");
           await client.query("SELECT pg_sleep(5)");
         } catch (err) {
           // The error will be handled here first, and then the transaction will continue.
@@ -72,7 +72,7 @@ describe("postgres pool", () => {
           //   } catch (err) { // log stuff, think problem is fixed }
           //   client.query("next part of transaction") -> error now because client is still broken.
           //   }
-          console.log("transaction err", err);
+          // console.log("transaction err", err);
           expect(err).toBeTruthy();
         }
       });

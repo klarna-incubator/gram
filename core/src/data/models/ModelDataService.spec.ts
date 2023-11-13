@@ -17,21 +17,19 @@ import { sampleUser } from "../../test-util/sampleUser.js";
 describe("ModelDataService implementation", () => {
   let data: ModelDataService;
   let dal: DataAccessLayer;
-  let pool: pg.Pool;
 
   beforeAll(async () => {
-    pool = await createPostgresPool();
+    const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
-    data = new ModelDataService(pool, dal);
-    await _deleteAllTheThings(pool);
+    data = new ModelDataService(dal);
   });
 
   afterEach(async () => {
-    await _deleteAllTheThings(pool);
+    await _deleteAllTheThings(dal);
   });
 
   afterAll(async () => {
-    await pool.end();
+    await dal.pool.end();
   });
 
   describe("getById model", () => {
@@ -461,7 +459,6 @@ describe("ModelDataService implementation", () => {
       const mitigationsCopy = await dal.mitigationService.list(
         resModelCopy!.id!
       );
-      console.log(mitigationsCopy);
 
       expect(mitigationsCopy.length).toEqual(3);
 

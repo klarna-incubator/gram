@@ -13,7 +13,6 @@ const mockedSend = jest.fn();
 describe("notification sender", () => {
   let notificationService: NotificationDataService;
   let templateHandler: TemplateHandler;
-  let pool: any;
   let dal: DataAccessLayer;
 
   const sampleNotification: NotificationInput = {
@@ -22,7 +21,7 @@ describe("notification sender", () => {
   };
 
   beforeAll(async () => {
-    pool = await createPostgresPool();
+    const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
     dal.templateHandler.register(
       new PlaintextHandlebarsNotificationTemplate(
@@ -36,7 +35,11 @@ describe("notification sender", () => {
         })
       )
     );
-    notificationService = new NotificationDataService(pool, dal);
+    notificationService = new NotificationDataService(dal);
+  });
+
+  afterAll(async () => {
+    await dal.pool.end();
   });
 
   describe("notificationSender", () => {

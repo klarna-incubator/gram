@@ -21,28 +21,21 @@ import {
 } from "./Suggestion.js";
 
 describe("SuggestionDataService implementation", () => {
-  let pool: pg.Pool;
   let dal: DataAccessLayer;
-  let modelId: string;
 
   beforeAll(async () => {
-    pool = await createPostgresPool();
+    const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
   });
 
-  beforeEach(async () => {
-    await _deleteAllTheThings(pool);
-
-    /** Set up test model needed for review **/
-    modelId = await createSampleModel(dal);
-  });
-
   afterAll(async () => {
-    await pool.end();
+    await _deleteAllTheThings(dal);
+    await dal.pool.end();
   });
 
   describe("bulkInsert", () => {
     it("should be able to insert empty threats and controls", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [],
@@ -52,6 +45,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should be able to insert multiple threats and controls", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [...new Array(50)].map(genSuggestedControl),
@@ -68,6 +62,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should remove unused suggestions that are no longer included in the batch, but keep ones that have been added/rejected", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [...new Array(50)].map(genSuggestedControl),
@@ -118,6 +113,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should not have different sources interfering with each others' batches", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [...new Array(50)].map(genSuggestedControl),
@@ -140,6 +136,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should not have different models interfering with each others' batches", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [...new Array(3)].map(genSuggestedControl),
@@ -167,6 +164,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should insert control suggestions with empty mitigations", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestionsAfter: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [genSuggestedControl()],
@@ -187,6 +185,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should insert control suggestions with list of mitigations", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestThreats = [...Array(10)].map(genSuggestedThreat);
       const partialThreatIds = suggestThreats.map((t: any) =>
         t.id.val.split("/").slice(1).join("/")
@@ -219,6 +218,7 @@ describe("SuggestionDataService implementation", () => {
 
   describe("listControlSuggestions", () => {
     it("should return an empty list if no suggestions", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [],
@@ -231,6 +231,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should return a list", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [...new Array(50)].map(() => genSuggestedControl()),
@@ -246,6 +247,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should return the correct list", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [...new Array(50)].map(() => genSuggestedControl()),
@@ -266,6 +268,7 @@ describe("SuggestionDataService implementation", () => {
 
   describe("listThreatSuggestions", () => {
     it("should return an empty list if no suggestions", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [],
@@ -278,6 +281,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should return a list", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [],
@@ -295,6 +299,7 @@ describe("SuggestionDataService implementation", () => {
 
   describe("acceptSuggestion", () => {
     it("should return false if suggestion not found", async () => {
+      const modelId = await createSampleModel(dal);
       const res = await dal.suggestionService.acceptSuggestion(
         modelId,
         new SuggestionID(`${randomUUID()}/test-source/threat/test-1-23`),
@@ -302,15 +307,19 @@ describe("SuggestionDataService implementation", () => {
       );
       expect(res).toBe(false);
     });
+
     it("should return true if suggestion is control or threat", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestThreat = genSuggestedThreat();
       const suggestControl = genSuggestedControl({
+        componentId: randomUUID(),
         mitigates: [
           {
             partialThreatId: suggestThreat.id.val.split("/").slice(1).join("/"),
           },
         ],
       });
+
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [suggestControl],
@@ -320,18 +329,19 @@ describe("SuggestionDataService implementation", () => {
 
       let res = await dal.suggestionService.acceptSuggestion(
         modelId,
-        suggestions.controls[0].id,
+        suggestControl.id,
         "someuser"
       );
       expect(res).toBe(true);
       let suggestion = (await dal.suggestionService.getById(
         modelId,
-        suggestions.controls[0].id
+        suggestControl.id
       )) as SuggestedControl | SuggestedThreat;
-      expect(suggestion.status).toBe(SuggestionStatus.Accepted);
+
+      expect(suggestion.status).toEqual(SuggestionStatus.Accepted);
       const control = await dal.suggestionService._getLinkedThreatOrControl(
         modelId,
-        suggestions.controls[0].id
+        suggestControl.id
       );
       expect(control.title).toEqual(suggestion.title);
       expect(control.description).toEqual(suggestion.description);
@@ -339,18 +349,20 @@ describe("SuggestionDataService implementation", () => {
       // At this point, no mitigation should exist.
       res = await dal.suggestionService.acceptSuggestion(
         modelId,
-        suggestions.threats[0].id,
+        suggestThreat.id,
         "someuser"
       );
       expect(res).toBe(true);
       suggestion = (await dal.suggestionService.getById(
         modelId,
-        suggestions.threats[0].id
+        suggestThreat.id
       )) as SuggestedThreat;
-      expect(suggestion.status).toBe(SuggestionStatus.Accepted);
+
+      expect(suggestion.status).toEqual(SuggestionStatus.Accepted);
     });
 
     it("should create mitigation(s) if relevant threat exists", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestThreats = [...Array(5)].map(genSuggestedThreat);
       const suggestControl = genSuggestedControl({
         mitigates: suggestThreats.map((suggestThreat) => ({
@@ -404,6 +416,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should NOT create mitigation if relevant threat does NOT exists", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestThreat = genSuggestedThreat();
       const suggestControl = genSuggestedControl({
         mitigates: [
@@ -453,6 +466,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should NOT list deleted threats from partialId", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestThreat = genSuggestedThreat();
       const suggestControl = genSuggestedControl({
         mitigates: [
@@ -489,6 +503,7 @@ describe("SuggestionDataService implementation", () => {
 
   describe("setSuggestionStatus", () => {
     it("should return false if suggestion not found", async () => {
+      const modelId = await createSampleModel(dal);
       const res = await dal.suggestionService.setSuggestionStatus(
         modelId,
         new SuggestionID(`${randomUUID()}/test-source/threat/test-1-23`),
@@ -498,6 +513,7 @@ describe("SuggestionDataService implementation", () => {
     });
 
     it("should be able to set all statuses", async () => {
+      const modelId = await createSampleModel(dal);
       const suggestions: EngineSuggestedResult = {
         sourceSlugToClear: "test",
         controls: [genSuggestedControl()],
@@ -505,11 +521,11 @@ describe("SuggestionDataService implementation", () => {
       };
       await dal.suggestionService.bulkInsert(modelId, suggestions);
 
-      [
+      for (const status of [
         SuggestionStatus.Accepted,
         SuggestionStatus.New,
         SuggestionStatus.Rejected,
-      ].forEach(async (status) => {
+      ]) {
         let res = await dal.suggestionService.setSuggestionStatus(
           modelId,
           suggestions.threats[0].id,
@@ -531,7 +547,7 @@ describe("SuggestionDataService implementation", () => {
           modelId
         );
         expect(threats[0].status).toBe(status);
-      });
+      }
     });
   });
 });

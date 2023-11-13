@@ -1,6 +1,6 @@
-import pg from "pg";
 import log4js from "log4js";
 import { DataAccessLayer } from "../dal.js";
+import { GramConnectionPool } from "../postgres.js";
 
 interface Banner {
   id: number;
@@ -10,7 +10,11 @@ interface Banner {
 }
 
 export class BannerDataService {
-  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {}
+  constructor(private dal: DataAccessLayer) {
+    this.pool = dal.pool;
+  }
+
+  private pool: GramConnectionPool;
 
   log = log4js.getLogger("BannerDataService");
 

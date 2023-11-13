@@ -1,7 +1,7 @@
-import { Notification, NotificationStatus } from "./Notification.js";
-import pg from "pg";
 import log4js from "log4js";
 import { DataAccessLayer } from "../dal.js";
+import { GramConnectionPool } from "../postgres.js";
+import { Notification, NotificationStatus } from "./Notification.js";
 import { NotificationInput } from "./NotificationInput.js";
 
 function convertToNotification(row: any) {
@@ -16,7 +16,11 @@ function convertToNotification(row: any) {
 }
 
 export class NotificationDataService {
-  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {}
+  constructor(private dal: DataAccessLayer) {
+    this.pool = dal.pool;
+  }
+
+  private pool: GramConnectionPool;
 
   log = log4js.getLogger("NotificationDataService");
 

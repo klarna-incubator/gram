@@ -5,6 +5,7 @@ import { SuggestionID } from "../../suggestions/models.js";
 import { DataAccessLayer } from "../dal.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
 import Control from "./Control.js";
+import { GramConnectionPool } from "../postgres.js";
 
 export function convertToControl(row: any) {
   const control = new Control(
@@ -23,15 +24,13 @@ export function convertToControl(row: any) {
 }
 
 export class ControlDataService extends EventEmitter {
-  constructor(pool: pg.Pool, dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer) {
     super();
-    this.pool = pool;
-    this.dal = dal;
+    this.pool = dal.pool;
     this.log = log4js.getLogger("ControlDataService");
   }
 
-  private pool: pg.Pool;
-  private dal: DataAccessLayer;
+  private pool: GramConnectionPool;
   log: any;
   /**
    * Create a control object of specified id
@@ -173,12 +172,9 @@ export class ControlDataService extends EventEmitter {
       WHERE c.model_id = $1::uuid AND m.control_id = c.id AND c.id ${filter}      
    `;
 
-    const client = await this.pool.connect();
-    let result = false;
-    try {
-      await client.query("BEGIN");
+    const result = await this.pool.runTransaction(async (client) => {
       const res = await client.query(query, [modelId, ...ids]);
-      result = res.rowCount > 0;
+      const result = res.rowCount > 0;
 
       if (result) {
         const suggestionIds = res.rows
@@ -200,13 +196,9 @@ export class ControlDataService extends EventEmitter {
           componentId: res.rows[0].component_id,
         });
       }
-      await client.query("COMMIT");
-    } catch (e) {
-      this.log.error("Failed to delete control", e);
-      await client.query("ROLLBACK");
-    } finally {
-      client.release();
-    }
+
+      return result;
+    });
     return result;
   }
 

@@ -4,6 +4,7 @@ import { linkToModel } from "../../util/links.js";
 import { DataAccessLayer } from "../dal.js";
 import { SystemPropertyValue } from "../system-property/types.js";
 import { RequestContext } from "../providers/RequestContext.js";
+import { GramConnectionPool } from "../postgres.js";
 
 interface SystemCompliance {
   SystemID: string;
@@ -27,7 +28,11 @@ interface SystemComplianceReport {
 }
 
 export class ReportDataService {
-  constructor(private pool: pg.Pool, private dal: DataAccessLayer) {}
+  constructor(private dal: DataAccessLayer) {
+    this.pool = dal.pool;
+  }
+
+  private pool: GramConnectionPool;
 
   log = log4js.getLogger("ReportDataService");
 

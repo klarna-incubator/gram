@@ -5,10 +5,10 @@
  */
 
 import { EventEmitter } from "events";
-import pg from "pg";
 import log4js from "log4js";
 import { SuggestionID } from "../../suggestions/models.js";
 import { DataAccessLayer } from "../dal.js";
+import { GramConnectionPool } from "../postgres.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
 import Threat, { ThreatSeverity } from "./Threat.js";
 
@@ -30,15 +30,13 @@ export function convertToThreat(row: any): Threat {
 }
 
 export class ThreatDataService extends EventEmitter {
-  constructor(pool: pg.Pool, dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer) {
     super();
-    this.pool = pool;
-    this.dal = dal;
+    this.pool = dal.pool;
     this.log = log4js.getLogger("ThreatDataService");
   }
 
-  private pool: pg.Pool;
-  private dal: DataAccessLayer;
+  private pool: GramConnectionPool;
   log: any;
 
   /**
@@ -262,41 +260,39 @@ export class ThreatDataService extends EventEmitter {
       WHERE m.threat_id = t.id AND t.model_id = $1::uuid and t.id ${filter}
    `;
 
-    const client = await this.pool.connect();
-    let result = false;
-    try {
-      await client.query("BEGIN");
-      const res = await client.query(query, [modelId, ...ids]);
-      result = res.rowCount > 0;
+    const [result, suggestionIds] = await this.pool.runTransaction(
+      async (client) => {
+        let suggestionIds: SuggestionID[] = [];
 
-      if (result) {
-        const suggestionIds = res.rows
-          .filter((v: any) => v.suggestion_id)
-          .map((v: any) => new SuggestionID(v.suggestion_id));
+        const res = await client.query(query, [modelId, ...ids]);
+        const result = res.rowCount > 0;
 
-        // This runs in a different client and could be problematic.
-        const promises = suggestionIds.map((id) =>
-          this.dal.suggestionService.setSuggestionStatus(
-            res.rows[0].model_id,
-            id,
-            SuggestionStatus.New
-          )
-        );
-        await Promise.all(promises);
+        if (result) {
+          suggestionIds = res.rows
+            .filter((v: any) => v.suggestion_id)
+            .map((v: any) => new SuggestionID(v.suggestion_id));
 
-        await client.query(queryMitigations, [modelId, ...ids]);
-        this.emit("deleted-for", {
-          modelId: res.rows[0].model_id,
-          componentId: res.rows[0].component_id,
-        });
+          await client.query(queryMitigations, [modelId, ...ids]);
+          this.emit("deleted-for", {
+            modelId: res.rows[0].model_id,
+            componentId: res.rows[0].component_id,
+          });
+        }
+
+        return [result, suggestionIds];
       }
-      await client.query("COMMIT");
-    } catch (e) {
-      this.log.error("Failed to delete threat", e);
-      await client.query("ROLLBACK");
-    } finally {
-      client.release();
-    }
+    );
+
+    // This runs in a different client and could be problematic.
+    const promises = suggestionIds.map((id) =>
+      this.dal.suggestionService.setSuggestionStatus(
+        modelId,
+        id,
+        SuggestionStatus.New
+      )
+    );
+
+    await Promise.all(promises);
 
     return result;
   }

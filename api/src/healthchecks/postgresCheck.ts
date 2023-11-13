@@ -33,7 +33,7 @@ export async function postgresAvailableConnectionsCheck(dal: DataAccessLayer) {
     const check: any = {
       name: "@gram/api-postgres-available-connections",
       actionable: true,
-      healthy: dal.pool.waitingCount === 0,
+      healthy: dal.pool._pool.waitingCount === 0,
       dependentOn: "postgres",
       type: physical.type.EXTERNAL_DEPENDENCY,
       severity: physical.severity.WARNING,
