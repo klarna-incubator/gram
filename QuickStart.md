@@ -37,7 +37,7 @@ the workspace.
 npm install
 ```
 
-Next you can try running the project a first time:
+Next you need to start up the local database containers.
 
 ```sh
 docker compose up -d
