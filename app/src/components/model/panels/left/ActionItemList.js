@@ -12,6 +12,11 @@ function ComponentActionItem({
 }) {
   const component = useComponent(componentId);
 
+  /**
+   * Fix for the case where a component was just deleted.
+   */
+  if (!component) return null;
+
   return (
     <Box sx={{ paddingBottom: "10px" }}>
       <CollapsePaper
