@@ -54,6 +54,7 @@ export function ActionItemList({ automaticallyExpanded = false }) {
           <br />
           {actionItems.map(({ componentId, threats }) => (
             <ComponentActionItem
+              key={`component-action-item-${componentId}`}
               componentId={componentId}
               threats={threats}
               defaultExpanded={automaticallyExpanded}

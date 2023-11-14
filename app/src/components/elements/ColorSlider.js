@@ -1,6 +1,6 @@
 import { Slider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const baseMarks = [
   {
@@ -32,21 +32,25 @@ export function ColorSlider({
   hideDescription,
   ...props
 }) {
-  const joinedMarks = marks.map((m, i) => ({
-    ...(baseMarks.length > i ? baseMarks[i] : {}),
-    ...m,
-  }));
+  // Memoized to avoid issues with useEffect later. Not doing the memo means useEffect can't
+  // detect it's the same marks and triggers an infinite render loop.
+  const joinedMarks = useMemo(
+    () =>
+      marks.map((m, i) => ({
+        ...(baseMarks.length > i ? baseMarks[i] : {}),
+        ...m,
+      })),
+    [marks]
+  );
 
   const defaultMark = joinedMarks.find((m) => m.textValue === value);
   const [mark, setMark] = useState(defaultMark);
 
+  // Update the mark if an upstream value is updated, i.e. API value changed.
   useEffect(() => {
-    // Careful with joinedMarks - if set as a dependency here the useEffect loops forever.
-    const upstreamMark = joinedMarks.find((m) => m.textValue === value);
-    if (upstreamMark.value !== mark.value) {
-      setMark(upstreamMark);
-    }
-  }, [value]);
+    const newMark = joinedMarks.find((m) => m.textValue === value);
+    setMark(newMark);
+  }, [joinedMarks, value]);
 
   return (
     <>
