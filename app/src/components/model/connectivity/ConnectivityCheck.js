@@ -36,28 +36,29 @@ function ConnectivityCheck() {
         &nbsp; Who broke the internet?
       </DialogTitle>
       <DialogContent>
-        {isEstablishing ||
-          (timeout && (
-            <Typography>
-              <b>*modem noises*</b> connecting...
-            </Typography>
-          ))}
-        {!isEstablishing && !isConnected && !timeout && (
-          <>
-            <Typography>
-              Your websocket connection to the server has timed out or been
-              closed remotely. This could be due to bad connectivity, or the
-              Gram server having a bad time.
-            </Typography>
+        <>
+          {isEstablishing ||
+            (timeout && (
+              <Typography>
+                <b>*modem noises*</b> connecting...
+              </Typography>
+            ))}
+          {!isEstablishing && !isConnected && !timeout && (
+            <>
+              <Typography>
+                Your websocket connection to the server has timed out or been
+                closed remotely. This could be due to bad connectivity, or the
+                Gram server having a bad time.
+              </Typography>
 
-            {fails > 0 && (
-              <>
-                <br />
-                <Typography>Reconnection failed, try again?</Typography>
-              </>
-            )}
+              {fails > 0 && (
+                <>
+                  <br />
+                  <Typography>Reconnection failed, try again?</Typography>
+                </>
+              )}
 
-            {/* Unfortunately the error given is not very descriptive. 
+              {/* Unfortunately the error given is not very descriptive. 
               https://stackoverflow.com/questions/18803971/websocket-onerror-how-to-read-error-description
               {error && (
                 <>
@@ -65,23 +66,24 @@ function ConnectivityCheck() {
                   <pre>{JSON.stringify(error)}</pre>
                 </>
               )} */}
-            <br />
+              <br />
 
-            <Button
-              variant="contained"
-              onClick={() => {
-                dispatch(webSocketActions.establishConnection(modelId));
-                setFakeTimeout(true);
-                setTimeout(() => {
-                  setFakeTimeout(false);
-                  setFails(fails + 1);
-                }, 5000);
-              }}
-            >
-              attempt to reconnect
-            </Button>
-          </>
-        )}
+              <Button
+                variant="contained"
+                onClick={() => {
+                  dispatch(webSocketActions.establishConnection(modelId));
+                  setFakeTimeout(true);
+                  setTimeout(() => {
+                    setFakeTimeout(false);
+                    setFails(fails + 1);
+                  }, 5000);
+                }}
+              >
+                attempt to reconnect
+              </Button>
+            </>
+          )}
+        </>
       </DialogContent>
     </Dialog>
   );
