@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.1](https://github.com/klarna/gram/compare/v4.6.0...v4.6.1) (2023-11-14)
+
+### Bug Fixes
+
+- importing models with deleted components should no longer crash ([f5a2681](https://github.com/klarna/gram/commit/f5a2681ea30797b4f123e4a0fbf9765f7e53c4aa))
+- stop SeveritySlider from crashing if severity is null. ([25f7654](https://github.com/klarna/gram/commit/25f7654c051c17ef34c38e76b4a2dc04d4336541))
+
 # [4.6.0](https://github.com/klarna/gram/compare/v4.5.1...v4.6.0) (2023-11-14)
 
 ### Bug Fixes
