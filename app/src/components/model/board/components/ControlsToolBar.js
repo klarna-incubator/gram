@@ -10,6 +10,18 @@ import {
   CURSOR_PAN,
   CURSOR_POINTER,
 } from "../../../../actions/model/controlsToolbarActions";
+import { ScreenshotMonitor } from "@mui/icons-material";
+import Konva from "konva";
+
+// This is just a quick hack but fun little feature. The exported image is a bit janky by itself as it comes with gridlines and no background,
+// but it looks ok when copied into a doc. Would be cool to make an SVG instead.
+function exportImage() {
+  const data = Konva.stages[0].toDataURL({ pixelRatio: 3 });
+  const a = document.createElement("a");
+  a.href = data;
+  a.download = "Image.png";
+  a.click();
+}
 
 export const ControlsToolBar = (props) => {
   const { zoomInCenter } = props;
@@ -50,6 +62,12 @@ export const ControlsToolBar = (props) => {
         </ToggleButton>
         <ToggleButton value="zoom-out" onClick={() => zoomInCenter(1)}>
           <ZoomOutIcon />
+        </ToggleButton>
+        <ToggleButton>
+          <ScreenshotMonitor
+            value="export-image"
+            onClick={() => exportImage()}
+          />
         </ToggleButton>
       </ToggleButtonGroup>
     </Paper>
