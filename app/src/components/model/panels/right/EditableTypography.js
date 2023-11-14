@@ -1,8 +1,15 @@
 import { Input, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export function EditableTypography(props) {
-  const { text, variant, color, onSubmit, placeholder, sx, readOnly } = props;
+export function EditableTypography({
+  text,
+  variant,
+  color,
+  onSubmit,
+  placeholder,
+  sx,
+  readOnly,
+}) {
   const colorType = color.substring(5);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -11,10 +18,6 @@ export function EditableTypography(props) {
   useEffect(() => {
     setValue(text);
   }, [text]);
-
-  function toggleIsEditing() {
-    setIsEditing(!isEditing);
-  }
 
   return (
     <>
@@ -30,7 +33,7 @@ export function EditableTypography(props) {
           onBlur={(e) => {
             setValue(e.target.value);
             onSubmit(e.target.value);
-            toggleIsEditing();
+            setIsEditing(!isEditing);
           }}
           onFocus={(e) => {
             e.target.selectionStart = e.target.value.length;
@@ -65,7 +68,7 @@ export function EditableTypography(props) {
           color={color}
           onClick={() => {
             if (!readOnly) {
-              toggleIsEditing();
+              setIsEditing(!isEditing);
             }
           }}
           sx={{
