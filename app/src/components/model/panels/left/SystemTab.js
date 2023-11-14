@@ -125,7 +125,7 @@ export function SystemTab() {
                   control={
                     <Switch
                       color="primary"
-                      checked={isTemplate}
+                      checked={isTemplate || false}
                       onChange={(val) => {
                         setTemplate({ id: modelId, isTemplate: !isTemplate });
                       }}
