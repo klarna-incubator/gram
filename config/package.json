@@ -36,7 +36,7 @@
     "@gram/azure": "*",
     "@gram/cncf": "*",
     "@gram/core": "*",
-    "@gram/kubernetes": "*",    
+    "@gram/kubernetes": "*",
     "@gram/stride": "*",
     "@gram/svgporn": "*",
     "@gram/threatlib": "*",
