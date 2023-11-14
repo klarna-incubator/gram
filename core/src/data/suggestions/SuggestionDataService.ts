@@ -17,6 +17,7 @@ import {
   SuggestedThreat,
   SuggestionStatus,
 } from "./Suggestion.js";
+import { GramConnectionPool } from "../postgres.js";
 
 function convertToSuggestionControl(row: any) {
   const control = new SuggestedControl(
@@ -50,9 +51,12 @@ function convertToSuggestionThreat(row: any) {
 const log = log4js.getLogger("SuggestionDataService");
 
 export class SuggestionDataService extends EventEmitter {
-  constructor(private pool: Pool, private dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer) {
     super();
+    this.pool = dal.pool;
   }
+
+  private pool: GramConnectionPool;
 
   /**
    * Copy suggestions from one model to anothger
@@ -128,11 +132,7 @@ export class SuggestionDataService extends EventEmitter {
     DELETE FROM suggested_controls WHERE source = $1::varchar and model_id = $2::uuid and status = 'new';
    `;
 
-    const client = await this.pool.connect();
-
-    try {
-      await client.query("BEGIN");
-
+    await this.pool.runTransaction(async (client) => {
       // Clear previous batches from this source
       if (suggestions.sourceSlugToClear) {
         await client.query(deleteControlsQuery, [
@@ -179,19 +179,13 @@ export class SuggestionDataService extends EventEmitter {
       }
       const queries = bulkThreats.concat(bulkControls);
       await Promise.all(queries);
-      await client.query("COMMIT");
       log.debug(
         `inserted ${bulkThreats.length} suggested threats, ${bulkControls.length} suggested controls.`
       );
       this.emit("updated-for", {
         modelId,
       });
-    } catch (e) {
-      await client.query("ROLLBACK");
-      log.error("Failed to insert suggestions", e);
-    } finally {
-      client.release();
-    }
+    });
   }
 
   async listControlSuggestions(modelId: string) {

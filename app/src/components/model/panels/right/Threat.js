@@ -13,7 +13,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
 import {
   useCreateMitigationMutation,
@@ -21,22 +20,22 @@ import {
 } from "../../../../api/gram/mitigations";
 
 import {
+  useAcceptSuggestionMutation,
+  useListSuggestionsQuery,
+} from "../../../../api/gram/suggestions";
+import {
   useDeleteThreatMutation,
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
+import { CollapsePaper } from "../../../elements/CollapsePaper";
 import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { SeveritySlider } from "../../modals/SeveritySlider";
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
-import {
-  useAcceptSuggestionMutation,
-  useListSuggestionsQuery,
-} from "../../../../api/gram/suggestions";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
-import { SeveritySlider } from "../../modals/SeveritySlider";
-import { CollapsePaper } from "../../../elements/CollapsePaper";
 
 export function Threat({
   threat,
@@ -53,9 +52,6 @@ export function Threat({
   const [createControl] = useCreateControlMutation();
   const [createMitigation] = useCreateMitigationMutation();
   const [acceptSuggestion] = useAcceptSuggestionMutation();
-
-  const [title, setTitle] = useState(threat.title);
-  const [description, setDescription] = useState(threat.description);
 
   const partialThreatId = threat?.suggestionId
     ? threat.suggestionId.split("/").splice(1).join("/")
@@ -80,21 +76,6 @@ export function Threat({
   const linkedControls = controls.filter((c) =>
     threatsMap[threat.id]?.includes(c.id)
   );
-
-  const [severity, setSeverity] = useState(threat.severity || "low");
-
-  //TODO clean this up, not the correct way to use useEffect imo
-  useEffect(() => {
-    if (title !== threat.title || description !== threat.description) {
-      updateThreat({
-        modelId: threat.modelId,
-        id: threat.id,
-        title: title,
-        description: description,
-      });
-    }
-    // eslint-disable-next-line
-  }, [title, description]);
 
   function createControlWithMitigation(title) {
     createControl({
@@ -178,7 +159,7 @@ export function Threat({
                       id: threat.id,
                       modelId: threat.modelId,
                       isActionItem: !threat.isActionItem,
-                      severity: severity,
+                      severity: threat.severity || "low",
                     })
                   }
                   disabled={readOnly}
@@ -192,11 +173,17 @@ export function Threat({
                 </IconButton>
               </Tooltip>
               <EditableTypography
-                text={title}
+                text={threat.title}
                 placeholder="Title"
                 variant="body1"
                 color="text.primary"
-                onSubmit={setTitle}
+                onSubmit={(v) =>
+                  updateThreat({
+                    modelId: threat.modelId,
+                    id: threat.id,
+                    title: v,
+                  })
+                }
                 readOnly={readOnly}
                 sx={{
                   lineHeight: "1.4",
@@ -218,15 +205,21 @@ export function Threat({
               )}
             </Box>
             <EditableTypography
-              text={description}
+              text={threat.description}
               placeholder={
                 readOnly
                   ? "No description provided."
                   : "Add description (optional)"
               }
               variant="body1"
-              color={description ? "text.secondary" : "text.disabled"}
-              onSubmit={setDescription}
+              color={threat.description ? "text.secondary" : "text.disabled"}
+              onSubmit={(v) =>
+                updateThreat({
+                  modelId: threat.modelId,
+                  id: threat.id,
+                  description: v,
+                })
+              }
               readOnly={readOnly}
               sx={{
                 paddingBottom: "10px",
@@ -291,14 +284,13 @@ export function Threat({
                   hideDescription={hideSeverityDescription}
                   onChange={(v) => {
                     updateThreat({
-                      id: threat.id,
                       modelId: threat.modelId,
+                      id: threat.id,
                       severity: v,
                     });
-                    setSeverity(v);
                   }}
                   disabled={readOnly}
-                  defaultValue={severity}
+                  severity={threat.severity}
                   valueLabelDisplay="off"
                 />
               </Paper>

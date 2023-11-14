@@ -29,23 +29,22 @@ const sampleNotification = new PlaintextHandlebarsNotificationTemplate(
 );
 
 describe("NotificationDataService implementation", () => {
-  let pool: pg.Pool;
   let dal: DataAccessLayer;
   let data: NotificationDataService;
 
   beforeAll(async () => {
-    pool = await createPostgresPool();
+    const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
     dal.templateHandler.register(sampleNotification);
-    data = new NotificationDataService(pool, dal);
+    data = new NotificationDataService(dal);
   });
 
   beforeEach(async () => {
-    await _deleteAllTheThings(pool);
+    await _deleteAllTheThings(dal);
   });
 
   afterAll(async () => {
-    await pool.end();
+    await dal.pool.end();
   });
 
   describe("queue", () => {

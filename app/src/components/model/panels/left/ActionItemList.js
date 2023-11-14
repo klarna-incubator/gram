@@ -12,6 +12,11 @@ function ComponentActionItem({
 }) {
   const component = useComponent(componentId);
 
+  /**
+   * Fix for the case where a component was just deleted.
+   */
+  if (!component) return null;
+
   return (
     <Box sx={{ paddingBottom: "10px" }}>
       <CollapsePaper
@@ -49,6 +54,7 @@ export function ActionItemList({ automaticallyExpanded = false }) {
           <br />
           {actionItems.map(({ componentId, threats }) => (
             <ComponentActionItem
+              key={`component-action-item-${componentId}`}
               componentId={componentId}
               threats={threats}
               defaultExpanded={automaticallyExpanded}

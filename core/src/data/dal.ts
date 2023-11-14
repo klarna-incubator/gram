@@ -19,14 +19,18 @@ import { authzProvider } from "../auth/authorization.js";
 import { systemProvider } from "./systems/systems.js";
 import { SystemProvider } from "./systems/SystemProvider.js";
 import { ReviewerHandler } from "./reviews/ReviewerHandler.js";
-import { createPostgresPool, getDatabaseName } from "./postgres.js";
+import {
+  GramConnectionPool,
+  createPostgresPool,
+  getDatabaseName,
+} from "./postgres.js";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
  */
 export class DataAccessLayer {
   // Database Connection Pool for direct access to postgres
-  pool: pg.Pool;
+  pool: GramConnectionPool;
 
   // DataServices - specific logic to handle database interactions
   modelService: ModelDataService;
@@ -62,7 +66,7 @@ export class DataAccessLayer {
   }
 
   constructor(pool: pg.Pool) {
-    this.pool = pool;
+    this.pool = new GramConnectionPool(pool);
     this.sysPropHandler = new SystemPropertyHandler();
     this.ccHandler = new ComponentClassHandler();
     this.templateHandler = new TemplateHandler();
@@ -71,15 +75,15 @@ export class DataAccessLayer {
     this.reviewerHandler = new ReviewerHandler();
 
     // Initialize Data Services
-    this.modelService = new ModelDataService(pool, this);
-    this.controlService = new ControlDataService(pool, this);
-    this.threatService = new ThreatDataService(pool, this);
-    this.mitigationService = new MitigationDataService(pool);
-    this.notificationService = new NotificationDataService(pool, this);
-    this.reviewService = new ReviewDataService(pool, this);
-    this.suggestionService = new SuggestionDataService(pool, this);
+    this.modelService = new ModelDataService(this);
+    this.controlService = new ControlDataService(this);
+    this.threatService = new ThreatDataService(this);
+    this.mitigationService = new MitigationDataService(this);
+    this.notificationService = new NotificationDataService(this);
+    this.reviewService = new ReviewDataService(this);
+    this.suggestionService = new SuggestionDataService(this);
     this.suggestionEngine = new SuggestionEngine(this);
-    this.reportService = new ReportDataService(pool, this);
-    this.bannerService = new BannerDataService(pool, this);
+    this.reportService = new ReportDataService(this);
+    this.bannerService = new BannerDataService(this);
   }
 }

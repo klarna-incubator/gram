@@ -1,6 +1,6 @@
 import { Slider, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const baseMarks = [
   {
@@ -27,54 +27,69 @@ const baseMarks = [
 
 export function ColorSlider({
   marks,
-  defaultValue,
-  onChange,
+  value,
+  onChangeCommitted,
   hideDescription,
   ...props
 }) {
-  const joinedMarks = marks.map((m, i) => ({
-    ...(baseMarks.length > i ? baseMarks[i] : {}),
-    ...m,
-  }));
+  // Memoized to avoid issues with useEffect later. Not doing the memo means useEffect can't
+  // detect it's the same marks and triggers an infinite render loop.
+  const joinedMarks = useMemo(
+    () =>
+      marks.map((m, i) => ({
+        ...(baseMarks.length > i ? baseMarks[i] : {}),
+        ...m,
+      })),
+    [marks]
+  );
 
-  const defaultMark = joinedMarks.find((m) => m.textValue === defaultValue);
-  const [selectedMark, setSelectedMark] = useState(defaultMark);
+  const defaultMark = joinedMarks.find((m) => m.textValue === value);
+  const [mark, setMark] = useState(defaultMark);
+
+  // Update the mark if an upstream value is updated, i.e. API value changed.
+  useEffect(() => {
+    const newMark = joinedMarks.find((m) => m.textValue === value);
+    setMark(newMark);
+  }, [joinedMarks, value]);
 
   return (
     <>
       <Box sx={{ paddingLeft: "30px", paddingRight: "30px" }}>
         <Slider
-          value={selectedMark.value}
+          value={mark.value}
           step={null} // restricts to only these steps
           marks={joinedMarks}
           min={0}
           max={4}
           valueLabelFormat={(v, i) => joinedMarks[i].label}
-          onChange={(e) => {
-            const mark = joinedMarks.find((m) => m.value === e.target.value);
-            setSelectedMark(mark);
-            return onChange(mark);
+          onChange={(_, v) => {
+            const m = joinedMarks.find((m) => m.value === v);
+            setMark(m);
+          }}
+          onChangeCommitted={(_, v) => {
+            const m = joinedMarks.find((m) => m.value === v);
+            onChangeCommitted(m.textValue);
           }}
           sx={{
-            color: selectedMark?.color || "primary",
+            color: mark?.color || "primary",
             ".MuiSlider-markLabel": {
               fontSize: "9px",
             },
             "&.Mui-disabled .MuiSlider-track": {
-              color: selectedMark?.color || "primary",
+              color: mark?.color || "primary",
             },
           }}
           {...props}
         />
       </Box>
-      {!hideDescription && selectedMark?.description && (
+      {!hideDescription && mark?.description && (
         <Typography
-          sx={{ "white-space": "pre-wrap" }}
+          sx={{ whiteSpace: "pre-wrap" }}
           variant="caption"
           display="block"
           className="dimmed"
         >
-          {selectedMark?.description}
+          {mark?.description}
         </Typography>
       )}
     </>

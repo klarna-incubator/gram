@@ -5,10 +5,10 @@
  */
 
 import { randomUUID } from "crypto";
-import { EventEmitter } from "node:events";
-import pg from "pg";
 import log4js from "log4js";
+import { EventEmitter } from "node:events";
 import { DataAccessLayer } from "../dal.js";
+import { GramConnectionPool } from "../postgres.js";
 import Model, { ModelData } from "./Model.js";
 
 function convertToModel(row: any) {
@@ -37,13 +37,13 @@ export interface ModelListOptions {
 }
 
 export class ModelDataService extends EventEmitter {
-  constructor(pool: pg.Pool, private dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer) {
     super();
-    this.pool = pool;
+    this.pool = dal.pool;
     this.log = log4js.getLogger("ModelDataService");
   }
 
-  private pool: pg.Pool;
+  private pool: GramConnectionPool;
   log: any;
 
   /**
@@ -291,10 +291,7 @@ export class ModelDataService extends EventEmitter {
         AND deleted_at IS NULL;
       `;
 
-    const client = await this.pool.connect();
-    try {
-      await client.query("BEGIN");
-
+    await this.pool.runTransaction(async (client) => {
       for (const threat of threats) {
         uuid.set(threat.id!, randomUUID());
         await client.query(queryThreats, [
@@ -331,14 +328,10 @@ export class ModelDataService extends EventEmitter {
           mitigation.controlId,
         ]);
       }
-      await client.query("COMMIT");
-      this.emit("updated-for", { modelId: uuid.get(srcModel.id!) });
-    } catch (e) {
-      await client.query("ROLLBACK");
-      this.log.error("Failed to copy model", e);
-    } finally {
-      client.release();
-    }
+    });
+
+    this.emit("updated-for", { modelId: uuid.get(srcModel.id!) });
+
     return uuid.get(srcModel.id!) as string;
   }
 
@@ -375,10 +368,7 @@ export class ModelDataService extends EventEmitter {
       RETURNING id
     `;
     let success = false;
-    const client = await this.pool.connect();
-    try {
-      await client.query("BEGIN");
-
+    const res = await this.pool.runTransaction(async (client) => {
       const threats = await client.query(queryThreats, [id]);
 
       const controls = await client.query(queryControls, [id]);
@@ -388,17 +378,14 @@ export class ModelDataService extends EventEmitter {
       await client.query(queryMitigations, [threatIds, controlIds]);
 
       const res = await client.query(query, [id]);
-      await client.query("COMMIT");
-      if (res.rowCount > 0) {
-        this.emit("updated-for", { modelId: id });
-        success = true;
-      }
-    } catch (e) {
-      await client.query("ROLLBACK");
-      this.log.error("Failed to delete model", e);
-    } finally {
-      client.release();
+      return res;
+    });
+
+    if (res.rowCount > 0) {
+      this.emit("updated-for", { modelId: id });
+      success = true;
     }
+
     return success;
   }
 
@@ -481,19 +468,15 @@ export class ModelDataService extends EventEmitter {
       );
     `;
 
-    const client = await this.pool.connect();
-    let insertRes = null;
-    try {
-      await client.query("BEGIN");
-      insertRes = await client.query(insertQuery, [userId, modelId, action]);
+    const insertRes = await this.pool.runTransaction(async (client) => {
+      const insertRes = await client.query(insertQuery, [
+        userId,
+        modelId,
+        action,
+      ]);
       await client.query(deleteQuery, [userId]);
-      await client.query("COMMIT");
-    } catch (e) {
-      await client.query("ROLLBACK");
-      this.log.error("Failed to log action", e);
-    } finally {
-      client.release();
-    }
+      return insertRes;
+    });
 
     return insertRes?.rows[0]?.id;
   }

@@ -1,6 +1,7 @@
-import pg from "pg";
-import { EventEmitter } from "node:events";
 import log4js from "log4js";
+import { EventEmitter } from "node:events";
+import { DataAccessLayer } from "../dal.js";
+import { GramConnectionPool } from "../postgres.js";
 import Mitigation from "./Mitigation.js";
 
 function convertToMitigation(row: any) {
@@ -15,12 +16,12 @@ function convertToMitigation(row: any) {
 }
 
 export class MitigationDataService extends EventEmitter {
-  constructor(pool: pg.Pool) {
+  constructor(private dal: DataAccessLayer) {
     super();
-    this.pool = pool;
+    this.pool = dal.pool;
     this.log = log4js.getLogger("MitigationDataService");
   }
-  private pool: pg.Pool;
+  private pool: GramConnectionPool;
   log: any;
 
   /**
@@ -45,26 +46,17 @@ export class MitigationDataService extends EventEmitter {
       WHERE id = $1::uuid
     `;
 
-    const client = await this.pool.connect();
-    try {
-      await client.query("BEGIN");
+    await this.pool.runTransaction(async (client) => {
       await client.query(query, [threatId, controlId, createdBy]);
       const res_threats = await client.query(queryThreats, [threatId]);
-      await client.query("COMMIT");
 
       this.emit("updated-for", {
         modelId: res_threats.rows[0].model_id,
         componentId: res_threats.rows[0].component_id,
       });
-      return { threatId, controlId };
-    } catch (e) {
-      await client.query("ROLLBACK");
-      this.log.error("Failed to create mitigation", e);
-    } finally {
-      client.release();
-    }
+    });
 
-    return false;
+    return { threatId, controlId };
   }
 
   /**
