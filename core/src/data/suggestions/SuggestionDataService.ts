@@ -102,8 +102,6 @@ export class SuggestionDataService extends EventEmitter {
       }))
       .filter((cs) => cs.componentId); // If componentId is null then the component this was suggested for may no longer exist
 
-    console.log("copy", controls);
-
     await this.bulkInsert(toModelId, {
       threats,
       controls,
