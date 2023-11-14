@@ -78,8 +78,8 @@ export class SuggestionDataService extends EventEmitter {
       return;
     }
 
-    await this.bulkInsert(toModelId, {
-      threats: threatSuggestions.map((ts) => ({
+    const threats = threatSuggestions
+      .map((ts) => ({
         ...ts,
         id: new SuggestionID(
           uuidMap.get(ts.componentId) + "/" + ts.id.partialId
@@ -87,8 +87,11 @@ export class SuggestionDataService extends EventEmitter {
         componentId: uuidMap.get(ts.componentId) as string,
         modelId: toModelId,
         slug: ts.id.partialId,
-      })),
-      controls: controlSuggestions.map((cs) => ({
+      }))
+      .filter((ts) => ts.componentId); // If componentId is null then the component this was suggested for may no longer exist
+
+    const controls = controlSuggestions
+      .map((cs) => ({
         ...cs,
         id: new SuggestionID(
           uuidMap.get(cs.componentId) + "/" + cs.id.partialId
@@ -96,7 +99,14 @@ export class SuggestionDataService extends EventEmitter {
         componentId: uuidMap.get(cs.componentId) as string,
         modelId: toModelId,
         slug: cs.id.partialId,
-      })),
+      }))
+      .filter((cs) => cs.componentId); // If componentId is null then the component this was suggested for may no longer exist
+
+    console.log("copy", controls);
+
+    await this.bulkInsert(toModelId, {
+      threats,
+      controls,
     });
   }
 
@@ -147,8 +157,8 @@ export class SuggestionDataService extends EventEmitter {
 
       let bulkThreats: Promise<QueryResult<any>>[] = [];
       if (suggestions.threats.length > 0) {
-        bulkThreats = suggestions.threats.map((threat) =>
-          client.query(threatQuery, [
+        bulkThreats = suggestions.threats.map((threat) => {
+          return client.query(threatQuery, [
             threat.id.val,
             modelId,
             threat.status || SuggestionStatus.New,
@@ -157,8 +167,8 @@ export class SuggestionDataService extends EventEmitter {
             threat.description,
             threat.reason,
             threat.source,
-          ])
-        );
+          ]);
+        });
       }
 
       let bulkControls: Promise<QueryResult<any>>[] = [];

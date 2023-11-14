@@ -294,6 +294,10 @@ export class ModelDataService extends EventEmitter {
     await this.pool.runTransaction(async (client) => {
       for (const threat of threats) {
         uuid.set(threat.id!, randomUUID());
+        if (!uuid.get(threat.componentId)) {
+          // skip, component no longer exists
+          continue;
+        }
         await client.query(queryThreats, [
           uuid.get(threat.id!),
           uuid.get(srcModel.id!),
@@ -307,6 +311,10 @@ export class ModelDataService extends EventEmitter {
 
       for (const control of controls) {
         uuid.set(control.id!, randomUUID());
+        if (!uuid.get(control.componentId)) {
+          // skip, component no longer exists
+          continue;
+        }
         await client.query(queryControls, [
           uuid.get(control.id!),
           uuid.get(srcModel.id!),
