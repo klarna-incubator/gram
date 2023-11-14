@@ -20,8 +20,8 @@
     "type": "git",
     "url": "git+https://github.com/klarna-incubator/gram.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Klarna",
+  "license": "Apache License 2.0",
   "bugs": {
     "url": "https://github.com/klarna-incubator/gram/issues"
   },
