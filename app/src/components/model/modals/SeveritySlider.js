@@ -35,7 +35,7 @@ export function SeveritySlider({ severity, onChange, ...props }) {
       onChangeCommitted={(value) => {
         onChange(value);
       }}
-      value={severity}
+      value={severity || "low"} // Default to low in the odd case where we get a null severity value, allowed by backend.
       {...props}
     />
   );
