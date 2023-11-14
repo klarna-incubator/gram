@@ -5,7 +5,11 @@ import { DateLabel } from "./DateLabel";
 function NoReview() {
   return (
     <Tooltip title={"No review has been requested yet. "}>
-      <Chip sx={{ width: "200px" }} label={"Review not requested"} />
+      <Chip
+        component={"span"}
+        sx={{ width: "200px" }}
+        label={"Review not requested"}
+      />
     </Tooltip>
   );
 }
@@ -23,6 +27,7 @@ export function ModelComplianceBadge({ reviewStatus, reviewApprovedAt }) {
           color="info"
           sx={{ width: "200px", textAlign: "left" }}
           label={<>Review pending</>}
+          component={"span"}
         />
       </Tooltip>
     );
@@ -37,6 +42,7 @@ export function ModelComplianceBadge({ reviewStatus, reviewApprovedAt }) {
           color="warning"
           sx={{ width: "200px", textAlign: "left" }}
           label={<>Meeting Requested</>}
+          component={"span"}
         />
       </Tooltip>
     );
@@ -63,6 +69,7 @@ export function ModelComplianceBadge({ reviewStatus, reviewApprovedAt }) {
                 Approval expired <DateLabel ts={validUntil}></DateLabel>{" "}
               </>
             }
+            component={"span"}
           />
         </Tooltip>
       );
@@ -79,11 +86,13 @@ export function ModelComplianceBadge({ reviewStatus, reviewApprovedAt }) {
             </b>
           </>
         }
+        component={"span"}
       >
         {aboutToExpire ? (
           <Chip
             color="warning"
             sx={{ width: "200px" }}
+            component={"span"}
             label={
               <>
                 Approved until <DateLabel ts={validUntil}></DateLabel>{" "}
@@ -94,6 +103,7 @@ export function ModelComplianceBadge({ reviewStatus, reviewApprovedAt }) {
           <Chip
             color="success"
             sx={{ width: "200px" }}
+            component={"span"}
             label={
               <>
                 Approved until <DateLabel ts={validUntil}></DateLabel>{" "}
