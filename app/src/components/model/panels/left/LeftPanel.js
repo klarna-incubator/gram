@@ -10,9 +10,7 @@ import { LeftTabsHeader } from "./LeftTabsHeader";
 import { SystemTab } from "./SystemTab";
 import { ActionItemTab } from "./ActionItemTab";
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
+function TabPanel({ children, value, index, ...other }) {
   return (
     <div
       role="tabpanel"
@@ -31,9 +29,6 @@ function TabPanel(props) {
   );
 }
 
-const width = "16.6vw";
-const minWidth = 310;
-
 export function LeftPanel() {
   const [tab, setTab] = useState(TAB.SYSTEM);
 
@@ -46,43 +41,43 @@ export function LeftPanel() {
     setTab(component ? TAB.COMPONENT : TAB.SYSTEM);
   }, [component]);
 
+  if (leftPanelCollapsed) {
+    return null;
+  }
+
   return (
-    <div>
-      {leftPanelCollapsed === false && (
-        <Box>
-          <ToggleLeftPanelButton />
-          <Drawer
-            id="panel-left"
-            sx={{
-              width,
-              minWidth,
-              flexShrink: 0,
-              "& .MuiDrawer-paper": {
-                minWidth,
-                width,
-                boxSizing: "border-box",
-              },
-            }}
-            variant="permanent"
-            anchor="left"
-          >
-            <Toolbar />
-            <LeftTabsHeader tab={tab} setTab={setTab} />
-            <TabPanel value={tab} index={TAB.SYSTEM}>
-              <SystemTab />
-            </TabPanel>
-            <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
-              <ActionItemTab />
-            </TabPanel>
-            {component && (
-              <TabPanel value={tab} index={TAB.COMPONENT}>
-                <ComponentTab />
-              </TabPanel>
-            )}
-            <LeftFooter />
-          </Drawer>
-        </Box>
-      )}
-    </div>
+    <Box>
+      <ToggleLeftPanelButton />
+      <Drawer
+        id="panel-left"
+        sx={{
+          width: "16.6vw",
+          minWidth: 310,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: "16.6vw",
+            minWidth: 310,
+            boxSizing: "border-box",
+          },
+        }}
+        variant="permanent"
+        anchor="left"
+      >
+        <Toolbar />
+        <LeftTabsHeader tab={tab} setTab={setTab} />
+        <TabPanel value={tab} index={TAB.SYSTEM}>
+          <SystemTab />
+        </TabPanel>
+        <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
+          <ActionItemTab />
+        </TabPanel>
+        {component && (
+          <TabPanel value={tab} index={TAB.COMPONENT}>
+            <ComponentTab />
+          </TabPanel>
+        )}
+        <LeftFooter />
+      </Drawer>
+    </Box>
   );
 }
