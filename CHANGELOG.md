@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/klarna-incubator/gram/compare/v4.6.1...v4.7.0) (2023-11-15)
+
+### Bug Fixes
+
+- suggestions should now clear correctly if the source no longer suggests them ([8d6c988](https://github.com/klarna-incubator/gram/commit/8d6c98898c8fe8a6fa5fc86c160bf9f04a019a55))
+- ui crash if copying component with no controls/threats ([38e80f6](https://github.com/klarna-incubator/gram/commit/38e80f69ab122f9d9b49b9833723e2ed6c92e6f5))
+
+### Features
+
+- add button to toolbar for adding new component ([9fcad2e](https://github.com/klarna-incubator/gram/commit/9fcad2eb912ccb672c4fa4a576fa046b6572f603)), closes [#28](https://github.com/klarna-incubator/gram/issues/28)
+- add quick and dirty screenshot feature 🖼️ ([1218589](https://github.com/klarna-incubator/gram/commit/1218589709bc3630281df39d8513b49e243b2ef7))
+
 ## [4.6.1](https://github.com/klarna-incubator/gram/compare/v4.6.0...v4.6.1) (2023-11-14)
 
 ### Bug Fixes
