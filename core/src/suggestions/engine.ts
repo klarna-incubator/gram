@@ -69,7 +69,7 @@ export class SuggestionEngine {
       try {
         const result = await source.suggest(model);
         return {
-          sourceSlug: source.slug,
+          sourceSlugToClear: source.slug,
           controls: result.controls.map((s) => ({
             ...s,
             id: generateSuggestionId(source.slug, s),
@@ -87,7 +87,7 @@ export class SuggestionEngine {
           error
         );
         return {
-          sourceSlug: source.slug,
+          sourceSlugToClear: source.slug,
           controls: [],
           threats: [],
         };

@@ -1,18 +1,13 @@
 import { AppBar, Grow, Tab, Tabs } from "@mui/material";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TAB } from "./constants";
 
-export function LeftTabsHeader(props) {
-  const { tab, setTab } = props;
-
-  const component = useSelectedComponent();
-
+export function LeftTabsHeader({ tab, setTab }) {
   return (
     <AppBar position="static">
       <Grow in={true}>
         <Tabs
           value={tab}
-          onChange={(e, v) => setTab(v)}
+          onChange={(_, v) => setTab(v)}
           textColor="inherit"
           variant="fullWidth"
           sx={{
@@ -23,7 +18,7 @@ export function LeftTabsHeader(props) {
         >
           <Tab disableRipple label="SYSTEM" value={TAB.SYSTEM} />
           <Tab disableRipple label="ACTION ITEMS" value={TAB.ACTION_ITEMS} />
-          {component && (
+          {tab === TAB.COMPONENT && (
             <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
           )}
         </Tabs>
