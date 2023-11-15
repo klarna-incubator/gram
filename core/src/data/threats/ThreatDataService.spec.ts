@@ -12,25 +12,23 @@ import { ThreatDataService } from "./ThreatDataService.js";
 describe("ThreatDataService implementation", () => {
   let data: ThreatDataService;
   let dal: DataAccessLayer;
-  let pool: pg.Pool;
   let model: Model;
 
   beforeAll(async () => {
-    pool = await createPostgresPool();
+    const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
     data = dal.threatService;
-    await _deleteAllTheThings(pool);
   });
 
   beforeEach(async () => {
-    await _deleteAllTheThings(pool);
+    await _deleteAllTheThings(dal);
     model = new Model("some-system-id", "some-version", "root");
     model.data = { components: [], dataFlows: [] };
     model.id = await dal.modelService.create(model);
   });
 
   afterAll(async () => {
-    await pool.end();
+    await dal.pool.end();
   });
 
   describe("getById threat", () => {

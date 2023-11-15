@@ -23,12 +23,17 @@ export class GramConnectionPool {
   }
 
   async query(query: string, ...args: any[]) {
-    log.info(args);
+    log.debug(query);
     return this._pool.query(query, ...args);
   }
 
   async runTransaction<T>(transaction: Transaction<T>): Promise<T> {
     const client = await this._pool.connect();
+
+    client.on("error", (err) => {
+      // This *should* catch weird timeout/disconnects that may happen
+      log.error("Transaction error", err);
+    });
 
     try {
       // Do transaction stuff
@@ -99,6 +104,7 @@ export async function createPostgresPool(passedOpts?: pg.PoolConfig) {
       process.env.NODE_ENV && ["test"].includes(process.env.NODE_ENV)
         ? 0
         : 5000,
+    idleTimeoutMillis: 1000,
   };
 
   defaultOpts.host = await config.postgres.host.getValue();
@@ -134,9 +140,6 @@ export async function createPostgresPool(passedOpts?: pg.PoolConfig) {
   pool.on("error", (err) => {
     log.error("Pool error", err);
   });
-
-  // TODO: will refactor DAL and more to use this wrapper class.
-  // return new GramConnectionPool(pool);
 
   // TODO: figure out metrics for multiple pools...
   initPostgresMetrics(pool);

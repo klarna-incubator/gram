@@ -17,6 +17,7 @@ import {
   SuggestedThreat,
   SuggestionStatus,
 } from "./Suggestion.js";
+import { GramConnectionPool } from "../postgres.js";
 
 function convertToSuggestionControl(row: any) {
   const control = new SuggestedControl(
@@ -50,9 +51,12 @@ function convertToSuggestionThreat(row: any) {
 const log = log4js.getLogger("SuggestionDataService");
 
 export class SuggestionDataService extends EventEmitter {
-  constructor(private pool: Pool, private dal: DataAccessLayer) {
+  constructor(private dal: DataAccessLayer) {
     super();
+    this.pool = dal.pool;
   }
+
+  private pool: GramConnectionPool;
 
   /**
    * Copy suggestions from one model to anothger
@@ -74,8 +78,8 @@ export class SuggestionDataService extends EventEmitter {
       return;
     }
 
-    await this.bulkInsert(toModelId, {
-      threats: threatSuggestions.map((ts) => ({
+    const threats = threatSuggestions
+      .map((ts) => ({
         ...ts,
         id: new SuggestionID(
           uuidMap.get(ts.componentId) + "/" + ts.id.partialId
@@ -83,8 +87,11 @@ export class SuggestionDataService extends EventEmitter {
         componentId: uuidMap.get(ts.componentId) as string,
         modelId: toModelId,
         slug: ts.id.partialId,
-      })),
-      controls: controlSuggestions.map((cs) => ({
+      }))
+      .filter((ts) => ts.componentId); // If componentId is null then the component this was suggested for may no longer exist
+
+    const controls = controlSuggestions
+      .map((cs) => ({
         ...cs,
         id: new SuggestionID(
           uuidMap.get(cs.componentId) + "/" + cs.id.partialId
@@ -92,7 +99,12 @@ export class SuggestionDataService extends EventEmitter {
         componentId: uuidMap.get(cs.componentId) as string,
         modelId: toModelId,
         slug: cs.id.partialId,
-      })),
+      }))
+      .filter((cs) => cs.componentId); // If componentId is null then the component this was suggested for may no longer exist
+
+    await this.bulkInsert(toModelId, {
+      threats,
+      controls,
     });
   }
 
@@ -128,11 +140,7 @@ export class SuggestionDataService extends EventEmitter {
     DELETE FROM suggested_controls WHERE source = $1::varchar and model_id = $2::uuid and status = 'new';
    `;
 
-    const client = await this.pool.connect();
-
-    try {
-      await client.query("BEGIN");
-
+    await this.pool.runTransaction(async (client) => {
       // Clear previous batches from this source
       if (suggestions.sourceSlugToClear) {
         await client.query(deleteControlsQuery, [
@@ -147,8 +155,8 @@ export class SuggestionDataService extends EventEmitter {
 
       let bulkThreats: Promise<QueryResult<any>>[] = [];
       if (suggestions.threats.length > 0) {
-        bulkThreats = suggestions.threats.map((threat) =>
-          client.query(threatQuery, [
+        bulkThreats = suggestions.threats.map((threat) => {
+          return client.query(threatQuery, [
             threat.id.val,
             modelId,
             threat.status || SuggestionStatus.New,
@@ -157,8 +165,8 @@ export class SuggestionDataService extends EventEmitter {
             threat.description,
             threat.reason,
             threat.source,
-          ])
-        );
+          ]);
+        });
       }
 
       let bulkControls: Promise<QueryResult<any>>[] = [];
@@ -179,19 +187,13 @@ export class SuggestionDataService extends EventEmitter {
       }
       const queries = bulkThreats.concat(bulkControls);
       await Promise.all(queries);
-      await client.query("COMMIT");
       log.debug(
         `inserted ${bulkThreats.length} suggested threats, ${bulkControls.length} suggested controls.`
       );
       this.emit("updated-for", {
         modelId,
       });
-    } catch (e) {
-      await client.query("ROLLBACK");
-      log.error("Failed to insert suggestions", e);
-    } finally {
-      client.release();
-    }
+    });
   }
 
   async listControlSuggestions(modelId: string) {

@@ -101,6 +101,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     if (!server) return;
     server.tellClientsToRefetch("threats", { modelId, componentId });
   });
+
   dal.threatService.on("deleted-for", ({ modelId, componentId }) => {
     const server = wssRegistry.get(modelId);
     log.debug(`threat was deleted via api ${modelId} ${componentId}`);

@@ -76,7 +76,7 @@ export const copyNodes = (componentIds) => async (dispatch, getState) => {
     //copy threats
     const copyThreats = async () => {
       await Promise.all(
-        threats?.threats[oldComponentId].map(async (oldThreatData) => {
+        (threats?.threats[oldComponentId] || []).map(async (oldThreatData) => {
           const result = await dispatch(
             api.endpoints.createThreat.initiate({
               modelId: oldThreatData.modelId,
@@ -97,29 +97,31 @@ export const copyNodes = (componentIds) => async (dispatch, getState) => {
 
     const copyControls = async () =>
       await Promise.all(
-        controls?.controls[oldComponentId].map(async (oldControlData) => {
-          const result = await dispatch(
-            api.endpoints.createControl.initiate({
-              modelId: oldControlData.modelId,
-              control: {
-                componentId: newComponentId,
-                description: oldControlData.description,
-                title: oldControlData.title,
-                inPlace: oldControlData.inPlace,
-              },
-            })
-          );
+        (controls?.controls[oldComponentId] || []).map(
+          async (oldControlData) => {
+            const result = await dispatch(
+              api.endpoints.createControl.initiate({
+                modelId: oldControlData.modelId,
+                control: {
+                  componentId: newComponentId,
+                  description: oldControlData.description,
+                  title: oldControlData.title,
+                  inPlace: oldControlData.inPlace,
+                },
+              })
+            );
 
-          if (result?.data?.control?.id) {
-            idMap.set(oldControlData.id, result.data.control.id);
+            if (result?.data?.control?.id) {
+              idMap.set(oldControlData.id, result.data.control.id);
+            }
           }
-        })
+        )
       );
 
     await Promise.all([copyThreats(), copyControls()]);
 
     const oldThreats = new Set(
-      threats?.threats[oldComponentId].map((t) => t.id)
+      threats?.threats[oldComponentId]?.map((t) => t.id) || []
     );
 
     //link mitigations
