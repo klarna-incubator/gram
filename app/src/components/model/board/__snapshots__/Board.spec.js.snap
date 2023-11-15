@@ -28,7 +28,9 @@ exports[`Board renders Board 1`] = `
             >
               <svg
                 aria-hidden="true"
+                aria-label="Toggle pointer mode - allows you to select components"
                 class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-mui-internal-clone-element="true"
                 data-testid="HighlightAltIcon"
                 focusable="false"
                 viewBox="0 0 24 24"
@@ -51,7 +53,9 @@ exports[`Board renders Board 1`] = `
             >
               <svg
                 aria-hidden="true"
+                aria-label="Toggle pan mode - allows you move the diagram. Hint: you can also hold space"
                 class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-mui-internal-clone-element="true"
                 data-testid="PanToolIcon"
                 focusable="false"
                 viewBox="0 0 24 24"
@@ -117,14 +121,16 @@ exports[`Board renders Board 1`] = `
               />
             </button>
             <button
-              aria-pressed="false"
-              class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
+              class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
+              value="download-image"
             >
               <svg
                 aria-hidden="true"
+                aria-label="Download as image"
                 class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-mui-internal-clone-element="true"
                 data-testid="ScreenshotMonitorIcon"
                 focusable="false"
                 value="export-image"
@@ -141,15 +147,29 @@ exports[`Board renders Board 1`] = `
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
+            <button
+              class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
+              tabindex="0"
+              type="button"
+              value="add-component"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                data-testid="AddIcon"
+                focusable="false"
+                value="add-component"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                />
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
           </div>
-        </div>
-        <div
-          class="loading"
-        >
-          <div />
-          <div />
-          <div />
-          <div />
         </div>
         <div
           class="active-users-overlay"
@@ -165,6 +185,14 @@ exports[`Board renders Board 1`] = `
               width="42"
             />
           </div>
+        </div>
+        <div
+          class="loading"
+        >
+          <div />
+          <div />
+          <div />
+          <div />
         </div>
       </div>
     </div>
@@ -193,7 +221,9 @@ exports[`Board renders Board 1`] = `
           >
             <svg
               aria-hidden="true"
+              aria-label="Toggle pointer mode - allows you to select components"
               class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-mui-internal-clone-element="true"
               data-testid="HighlightAltIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -216,7 +246,9 @@ exports[`Board renders Board 1`] = `
           >
             <svg
               aria-hidden="true"
+              aria-label="Toggle pan mode - allows you move the diagram. Hint: you can also hold space"
               class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-mui-internal-clone-element="true"
               data-testid="PanToolIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -282,14 +314,16 @@ exports[`Board renders Board 1`] = `
             />
           </button>
           <button
-            aria-pressed="false"
-            class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
+            class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
+            value="download-image"
           >
             <svg
               aria-hidden="true"
+              aria-label="Download as image"
               class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-mui-internal-clone-element="true"
               data-testid="ScreenshotMonitorIcon"
               focusable="false"
               value="export-image"
@@ -306,15 +340,29 @@ exports[`Board renders Board 1`] = `
               class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
             />
           </button>
+          <button
+            class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
+            tabindex="0"
+            type="button"
+            value="add-component"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="AddIcon"
+              focusable="false"
+              value="add-component"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
         </div>
-      </div>
-      <div
-        class="loading"
-      >
-        <div />
-        <div />
-        <div />
-        <div />
       </div>
       <div
         class="active-users-overlay"
@@ -330,6 +378,14 @@ exports[`Board renders Board 1`] = `
             width="42"
           />
         </div>
+      </div>
+      <div
+        class="loading"
+      >
+        <div />
+        <div />
+        <div />
+        <div />
       </div>
     </div>
   </div>,
