@@ -2,7 +2,7 @@ import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
 import PanToolIcon from "@mui/icons-material/PanTool";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
-import { Paper, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Paper, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,22 +10,11 @@ import {
   CURSOR_PAN,
   CURSOR_POINTER,
 } from "../../../../actions/model/controlsToolbarActions";
-import { ScreenshotMonitor } from "@mui/icons-material";
-import Konva from "konva";
 
-// This is just a quick hack but fun little feature. The exported image is a bit janky by itself as it comes with gridlines and no background,
-// but it looks ok when copied into a doc. Would be cool to make an SVG instead.
-function exportImage() {
-  const data = Konva.stages[0].toDataURL({ pixelRatio: 3 });
-  const a = document.createElement("a");
-  a.href = data;
-  a.download = "Image.png";
-  a.click();
-}
+import { AddComponentButton } from "./AddComponentButton";
+import { DownloadImageButton } from "./DownloadImageButton";
 
-export const ControlsToolBar = (props) => {
-  const { zoomInCenter } = props;
-
+export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
   const dispatch = useDispatch();
 
   let { cursorMode } = useSelector(({ model }) => ({
@@ -50,10 +39,20 @@ export const ControlsToolBar = (props) => {
         aria-label="cursor mode"
       >
         <ToggleButton value={CURSOR_POINTER} aria-label="pointer mode">
-          <HighlightAltIcon />
+          <Tooltip
+            title={"Toggle pointer mode - allows you to select components"}
+          >
+            <HighlightAltIcon />
+          </Tooltip>
         </ToggleButton>
         <ToggleButton value={CURSOR_PAN} aria-label="pan mode">
-          <PanToolIcon />
+          <Tooltip
+            title={
+              "Toggle pan mode - allows you move the diagram. Hint: you can also hold space"
+            }
+          >
+            <PanToolIcon />
+          </Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>
       <ToggleButtonGroup>
@@ -63,13 +62,9 @@ export const ControlsToolBar = (props) => {
         <ToggleButton value="zoom-out" onClick={() => zoomInCenter(1)}>
           <ZoomOutIcon />
         </ToggleButton>
-        <ToggleButton>
-          <ScreenshotMonitor
-            value="export-image"
-            onClick={() => exportImage()}
-          />
-        </ToggleButton>
+        <DownloadImageButton />
+        <AddComponentButton onAddComponent={onAddComponent} />
       </ToggleButtonGroup>
     </Paper>
   );
-};
+}
