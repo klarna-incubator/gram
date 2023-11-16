@@ -63,6 +63,11 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
     );
   }
 
+  async lookup(ctx: RequestContext, userIds: string[]): Promise<Reviewer[]> {
+    const uids = new Set(userIds);
+    return this.reviewers.filter((u) => uids.has(u.sub));
+  }
+
   /**
    * Overrides the calendar of the reviewer with a google calendar link going to their
    * personal account. This assumes the email given is a google account.
@@ -179,7 +184,6 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
   }
 
   async getDomainMembers(klarnaProjectCode: string) {
-    console.log(klarnaProjectCode);
     const client = await connectLdapClient(
       this.ldapProviderSettings.ldapSettings
     );

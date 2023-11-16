@@ -18,7 +18,6 @@ import {
   KlarnaReviewerProvider,
   NGOVSystemContextProvider,
   OctaneSystemProvider,
-  hookIntoReviewApproval,
 } from "@gram/klarna";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
@@ -268,16 +267,6 @@ export const defaultConfig: GramConfiguration = {
     const threatsaurus = new ThreatsaurusSuggestionSource(
       process.env["THREATSAURUS_URL"] as string
     );
-
-    // Hook for Reviews to create Risk Tickets
-    // await hookIntoReviewApproval(
-    //   dal,
-    //   systemProvider,
-    //   new EnvSecret("JIRA_HOST"),
-    //   new EnvSecret("JIRA_TOKEN"),
-    //   new EnvSecret("JIRA_USER"),
-    //   new EnvSecret("JIRA_PASSWORD")
-    // );
 
     const klarnaCronJob = new KlarnaCronJob(dal);
     klarnaCronJob.bootstrap(reviewerProvider, systemProvider);
