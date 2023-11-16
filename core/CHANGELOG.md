@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/klarna/gram/compare/v4.6.1...v4.7.0) (2023-11-15)
+
+### Bug Fixes
+
+- suggestions should now clear correctly if the source no longer suggests them ([8d6c988](https://github.com/klarna/gram/commit/8d6c98898c8fe8a6fa5fc86c160bf9f04a019a55))
+
 ## [4.6.1](https://github.com/klarna/gram/compare/v4.6.0...v4.6.1) (2023-11-14)
 
 ### Bug Fixes

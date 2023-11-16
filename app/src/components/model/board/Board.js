@@ -22,20 +22,19 @@ import {
 } from "../../../actions/model/setSelected";
 import { useListControlsQuery } from "../../../api/gram/controls";
 import { useListMitigationsQuery } from "../../../api/gram/mitigations";
-import { useGetModelPermissionsQuery } from "../../../api/gram/model";
 import { useListThreatsQuery } from "../../../api/gram/threats";
+import { useReadOnly } from "../../../hooks/useReadOnly";
 import { modalActions } from "../../../redux/modalSlice";
 import { MODALS } from "../../elements/modal/ModalManager";
 import Loading from "../../loading";
-import { PERMISSIONS } from "../constants";
 import { useModelID } from "../hooks/useModelID";
 import ActiveUsers from "../panels/ActiveUsers";
 import { ControlsToolBar } from "./components/ControlsToolBar";
 import { Grid } from "./components/Grid";
-import { ContextMenu } from "./components/menu/ContextMenu";
 import { SelectionRectangle } from "./components/SelectionRectangle";
 import { ToggleLeftPanelButton } from "./components/ToggleLeftPanelButton";
 import { ToggleRightPanelButton } from "./components/ToggleRightPanelButton";
+import { ContextMenu } from "./components/menu/ContextMenu";
 import {
   COMPONENT_SIZE,
   COMPONENT_TYPE,
@@ -83,8 +82,7 @@ export default function Board() {
     cursorType: model.cursorType,
   }));
 
-  const { data: permissions } = useGetModelPermissionsQuery({ modelId });
-  const readOnly = !permissions?.includes(PERMISSIONS.WRITE);
+  const readOnly = useReadOnly();
 
   // States which control if the component updates
   const [stage, setStage] = useState({
@@ -548,7 +546,7 @@ export default function Board() {
     }
   }
 
-  function onAddComponent(name, type) {
+  function onAddComponent(name, type, x, y) {
     const id = uuidv4();
 
     dispatch(
@@ -556,8 +554,8 @@ export default function Board() {
         {
           name,
           type,
-          x: lastPointerPosition.stage.x - COMPONENT_SIZE.WIDTH / 2,
-          y: lastPointerPosition.stage.y - COMPONENT_SIZE.HEIGHT / 2,
+          x: (x ? x : lastPointerPosition.stage.x) - COMPONENT_SIZE.WIDTH / 2,
+          y: (y ? y : lastPointerPosition.stage.y) - COMPONENT_SIZE.HEIGHT / 2,
         },
         id
       )
@@ -614,9 +612,23 @@ export default function Board() {
       onKeyDown={(e) => onKeyDown(e)}
       onKeyUp={(e) => onKeyUp(e)}
     >
-      <ControlsToolBar zoomInCenter={zoomInCenter} />
+      <ControlsToolBar
+        stage={stage}
+        zoomInCenter={zoomInCenter}
+        onAddComponent={(name, type) => {
+          let pos = {
+            x: stage.width / 2,
+            y: stage.height / 2,
+          };
+          if (stageRef.current) {
+            pos = getAbsolutePosition(stageRef.current, pos);
+          }
+          onAddComponent(name, type, pos.x, pos.y);
+        }}
+      />
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
       {leftPanelCollapsed === true && <ToggleLeftPanelButton />}
+
       <ContextMenu
         stage={stage}
         stageDialog={stageDialog}
@@ -627,6 +639,9 @@ export default function Board() {
         onAddComponent={onAddComponent}
       />
 
+      <ActiveUsers />
+
+      {/* Canvas */}
       {stage.width ? (
         <ReactReduxContext.Consumer>
           {({ store }) => (
@@ -650,6 +665,29 @@ export default function Board() {
             >
               <Provider store={store}>
                 <Grid {...stage} />
+
+                {/* <Layer key="debug-layer">
+                  <Text
+                    x={0}
+                    y={0}
+                    width={1000}
+                    height={1000}
+                    text={JSON.stringify(
+                      {
+                        lastPointerPosition,
+                        stage,
+                        abs: stageRef.current
+                          ? getAbsolutePosition(stageRef.current, {
+                              x: stage.width / 2,
+                              y: stage.height / 2,
+                            })
+                          : undefined,
+                      },
+                      null,
+                      4
+                    )}
+                  ></Text>
+                </Layer> */}
 
                 <Layer key="layer-components">
                   {components
@@ -797,7 +835,6 @@ export default function Board() {
       ) : (
         <Loading />
       )}
-      <ActiveUsers />
     </div>
   );
 }

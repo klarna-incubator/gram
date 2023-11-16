@@ -32,6 +32,7 @@ import { UserChip } from "../../../elements/UserChip";
 import { MODALS } from "../../../elements/modal/ModalManager";
 import { PERMISSIONS } from "../../constants";
 import { useModelID } from "../../hooks/useModelID";
+import { Link } from "react-router-dom";
 
 const ReviewContent = (review) => {
   const { hasExpired, validUntil, aboutToExpire } = useReviewExpiration(
@@ -87,7 +88,7 @@ const ReviewContent = (review) => {
         : "",
       buttons: [
         ApproveButton,
-        BookMeetingButton,
+        ScheduleMeetingButton,
         ReassignReviewButton,
         CancelReviewButton,
       ],
@@ -141,7 +142,6 @@ function CancelReviewButton({ permissions, modelId, handleClose }) {
     <MenuItem
       color="inherit"
       variant="outlined"
-      // sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
       onClick={() => {
         dispatch(
           modalActions.open({
@@ -288,7 +288,6 @@ function RequestMeetingButton({ permissions, review, modelId, handleClose }) {
         );
         handleClose();
       }}
-      // sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
     >
       <ListItemIcon>
         <TodayRoundedIcon />
@@ -298,17 +297,20 @@ function RequestMeetingButton({ permissions, review, modelId, handleClose }) {
   );
 }
 
-function BookMeetingButton({ permissions, review, handleClose }) {
-  if (!review?.reviewer?.calendarLink) return <></>;
+function ScheduleMeetingButton({ permissions, review }) {
+  if (
+    !review?.reviewer?.calendarLink ||
+    !permissions.includes(PERMISSIONS.WRITE)
+  )
+    return <></>;
 
   return (
     <MenuItem
-      disabled={!permissions.includes(PERMISSIONS.WRITE)}
+      component={Link}
       color="inherit"
       variant="outlined"
+      to={review.reviewer.calendarLink}
       target="_blank"
-      href={review.reviewer.calendarLink}
-      sx={{ fontSize: "12px", padding: "2px 10px 2px 10px" }}
     >
       <ListItemIcon>
         <TodayRoundedIcon />

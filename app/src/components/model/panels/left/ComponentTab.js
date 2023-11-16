@@ -47,6 +47,7 @@ export function ComponentTab() {
     type: componentTypes[component.type],
     search: teachStackSearch,
   });
+  const techStackOptions = loadedTechStacks || [];
 
   // Update states if redux changed from outside the component
   useEffect(() => {
@@ -158,7 +159,7 @@ export function ComponentTab() {
                 PaperComponent={CustomPaper}
                 disabled={readOnly}
                 value={techStacks}
-                options={loadedTechStacks}
+                options={techStackOptions}
                 getOptionLabel={(option) =>
                   option.id ? option.id : option.name
                 }
@@ -168,10 +169,10 @@ export function ComponentTab() {
                 renderInput={(props) => (
                   <TextField {...props} variant="standard" label="Tech Stack" />
                 )}
-                onInputChange={(e, input) => {
+                onInputChange={(_, input) => {
                   setTechStackSearch(input);
                 }}
-                onChange={(e, values) => {
+                onChange={(_, values) => {
                   setTechStacks(
                     values.map((value) =>
                       value.inputValue
