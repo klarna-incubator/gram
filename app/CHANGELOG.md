@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.1](https://github.com/klarna-incubator/gram/compare/v4.7.0...v4.7.1) (2023-11-16)
+
+### Bug Fixes
+
+- Schedule meeting button not working correctly ([3e9495c](https://github.com/klarna-incubator/gram/commit/3e9495c8df01d477c0c7f3628f3c6801f65e5cb5)), closes [#68](https://github.com/klarna-incubator/gram/issues/68)
+
 # [4.7.0](https://github.com/klarna-incubator/gram/compare/v4.6.1...v4.7.0) (2023-11-15)
 
 ### Bug Fixes
