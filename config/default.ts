@@ -18,7 +18,6 @@ import {
   KlarnaReviewerProvider,
   NGOVSystemContextProvider,
   OctaneSystemProvider,
-  hookIntoReviewApproval,
 } from "@gram/klarna";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
