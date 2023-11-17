@@ -497,6 +497,111 @@ describe("ModelDataService implementation", () => {
       );
     });
 
+    it("should not crash if original model has deleted threats/controls", async () => {
+      const systemId = randomUUID();
+      const model = new Model(systemId, "whatever", "me");
+      const component1Id = randomUUID();
+      const component2Id = randomUUID();
+      const datafFlowId = randomUUID();
+      model.data = {
+        components: [
+          { id: component1Id, x: 0, y: 0, type: "ee", name: "omegalul" },
+          { id: component2Id, x: 1, y: 1, type: "ds", name: "hello" },
+        ],
+        dataFlows: [
+          {
+            id: datafFlowId,
+            endComponent: { id: component1Id },
+            startComponent: { id: component2Id },
+            points: [0, 0],
+            bidirectional: false,
+          },
+        ],
+      };
+      model.id = await data.create(model);
+
+      const threat1 = new Threat(
+        "tampering",
+        "act of something",
+        model.id!,
+        component1Id,
+        "erik"
+      );
+      threat1.id = await dal.threatService.create(threat1);
+      await dal.threatService.update(model.id!, threat1.id!, {
+        isActionItem: true,
+      });
+      const control1 = new Control(
+        "counter tampering",
+        "sumting",
+        true,
+        model.id!,
+        component1Id,
+        "erik"
+      );
+      control1.id = await dal.controlService.create(control1);
+      const mitigation1 = new Mitigation(threat1.id!, control1.id!, "erik");
+      const res1 = await dal.mitigationService.create(mitigation1);
+      expect(res1).toBeTruthy();
+
+      const threat2 = new Threat(
+        "tampering2",
+        "act of something2",
+        model.id!,
+        component2Id,
+        "erik2"
+      );
+      threat2.id = await dal.threatService.create(threat2);
+      const control2 = new Control(
+        "counter tampering2",
+        "sumting2",
+        false,
+        model.id!,
+        component2Id,
+        "erik2"
+      );
+      control2.id = await dal.controlService.create(control2);
+      const mitigation2 = new Mitigation(threat2.id!, control2.id!, "erik2");
+      const res2 = await dal.mitigationService.create(mitigation2);
+      expect(res2).toBeTruthy();
+
+      // Suggestions
+      const threatSuggestion = genSuggestedThreat(component2Id);
+      await dal.suggestionService.bulkInsert(model.id!, {
+        threats: [threatSuggestion],
+        controls: [
+          genSuggestedControl({
+            componentId: component2Id,
+            mitigates: [{ partialThreatId: threatSuggestion.id.partialId }],
+          }),
+        ],
+      });
+      const threatSuggestionsOriginal =
+        await dal.suggestionService.listThreatSuggestions(model.id!);
+      const controlSuggestionsOriginal =
+        await dal.suggestionService.listControlSuggestions(model.id!);
+
+      await dal.suggestionService.acceptSuggestion(
+        model.id!,
+        threatSuggestionsOriginal[0].id,
+        sampleUser.sub
+      );
+      await dal.suggestionService.acceptSuggestion(
+        model.id!,
+        controlSuggestionsOriginal[0].id,
+        sampleUser.sub
+      );
+
+      // Delete the threat
+      await dal.threatService.deleteByComponentId(model.id!, [
+        threat1.componentId,
+      ]);
+
+      const modelCopy = new Model(systemId, "nr2", "erik");
+      const modelCopyId = await data.copy(model.id!, modelCopy);
+      expect(modelCopyId).toBeTruthy();
+    });
+
     it("should return null on no matching srcModel", async () => {
       const modelCopy = new Model(randomUUID(), "nr2", "erik");
       const modelCopyId = await data.copy(randomUUID(), modelCopy);
