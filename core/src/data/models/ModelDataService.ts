@@ -291,11 +291,14 @@ export class ModelDataService extends EventEmitter {
         AND deleted_at IS NULL;
       `;
 
+    const anyInvalidUuid = (...uuids: string[]) =>
+      uuids.reduce((p: boolean, c) => p || !uuid.has(c), false);
+
     await this.pool.runTransaction(async (client) => {
       for (const threat of threats) {
         uuid.set(threat.id!, randomUUID());
-        if (!uuid.get(threat.componentId)) {
-          // skip, component no longer exists
+        if (anyInvalidUuid(threat.id!, threat.componentId)) {
+          // skip, component or threat no longer exists
           continue;
         }
         await client.query(queryThreats, [
@@ -311,8 +314,8 @@ export class ModelDataService extends EventEmitter {
 
       for (const control of controls) {
         uuid.set(control.id!, randomUUID());
-        if (!uuid.get(control.componentId)) {
-          // skip, component no longer exists
+        if (anyInvalidUuid(control.id!, control.componentId)) {
+          // skip, component or threat no longer exists
           continue;
         }
         await client.query(queryControls, [
@@ -329,6 +332,10 @@ export class ModelDataService extends EventEmitter {
       }
 
       for (const mitigation of mitigations) {
+        if (anyInvalidUuid(mitigation.threatId, mitigation.controlId)) {
+          // skip, component or threat no longer exists
+          continue;
+        }
         await client.query(queryMitigations, [
           uuid.get(mitigation.threatId),
           uuid.get(mitigation.controlId),

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.2](https://github.com/klarna/gram/compare/v4.7.1...v4.7.2) (2023-11-20)
+
+### Bug Fixes
+
+- should no longer crash if importing a model with mitigations on deleted threats/controls ([7856989](https://github.com/klarna/gram/commit/7856989d6db1467dee3c109bab22ae978fe28484))
+
 ## [4.7.1](https://github.com/klarna/gram/compare/v4.7.0...v4.7.1) (2023-11-16)
 
 **Note:** Version bump only for package @gram/core
