@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.3](https://github.com/klarna-incubator/gram/compare/v4.7.2...v4.7.3) (2023-12-06)
+
+### Bug Fixes
+
+- broken ActiveUsers import and snapshot test ([b06a360](https://github.com/klarna-incubator/gram/commit/b06a360fce29021555780d5e3b4e7eab6f29b51a))
+- Make Active Users widget visible again ([4c9b072](https://github.com/klarna-incubator/gram/commit/4c9b072b7e467cdff5a63009545c39894625040c)), closes [#70](https://github.com/klarna-incubator/gram/issues/70)
+
 ## [4.7.2](https://github.com/klarna-incubator/gram/compare/v4.7.1...v4.7.2) (2023-11-20)
 
 **Note:** Version bump only for package @gram/app
