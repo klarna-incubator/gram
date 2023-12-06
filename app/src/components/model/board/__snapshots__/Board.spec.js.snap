@@ -172,6 +172,14 @@ exports[`Board renders Board 1`] = `
           </div>
         </div>
         <div
+          class="loading"
+        >
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+        <div
           class="active-users-overlay"
         >
           <div
@@ -185,14 +193,6 @@ exports[`Board renders Board 1`] = `
               width="42"
             />
           </div>
-        </div>
-        <div
-          class="loading"
-        >
-          <div />
-          <div />
-          <div />
-          <div />
         </div>
       </div>
     </div>
@@ -365,6 +365,14 @@ exports[`Board renders Board 1`] = `
         </div>
       </div>
       <div
+        class="loading"
+      >
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
+      <div
         class="active-users-overlay"
       >
         <div
@@ -378,14 +386,6 @@ exports[`Board renders Board 1`] = `
             width="42"
           />
         </div>
-      </div>
-      <div
-        class="loading"
-      >
-        <div />
-        <div />
-        <div />
-        <div />
       </div>
     </div>
   </div>,
