@@ -28,7 +28,7 @@ import { modalActions } from "../../../redux/modalSlice";
 import { MODALS } from "../../elements/modal/ModalManager";
 import Loading from "../../loading";
 import { useModelID } from "../hooks/useModelID";
-import ActiveUsers from "../panels/ActiveUsers";
+import { ActiveUsers } from "../panels/ActiveUsers";
 import { ControlsToolBar } from "./components/ControlsToolBar";
 import { Grid } from "./components/Grid";
 import { SelectionRectangle } from "./components/SelectionRectangle";
@@ -639,8 +639,6 @@ export default function Board() {
         onAddComponent={onAddComponent}
       />
 
-      <ActiveUsers />
-
       {/* Canvas */}
       {stage.width ? (
         <ReactReduxContext.Consumer>
@@ -835,6 +833,8 @@ export default function Board() {
       ) : (
         <Loading />
       )}
+
+      <ActiveUsers />
     </div>
   );
 }
