@@ -9,7 +9,7 @@ const initials = (name) =>
     .map((p) => p[0])
     .join("");
 
-function ActiveUsers() {
+export function ActiveUsers() {
   const activeUsers = useSelector(
     ({ webSocket: { activeUsers } }) => activeUsers
   );
@@ -37,4 +37,3 @@ function ActiveUsers() {
     </div>
   );
 }
-export default ActiveUsers;
