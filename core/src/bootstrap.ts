@@ -20,6 +20,9 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   bt.setReviewerProvider(providers.reviewerProvider);
   bt.setUserProvider(providers.userProvider);
   bt.setSystemProvider(providers.systemProvider);
+  providers.actionItemExporters?.forEach((exporter) =>
+    dal.actionItemHandler.attachExporter(exporter)
+  );
 
   bt.registerComponentClasses(providers.componentClasses || []);
   bt.registerNotificationTemplates(providers.notificationTemplates || []);
