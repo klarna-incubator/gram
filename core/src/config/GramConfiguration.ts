@@ -12,6 +12,7 @@ import type { AssetFolder } from "./AssetFolder.js";
 import type { Secret } from "./Secret.js";
 import type { Migration } from "../data/Migration.js";
 import type { TeamProvider } from "../auth/TeamProvider.js";
+import type { ActionItemExporter } from "../action-items/ActionItemExporter.js";
 
 export interface Providers {
   /**
@@ -32,6 +33,7 @@ export interface Providers {
   notificationTemplates?: NotificationTemplate[];
   suggestionSources?: SuggestionSource[];
   teamProvider?: TeamProvider;
+  actionItemExporters?: ActionItemExporter[];
 }
 
 export interface GramConfiguration {

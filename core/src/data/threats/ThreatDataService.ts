@@ -11,6 +11,7 @@ import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
 import Threat, { ThreatSeverity } from "./Threat.js";
+import { ActionItem, ActionItemExport } from "./ActionItem.js";
 
 export function convertToThreat(row: any): Threat {
   const threat = new Threat(
@@ -44,7 +45,7 @@ export class ThreatDataService extends EventEmitter {
    * @param {Threat} threat - Threat creation object
    * @returns {string}
    */
-  async create(threat: Threat) {
+  async create(threat: Threat): Promise<string> {
     const query = `
      INSERT INTO threats (title, description, model_id, component_id, created_by, suggestion_id)
      VALUES ($1::varchar, $2::varchar, $3::uuid, $4::uuid, $5::varchar, $6)
@@ -134,24 +135,29 @@ export class ThreatDataService extends EventEmitter {
     return res.rows.map((record) => convertToThreat(record));
   }
 
-  async listActionItems(modelId: string) {
+  async listActionItems(modelId: string): Promise<ActionItem[]> {
     const query = `
     SELECT
-      id,
-      title,
-      description,
-      model_id,
-      component_id,
-      created_by,
-      extract(epoch from created_at) as created_at,
-      extract(epoch from updated_at) as updated_at,
-      suggestion_id,
-      is_action_item,
-      severity
-    FROM threats
-    WHERE model_id = $1::uuid and is_action_item = true
-    AND deleted_at IS NULL
-    ORDER BY created_at DESC
+      t.id,
+      t.title,
+      t.description,
+      t.model_id,
+      t.component_id,
+      t.created_by,
+      extract(epoch from t.created_at) as created_at,
+      extract(epoch from t.updated_at) as updated_at,
+      t.suggestion_id,
+      t.is_action_item,
+      t.severity,
+      ex.exporter_key,
+      ex.url
+    FROM threats AS t
+    LEFT JOIN exported_action_items AS ex ON t.id = ex.threat_id
+    WHERE 
+      t.model_id = $1::uuid 
+      AND t.is_action_item = true
+      AND t.deleted_at IS NULL
+    ORDER BY t.created_at DESC
   `;
     const res = await this.pool.query(query, [modelId]);
 
@@ -159,7 +165,35 @@ export class ThreatDataService extends EventEmitter {
       return [];
     }
 
-    return res.rows.map((record) => convertToThreat(record));
+    const threatMap = new Map<string, ActionItem>();
+    res.rows.forEach((row) => {
+      if (!threatMap.has(row.id!)) {
+        threatMap.set(row.id!, new ActionItem(convertToThreat(row), []));
+      }
+      const actionItem = threatMap.get(row.id!);
+      if (row.exporter_key) {
+        actionItem?.exports.push(
+          new ActionItemExport(row.exporter_key, row.id, row.url)
+        );
+      }
+    });
+
+    return [...threatMap.values()];
+  }
+
+  async insertActionItemExport(actionItemExport: ActionItemExport) {
+    const query = `
+      INSERT INTO exported_action_items (threat_id, exporter_key, url)
+      VALUES ($1::uuid, $2::varchar, $3::varchar)
+      ON CONFLICT (threat_id, exporter_key) DO
+        UPDATE SET url = $3::varchar
+      RETURNING threat_id;
+    `;
+    await this.pool.query(query, [
+      actionItemExport.threatId,
+      actionItemExport.exporterKey,
+      actionItemExport.linkedURL,
+    ]);
   }
 
   /**
