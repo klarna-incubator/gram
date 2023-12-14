@@ -109,7 +109,7 @@ export const defaultConfig: GramConfiguration = {
     },
     {
       name: "Docs",
-      path: "https://kep.klarna.net/docs/secure-development/threat_modeling/threat_modeling/",
+      path: "https://kep.klarna.net/docs/secure-development/threat_modeling/threat_modeling_process/",
     },
     {
       name: "Support",
