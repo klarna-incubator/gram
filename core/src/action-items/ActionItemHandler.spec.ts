@@ -9,6 +9,7 @@ import { ActionItemHandler } from "./ActionItemHandler.js";
 import { DummyActionItemExporter } from "./DummyActionItemExporter.js";
 import { ActionItem } from "../data/threats/ActionItem.js";
 import { ExportResult } from "./ActionItemExporter.js";
+import { createSampleModel } from "../test-util/model.js";
 
 class OtherDummyActionItemExporter extends DummyActionItemExporter {
   key = "other-dummy";
@@ -32,7 +33,7 @@ class OtherDummyActionItemExporter extends DummyActionItemExporter {
 
 describe("ActionItemHandler implementation", () => {
   let dal: DataAccessLayer;
-  let model: Model;
+  let modelId: string;
   let threatId: string;
   let review: Review;
 
@@ -43,17 +44,24 @@ describe("ActionItemHandler implementation", () => {
 
   beforeEach(async () => {
     await _deleteAllTheThings(dal);
-    model = new Model("some-system-id", "some-version", "root");
-    model.data = { components: [], dataFlows: [] };
-    model.id = await dal.modelService.create(model);
+    modelId = await createSampleModel(dal);
+
+    const model = await dal.modelService.getById(modelId);
+
     threatId = await dal.threatService.create(
-      new Threat("title", "desc", model.id!, randomUUID(), "root")
+      new Threat(
+        "title",
+        "desc",
+        modelId,
+        model?.data.components[0].id!,
+        "root"
+      )
     );
-    await dal.threatService.update(model.id, threatId, {
+    await dal.threatService.update(modelId, threatId, {
       severity: ThreatSeverity.High,
       isActionItem: true,
     });
-    review = new Review(model.id!, "root");
+    review = new Review(modelId, "root");
     await dal.reviewService.create(review);
   });
 
@@ -66,7 +74,7 @@ describe("ActionItemHandler implementation", () => {
     const handler = new ActionItemHandler(dal);
     handler.attachExporter(new DummyActionItemExporter());
     await handler.onReviewApproved(review);
-    const actionItems = await dal.threatService.listActionItems(model.id!);
+    const actionItems = await dal.threatService.listActionItems(modelId);
     expect(actionItems).toHaveLength(1);
     expect(actionItems[0].threat.id).toEqual(threatId);
     expect(actionItems[0].threat.severity).toEqual(ThreatSeverity.High);
@@ -78,7 +86,7 @@ describe("ActionItemHandler implementation", () => {
     const handler = new ActionItemHandler(dal);
     handler.attachExporter(new DummyActionItemExporter());
     await handler.onReviewApproved(review);
-    const actionItems = await dal.threatService.listActionItems(model.id!);
+    const actionItems = await dal.threatService.listActionItems(modelId);
     expect(actionItems).toHaveLength(1);
     expect(actionItems[0].threat.id).toEqual(threatId);
     expect(actionItems[0].threat.severity).toEqual(ThreatSeverity.High);
@@ -99,7 +107,7 @@ describe("ActionItemHandler implementation", () => {
     handler.attachExporter(new DummyActionItemExporter());
     handler.attachExporter(new OtherDummyActionItemExporter());
     await handler.onReviewApproved(review);
-    const actionItems = await dal.threatService.listActionItems(model.id!);
+    const actionItems = await dal.threatService.listActionItems(modelId);
     expect(actionItems).toHaveLength(1);
     expect(actionItems[0].threat.id).toEqual(threatId);
     expect(actionItems[0].threat.severity).toEqual(ThreatSeverity.High);
@@ -114,7 +122,7 @@ describe("ActionItemHandler implementation", () => {
     const other = new OtherDummyActionItemExporter();
     handler.attachExporter(other);
     await handler.onReviewApproved(review);
-    const actionItems = await dal.threatService.listActionItems(model.id!);
+    const actionItems = await dal.threatService.listActionItems(modelId);
     expect(actionItems).toHaveLength(1);
     expect(actionItems[0].threat.id).toEqual(threatId);
     expect(actionItems[0].threat.severity).toEqual(ThreatSeverity.High);
@@ -125,7 +133,7 @@ describe("ActionItemHandler implementation", () => {
     // change the url
     other.setUrl("changed");
     await handler.onReviewApproved(review);
-    const actionItems2 = await dal.threatService.listActionItems(model.id!);
+    const actionItems2 = await dal.threatService.listActionItems(modelId);
     expect(actionItems2).toHaveLength(1);
     expect(actionItems2[0].threat.id).toEqual(threatId);
     expect(actionItems2[0].threat.severity).toEqual(ThreatSeverity.High);
@@ -133,6 +141,41 @@ describe("ActionItemHandler implementation", () => {
     expect(actionItems2[0].exports[0].exporterKey).toBe("dummy");
     expect(actionItems2[0].exports[1].exporterKey).toBe("other-dummy");
     expect(actionItems2[0].exports[1].linkedURL).toBe("changed");
+  });
+
+  it("should still keep action item exports on model import", async () => {
+    const handler = new ActionItemHandler(dal);
+    handler.attachExporter(new DummyActionItemExporter());
+    const other = new OtherDummyActionItemExporter();
+    handler.attachExporter(other);
+    await handler.onReviewApproved(review);
+
+    const actionItems = await dal.threatService.listActionItems(modelId);
+    expect(actionItems).toHaveLength(1);
+    expect(actionItems[0].threat.id).toEqual(threatId);
+    expect(actionItems[0].threat.severity).toEqual(ThreatSeverity.High);
+    expect(actionItems[0].exports).toHaveLength(2);
+    expect(actionItems[0].exports[0].exporterKey).toBe("dummy");
+    expect(actionItems[0].exports[1].exporterKey).toBe("other-dummy");
+
+    const modelId2 = await dal.modelService.copy(
+      modelId,
+      new Model("other", "new", "root")
+    );
+
+    expect(modelId).not.toEqual(modelId2);
+    expect(modelId).not.toBeNull();
+
+    const threats = await dal.threatService.list(modelId2!);
+    expect(threats).toHaveLength(1);
+
+    const actionItems2 = await dal.threatService.listActionItems(modelId2!);
+    expect(actionItems2).toHaveLength(1);
+    expect(actionItems2[0].threat.id).not.toEqual(threatId); // Thread ID gets overwritten during import
+    expect(actionItems2[0].threat.severity).toEqual(ThreatSeverity.High);
+    expect(actionItems2[0].exports).toHaveLength(2);
+    expect(actionItems2[0].exports[0].exporterKey).toBe("dummy");
+    expect(actionItems2[0].exports[1].exporterKey).toBe("other-dummy");
   });
 
   afterAll(async () => {

@@ -260,6 +260,19 @@ export class ModelDataService extends EventEmitter {
         AND deleted_at IS NULL;
       `;
 
+    const queryExportedActionItems = `
+        INSERT INTO exported_action_items ( 
+          threat_id, exporter_key, url, created_at, updated_at
+        )
+        SELECT $1::uuid as threat_id,
+              exporter_key,
+              url,
+              created_at,
+              updated_at
+        FROM exported_action_items 
+        WHERE threat_id = $2::uuid;        
+      `;
+
     const queryControls = `
         INSERT INTO controls ( 
         id, model_id, component_id, title, description, in_place, created_by, suggestion_id, created_at
@@ -308,6 +321,11 @@ export class ModelDataService extends EventEmitter {
           threat.suggestionId
             ? uuid.get(threat.componentId) + "/" + threat.suggestionId.partialId
             : null,
+          threat.id,
+        ]);
+
+        await client.query(queryExportedActionItems, [
+          uuid.get(threat.id!),
           threat.id,
         ]);
       }
