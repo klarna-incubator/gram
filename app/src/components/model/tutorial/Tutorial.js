@@ -13,8 +13,8 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch} from "react-redux";
 import { modalActions } from "../../../redux/modalSlice";
 import HightlightOverlay from "../../elements/overlay/HightlightOverlay";
 import addcomponentImg from "./img/addcomponent.png";
@@ -37,10 +37,17 @@ import indicatorVulnerableImg from "./img/vulnerable.svg";
 import actionItemImg from "./img/actionItem.gif";
 import { ContactChip } from "../../elements/ContactChip";
 
+import {
+  setMultipleSelected,
+} from "../../../actions/model/setSelected";
+
 const Introduction = () => (
   <>
     <Typography>
-      This tutorial will show you how to use the diagramming interface of Gram.
+      Gram is a threat modeling tool, where you can create a data flow diagram enriched with threats and controls. 
+    </Typography>
+    <Typography>
+      This tutorial will show you how to use it.
     </Typography>
     <Typography>
       If you have any questions or feedback, feel free to reach out to{" "}
@@ -49,15 +56,36 @@ const Introduction = () => (
   </>
 );
 
+const SystemContext = () => (
+  <>
+    <Typography>
+      On the left panel in the system tab, there is information about your
+      system taken from the system inventory as well as other sources. This
+      helps contextualize the system that is being modeled.
+    </Typography>
+    <Typography>
+      In addition to this, the left panel also contains information on any
+      current{" "}
+      <Typography sx={{ fontWeight: "bold", display: "inline" }}>
+        review
+      </Typography>{" "}
+      ongoing for your threat model. This we'll talk about next!
+    </Typography>
+  </>
+);
+
 const General = () => (
   <>
     <Typography>
-      In Gram, a threat model is created as data flow diagram. Systems are
-      divided up into their component parts, and the flow of data between
-      components is used to find potential threats.
+      Let's start threat modeling.
     </Typography>
     <Typography>
-      The diagram is constructed from three different types of components. Let's
+      First, a dataflow diagram is created, representing the components 
+      of a system and how the data flows between
+      them. It is, then, used to find potential threats and controls.
+    </Typography>
+    <Typography>
+      The diagram is built from three different types of components. Let's
       go through each and explain what they are!
     </Typography>
   </>
@@ -66,8 +94,7 @@ const General = () => (
 const ProcessExplanation = () => (
   <>
     <Typography>
-      Processes are represented by an oval. These indicates functional processes
-      of a system, e.g. the API that runs your business logic or the frontend
+      Processes are represented by an oval. They are processes or operating units within the system in scope, e.g. the API that runs your business logic or the frontend
       application that is visible to users.
     </Typography>
     <Typography>
@@ -80,7 +107,7 @@ const ProcessExplanation = () => (
 const DataStoreExplanation = () => (
   <>
     <Typography>
-      Data stores indicate where the data is resting. These components are
+      Data stores indicate where the "bulk" data is stored. These components are
       represented by two parallel horizontal lines.
     </Typography>
     <Typography>
@@ -93,8 +120,7 @@ const DataStoreExplanation = () => (
 const ExternalEntityExplanation = () => (
   <>
     <Typography>
-      External Entities are represented by a rectangle. These denote components,
-      services, and users, that are outside the threat model scope. As such,
+      External Entities are represented by a rectangle. They are processes or operating units interacting with the system in scope. As such,
       threats are not tracked for these components.
     </Typography>
     <Typography>
@@ -113,7 +139,29 @@ const CreateComponent = () => (
       would like to add.
     </Typography>
     <Typography sx={{ fontWeight: "bold" }}>
-      Add a Process or Data store, and then press next to continue.
+      Add a Process or Data store. Select it and then press next to continue.
+    </Typography>
+  </>
+);
+
+const ComponentTab = () => (
+  <>
+    <Typography>
+      The component tab contain input fields for specifying component specific
+      information not relating to threats or controls.
+    </Typography>
+    <Typography>
+      The type dropdown lets you edit the component type, e.g. a process is
+      later discovered to be out of scope for the threat model, then switch the
+      type to external entity.
+    </Typography>
+    <Typography>
+      The tech stack dropdown is used to specify the technologies that the
+      component uses (e.g. Node.js, React, Kafka, AWS S3, or AWS RDS).
+    </Typography>
+    <Typography>
+      The description field should be used to present additional information
+      about what the component is used for etc.
     </Typography>
   </>
 );
@@ -141,15 +189,19 @@ const DataFlows = () => (
       two connected components.
     </Typography>
     <Typography>
-      To create a new dataflow on the board, hover your mouse over the component
+      Hover your mouse over the component
       where you want the flow to start, then click one of the small grey circles
-      that appear around it.
-    </Typography>
-    {/* Milestone: create dataflow */}
-    <Typography>
-      Take care to have the dataflow pointing in the right direction. You can
-      change the flow direction or make the flow bidirectional by right-click on
+      that appear around it. You can change the flow direction or make the flow bidirectional by right-click on
       the dataflow.
+    </Typography>
+    <Typography>
+      What is the right direction for the arrow?
+      The direction of the arrow represents the flow of meaningful data.
+      Meaningful data is any data that is of value for the system in scope.
+    </Typography>
+    <Typography>
+      An example of a unidirectional flow could be a system fetching data from an external API. 
+      The arrow would start at the external API and point out process representing the system in scope.
     </Typography>
     <Typography>
       An example of a bidirectional flow could be a database connection where a
@@ -174,14 +226,14 @@ const RightPanelTabs = () => (
   <>
     <Typography>
       At the top of the right panel, you'll see the three tabs used to navigate
-      between threats, controls and suggestions.
+      between suggestions, threats and controls.
     </Typography>
     <Typography>
       The numbers beside the tab titles shows the number of items present in the
       tab and the color indicates the status of the items on that page. The
-      image shows the tabs of a component which has two threats (where at least
-      one is still unmitigated), two controls (where at least one is still
-      pending) and two suggestions.
+      image shows the tabs of a component which has three suggestions, one threat (which is
+      still unmitigated) and one control (which is still
+      pending).
     </Typography>
   </>
 );
@@ -377,46 +429,6 @@ const ThreatIndicators = () => (
   </>
 );
 
-const ComponentTab = () => (
-  <>
-    <Typography>
-      The component tab contain input fields for specifying component specific
-      information not relating to threats or controls.
-    </Typography>
-    <Typography>
-      The type dropdown lets you edit the component type, e.g. a process is
-      later discovered to be out of scope for the threat model, then switch the
-      type to external entity.
-    </Typography>
-    <Typography>
-      The tech stack dropdown is used to specify the technologies that the
-      component uses (e.g. Node.js, React, Kafka, AWS S3, or AWS RDS).
-    </Typography>
-    <Typography>
-      The description field should be used to present additional information
-      about what the component is used for etc.
-    </Typography>
-  </>
-);
-
-const SystemContext = () => (
-  <>
-    <Typography>
-      On the left panel in the system tab, there is information about your
-      system taken from the system inventory as well as other sources. This
-      helps contextualize the system that is being modeled.
-    </Typography>
-    <Typography>
-      In addition to this, the left panel also contains information on any
-      current{" "}
-      <Typography sx={{ fontWeight: "bold", display: "inline" }}>
-        review
-      </Typography>{" "}
-      ongoing for your threat model. This we'll talk about next!
-    </Typography>
-  </>
-);
-
 const ReviewProcess = () => (
   <>
     <Typography>
@@ -481,7 +493,14 @@ const steps = [
     position: "center",
   },
   {
-    title: "Overview",
+    title: "System context",
+    body: SystemContext,
+    highlighted: ["#panel-left"],
+    position: "center",
+    actions: [setMultipleSelected]
+  },
+  {
+    title: "Dataflow diagram",
     body: General,
     highlighted: [],
     position: "center",
@@ -527,6 +546,16 @@ const steps = [
     position: "flex-start",
   },
   {
+    title: "Component",
+    body: ComponentTab,
+    media: {
+      image: componentTab,
+      alt: "the component tab",
+    },
+    highlighted: ["#panel-left"],
+    position: "center",
+  },
+  {
     title: "Component actions",
     body: MoreComponentStuff,
     media: {
@@ -563,6 +592,16 @@ const steps = [
     position: "center",
   },
   {
+    title: "Suggestions",
+    body: Suggestions,
+    media: {
+      image: suggestions,
+      alt: "the process of accepting suggestions",
+    },
+    highlighted: ["#panel-right"],
+    position: "center",
+  },
+  {
     title: "Creating threats",
     body: CreatingThreats,
     media: {
@@ -589,16 +628,6 @@ const steps = [
     position: "center",
   },
   {
-    title: "Suggestions",
-    body: Suggestions,
-    media: {
-      image: suggestions,
-      alt: "the process of accepting suggestions",
-    },
-    highlighted: ["#panel-right"],
-    position: "center",
-  },
-  {
     title: "Action items",
     body: ActionItems,
     media: {
@@ -618,28 +647,12 @@ const steps = [
     highlighted: ["#diagram-container"],
     position: "flex-start",
   },
-
-  {
-    title: "Component",
-    body: ComponentTab,
-    media: {
-      image: componentTab,
-      alt: "the component tab",
-    },
-    highlighted: ["#panel-left"],
-    position: "center",
-  },
-  {
-    title: "System context",
-    body: SystemContext,
-    highlighted: ["#panel-left"],
-    position: "center",
-  },
   {
     title: "Review",
     body: ReviewProcess,
     highlighted: ["#panel-left-review"],
     position: "center",
+    actions: [setMultipleSelected]
   },
   {
     title: "Review flow",
@@ -648,11 +661,12 @@ const steps = [
       image: reviewRequestViewImg,
       alt: "what the review request view looks like",
     },
-    highlighted: ["#panel-left"],
+    highlighted: ["#panel-left-review"],
     position: "center",
+    actions: [setMultipleSelected]
   },
   {
-    title: "Tuturial complete",
+    title: "Tutorial complete",
     body: FinalWindow,
     highlighted: [],
     position: "center",
@@ -670,6 +684,13 @@ function Tutorial() {
   function close() {
     dispatch(modalActions.close());
   }
+  useEffect(()=> {
+    if(currentStep.actions && currentStep.actions.length > 0){
+      for (const action of currentStep.actions){
+        dispatch(action());
+      }
+    }
+  }, [step])
 
   return (
     <>
