@@ -690,7 +690,7 @@ function Tutorial() {
         dispatch(action());
       }
     }
-  }, [step])
+  }, [currentStep.actions, dispatch])
 
   return (
     <>
