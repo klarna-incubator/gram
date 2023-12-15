@@ -69,7 +69,7 @@ const SystemContext = () => (
       <Typography sx={{ fontWeight: "bold", display: "inline" }}>
         review
       </Typography>{" "}
-      ongoing for your threat model. This we'll talk about next!
+      ongoing for your threat model. This we'll talk about later!
     </Typography>
   </>
 );
