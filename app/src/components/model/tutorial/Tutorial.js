@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { modalActions } from "../../../redux/modalSlice";
 import HightlightOverlay from "../../elements/overlay/HightlightOverlay";
 import addcomponentImg from "./img/addcomponent.png";
@@ -37,18 +37,15 @@ import indicatorVulnerableImg from "./img/vulnerable.svg";
 import actionItemImg from "./img/actionItem.gif";
 import { ContactChip } from "../../elements/ContactChip";
 
-import {
-  setMultipleSelected,
-} from "../../../actions/model/setSelected";
+import { setMultipleSelected } from "../../../actions/model/setSelected";
 
 const Introduction = () => (
   <>
     <Typography>
-      Gram is a threat modeling tool, where you can create a data flow diagram enriched with threats and controls. 
+      Gram is a threat modeling tool, where you can create a data flow diagram
+      enriched with threats and controls.
     </Typography>
-    <Typography>
-      This tutorial will show you how to use it.
-    </Typography>
+    <Typography>This tutorial will show you how to use it.</Typography>
     <Typography>
       If you have any questions or feedback, feel free to reach out to{" "}
       <ContactChip />
@@ -76,17 +73,15 @@ const SystemContext = () => (
 
 const General = () => (
   <>
+    <Typography>Let's start threat modeling.</Typography>
     <Typography>
-      Let's start threat modeling.
+      First, a dataflow diagram is created, representing the components of a
+      system and how the data flows between them. It is, then, used to find
+      potential threats and controls.
     </Typography>
     <Typography>
-      First, a dataflow diagram is created, representing the components 
-      of a system and how the data flows between
-      them. It is, then, used to find potential threats and controls.
-    </Typography>
-    <Typography>
-      The diagram is built from three different types of components. Let's
-      go through each and explain what they are!
+      The diagram is built from three different types of components. Let's go
+      through each and explain what they are!
     </Typography>
   </>
 );
@@ -94,8 +89,9 @@ const General = () => (
 const ProcessExplanation = () => (
   <>
     <Typography>
-      Processes are represented by an oval. They are processes or operating units within the system in scope, e.g. the API that runs your business logic or the frontend
-      application that is visible to users.
+      Processes are represented by an oval. They are processes or operating
+      units within the system in scope, e.g. the API that runs your business
+      logic or the frontend application that is visible to users.
     </Typography>
     <Typography>
       Some concrete examples of processes are: a NodeJS webservice running via
@@ -120,8 +116,9 @@ const DataStoreExplanation = () => (
 const ExternalEntityExplanation = () => (
   <>
     <Typography>
-      External Entities are represented by a rectangle. They are processes or operating units interacting with the system in scope. As such,
-      threats are not tracked for these components.
+      External Entities are represented by a rectangle. They are processes or
+      operating units interacting with the system in scope. As such, threats are
+      not tracked for these components.
     </Typography>
     <Typography>
       Some concrete examples of processes could be: an API that your service
@@ -189,19 +186,20 @@ const DataFlows = () => (
       two connected components.
     </Typography>
     <Typography>
-      Hover your mouse over the component
-      where you want the flow to start, then click one of the small grey circles
-      that appear around it. You can change the flow direction or make the flow bidirectional by right-click on
-      the dataflow.
+      Hover your mouse over the component where you want the flow to start, then
+      click one of the small grey circles that appear around it. You can change
+      the flow direction or make the flow bidirectional by right-click on the
+      dataflow.
     </Typography>
     <Typography>
-      What is the right direction for the arrow?
-      The direction of the arrow represents the flow of meaningful data.
-      Meaningful data is any data that is of value for the system in scope.
+      What is the right direction for the arrow? The direction of the arrow
+      represents the flow of meaningful data. Meaningful data is any data that
+      is of value for the system in scope.
     </Typography>
     <Typography>
-      An example of a unidirectional flow could be a system fetching data from an external API. 
-      The arrow would start at the external API and point out process representing the system in scope.
+      An example of a unidirectional flow could be a system fetching data from
+      an external API. The arrow would start at the external API and point out
+      process representing the system in scope.
     </Typography>
     <Typography>
       An example of a bidirectional flow could be a database connection where a
@@ -231,8 +229,8 @@ const RightPanelTabs = () => (
     <Typography>
       The numbers beside the tab titles shows the number of items present in the
       tab and the color indicates the status of the items on that page. The
-      image shows the tabs of a component which has three suggestions, one threat (which is
-      still unmitigated) and one control (which is still
+      image shows the tabs of a component which has three suggestions, one
+      threat (which is still unmitigated) and one control (which is still
       pending).
     </Typography>
   </>
@@ -497,7 +495,7 @@ const steps = [
     body: SystemContext,
     highlighted: ["#panel-left"],
     position: "center",
-    actions: [setMultipleSelected]
+    actions: [setMultipleSelected],
   },
   {
     title: "Dataflow diagram",
@@ -652,7 +650,7 @@ const steps = [
     body: ReviewProcess,
     highlighted: ["#panel-left-review"],
     position: "center",
-    actions: [setMultipleSelected]
+    actions: [setMultipleSelected],
   },
   {
     title: "Review flow",
@@ -663,7 +661,7 @@ const steps = [
     },
     highlighted: ["#panel-left-review"],
     position: "center",
-    actions: [setMultipleSelected]
+    actions: [setMultipleSelected],
   },
   {
     title: "Tutorial complete",
@@ -684,13 +682,13 @@ function Tutorial() {
   function close() {
     dispatch(modalActions.close());
   }
-  useEffect(()=> {
-    if(currentStep.actions && currentStep.actions.length > 0){
-      for (const action of currentStep.actions){
+  useEffect(() => {
+    if (currentStep.actions && currentStep.actions.length > 0) {
+      for (const action of currentStep.actions) {
         dispatch(action());
       }
     }
-  }, [currentStep.actions, dispatch])
+  }, [currentStep.actions, dispatch]);
 
   return (
     <>
