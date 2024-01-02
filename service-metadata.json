@@ -88,20 +88,7 @@
           "ports": [25, 587]
         }
       ],
-      "security_groups": [
-        {
-          "rule": {
-            "cidr_blocks": [
-              "52.30.236.203/32",
-              "54.73.174.245/32",
-              "3.73.181.240/32",
-              "35.156.176.213/32"
-            ],
-            "ports": ["25", "587"],
-            "description": "Allow smtp traffic to new smtp service"
-          }
-        }
-      ]
+      "security_groups": [{ "named_security_group": "smtp-eu-production" }]
     },
     "clients": {
       "cidr_blocks": ["10.0.0.0/8"]

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.8.1](https://github.com/klarna-incubator/gram/compare/v4.8.0...v4.8.1) (2024-01-02)
+
+**Note:** Version bump only for package @gram/app
+
+# [4.8.0](https://github.com/klarna-incubator/gram/compare/v4.7.3...v4.8.0) (2024-01-02)
+
+### Bug Fixes
+
+- correct system step content ([ae20a75](https://github.com/klarna-incubator/gram/commit/ae20a75e90e3bbf26138c08c7d5d2004ef8b85bb))
+- fix linting ([a334d46](https://github.com/klarna-incubator/gram/commit/a334d467d85d23ca95b4a28b07208ee350955a4f))
+- fix react error ([8422b68](https://github.com/klarna-incubator/gram/commit/8422b684a12cf3ab6de286abcc507774ecaef67a))
+
+### Features
+
+- reorganise tutorial steps and add actions ([2fe23e5](https://github.com/klarna-incubator/gram/commit/2fe23e5552b31d589ac79cb05c550d39ea7cb744))
+
 ## [4.7.3](https://github.com/klarna-incubator/gram/compare/v4.7.2...v4.7.3) (2023-12-06)
 
 ### Bug Fixes

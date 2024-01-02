@@ -46,10 +46,9 @@ export function LeftPanel() {
   }
 
   return (
-    <Box>
+    <Box id="panel-left">
       <ToggleLeftPanelButton />
       <Drawer
-        id="panel-left"
         sx={{
           width: "16.6vw",
           minWidth: 310,
