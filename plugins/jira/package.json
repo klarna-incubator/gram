@@ -1,5 +1,5 @@
 {
-  "name": "@gram/threatlib",
+  "name": "@gram/jira",
   "type": "module",
   "version": "4.8.0",
   "description": "",
@@ -12,11 +12,14 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
-    "lint-fix": "prettier -l . --write"
+    "lint-fix": "prettier -l . --write",
+    "list-fields": "node dist/getFields.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.8.0"
+    "@gram/core": "^4.8.0",
+    "@types/jira-client": "^7.1.9",
+    "jira-client": "^8.2.2"
   }
 }
