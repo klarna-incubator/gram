@@ -1,24 +1,25 @@
 {
-  "name": "@gram/magiclink",
+  "name": "@gram/jira",
   "type": "module",
   "version": "4.8.1",
-  "description": "Pack with local auth provider",
+  "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "private": true,
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "migrate-database": "ts-node src/migrate.ts",
     "lint": "prettier --check .",
-    "lint-fix": "prettier -l . --write"
+    "lint-fix": "prettier -l . --write",
+    "list-fields": "node dist/getFields.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@gram/core": "^4.8.1",
-    "pg": "^8.11.0"
-  },
-  "private": true
+    "@types/jira-client": "^7.1.9",
+    "jira-client": "^8.2.2"
+  }
 }
