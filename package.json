@@ -5,8 +5,9 @@
   "scripts": {
     "test": "lerna run test",
     "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build",
+    "build-backend": "lerna run --scope=@gram/api --include-dependencies build",
     "build-all": "lerna run build",
-    "dev": "lerna run start --parallel",
+    "dev": "npm run build-backend && lerna run start --parallel",
     "snyk": "snyk test --all-projects",
     "lint": "lerna run lint",
     "clean": "lerna run clean",
