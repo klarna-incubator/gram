@@ -10,6 +10,7 @@ import { EventEmitter } from "node:events";
 import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import Model, { ModelData } from "./Model.js";
+import { LinkObjectType } from "../links/Link.js";
 
 function convertToModel(row: any) {
   const model = new Model(row.system_id, row.version, row.created_by);
@@ -260,17 +261,21 @@ export class ModelDataService extends EventEmitter {
         AND deleted_at IS NULL;
       `;
 
-    const queryExportedActionItems = `
-        INSERT INTO exported_action_items ( 
-          threat_id, exporter_key, url, created_at, updated_at
+    const queryLinks = `
+        INSERT INTO links ( 
+          id, object_type, object_id, icon, url, label, created_by, created_at, updated_at
         )
-        SELECT $1::uuid as threat_id,
-              exporter_key,
-              url,
-              created_at,
-              updated_at
-        FROM exported_action_items 
-        WHERE threat_id = $2::uuid;        
+        SELECT id, 
+               object_type, 
+               $1 as object_id, 
+               icon, 
+               url, 
+               label, 
+               created_by, 
+               created_at, 
+               updated_at              
+        FROM links 
+        WHERE object_type = $3 AND object_id = $2;        
       `;
 
     const queryControls = `
@@ -324,9 +329,10 @@ export class ModelDataService extends EventEmitter {
           threat.id,
         ]);
 
-        await client.query(queryExportedActionItems, [
+        await client.query(queryLinks, [
           uuid.get(threat.id!),
           threat.id,
+          LinkObjectType.Threat,
         ]);
       }
 
@@ -347,6 +353,12 @@ export class ModelDataService extends EventEmitter {
             : null,
           control.id,
         ]);
+
+        await client.query(queryLinks, [
+          uuid.get(control.id!),
+          control.id,
+          LinkObjectType.Control,
+        ]);
       }
 
       for (const mitigation of mitigations) {
@@ -361,6 +373,12 @@ export class ModelDataService extends EventEmitter {
           mitigation.controlId,
         ]);
       }
+
+      await client.query(queryLinks, [
+        uuid.get(srcModel.id!),
+        srcModel.id,
+        LinkObjectType.Model,
+      ]);
     });
 
     this.emit("updated-for", { modelId: uuid.get(srcModel.id!) });

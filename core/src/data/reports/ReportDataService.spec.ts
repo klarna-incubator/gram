@@ -8,17 +8,16 @@ describe("ReportDataService implementation", () => {
   beforeAll(async () => {
     const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
+    await _deleteAllTheThings(dal);
   });
 
   afterAll(async () => {
-    await _deleteAllTheThings(dal);
     await dal.pool.end();
   });
 
   describe("listSystemCompliance", () => {
     it("should not crash", async () => {
       const report = await dal.reportService.listSystemCompliance({});
-
       expect(report.TotalSystems).toBe("0");
     });
   });

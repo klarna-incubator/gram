@@ -11,7 +11,6 @@ import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
 import Threat, { ThreatSeverity } from "./Threat.js";
-import { ActionItem, ActionItemExport } from "./ActionItem.js";
 
 export function convertToThreat(row: any): Threat {
   const threat = new Threat(
@@ -135,7 +134,7 @@ export class ThreatDataService extends EventEmitter {
     return res.rows.map((record) => convertToThreat(record));
   }
 
-  async listActionItems(modelId: string): Promise<ActionItem[]> {
+  async listActionItems(modelId: string): Promise<Threat[]> {
     const query = `
     SELECT
       t.id,
@@ -148,11 +147,8 @@ export class ThreatDataService extends EventEmitter {
       extract(epoch from t.updated_at) as updated_at,
       t.suggestion_id,
       t.is_action_item,
-      t.severity,
-      ex.exporter_key,
-      ex.url
-    FROM threats AS t
-    LEFT JOIN exported_action_items AS ex ON t.id = ex.threat_id
+      t.severity
+    FROM threats AS t    
     WHERE 
       t.model_id = $1::uuid 
       AND t.is_action_item = true
@@ -165,35 +161,7 @@ export class ThreatDataService extends EventEmitter {
       return [];
     }
 
-    const threatMap = new Map<string, ActionItem>();
-    res.rows.forEach((row) => {
-      if (!threatMap.has(row.id!)) {
-        threatMap.set(row.id!, new ActionItem(convertToThreat(row), []));
-      }
-      const actionItem = threatMap.get(row.id!);
-      if (row.exporter_key) {
-        actionItem?.exports.push(
-          new ActionItemExport(row.exporter_key, row.id, row.url)
-        );
-      }
-    });
-
-    return [...threatMap.values()];
-  }
-
-  async insertActionItemExport(actionItemExport: ActionItemExport) {
-    const query = `
-      INSERT INTO exported_action_items (threat_id, exporter_key, url)
-      VALUES ($1::uuid, $2::varchar, $3::varchar)
-      ON CONFLICT (threat_id, exporter_key) DO
-        UPDATE SET url = $3::varchar
-      RETURNING threat_id;
-    `;
-    await this.pool.query(query, [
-      actionItemExport.threatId,
-      actionItemExport.exporterKey,
-      actionItemExport.linkedURL,
-    ]);
+    return res.rows.map((record) => convertToThreat(record));
   }
 
   /**

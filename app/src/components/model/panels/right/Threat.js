@@ -2,17 +2,9 @@ import {
   Circle as CircleIcon,
   ClearRounded as ClearRoundedIcon,
 } from "@mui/icons-material";
+
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import {
-  Box,
-  Card,
-  CardContent,
-  IconButton,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, IconButton, Tooltip } from "@mui/material";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
 import {
   useCreateMitigationMutation,
@@ -28,14 +20,14 @@ import {
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
-import { CollapsePaper } from "../../../elements/CollapsePaper";
 import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
-import { SeveritySlider } from "../../modals/SeveritySlider";
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
+import { Links } from "./Links";
 import { MitigationChip } from "./MitigationChip";
+import { ThreatAssessment } from "./ThreatAssessment";
 
 export function Threat({
   threat,
@@ -152,6 +144,7 @@ export function Threat({
                 }}
                 color={threatColor}
               />
+
               <Tooltip title="Mark as action item">
                 <IconButton
                   onClick={() =>
@@ -172,6 +165,7 @@ export function Threat({
                   />
                 </IconButton>
               </Tooltip>
+
               <EditableTypography
                 text={threat.title}
                 placeholder="Title"
@@ -272,31 +266,16 @@ export function Threat({
         )}
 
         {threat.isActionItem && (
-          <CollapsePaper
-            title={"Assessment"}
-            defaultExpanded={true}
-            sx={{ marginTop: "10px" }}
-          >
-            <Stack spacing={1} sx={{ padding: "5px" }}>
-              <Paper elevation={24} sx={{ padding: "5px" }}>
-                <Typography variant="caption">Severity</Typography>
-                <SeveritySlider
-                  hideDescription={hideSeverityDescription}
-                  onChange={(v) => {
-                    updateThreat({
-                      modelId: threat.modelId,
-                      id: threat.id,
-                      severity: v,
-                    });
-                  }}
-                  disabled={readOnly}
-                  severity={threat.severity}
-                  valueLabelDisplay="off"
-                />
-              </Paper>
-            </Stack>
-          </CollapsePaper>
+          <ThreatAssessment
+            hideSeverityDescription={hideSeverityDescription}
+            threat={threat}
+            readOnly={readOnly}
+          />
         )}
+
+        <Box sx={{ marginTop: "10px" }}>
+          <Links objectType={"threat"} objectId={threat.id} />
+        </Box>
       </CardContent>
     </Card>
   );

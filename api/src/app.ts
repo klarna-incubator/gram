@@ -38,6 +38,8 @@ import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApprov
 import { config } from "@gram/core/dist/config/index.js";
 import cookieParser from "cookie-parser";
 import { getContact } from "./resources/gram/v1/contact/get.js";
+import { listActionItems } from "./resources/gram/v1/action-items/list.js";
+import { linksRouter } from "./resources/gram/v1/links/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -131,6 +133,14 @@ export async function createApp(dal: DataAccessLayer) {
     "/models/:modelId/threats/:threatId",
     errorWrap(threats.delete)
   );
+
+  // Action Items
+  authenticatedRoutes.get(
+    "/models/:modelId/action-items",
+    errorWrap(listActionItems(dal))
+  );
+
+  authenticatedRoutes.use("/links", linksRouter(dal));
 
   // Controls
   const controls = controlsV1(dal);

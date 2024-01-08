@@ -163,7 +163,7 @@ describe("ThreatDataService implementation", () => {
       expect(threats.length).toEqual(1);
 
       expect(threats[0].toJSON()).toBeDefined();
-      expect(threats[0].threat.id).toBe(threat2.id);
+      expect(threats[0].id).toBe(threat2.id);
     });
 
     it("should return null value by default", async () => {
