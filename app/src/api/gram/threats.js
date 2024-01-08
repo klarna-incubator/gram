@@ -36,7 +36,7 @@ const threatApi = api.injectEndpoints({
         body: { ...fields },
       }),
       transformResponse: (response, meta, arg) => response,
-      invalidatesTags: ["Threats"],
+      invalidatesTags: ["Threats", "ActionItems"],
     }),
     deleteThreat: build.mutation({
       query: ({ modelId, id }) => ({

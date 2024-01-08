@@ -1,12 +1,10 @@
-import {
-  ActionItemExporter,
-  ExportResult,
-} from "@gram/core/dist/action-items/ActionItemExporter.js";
+import { ActionItemExporter } from "@gram/core/dist/action-items/ActionItemExporter.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import { ActionItem } from "@gram/core/dist/data/threats/ActionItem.js";
 import { JiraConfig } from "./JiraConfig.js";
 import log4js from "log4js";
 import fetch from "node-fetch";
+import { LinkObjectType } from "@gram/core/dist/data/links/Link.js";
+import Threat from "@gram/core/dist/data/threats/Threat.js";
 
 const log = log4js.getLogger("JiraActionItemExporter");
 
@@ -15,7 +13,7 @@ export interface JiraActionItemExporterConfig extends JiraConfig {
 
   modelToIssueFields: (
     dal: DataAccessLayer,
-    actionItem: ActionItem
+    actionItem: Threat
   ) => Promise<JiraIssueFields>;
 }
 
@@ -51,27 +49,36 @@ export class JiraActionItemExporter implements ActionItemExporter {
 
   async onReviewApproved(
     dal: DataAccessLayer,
-    actionItems: ActionItem[]
-  ): Promise<ExportResult[]> {
-    return (
-      await Promise.all(
-        actionItems.map(async (actionItem) => {
-          if (actionItem.exports.find((e) => e.exporterKey === this.key)) {
-            // Already exported
-            log.info(`Action item ${actionItem.threat.id} already exported`);
-            return null;
-          }
+    actionItems: Threat[]
+  ): Promise<void> {
+    await Promise.all(
+      actionItems.map(async (actionItem) => {
+        // Will be slow if there are many action items as each one will do a select query
+        const links = await dal.linkService.listLinks(
+          LinkObjectType.Threat,
+          actionItem.id!
+        );
 
-          const issue = await this.createIssue(actionItem);
+        if (links.find((e) => e.createdBy === this.key)) {
+          // Already exported
+          log.info(`Action item ${actionItem.id} is already exported`);
+          return;
+        }
 
-          return {
-            Key: this.key,
-            ThreatId: actionItem.threat.id!,
-            LinkedURL: issue.self,
-          };
-        })
-      )
-    ).filter((r) => r !== null) as ExportResult[];
+        // Create the issue in Jira
+        const issue = await this.createIssue(actionItem);
+
+        // Insert as a link
+        await dal.linkService.insertLink(
+          LinkObjectType.Threat,
+          actionItem.id!,
+          issue.key,
+          this.config.host + "/browse/" + issue.key,
+          this.key,
+          this.key
+        );
+      })
+    );
   }
 
   host() {
@@ -80,7 +87,7 @@ export class JiraActionItemExporter implements ActionItemExporter {
       : "https://" + this.config.host;
   }
 
-  async getReporter(actionItem: ActionItem) {
+  async getReporter(actionItem: Threat) {
     const user = await this.config.auth.user.getValue();
 
     if (!user) {
@@ -91,12 +98,12 @@ export class JiraActionItemExporter implements ActionItemExporter {
       return { id: await this.getAccountIdCurrentUser() };
     } else {
       const review = await this.dal.reviewService.getByModelId(
-        actionItem.threat.modelId
+        actionItem.modelId
       );
 
       if (!review) {
         throw new Error(
-          `Could not find review for model ${actionItem.threat.modelId}`
+          `Could not find review for model ${actionItem.modelId}`
         );
       }
 
@@ -104,11 +111,29 @@ export class JiraActionItemExporter implements ActionItemExporter {
     }
   }
 
-  async createIssue(actionItem: ActionItem) {
+  async createIssue(actionItem: Threat) {
     const fields = await this.config.modelToIssueFields(this.dal, actionItem);
 
     if (!fields.reporter) {
       fields.reporter = await this.getReporter(actionItem);
+    }
+
+    if (!fields.description) {
+      fields.description = {
+        type: "doc",
+        version: 1,
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: actionItem.description || "(no description)",
+              },
+            ],
+          },
+        ],
+      };
     }
 
     const user = await this.config.auth.user.getValue();
@@ -132,7 +157,7 @@ export class JiraActionItemExporter implements ActionItemExporter {
     if (resp.status !== 201) {
       throw new Error(
         `Failed to create issue for action item ${
-          actionItem.threat.id
+          actionItem.id
         }: ${JSON.stringify(data)}`
       );
     }

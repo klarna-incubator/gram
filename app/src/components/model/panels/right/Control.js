@@ -23,6 +23,7 @@ import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThr
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
+import { Links } from "./Links";
 
 export function Control(props) {
   const { control, scrollToId, selected } = props;
@@ -205,6 +206,7 @@ export function Control(props) {
             createNew={createThreatWithMitigation}
           />
         )}
+        <Links objectType={"control"} objectId={control.id} />
       </CardContent>
     </Card>
   );
