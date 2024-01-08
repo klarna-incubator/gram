@@ -3,10 +3,6 @@
   "regions": ["EU"],
   "system_dependencies": [
     {
-      "system_id": "aws",
-      "sla_impact": "IMMEDIATE"
-    },
-    {
       "system_id": "oh-what",
       "sla_impact": "IMMEDIATE"
     },
