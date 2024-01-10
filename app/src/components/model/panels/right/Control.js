@@ -23,7 +23,7 @@ import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThr
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
-import { Links } from "./Links";
+import { Links } from "../../../elements/Links";
 
 export function Control(props) {
   const { control, scrollToId, selected } = props;

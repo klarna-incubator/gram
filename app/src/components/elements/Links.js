@@ -1,14 +1,11 @@
 import { AddLink as AddLinkIcon } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { useDispatch } from "react-redux";
-import {
-  useDeleteLinkMutation,
-  useListLinksQuery,
-} from "../../../../api/gram/links";
-import { modalActions } from "../../../../redux/modalSlice";
-import { ExternalLink } from "../../../elements/ExternalLink";
-import { MODALS } from "../../../elements/modal/ModalManager";
-import { useReadOnly } from "../../../../hooks/useReadOnly";
+import { useDeleteLinkMutation, useListLinksQuery } from "../../api/gram/links";
+import { modalActions } from "../../redux/modalSlice";
+import { ExternalLink } from "./ExternalLink";
+import { MODALS } from "./modal/ModalManager";
+import { useReadOnly } from "../../hooks/useReadOnly";
 
 export function Links({ objectType, objectId }) {
   const dispatch = useDispatch();
@@ -16,7 +13,7 @@ export function Links({ objectType, objectId }) {
     objectType,
     objectId,
   });
-  const [deleteLink, link] = useDeleteLinkMutation();
+  const [deleteLink, _] = useDeleteLinkMutation();
   const readOnly = useReadOnly();
 
   const openAddLinkModal = () =>
@@ -28,15 +25,17 @@ export function Links({ objectType, objectId }) {
     );
 
   return (
-    <>
-      <IconButton onClick={openAddLinkModal}>
-        <AddLinkIcon
-          sx={{
-            fontSize: 20,
-            color: "#ccc",
-          }}
-        />
-      </IconButton>
+    <Box>
+      {!readOnly && (
+        <IconButton onClick={openAddLinkModal}>
+          <AddLinkIcon
+            sx={{
+              fontSize: 20,
+              color: "#ccc",
+            }}
+          />
+        </IconButton>
+      )}
 
       {links &&
         links.map((e) => (
@@ -55,6 +54,6 @@ export function Links({ objectType, objectId }) {
             }
           />
         ))}
-    </>
+    </Box>
   );
 }

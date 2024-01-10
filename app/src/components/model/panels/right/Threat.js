@@ -25,9 +25,9 @@ import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
-import { Links } from "./Links";
 import { MitigationChip } from "./MitigationChip";
 import { ThreatAssessment } from "./ThreatAssessment";
+import { Links } from "../../../elements/Links";
 
 export function Threat({
   threat,
