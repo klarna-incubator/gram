@@ -53,6 +53,15 @@ export function AddLink({ objectType, objectId }) {
     }
   }, [link, dispatch]);
 
+  const validationErrors = new Map();
+  if (link.error) {
+    link.error.data.issues.forEach((issue) => {
+      issue.path.forEach((path) => {
+        validationErrors.set(path, issue.message);
+      });
+    });
+  }
+
   const valid = url && label;
 
   return (
@@ -78,6 +87,8 @@ export function AddLink({ objectType, objectId }) {
             placeholder="URL"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            error={validationErrors.has("url")}
+            helperText={validationErrors.get("url")}
           />
         </Box>
 
@@ -114,6 +125,8 @@ export function AddLink({ objectType, objectId }) {
             onChange={(e) => {
               setLabel(e.target.value);
             }}
+            error={validationErrors.has("label")}
+            helperText={validationErrors.get("label")}
           />
         </Box>
 
@@ -128,15 +141,6 @@ export function AddLink({ objectType, objectId }) {
             size="small"
           />
         </Box>
-
-        {link.isError && (
-          <>
-            <Typography variant="h6">Something went wrong :(</Typography>
-            <Typography variant="caption">
-              Error: {JSON.stringify(link.error.data.issues)}
-            </Typography>
-          </>
-        )}
       </DialogContent>
       <DialogActions>
         <Button
