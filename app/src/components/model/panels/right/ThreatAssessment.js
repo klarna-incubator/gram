@@ -1,7 +1,6 @@
-import { Paper, Stack, Typography } from "@mui/material";
-import { CollapsePaper } from "../../../elements/CollapsePaper";
-import { SeveritySlider } from "../../elements/SeveritySlider";
+import { Paper, Typography } from "@mui/material";
 import { useUpdateThreatMutation } from "../../../../api/gram/threats";
+import { SeveritySlider } from "../../elements/SeveritySlider";
 
 export function ThreatAssessment({
   threat,
@@ -11,29 +10,23 @@ export function ThreatAssessment({
   const [updateThreat] = useUpdateThreatMutation();
 
   return (
-    <CollapsePaper
-      title={"Assessment"}
-      defaultExpanded={true}
-      sx={{ marginTop: "10px" }}
-    >
-      <Stack spacing={1} sx={{ padding: "5px" }}>
-        <Paper elevation={24} sx={{ padding: "5px" }}>
-          <Typography variant="caption">Severity</Typography>
-          <SeveritySlider
-            hideDescription={hideSeverityDescription}
-            onChange={(v) => {
-              updateThreat({
-                modelId: threat.modelId,
-                id: threat.id,
-                severity: v,
-              });
-            }}
-            disabled={readOnly}
-            severity={threat.severity}
-            valueLabelDisplay="off"
-          />
-        </Paper>
-      </Stack>
-    </CollapsePaper>
+    <Paper elevation={24} sx={{ padding: "5px", marginTop: "5px" }}>
+      <Typography variant="caption" sx={{ paddingLeft: "5px" }}>
+        Severity
+      </Typography>
+      <SeveritySlider
+        hideDescription={hideSeverityDescription}
+        onChange={(v) => {
+          updateThreat({
+            modelId: threat.modelId,
+            id: threat.id,
+            severity: v,
+          });
+        }}
+        disabled={readOnly}
+        severity={threat.severity}
+        valueLabelDisplay="off"
+      />
+    </Paper>
   );
 }
