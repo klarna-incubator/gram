@@ -89,29 +89,29 @@ export class JiraActionItemExporter implements ActionItemExporter {
       : "https://" + this.config.host;
   }
 
-  async getFields() {
-    const user = await this.config.auth.user.getValue();
-    const token = await this.config.auth.apiToken.getValue();
-    const response = await fetch(`${this.config.host}/rest/api/3/field`, {
-      method: "GET",
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${user}:${token}`).toString(
-          "base64"
-        )}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+  // async getFields() {
+  //   const user = await this.config.auth.user.getValue();
+  //   const token = await this.config.auth.apiToken.getValue();
+  //   const response = await fetch(`${this.config.host}/rest/api/3/field`, {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Basic ${Buffer.from(`${user}:${token}`).toString(
+  //         "base64"
+  //       )}`,
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //   });
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch Jira fields: ${response.status} ${response.statusText}`
-      );
-    }
+  //   if (!response.ok) {
+  //     throw new Error(
+  //       `Failed to fetch Jira fields: ${response.status} ${response.statusText}`
+  //     );
+  //   }
 
-    const fields = await response.json();
-    return fields;
-  }
+  //   const fields = await response.json();
+  //   return fields;
+  // }
 
   async getReporter(actionItem: Threat) {
     const user = await this.config.auth.user.getValue();

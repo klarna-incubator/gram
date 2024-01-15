@@ -29,17 +29,7 @@ export function exportActionItem(dal: DataAccessLayer) {
 
     await req.authz.hasPermissionsForModelId(threat.modelId, Permission.Write);
 
-    const exporter = dal.actionItemHandler.exporters.filter(
-      (e) => e.key === actionItem.exporterKey
-    );
-
-    if (exporter.length === 0) {
-      return res
-        .json({ error: { message: "No such exporter" } })
-        .sendStatus(404);
-    }
-
-    await exporter[0].export(dal, [threat]);
+    await dal.actionItemHandler.export(actionItem.exporterKey, [threat]);
 
     return res.json({ success: true });
   };

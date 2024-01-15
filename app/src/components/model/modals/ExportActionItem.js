@@ -18,6 +18,7 @@ import {
   useListExportersQuery,
 } from "../../../api/gram/action-items";
 import { modalActions } from "../../../redux/modalSlice";
+import { ErrorLine } from "../../elements/ErrorLine";
 
 export function ExportActionItem({ threatId }) {
   const dispatch = useDispatch();
@@ -44,7 +45,9 @@ export function ExportActionItem({ threatId }) {
       <DialogContent sx={{ paddingTop: "0" }}>
         {isLoading && <CircularProgress />}
 
-        {isError && <Typography>Error loading exporters</Typography>}
+        {isError && <ErrorLine message={"Error loading exporters"} />}
+
+        {result.error && <ErrorLine message={"Error exporting action item"} />}
 
         <Typography>Which exporter would you like to use?</Typography>
 

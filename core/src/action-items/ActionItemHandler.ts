@@ -2,7 +2,7 @@ import log4js from "log4js";
 import { DataAccessLayer } from "../data/dal.js";
 import { Review } from "../data/reviews/Review.js";
 import { ActionItemExporter } from "./ActionItemExporter.js";
-import EventEmitter from "events";
+import Threat from "../data/threats/Threat.js";
 
 const log = log4js.getLogger("ActionItemHandler");
 
@@ -26,22 +26,42 @@ export class ActionItemHandler {
       return;
     }
 
-    return this.exportForModel(review.modelId);
-  }
-
-  async exportForModel(modelId: string) {
-    const actionItems = await this.dal.threatService.listActionItems(modelId);
+    const actionItems = await this.dal.threatService.listActionItems(
+      review.modelId
+    );
     log.info(`Found ${actionItems.length} action items to export`);
 
     const promises = this.exporters
       .filter((exporter) => exporter.exportOnReviewApproved)
       .map((exporter) => {
-        exporter.export(this.dal, actionItems);
-        log.info(
-          `Exported ${actionItems.length} action items to ${exporter.key}`
-        );
+        this.runExport(exporter, actionItems);
       });
 
     await Promise.all(promises);
+  }
+
+  async export(exporterKey: string, actionItems: Threat[]) {
+    log.info(`Found ${actionItems.length} action items to export`);
+
+    const exporter = this.exporters.find((e) => e.key === exporterKey);
+
+    if (!exporter) {
+      throw new Error(`No such exporter ${exporterKey}`);
+    }
+
+    await this.runExport(exporter, actionItems);
+  }
+
+  async runExport(exporter: ActionItemExporter, actionItems: Threat[]) {
+    try {
+      await exporter.export(this.dal, actionItems);
+      log.info(
+        `Exported ${actionItems.length} action items to ${exporter.key}`
+      );
+    } catch (e) {
+      // Handle errors gracefully to avoid fatal errors crashing the entire app
+      log.error(`Failed to export to ${exporter.key}`, e);
+      throw e;
+    }
   }
 }
