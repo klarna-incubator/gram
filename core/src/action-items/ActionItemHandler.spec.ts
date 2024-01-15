@@ -14,6 +14,14 @@ class OtherDummyActionItemExporter extends DummyActionItemExporter {
   async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {}
 }
 
+class ErroringActionItemExporter extends DummyActionItemExporter {
+  key = "errorer";
+
+  async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {
+    throw new Error("Erroring exporter");
+  }
+}
+
 describe("ActionItemHandler implementation", () => {
   let dal: DataAccessLayer;
   let modelId: string;
@@ -64,6 +72,26 @@ describe("ActionItemHandler implementation", () => {
     handler.attachExporter(new DummyActionItemExporter());
     handler.attachExporter(new OtherDummyActionItemExporter());
     await handler.onReviewApproved(review);
+  });
+
+  it("should handle errors in exporters", async () => {
+    const handler = new ActionItemHandler(dal);
+    handler.attachExporter(new ErroringActionItemExporter());
+    const threat = await dal.threatService.getById(threatId);
+
+    let threw = false;
+    try {
+      await handler.export("errorer", [threat!]);
+    } catch (e) {
+      console.log(e);
+      threw = true;
+    }
+    expect(threw).toBe(true);
+
+    const res = await dal.pool.query(
+      "SELECT * FROM action_item_failed_exports"
+    );
+    expect(res.rows.length).toBe(1);
   });
 
   afterAll(async () => {

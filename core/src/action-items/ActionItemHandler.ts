@@ -33,8 +33,12 @@ export class ActionItemHandler {
 
     const promises = this.exporters
       .filter((exporter) => exporter.exportOnReviewApproved)
-      .map((exporter) => {
-        this.runExport(exporter, actionItems);
+      .map(async (exporter) => {
+        try {
+          await this.runExport(exporter, actionItems);
+        } catch (e) {
+          // Handled within runExport
+        }
       });
 
     await Promise.all(promises);
@@ -61,7 +65,32 @@ export class ActionItemHandler {
     } catch (e) {
       // Handle errors gracefully to avoid fatal errors crashing the entire app
       log.error(`Failed to export to ${exporter.key}`, e);
+      await this.trackFailedExports(exporter, actionItems);
       throw e;
     }
+  }
+
+  async trackFailedExports(
+    exporter: ActionItemExporter,
+    actionItems: Threat[]
+  ) {
+    await Promise.all(
+      actionItems.map(async (actionItem) => {
+        await this.dal.pool.query(
+          `INSERT INTO action_item_failed_exports (exporter, model_id, threat_id) VALUES ($1, $2, $3)`,
+          [exporter.key, actionItem.modelId, actionItem.id]
+        );
+      })
+    );
+  }
+
+  /**
+   * Count number of exports current marked as failed.
+   */
+  async countFailures() {
+    const query = `
+        SELECT COUNT(*) as count FROM action_item_failed_exports`;
+    const res = await this.dal.pool.query(query);
+    return parseInt(res.rows[0].count);
   }
 }
