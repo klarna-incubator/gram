@@ -5,10 +5,9 @@ import { ActionItemExporter } from "./ActionItemExporter.js";
 export class DummyActionItemExporter implements ActionItemExporter {
   key: string = "dummy";
 
-  async onReviewApproved(
-    dal: DataAccessLayer,
-    actionItems: Threat[]
-  ): Promise<void> {
+  exportOnReviewApproved: boolean = true;
+
+  async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {
     // It does nothing.
   }
 }

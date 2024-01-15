@@ -7,7 +7,7 @@ import EventEmitter from "events";
 const log = log4js.getLogger("ActionItemHandler");
 
 export class ActionItemHandler {
-  private exporters: ActionItemExporter[] = [];
+  public exporters: ActionItemExporter[] = [];
 
   constructor(private dal: DataAccessLayer) {
     this.dal.reviewService.on("approved", ({ review }) => {
@@ -33,12 +33,14 @@ export class ActionItemHandler {
     const actionItems = await this.dal.threatService.listActionItems(modelId);
     log.info(`Found ${actionItems.length} action items to export`);
 
-    const promises = this.exporters.map((exporter) => {
-      exporter.onReviewApproved(this.dal, actionItems);
-      log.info(
-        `Exported ${actionItems.length} action items to ${exporter.key}`
-      );
-    });
+    const promises = this.exporters
+      .filter((exporter) => exporter.exportOnReviewApproved)
+      .map((exporter) => {
+        exporter.export(this.dal, actionItems);
+        log.info(
+          `Exported ${actionItems.length} action items to ${exporter.key}`
+        );
+      });
 
     await Promise.all(promises);
   }
