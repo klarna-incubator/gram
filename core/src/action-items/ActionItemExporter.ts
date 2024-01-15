@@ -4,5 +4,7 @@ import Threat from "../data/threats/Threat.js";
 export interface ActionItemExporter {
   key: string;
 
-  onReviewApproved(dal: DataAccessLayer, actionItems: Threat[]): Promise<void>;
+  exportOnReviewApproved: boolean;
+
+  export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void>;
 }

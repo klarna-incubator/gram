@@ -1,8 +1,3 @@
-/**
- * GET /api/v1/models
- * @exports {function} handler
- */
-
 import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";

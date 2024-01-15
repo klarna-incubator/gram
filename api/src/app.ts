@@ -1,10 +1,12 @@
-import * as Sentry from "@sentry/node";
-import express from "express";
-import { errorWrap } from "./util/errorHandler.js";
-import path from "path";
+import { AssetDir } from "@gram/core/dist/Bootstrapper.js";
 import { Role } from "@gram/core/dist/auth/models/Role.js";
+import { config } from "@gram/core/dist/config/index.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import * as Sentry from "@sentry/node";
+import cookieParser from "cookie-parser";
+import express from "express";
 import log4js from "log4js";
+import path from "path";
 import { metricsMiddleware } from "./metrics/metrics.js";
 import {
   authRequiredMiddleware,
@@ -12,14 +14,18 @@ import {
 } from "./middlewares/auth.js";
 import { AuthzMiddleware } from "./middlewares/authz.js";
 import cacheMw from "./middlewares/cache.js";
+import errorHandler from "./middlewares/errorHandler.js";
 import loggerMw from "./middlewares/logger.js";
 import { securityHeaders } from "./middlewares/securityHeaders.js";
-import { AssetDir } from "@gram/core/dist/Bootstrapper.js";
+import { actionItemRouter } from "./resources/gram/v1/action-items/router.js";
 import crash from "./resources/gram/v1/admin/crash.js";
+import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval.js";
 import setRoles from "./resources/gram/v1/admin/setRoles.js";
 import { getBanner } from "./resources/gram/v1/banners/get.js";
 import { searchClasses } from "./resources/gram/v1/component-classes/search.js";
+import { getContact } from "./resources/gram/v1/contact/get.js";
 import controlsV1 from "./resources/gram/v1/controls/index.js";
+import { linksRouter } from "./resources/gram/v1/links/router.js";
 import { getMenu } from "./resources/gram/v1/menu/get.js";
 import { mitigationsV1 } from "./resources/gram/v1/mitigations/index.js";
 import modelsV1 from "./resources/gram/v1/models/index.js";
@@ -28,18 +34,12 @@ import reviewsV1 from "./resources/gram/v1/reviews/index.js";
 import suggestionsV1 from "./resources/gram/v1/suggestions/index.js";
 import systemPropertyRoutesV1 from "./resources/gram/v1/system-properties/index.js";
 import systemsV1 from "./resources/gram/v1/systems/index.js";
+import { getTeam } from "./resources/gram/v1/team/get.js";
 import threatsV1 from "./resources/gram/v1/threats/index.js";
 import tokenV1 from "./resources/gram/v1/token/index.js";
 import userV1 from "./resources/gram/v1/user/index.js";
-import errorHandler from "./middlewares/errorHandler.js";
-import { getTeam } from "./resources/gram/v1/team/get.js";
+import { errorWrap } from "./util/errorHandler.js";
 import { initSentry } from "./util/sentry.js";
-import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval.js";
-import { config } from "@gram/core/dist/config/index.js";
-import cookieParser from "cookie-parser";
-import { getContact } from "./resources/gram/v1/contact/get.js";
-import { listActionItems } from "./resources/gram/v1/action-items/list.js";
-import { linksRouter } from "./resources/gram/v1/links/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -135,11 +135,9 @@ export async function createApp(dal: DataAccessLayer) {
   );
 
   // Action Items
-  authenticatedRoutes.get(
-    "/models/:modelId/action-items",
-    errorWrap(listActionItems(dal))
-  );
+  authenticatedRoutes.use("/action-items", actionItemRouter(dal));
 
+  // Links
   authenticatedRoutes.use("/links", linksRouter(dal));
 
   // Controls

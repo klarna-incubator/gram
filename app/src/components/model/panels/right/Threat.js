@@ -1,6 +1,7 @@
 import {
   Circle as CircleIcon,
   ClearRounded as ClearRoundedIcon,
+  IosShare as IosShareIcon,
 } from "@mui/icons-material";
 
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
@@ -28,6 +29,9 @@ import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
 import { ThreatAssessment } from "./ThreatAssessment";
 import { Links } from "../../../elements/Links";
+import { useDispatch } from "react-redux";
+import { modalActions } from "../../../../redux/modalSlice";
+import { MODALS } from "../../../elements/modal/ModalManager";
 
 export function Threat({
   threat,
@@ -36,7 +40,9 @@ export function Threat({
   hideDelete,
   hideAddControl,
   hideSeverityDescription,
+  hideExport,
 }) {
+  const dispatch = useDispatch();
   const modelId = useModelID();
   const selectedComponent = useSelectedComponent();
   const [deleteThreat] = useDeleteThreatMutation();
@@ -44,6 +50,14 @@ export function Threat({
   const [createControl] = useCreateControlMutation();
   const [createMitigation] = useCreateMitigationMutation();
   const [acceptSuggestion] = useAcceptSuggestionMutation();
+
+  const openExportActionItemModal = () =>
+    dispatch(
+      modalActions.open({
+        type: MODALS.ExportActionItem.name,
+        props: { threatId: threat.id },
+      })
+    );
 
   const partialThreatId = threat?.suggestionId
     ? threat.suggestionId.split("/").splice(1).join("/")
@@ -185,18 +199,31 @@ export function Threat({
                 }}
               />
 
-              {!readOnly && !hideDelete && (
-                <Tooltip title="Delete Threat">
-                  <IconButton
-                    onClick={() =>
-                      deleteThreat({ modelId: threat.modelId, id: threat.id })
-                    }
-                    sx={{ marginLeft: "auto", alignSelf: "flex-start" }}
-                  >
-                    <ClearRoundedIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Box sx={{ marginLeft: "auto", alignSelf: "flex-start" }}>
+                {!readOnly && !hideExport && (
+                  <Tooltip title="Export Threat">
+                    <IconButton
+                      onClick={openExportActionItemModal}
+                      size="small"
+                    >
+                      <IosShareIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+
+                {!readOnly && !hideDelete && (
+                  <Tooltip title="Delete Threat">
+                    <IconButton
+                      onClick={() =>
+                        deleteThreat({ modelId: threat.modelId, id: threat.id })
+                      }
+                      size="small"
+                    >
+                      <ClearRoundedIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </Box>
             </Box>
             <EditableTypography
               text={threat.description}

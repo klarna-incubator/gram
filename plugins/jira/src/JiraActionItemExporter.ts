@@ -1,15 +1,17 @@
 import { ActionItemExporter } from "@gram/core/dist/action-items/ActionItemExporter.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import { JiraConfig } from "./JiraConfig.js";
-import log4js from "log4js";
-import fetch from "node-fetch";
 import { LinkObjectType } from "@gram/core/dist/data/links/Link.js";
 import Threat from "@gram/core/dist/data/threats/Threat.js";
+import log4js from "log4js";
+import fetch from "node-fetch";
+import { JiraConfig } from "./JiraConfig.js";
 
 const log = log4js.getLogger("JiraActionItemExporter");
 
 export interface JiraActionItemExporterConfig extends JiraConfig {
   reporterMode: "reviewer-as-reporter" | "jira-token-user";
+
+  exportOnReviewApproved: boolean;
 
   modelToIssueFields: (
     dal: DataAccessLayer,
@@ -41,16 +43,16 @@ export interface JiraIssueFields {
 
 export class JiraActionItemExporter implements ActionItemExporter {
   key: string = "jira";
+  exportOnReviewApproved: boolean;
 
   constructor(
     private config: JiraActionItemExporterConfig,
     private dal: DataAccessLayer
-  ) {}
+  ) {
+    this.exportOnReviewApproved = config.exportOnReviewApproved;
+  }
 
-  async onReviewApproved(
-    dal: DataAccessLayer,
-    actionItems: Threat[]
-  ): Promise<void> {
+  async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {
     await Promise.all(
       actionItems.map(async (actionItem) => {
         // Will be slow if there are many action items as each one will do a select query
@@ -87,6 +89,30 @@ export class JiraActionItemExporter implements ActionItemExporter {
       : "https://" + this.config.host;
   }
 
+  async getFields() {
+    const user = await this.config.auth.user.getValue();
+    const token = await this.config.auth.apiToken.getValue();
+    const response = await fetch(`${this.config.host}/rest/api/3/field`, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${user}:${token}`).toString(
+          "base64"
+        )}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch Jira fields: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const fields = await response.json();
+    return fields;
+  }
+
   async getReporter(actionItem: Threat) {
     const user = await this.config.auth.user.getValue();
 
@@ -112,6 +138,12 @@ export class JiraActionItemExporter implements ActionItemExporter {
   }
 
   async createIssue(actionItem: Threat) {
+    // console.log(JSON.stringify(await this.getFields()));
+    // writeFileSync(
+    //   "fields.json",
+    //   JSON.stringify(await this.getFields(), null, 4)
+    // );
+
     const fields = await this.config.modelToIssueFields(this.dal, actionItem);
 
     if (!fields.reporter) {

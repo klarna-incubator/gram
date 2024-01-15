@@ -11,10 +11,7 @@ class OtherDummyActionItemExporter extends DummyActionItemExporter {
   key = "other-dummy";
   url = "other";
 
-  async onReviewApproved(
-    dal: DataAccessLayer,
-    actionItems: Threat[]
-  ): Promise<void> {}
+  async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {}
 }
 
 describe("ActionItemHandler implementation", () => {
