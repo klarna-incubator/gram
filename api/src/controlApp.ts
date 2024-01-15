@@ -8,7 +8,7 @@ import { version } from "./util/version.js";
 
 export function createControlApp(dal: DataAccessLayer) {
   const app = express();
-  app.use(metricsMiddleware.metricsMiddleware);
+
   app.use(express.json());
 
   app.get("/healthcheck", createHealthChecks(dal));
@@ -23,6 +23,8 @@ export function createControlApp(dal: DataAccessLayer) {
   });
   app.get("/ping", (_req, res) => res.json({ message: "pong" }));
 
+  // Metrics Middleware
+  app.use(metricsMiddleware.metricsMiddleware);
   // Sentry Error Handler
   app.use(Sentry.Handlers.errorHandler());
   // Global Error Handler. Should catch anything that propagates up from the REST routes.
