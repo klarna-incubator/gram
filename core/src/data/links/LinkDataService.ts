@@ -83,7 +83,7 @@ export class LinkDataService extends EventEmitter {
       createdBy,
     ]);
 
-    this.emit("updated-for", { objectType, objectId });
+    this.notifyUpdatedFor(objectType, objectId);
 
     const link = new Link(
       res.rows[0].id,
@@ -110,8 +110,28 @@ export class LinkDataService extends EventEmitter {
       const objectType = res.rows[0].object_type;
       const objectId = res.rows[0].object_id;
 
-      // TODO: need modelId to connect to right websocket.
-      this.emit("updated-for", { objectType, objectId });
+      this.notifyUpdatedFor(objectType, objectId);
+    }
+  }
+
+  async notifyUpdatedFor(objectType: LinkObjectType, objectId: LinkObjectId) {
+    let modelId: string | undefined;
+    if (objectType === LinkObjectType.Threat) {
+      const threat = await this.dal.threatService.getById(objectId);
+      if (threat) {
+        modelId = threat.modelId;
+      }
+    } else if (objectType === LinkObjectType.Control) {
+      const control = await this.dal.controlService.getById(objectId);
+      if (control) {
+        modelId = control.modelId;
+      }
+    } else if (objectType === LinkObjectType.Model) {
+      modelId = objectId;
+    }
+
+    if (modelId) {
+      this.emit("updated-for", { modelId, objectType, objectId });
     }
   }
 }
