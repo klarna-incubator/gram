@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   TextField,
