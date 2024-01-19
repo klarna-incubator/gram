@@ -13,7 +13,7 @@ export function Links({ objectType, objectId }) {
     objectType,
     objectId,
   });
-  const [deleteLink, _] = useDeleteLinkMutation();
+  const [deleteLink] = useDeleteLinkMutation();
   const readOnly = useReadOnly();
 
   const openAddLinkModal = () =>
