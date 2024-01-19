@@ -9,10 +9,24 @@ import { JiraConfig } from "./JiraConfig.js";
 const log = log4js.getLogger("JiraActionItemExporter");
 
 export interface JiraActionItemExporterConfig extends JiraConfig {
+  /**
+   * If "reviewer-as-reporter", the reporter will be set to the user that created the review.'
+   * If "jira-token-user", the reporter will be set to the user that the Jira API token belongs to.
+   */
   reporterMode: "reviewer-as-reporter" | "jira-token-user";
 
+  /**
+   * If true, action items will be exported when the review is approved.
+   */
   exportOnReviewApproved: boolean;
 
+  /**
+   * (Required) Translates the action item in Gram to the correct fields in your Jira project.
+   *
+   * @param dal
+   * @param actionItem
+   * @returns
+   */
   modelToIssueFields: (
     dal: DataAccessLayer,
     actionItem: Threat
@@ -20,22 +34,42 @@ export interface JiraActionItemExporterConfig extends JiraConfig {
 }
 
 export interface JiraIssueFields {
+  /**
+   * The project the issue should be created in.
+   */
   project: {
     id: string;
   };
+  /**
+   * The issue type.
+   */
   issuetype: {
     id: string;
   };
+  /**
+   * Who the issue is reported by
+   */
   reporter?: {
     // Jira account id
     id: string;
   };
-  // Assignee
+  /**
+   * Who the issue is assigned to
+   */
   assignee?: {
-    // Jira username
-    name: string;
+    // Jira account id
+    id: string;
   };
+
+  /**
+   * The summary/title of the issue.
+   */
   summary?: string;
+
+  /**
+   * The description of the issue.
+   */
+  description?: { type: string; version: number; content: any[] };
 
   // Any other fields
   [name: string]: any;
@@ -122,19 +156,17 @@ export class JiraActionItemExporter implements ActionItemExporter {
 
     if (this.config.reporterMode === "jira-token-user") {
       return { id: await this.getAccountIdCurrentUser() };
-    } else {
-      const review = await this.dal.reviewService.getByModelId(
-        actionItem.modelId
-      );
-
-      if (!review) {
-        throw new Error(
-          `Could not find review for model ${actionItem.modelId}`
-        );
-      }
-
-      return { id: await this.getAccountIdForEmail(review.reviewedBy) };
     }
+
+    const review = await this.dal.reviewService.getByModelId(
+      actionItem.modelId
+    );
+
+    if (!review) {
+      throw new Error(`Could not find review for model ${actionItem.modelId}`);
+    }
+
+    return { id: await this.getAccountIdForEmail(review.reviewedBy) };
   }
 
   async createIssue(actionItem: Threat) {
