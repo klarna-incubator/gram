@@ -46,23 +46,23 @@ docker compose up -d
 Then build and try to run the project
 
 ```sh
-npm run build
-npm run dev # note: you'll need to run build before every dev
+npm run dev # note: you'll need to restart this process if you make an backend changes
 ```
 
 ## First Login
-With the default configuration, Gram will be configured to use login via email. 
 
-For your first login, use the email address `admin@localhost`. 
+With the default configuration, Gram will be configured to use login via email.
+
+For your first login, use the email address `admin@localhost`.
 
 Since SMTP is not configured yet, you will need to get the actual link from your application logs:
+
 ```
 [2023-11-07T14:29:12.229] [DEBUG] MagicLinkIdentityProvider - Sending magic link to <REDACTED> with link http://localhost:4726/login/callback/magic-link?token=<REDACTED>
 ```
 
 For the default configuration, the login is limited to three hardcoded users: `user@localhost`, `reviewer@localhost` and `admin@localhost`.
 You will need to change the configuration to change this.
-
 
 ## Modify the configuration
 

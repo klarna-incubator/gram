@@ -44,7 +44,7 @@ export class ThreatDataService extends EventEmitter {
    * @param {Threat} threat - Threat creation object
    * @returns {string}
    */
-  async create(threat: Threat) {
+  async create(threat: Threat): Promise<string> {
     const query = `
      INSERT INTO threats (title, description, model_id, component_id, created_by, suggestion_id)
      VALUES ($1::varchar, $2::varchar, $3::uuid, $4::uuid, $5::varchar, $6)
@@ -134,24 +134,26 @@ export class ThreatDataService extends EventEmitter {
     return res.rows.map((record) => convertToThreat(record));
   }
 
-  async listActionItems(modelId: string) {
+  async listActionItems(modelId: string): Promise<Threat[]> {
     const query = `
     SELECT
-      id,
-      title,
-      description,
-      model_id,
-      component_id,
-      created_by,
-      extract(epoch from created_at) as created_at,
-      extract(epoch from updated_at) as updated_at,
-      suggestion_id,
-      is_action_item,
-      severity
-    FROM threats
-    WHERE model_id = $1::uuid and is_action_item = true
-    AND deleted_at IS NULL
-    ORDER BY created_at DESC
+      t.id,
+      t.title,
+      t.description,
+      t.model_id,
+      t.component_id,
+      t.created_by,
+      extract(epoch from t.created_at) as created_at,
+      extract(epoch from t.updated_at) as updated_at,
+      t.suggestion_id,
+      t.is_action_item,
+      t.severity
+    FROM threats AS t    
+    WHERE 
+      t.model_id = $1::uuid 
+      AND t.is_action_item = true
+      AND t.deleted_at IS NULL
+    ORDER BY t.created_at DESC
   `;
     const res = await this.pool.query(query, [modelId]);
 

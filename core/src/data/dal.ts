@@ -24,6 +24,8 @@ import {
   createPostgresPool,
   getDatabaseName,
 } from "./postgres.js";
+import { ActionItemHandler } from "../action-items/ActionItemHandler.js";
+import { LinkDataService } from "./links/LinkDataService.js";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
@@ -42,6 +44,7 @@ export class DataAccessLayer {
   suggestionService: SuggestionDataService;
   reportService: ReportDataService;
   bannerService: BannerDataService;
+  linkService: LinkDataService;
 
   // Non-Database related handlers
   sysPropHandler: SystemPropertyHandler;
@@ -51,6 +54,7 @@ export class DataAccessLayer {
   userHandler: UserHandler;
   reviewerHandler: ReviewerHandler;
   teamHandler: TeamHandler;
+  actionItemHandler: ActionItemHandler;
 
   get authzProvider(): AuthzProvider {
     return authzProvider;
@@ -85,5 +89,9 @@ export class DataAccessLayer {
     this.suggestionEngine = new SuggestionEngine(this);
     this.reportService = new ReportDataService(this);
     this.bannerService = new BannerDataService(this);
+    this.linkService = new LinkDataService(this);
+
+    // Initialize Action Item Handler. Needs to happen after Data Services are initialized.
+    this.actionItemHandler = new ActionItemHandler(this);
   }
 }

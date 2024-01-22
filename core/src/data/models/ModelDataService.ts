@@ -10,6 +10,7 @@ import { EventEmitter } from "node:events";
 import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import Model, { ModelData } from "./Model.js";
+import { LinkObjectType } from "../links/Link.js";
 
 function convertToModel(row: any) {
   const model = new Model(row.system_id, row.version, row.created_by);
@@ -260,6 +261,23 @@ export class ModelDataService extends EventEmitter {
         AND deleted_at IS NULL;
       `;
 
+    const queryLinks = `
+        INSERT INTO links ( 
+          id, object_type, object_id, icon, url, label, created_by, created_at, updated_at
+        )
+        SELECT id, 
+               object_type, 
+               $1 as object_id, 
+               icon, 
+               url, 
+               label, 
+               created_by, 
+               created_at, 
+               updated_at              
+        FROM links 
+        WHERE object_type = $3 AND object_id = $2;        
+      `;
+
     const queryControls = `
         INSERT INTO controls ( 
         id, model_id, component_id, title, description, in_place, created_by, suggestion_id, created_at
@@ -310,6 +328,12 @@ export class ModelDataService extends EventEmitter {
             : null,
           threat.id,
         ]);
+
+        await client.query(queryLinks, [
+          uuid.get(threat.id!),
+          threat.id,
+          LinkObjectType.Threat,
+        ]);
       }
 
       for (const control of controls) {
@@ -329,6 +353,12 @@ export class ModelDataService extends EventEmitter {
             : null,
           control.id,
         ]);
+
+        await client.query(queryLinks, [
+          uuid.get(control.id!),
+          control.id,
+          LinkObjectType.Control,
+        ]);
       }
 
       for (const mitigation of mitigations) {
@@ -343,6 +373,12 @@ export class ModelDataService extends EventEmitter {
           mitigation.controlId,
         ]);
       }
+
+      await client.query(queryLinks, [
+        uuid.get(srcModel.id!),
+        srcModel.id,
+        LinkObjectType.Model,
+      ]);
     });
 
     this.emit("updated-for", { modelId: uuid.get(srcModel.id!) });
