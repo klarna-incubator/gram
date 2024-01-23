@@ -10,6 +10,7 @@ import * as Sentry from "@sentry/node";
 import { OctaneSystemProvider } from "./index.js";
 import { LDAPCache } from "@gram/ldap/dist/index.js";
 import cron from "node-cron";
+import { CronJob } from "cron";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;
 const REQUESTED_REMIND_AFTER_X_DAYS = 14;
@@ -32,14 +33,18 @@ export class KlarnaCronJob {
     crontab: string,
     jobFunction: Function
   ) {
-    const cronWithCheckIn = Sentry.cron.instrumentNodeCron(cron);
+    // const cronWithCheckIn = Sentry.cron.instrumentNodeCron(cron);
+    // const CronJobWithCheckIn = Sentry.cron.instrumentCron(
+    //   CronJob,
+    //   "my-cron-job"
+    // );
 
-    cronWithCheckIn.schedule(
+    cron.schedule(
       crontab,
-      async () => {
-        await jobFunction();
+      () => {
+        jobFunction();
       },
-      { name: monitorSlug }
+      { name: monitorSlug, timezone: "Europe/Stockholm" }
     );
 
     log.info(`${monitorSlug} cronjob schedule for ${crontab} - ${crontab}`);
