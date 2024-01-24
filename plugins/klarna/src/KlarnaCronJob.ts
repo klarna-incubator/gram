@@ -47,7 +47,7 @@ export class KlarnaCronJob {
       { name: monitorSlug, timezone: "Europe/Stockholm" }
     );
 
-    log.info(`${monitorSlug} cronjob schedule for ${crontab} - ${crontab}`);
+    log.info(`${monitorSlug} cronjob schedule for ${monitorSlug} - ${crontab}`);
   }
 
   async sendRemindersForMeetingRequested() {
