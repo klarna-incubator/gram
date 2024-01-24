@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { OctaneSystemProvider } from "./index.js";
 import { LDAPCache } from "@gram/ldap/dist/index.js";
 import cron from "node-cron";
-import { CronJob } from "cron";
+// import { CronJob } from "cron";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;
 const REQUESTED_REMIND_AFTER_X_DAYS = 14;
