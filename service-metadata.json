@@ -25,6 +25,9 @@
         },
         "THREATSAURUS_URL": {
           "value": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+        },
+        "JIRA_HOST": {
+          "value": "https://klarna-sandbox-343.atlassian.net"
         }
       }
     },
@@ -53,6 +56,9 @@
         },
         "THREATSAURUS_URL": {
           "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+        },
+        "JIRA_HOST": {
+          "value": "https://klarna.atlassian.net"
         }
       }
     }
@@ -106,9 +112,8 @@
       "EMAIL_PASSWORD": { "secret": "/notifications.providers.email.password" },
       "LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
       "LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
-      "JIRA_HOST": { "secret": "/jira.host" },
       "JIRA_USER": { "secret": "/jira.user" },
-      "JIRA_PASSWORD": { "secret": "/jira.password" },
+      "JIRA_API_TOKEN": { "secret": "/jira.token" },
       "OIDC_CLIENT_DISCOVER_URL": { "value": "https://sso.klarna.net/" },
       "OIDC_SESSION_SECRET": { "secret": "/auth.oidc.session_secret" },
       "OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },

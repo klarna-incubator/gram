@@ -1,6 +1,7 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
 import { defaultConfig } from "./default.js";
+import { createStagingJiraActionItemExporter } from "./jira.js";
 
 export const developmentConfig: GramConfiguration = {
   ...defaultConfig,
@@ -53,6 +54,13 @@ export const developmentConfig: GramConfiguration = {
 
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
+
+    const jiraActionItemExporter = createStagingJiraActionItemExporter(
+      this,
+      dal
+    );
+    providers.actionItemExporters = [jiraActionItemExporter];
+
     return providers;
   },
 };
