@@ -84,6 +84,8 @@
         { "destination": "o24547.ingest.sentry.io", "ports": [443] },
         { "destination": "octane.klarna.net", "ports": [443] },
         { "destination": "sso.klarna.net", "ports": [443] },
+        { "destination": "klarna-sandbox-343.atlassian.net", "ports": [443] },
+        { "destination": "klarna.atlassian.net", "ports": [443] },
         { "destination": "klarna-dev-admin.oktapreview.com", "ports": [443] },
         {
           "destination": "inbound.production.eu1.smtp-service.klarna.net",
