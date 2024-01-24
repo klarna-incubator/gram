@@ -10,8 +10,9 @@ const log = log4js.getLogger("JiraActionItemExporter");
 
 export interface JiraActionItemExporterConfig extends JiraConfig {
   /**
-   * If "reviewer-as-reporter", the reporter will be set to the user that created the review.'
-   * If "jira-token-user", the reporter will be set to the user that the Jira API token belongs to.
+   * If "reviewer-as-reporter", the reporter will be set to the user that created the review.' Ensure that the token user has the global permission:
+   * `Browse users and groups`.
+   * If "jira-token-user", the reporter will always be set to the user that the Jira API token belongs to.
    */
   reporterMode: "reviewer-as-reporter" | "jira-token-user";
 
@@ -163,7 +164,11 @@ export class JiraActionItemExporter implements ActionItemExporter {
     );
 
     if (!review) {
-      throw new Error(`Could not find review for model ${actionItem.modelId}`);
+      // Fall back to token user if no reviewer is assigned
+      log.info(
+        `Could not find review for model ${actionItem.modelId}, using token user as reporter`
+      );
+      return { id: await this.getAccountIdCurrentUser() };
     }
 
     return { id: await this.getAccountIdForEmail(review.reviewedBy) };
