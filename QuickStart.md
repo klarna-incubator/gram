@@ -46,7 +46,7 @@ docker compose up -d
 Then build and try to run the project
 
 ```sh
-npm run dev # note: you'll need to restart this process if you make an backend changes
+npm run dev # note: you'll need to restart this process if you make backend changes
 ```
 
 ## First Login
