@@ -2,7 +2,7 @@ import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import { defaultConfig } from "./default.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
-import { createStagingJiraActionItemExporter } from "./jira.js";
+import { createJiraActionItemExporter } from "./jira.js";
 
 export const stagingConfig: GramConfiguration = {
   ...defaultConfig,
@@ -37,9 +37,10 @@ export const stagingConfig: GramConfiguration = {
 
     providers.suggestionSources?.push(threatsaurus);
 
-    const jiraActionItemExporter = createStagingJiraActionItemExporter(
+    const jiraActionItemExporter = createJiraActionItemExporter(
       this,
-      dal
+      dal,
+      "sandbox"
     );
     providers.actionItemExporters = [jiraActionItemExporter];
 

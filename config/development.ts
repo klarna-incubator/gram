@@ -1,7 +1,11 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
 import { defaultConfig } from "./default.js";
-import { createStagingJiraActionItemExporter } from "./jira.js";
+import { createJiraActionItemExporter } from "./jira.js";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus/dist/index.js";
+import log4js from "log4js";
+
+const log = log4js.getLogger("DevelopmentConfig");
 
 export const developmentConfig: GramConfiguration = {
   ...defaultConfig,
@@ -55,11 +59,26 @@ export const developmentConfig: GramConfiguration = {
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
-    const jiraActionItemExporter = createStagingJiraActionItemExporter(
-      this,
-      dal
-    );
-    providers.actionItemExporters = [jiraActionItemExporter];
+    if (process.env.JIRA_HOST) {
+      const jiraActionItemExporter = createJiraActionItemExporter(
+        this,
+        dal,
+        "sandbox"
+      );
+      providers.actionItemExporters = [jiraActionItemExporter];
+    } else {
+      log.debug("JIRA is not configured. Skipping");
+    }
+
+    if (process.env.THREATSAURUS_URL) {
+      const threatsaurus = new ThreatsaurusSuggestionSource(
+        "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+      );
+
+      providers.suggestionSources?.push(threatsaurus);
+    } else {
+      log.debug("Threatsaurus is not configured. Skipping");
+    }
 
     return providers;
   },

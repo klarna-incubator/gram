@@ -5,10 +5,15 @@ import { ThreatSeverity } from "@gram/core/dist/data/threats/Threat.js";
 import {
   JiraActionItemExporter,
   JiraActionItemExporterConfig,
+  JiraIssueFields,
 } from "@gram/jira/dist/JiraActionItemExporter.js";
+import fetch from "node-fetch";
+import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
+import log4js from "log4js";
 
-// {customfield_10063: {id: "12354", value: "Low"}}} {customfield_10063: {id: "12356", value: "High"}} 12357 Critical 12355 Medium 12353 Informative
-function severityToJiraSeverity(severity?: ThreatSeverity) {
+const log = log4js.getLogger("jira");
+
+function severityToStagJiraSeverity(severity?: ThreatSeverity) {
   switch (severity) {
     case ThreatSeverity.Low:
       return { id: "12354", value: "Low" };
@@ -25,9 +30,27 @@ function severityToJiraSeverity(severity?: ThreatSeverity) {
   }
 }
 
-export function createStagingJiraActionItemExporter(
+function severityToProdJiraSeverity(severity?: ThreatSeverity) {
+  switch (severity) {
+    case ThreatSeverity.Low:
+      return { id: "13314", value: "Low" };
+    case ThreatSeverity.Medium:
+      return { id: "13313", value: "Medium" };
+    case ThreatSeverity.High:
+      return { id: "13312", value: "High" };
+    case ThreatSeverity.Critical:
+      return { id: "13311", value: "Critical" };
+    case ThreatSeverity.Informative:
+      return { id: "13315", value: "Informative" };
+    default:
+      return { id: "13314", value: "Low" };
+  }
+}
+
+export function createJiraActionItemExporter(
   config: GramConfiguration,
-  dal: DataAccessLayer
+  dal: DataAccessLayer,
+  jiraEnvironment: "sandbox" | "production" = "sandbox"
 ) {
   if (!process.env.JIRA_HOST) {
     throw new Error("JIRA_HOST is not set");
@@ -65,15 +88,7 @@ export function createStagingJiraActionItemExporter(
         ],
       }));
 
-      return {
-        project: {
-          id: "11717",
-        },
-
-        issuetype: {
-          id: "10001",
-        },
-
+      let fields: Partial<JiraIssueFields> = {
         summary: actionItem.title,
 
         description: {
@@ -122,8 +137,18 @@ export function createStagingJiraActionItemExporter(
             },
           ],
         },
+      };
 
-        customfield_11749: {
+      if (jiraEnvironment === "sandbox") {
+        fields["project"] = {
+          id: "11717",
+        };
+
+        fields["issuetype"] = {
+          id: "10001",
+        };
+
+        fields["customfield_11749"] = {
           type: "doc",
           version: 1,
           content: [
@@ -137,17 +162,53 @@ export function createStagingJiraActionItemExporter(
               ],
             },
           ],
-        },
+        };
 
         // Severity
-        customfield_10063: severityToJiraSeverity(actionItem.severity),
+        fields["customfield_10063"] = severityToStagJiraSeverity(
+          actionItem.severity
+        );
 
-        customfield_10118: model?.systemId
-          ? [{ key: "Demo Service" || model?.systemId }]
-          : [],
-      };
+        fields["customfield_11524"] = model?.systemId;
+      } else if (jiraEnvironment === "production") {
+        fields["project"] = {
+          id: "12056",
+        };
+
+        fields["issuetype"] = {
+          id: "10002",
+        };
+
+        fields["customfield_11727"] = {
+          type: "doc",
+          version: 1,
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                {
+                  type: "text",
+                  text: config.origin + "/model/" + actionItem.modelId,
+                },
+              ],
+            },
+          ],
+        };
+
+        // Severity
+        fields["customfield_10043"] = severityToProdJiraSeverity(
+          actionItem.severity
+        );
+
+        fields["customfield_10311"] = model?.systemId;
+      }
+
+      log.debug("creating jira issue with fields: ", fields);
+
+      return fields as JiraIssueFields;
     },
   };
+
   const jiraActionItemExporter = new JiraActionItemExporter(
     jiraActionItemExporterConfig,
     dal

@@ -3,6 +3,7 @@ import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration
 import { LDAPGroupBasedAuthzProvider } from "@gram/ldap";
 import { LDAPUserSearchBase, ldapSettings } from "./default.js";
 import { defaultConfig } from "./default.js";
+import { createJiraActionItemExporter } from "./jira.js";
 
 export const productionConfig: GramConfiguration = {
   ...defaultConfig,
@@ -37,6 +38,13 @@ export const productionConfig: GramConfiguration = {
     });
 
     providers.authzProvider = ldapAuthz;
+
+    const jiraActionItemExporter = createJiraActionItemExporter(
+      this,
+      dal,
+      "production"
+    );
+    providers.actionItemExporters = [jiraActionItemExporter];
 
     return providers;
   },
