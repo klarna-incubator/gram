@@ -5,6 +5,8 @@ import Threat from "@gram/core/dist/data/threats/Threat.js";
 import log4js from "log4js";
 import fetch from "node-fetch";
 import { JiraConfig } from "./JiraConfig.js";
+import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
+import { Agent } from "https";
 
 const log = log4js.getLogger("JiraActionItemExporter");
 
@@ -79,12 +81,14 @@ export interface JiraIssueFields {
 export class JiraActionItemExporter implements ActionItemExporter {
   key: string = "jira";
   exportOnReviewApproved: boolean;
+  agent?: Agent;
 
   constructor(
     private config: JiraActionItemExporterConfig,
     private dal: DataAccessLayer
   ) {
     this.exportOnReviewApproved = config.exportOnReviewApproved;
+    this.agent = createHttpsProxyAgent();
   }
 
   async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {
@@ -136,6 +140,7 @@ export class JiraActionItemExporter implements ActionItemExporter {
   //       Accept: "application/json",
   //       "Content-Type": "application/json",
   //     },
+  //      agent: this.agent,
   //   });
 
   //   if (!response.ok) {
@@ -219,6 +224,7 @@ export class JiraActionItemExporter implements ActionItemExporter {
       body: JSON.stringify({
         fields,
       }),
+      agent: this.agent,
     });
 
     const data = (await resp.json()) as any;
@@ -247,6 +253,7 @@ export class JiraActionItemExporter implements ActionItemExporter {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
+      agent: this.agent,
     });
 
     const data = (await resp.json()) as any;
@@ -275,6 +282,7 @@ export class JiraActionItemExporter implements ActionItemExporter {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
+        agent: this.agent,
       }
     );
 
