@@ -52,10 +52,6 @@ export function createJiraActionItemExporter(
   dal: DataAccessLayer,
   jiraEnvironment: "sandbox" | "production" = "sandbox"
 ) {
-  if (!process.env.JIRA_HOST) {
-    throw new Error("JIRA_HOST is not set");
-  }
-
   const jiraActionItemExporterConfig: JiraActionItemExporterConfig = {
     exportOnReviewApproved: true,
     auth: {
@@ -63,7 +59,9 @@ export function createJiraActionItemExporter(
       apiToken: new EnvSecret("JIRA_API_TOKEN"),
     },
     reporterMode: "reviewer-as-reporter",
-    host: process.env.JIRA_HOST,
+    host: "sandbox"
+      ? "https://klarna-sandbox-343.atlassian.net"
+      : "https://klarna.atlassian.net",
     modelToIssueFields: async (dal, actionItem) => {
       const controls = await dal.controlService.list(actionItem.modelId);
       const model = await dal.modelService.getById(actionItem.modelId);

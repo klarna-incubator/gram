@@ -25,9 +25,6 @@
         },
         "THREATSAURUS_URL": {
           "value": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
-        },
-        "JIRA_HOST": {
-          "value": "https://klarna-sandbox-343.atlassian.net"
         }
       }
     },
@@ -56,9 +53,6 @@
         },
         "THREATSAURUS_URL": {
           "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
-        },
-        "JIRA_HOST": {
-          "value": "https://klarna.atlassian.net"
         }
       }
     }
