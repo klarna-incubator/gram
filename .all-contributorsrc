@@ -114,6 +114,15 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "Ogglas",
+      "name": "Oscar Andersson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4015237?v=4",
+      "profile": "https://github.com/Ogglas",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
