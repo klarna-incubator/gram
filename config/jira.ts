@@ -7,8 +7,6 @@ import {
   JiraActionItemExporterConfig,
   JiraIssueFields,
 } from "@gram/jira/dist/JiraActionItemExporter.js";
-import fetch from "node-fetch";
-import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
 import log4js from "log4js";
 
 const log = log4js.getLogger("jira");
@@ -64,27 +62,36 @@ export function createJiraActionItemExporter(
       : "https://klarna.atlassian.net",
     modelToIssueFields: async (dal, actionItem) => {
       const controls = await dal.controlService.list(actionItem.modelId);
+      const mitigations = await dal.mitigationService.list(actionItem.modelId);
       const model = await dal.modelService.getById(actionItem.modelId);
       const componentName =
         model?.data.components.find((c) => c.id === actionItem.componentId)
           ?.name || "unknown component";
 
-      const controlsList = controls.map((control) => ({
-        type: "listItem",
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text:
-                  control.title +
-                  (control.description ? " - " + control.description : ""),
-              },
-            ],
-          },
-        ],
-      }));
+      const mitigationsForThreat = new Set(
+        mitigations
+          .filter((m) => m.threatId === actionItem.id)
+          .map((m) => m.controlId)
+      );
+
+      const controlsList = controls
+        .filter((control) => mitigationsForThreat.has(control.id!))
+        .map((control) => ({
+          type: "listItem",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                {
+                  type: "text",
+                  text:
+                    control.title +
+                    (control.description ? " - " + control.description : ""),
+                },
+              ],
+            },
+          ],
+        }));
 
       let fields: Partial<JiraIssueFields> = {
         summary: actionItem.title,
