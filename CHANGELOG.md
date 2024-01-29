@@ -19,16 +19,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 - Ability to add custom links to threats/controls ([b237532](https://github.com/klarna-incubator/gram/commit/b237532dbdbfffc2c476fc0f6c45d332a9fcb817))
-- Ability to add custom links to threats/controls ([36b88e3](https://github.com/klarna-incubator/gram/commit/36b88e3a32db0f642fae1e70266daadfd1e4a0f6))
 - add new ActionItemExporter functionality ([dc5f6d5](https://github.com/klarna-incubator/gram/commit/dc5f6d5fa9439b6c354f0dc8602086f7722e13da)), closes [#61](https://github.com/klarna-incubator/gram/issues/61)
-- add new ActionItemExporter functionality ([1f87897](https://github.com/klarna-incubator/gram/commit/1f878976d6c4485da278b72da2c8777abf071ce5)), closes [#61](https://github.com/klarna-incubator/gram/issues/61)
 - add proxying to jira plugin ([fe87616](https://github.com/klarna-incubator/gram/commit/fe8761653a718d0ed3d2004bd2435f5963b03ea1))
 - add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([9943fff](https://github.com/klarna-incubator/gram/commit/9943fff9f23876e38aa86ff072a76f3b4243d2d5))
-- add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([bb91786](https://github.com/klarna-incubator/gram/commit/bb917861a726a112ab866a6fe25df66da1e93ad6))
 - exported action items are also copied on imported models ([6f549e8](https://github.com/klarna-incubator/gram/commit/6f549e8a639f10a6dc103c84fb1b8128c73468f4))
-- exported action items are also copied on imported models ([efb200f](https://github.com/klarna-incubator/gram/commit/efb200fc9a7f837de6ac590f7071fc0d670da649))
 - new Jira Action Item exporter ([7c127e4](https://github.com/klarna-incubator/gram/commit/7c127e4d8e711289077254aec23c134917fcafef))
-- new Jira Action Item exporter ([fa7db12](https://github.com/klarna-incubator/gram/commit/fa7db1298d09f1ecd401cef2ff5dda51daad781a))
+
 
 ## [4.8.1](https://github.com/klarna-incubator/gram/compare/v4.8.0...v4.8.1) (2024-01-02)
 
