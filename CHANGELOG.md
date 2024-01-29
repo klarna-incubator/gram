@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/klarna-incubator/gram/compare/v4.8.1...v4.9.0) (2024-01-29)
+
+### Bug Fixes
+
+- control/ops api not correctly routing healthchecks and metadata. Also fix healthchecks with faulty logic. Adds new healthcheck for faulty action item exports. ([9d01102](https://github.com/klarna-incubator/gram/commit/9d01102e028fb4936cb71712f8b678773e1bf899))
+- control/ops api not correctly routing healthchecks and metadata. Also fix healthchecks with faulty logic. Adds new healthcheck for faulty action item exports. ([964a27e](https://github.com/klarna-incubator/gram/commit/964a27e1f489b0c2d777044f6a46ea21c3870245))
+- improve rendering of validation when creating links and fix javascript url check ([4ff6cab](https://github.com/klarna-incubator/gram/commit/4ff6cabd4ae1763f692d8f1a5e36f4ab7b15fe71))
+- improve rendering of validation when creating links and fix javascript url check ([a4e45a3](https://github.com/klarna-incubator/gram/commit/a4e45a39c74ab9f29f4d52299f24f7147bab6e56))
+- jira export can happen before reviewer exists on model - quick fix by falling back on token user as reviewer. ([c015a4e](https://github.com/klarna-incubator/gram/commit/c015a4eddae8c0f4ea8d71cac51205109e5f1152))
+- make severity slider / assessment on threat less bulky by removing the collapsible part ([eeaf6cf](https://github.com/klarna-incubator/gram/commit/eeaf6cfca457df5583911c5d4d895b8571ee1fd1))
+- make severity slider / assessment on threat less bulky by removing the collapsible part ([99fac7c](https://github.com/klarna-incubator/gram/commit/99fac7c7e3737a43872fe4b693d9045de0eb180a))
+- zod errors should now return why they failed in the API response. Add some tests for /api/links ([9ea9a1d](https://github.com/klarna-incubator/gram/commit/9ea9a1de98007bb0319c35611fc51ab12e62848e))
+
+### Features
+
+- Ability to add custom links to threats/controls ([b237532](https://github.com/klarna-incubator/gram/commit/b237532dbdbfffc2c476fc0f6c45d332a9fcb817))
+- Ability to add custom links to threats/controls ([36b88e3](https://github.com/klarna-incubator/gram/commit/36b88e3a32db0f642fae1e70266daadfd1e4a0f6))
+- add new ActionItemExporter functionality ([dc5f6d5](https://github.com/klarna-incubator/gram/commit/dc5f6d5fa9439b6c354f0dc8602086f7722e13da)), closes [#61](https://github.com/klarna-incubator/gram/issues/61)
+- add new ActionItemExporter functionality ([1f87897](https://github.com/klarna-incubator/gram/commit/1f878976d6c4485da278b72da2c8777abf071ce5)), closes [#61](https://github.com/klarna-incubator/gram/issues/61)
+- add proxying to jira plugin ([fe87616](https://github.com/klarna-incubator/gram/commit/fe8761653a718d0ed3d2004bd2435f5963b03ea1))
+- add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([9943fff](https://github.com/klarna-incubator/gram/commit/9943fff9f23876e38aa86ff072a76f3b4243d2d5))
+- add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([bb91786](https://github.com/klarna-incubator/gram/commit/bb917861a726a112ab866a6fe25df66da1e93ad6))
+- exported action items are also copied on imported models ([6f549e8](https://github.com/klarna-incubator/gram/commit/6f549e8a639f10a6dc103c84fb1b8128c73468f4))
+- exported action items are also copied on imported models ([efb200f](https://github.com/klarna-incubator/gram/commit/efb200fc9a7f837de6ac590f7071fc0d670da649))
+- new Jira Action Item exporter ([7c127e4](https://github.com/klarna-incubator/gram/commit/7c127e4d8e711289077254aec23c134917fcafef))
+- new Jira Action Item exporter ([fa7db12](https://github.com/klarna-incubator/gram/commit/fa7db1298d09f1ecd401cef2ff5dda51daad781a))
+
 ## [4.8.1](https://github.com/klarna-incubator/gram/compare/v4.8.0...v4.8.1) (2024-01-02)
 
 **Note:** Version bump only for package gram
