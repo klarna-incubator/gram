@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/klarna-incubator/gram/compare/v4.8.1...v4.9.0) (2024-01-29)
+
+### Bug Fixes
+
+- jira export can happen before reviewer exists on model - quick fix by falling back on token user as reviewer. ([c015a4e](https://github.com/klarna-incubator/gram/commit/c015a4eddae8c0f4ea8d71cac51205109e5f1152))
+- zod errors should now return why they failed in the API response. Add some tests for /api/links ([9ea9a1d](https://github.com/klarna-incubator/gram/commit/9ea9a1de98007bb0319c35611fc51ab12e62848e))
+
+### Features
+
+- Ability to add custom links to threats/controls ([36b88e3](https://github.com/klarna-incubator/gram/commit/36b88e3a32db0f642fae1e70266daadfd1e4a0f6))
+- add proxying to jira plugin ([fe87616](https://github.com/klarna-incubator/gram/commit/fe8761653a718d0ed3d2004bd2435f5963b03ea1))
+- add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([bb91786](https://github.com/klarna-incubator/gram/commit/bb917861a726a112ab866a6fe25df66da1e93ad6))
+- new Jira Action Item exporter ([fa7db12](https://github.com/klarna-incubator/gram/commit/fa7db1298d09f1ecd401cef2ff5dda51daad781a))
+
 ## [4.8.1](https://github.com/klarna-incubator/gram/compare/v4.8.0...v4.8.1) (2024-01-02)
 
 **Note:** Version bump only for package @gram/jira

@@ -30,24 +30,33 @@ export function createJiraActionItemExporter(
      */
     modelToIssueFields: async (dal, actionItem) => {
       const controls = await dal.controlService.list(actionItem.modelId);
+      const mitigations = await dal.mitigationService.list(actionItem.modelId);
       const model = await dal.modelService.getById(actionItem.modelId);
 
-      const controlsList = controls.map((control) => ({
-        type: "listItem",
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text:
-                  control.title +
-                  (control.description ? " - " + control.description : ""),
-              },
-            ],
-          },
-        ],
-      }));
+      const mitigationsForThreat = new Set(
+        mitigations
+          .filter((m) => m.threatId === actionItem.id)
+          .map((m) => m.controlId)
+      );
+
+      const controlsList = controls
+        .filter((control) => mitigationsForThreat.has(control.id!))
+        .map((control) => ({
+          type: "listItem",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                {
+                  type: "text",
+                  text:
+                    control.title +
+                    (control.description ? " - " + control.description : ""),
+                },
+              ],
+            },
+          ],
+        }));
 
       return {
         project: {
