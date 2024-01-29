@@ -8,11 +8,11 @@ export const LinkSchema = z.object({
   objectType: z.nativeEnum(LinkObjectType),
   objectId: z.string().max(255),
   label: z.string().max(255),
-  icon: z.enum(["", "jira", "github"]), // TODO: make this more extensible / automagic.
+  icon: z.enum(["", "jira", "github"]).default(""), // TODO: make this more extensible / automagic.
   url: z
     .string()
     .refine(
-      (value) => !value.startsWith("javascript"),
+      (value) => !value.toLowerCase().startsWith("javascript"),
       "URL cannot start with 'javascript'"
     ),
 });

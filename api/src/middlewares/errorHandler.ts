@@ -21,6 +21,15 @@ export default function errorHandler(err: any, req: any, res: any, next: any) {
     log.info(err); // Happens on model not found etc, not necessarily an error.
   } else if (err instanceof InvalidInputError || err instanceof ZodError) {
     res.status(400);
+    if (err instanceof ZodError) {
+      res.json({
+        error: err.issues,
+      });
+    } else {
+      res.json({
+        error: err.message,
+      });
+    }
     log.error(err, { errorHandled: true });
   } else {
     res.status(500);
