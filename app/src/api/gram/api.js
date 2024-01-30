@@ -6,6 +6,7 @@ export const BASE_URL = `${window.location.origin}`;
 // initialize an empty api service that we'll inject endpoints into later as needed
 export const api = createApi({
   tagTypes: [
+    "ActionItems",
     "Controls",
     "Mitigations",
     "Model",
@@ -19,6 +20,7 @@ export const api = createApi({
     "Team",
     "Threats",
     "User",
+    "Links",
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: `${BASE_URL}/api/v1/`,

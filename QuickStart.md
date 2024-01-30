@@ -46,23 +46,23 @@ docker compose up -d
 Then build and try to run the project
 
 ```sh
-npm run build
-npm run dev # note: you'll need to run build before every dev
+npm run dev # note: you'll need to restart this process if you make backend changes
 ```
 
 ## First Login
-With the default configuration, Gram will be configured to use login via email. 
 
-For your first login, use the email address `admin@localhost`. 
+With the default configuration, Gram will be configured to use login via email.
+
+For your first login, use the email address `admin@localhost`.
 
 Since SMTP is not configured yet, you will need to get the actual link from your application logs:
+
 ```
 [2023-11-07T14:29:12.229] [DEBUG] MagicLinkIdentityProvider - Sending magic link to <REDACTED> with link http://localhost:4726/login/callback/magic-link?token=<REDACTED>
 ```
 
 For the default configuration, the login is limited to three hardcoded users: `user@localhost`, `reviewer@localhost` and `admin@localhost`.
 You will need to change the configuration to change this.
-
 
 ## Modify the configuration
 
@@ -86,7 +86,7 @@ Then adjust the configuration code as needed to load the new functionality.
 
 ## Deploying
 
-Gram is designed to run as a single docker container with a Postgres database provided beside it. Typically the postgres database would be hosted on something like AWS RDS.
+Gram is designed to run as a single docker container with a Postgres database provided beside it. Typically, the Postgres database would be hosted on something like AWS RDS.
 
 ### Docker Compose Example
 
@@ -122,9 +122,9 @@ To run this on a server, you can either build the image on the server or use a C
 
 ### Warnings ⚠️
 
-- There are some scalability issues to be aware of - currently we only run this as a single container as the websocket server used for the
-  realtime diagram sharing only runs on the same express server. For Klarna's setup this has worked fine since we don't have that many concurrent users,
-  but it will eventually hit a bottleneck and means the application can't be scaled horizontally. This is solveable but it's not anything we're prioritizing until it actually becomes a problem.
+- There are some scalability issues to be aware of - currently we only run this as a single container as the WebSocket server used for the
+  real-time diagram sharing only runs on the same express server. For Klarna's setup this has worked fine since we don't have that many concurrent users,
+  but it will eventually hit a bottleneck and means the application can't be scaled horizontally. This is solvable but it's not anything we're prioritizing until it actually becomes a problem.
 
 - This webapp was built with the premise that it would run on an internal-only, closed network and be accessible to all engineers. It will not withstand DoS or necessarily guarantee confidentiality if exposed
   directly on the internet.

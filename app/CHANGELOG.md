@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/klarna-incubator/gram/compare/v4.8.1...v4.9.0) (2024-01-29)
+
+### Bug Fixes
+
+- improve rendering of validation when creating links and fix javascript url check ([4ff6cab](https://github.com/klarna-incubator/gram/commit/4ff6cabd4ae1763f692d8f1a5e36f4ab7b15fe71))
+- make severity slider / assessment on threat less bulky by removing the collapsible part ([eeaf6cf](https://github.com/klarna-incubator/gram/commit/eeaf6cfca457df5583911c5d4d895b8571ee1fd1))
+
+### Features
+
+- Ability to add custom links to threats/controls ([b237532](https://github.com/klarna-incubator/gram/commit/b237532dbdbfffc2c476fc0f6c45d332a9fcb817))
+- add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([9943fff](https://github.com/klarna-incubator/gram/commit/9943fff9f23876e38aa86ff072a76f3b4243d2d5))
+
 ## [4.8.1](https://github.com/klarna-incubator/gram/compare/v4.8.0...v4.8.1) (2024-01-02)
 
 **Note:** Version bump only for package @gram/app

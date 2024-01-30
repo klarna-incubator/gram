@@ -1,18 +1,11 @@
 import {
   Circle as CircleIcon,
   ClearRounded as ClearRoundedIcon,
+  IosShare as IosShareIcon,
 } from "@mui/icons-material";
+
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import {
-  Box,
-  Card,
-  CardContent,
-  IconButton,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, IconButton, Tooltip } from "@mui/material";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
 import {
   useCreateMitigationMutation,
@@ -28,14 +21,17 @@ import {
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
-import { CollapsePaper } from "../../../elements/CollapsePaper";
 import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
-import { SeveritySlider } from "../../modals/SeveritySlider";
 import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
+import { ThreatAssessment } from "./ThreatAssessment";
+import { Links } from "../../../elements/Links";
+import { useDispatch } from "react-redux";
+import { modalActions } from "../../../../redux/modalSlice";
+import { MODALS } from "../../../elements/modal/ModalManager";
 
 export function Threat({
   threat,
@@ -44,7 +40,9 @@ export function Threat({
   hideDelete,
   hideAddControl,
   hideSeverityDescription,
+  hideExport,
 }) {
+  const dispatch = useDispatch();
   const modelId = useModelID();
   const selectedComponent = useSelectedComponent();
   const [deleteThreat] = useDeleteThreatMutation();
@@ -52,6 +50,14 @@ export function Threat({
   const [createControl] = useCreateControlMutation();
   const [createMitigation] = useCreateMitigationMutation();
   const [acceptSuggestion] = useAcceptSuggestionMutation();
+
+  const openExportActionItemModal = () =>
+    dispatch(
+      modalActions.open({
+        type: MODALS.ExportActionItem.name,
+        props: { threatId: threat.id },
+      })
+    );
 
   const partialThreatId = threat?.suggestionId
     ? threat.suggestionId.split("/").splice(1).join("/")
@@ -152,6 +158,7 @@ export function Threat({
                 }}
                 color={threatColor}
               />
+
               <Tooltip title="Mark as action item">
                 <IconButton
                   onClick={() =>
@@ -172,6 +179,7 @@ export function Threat({
                   />
                 </IconButton>
               </Tooltip>
+
               <EditableTypography
                 text={threat.title}
                 placeholder="Title"
@@ -191,18 +199,31 @@ export function Threat({
                 }}
               />
 
-              {!readOnly && !hideDelete && (
-                <Tooltip title="Delete Threat">
-                  <IconButton
-                    onClick={() =>
-                      deleteThreat({ modelId: threat.modelId, id: threat.id })
-                    }
-                    sx={{ marginLeft: "auto", alignSelf: "flex-start" }}
-                  >
-                    <ClearRoundedIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
+              <Box sx={{ marginLeft: "auto", alignSelf: "flex-start" }}>
+                {!readOnly && !hideExport && (
+                  <Tooltip title="Export Threat">
+                    <IconButton
+                      onClick={openExportActionItemModal}
+                      size="small"
+                    >
+                      <IosShareIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+
+                {!readOnly && !hideDelete && (
+                  <Tooltip title="Delete Threat">
+                    <IconButton
+                      onClick={() =>
+                        deleteThreat({ modelId: threat.modelId, id: threat.id })
+                      }
+                      size="small"
+                    >
+                      <ClearRoundedIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </Box>
             </Box>
             <EditableTypography
               text={threat.description}
@@ -272,31 +293,16 @@ export function Threat({
         )}
 
         {threat.isActionItem && (
-          <CollapsePaper
-            title={"Assessment"}
-            defaultExpanded={true}
-            sx={{ marginTop: "10px" }}
-          >
-            <Stack spacing={1} sx={{ padding: "5px" }}>
-              <Paper elevation={24} sx={{ padding: "5px" }}>
-                <Typography variant="caption">Severity</Typography>
-                <SeveritySlider
-                  hideDescription={hideSeverityDescription}
-                  onChange={(v) => {
-                    updateThreat({
-                      modelId: threat.modelId,
-                      id: threat.id,
-                      severity: v,
-                    });
-                  }}
-                  disabled={readOnly}
-                  severity={threat.severity}
-                  valueLabelDisplay="off"
-                />
-              </Paper>
-            </Stack>
-          </CollapsePaper>
+          <ThreatAssessment
+            hideSeverityDescription={hideSeverityDescription}
+            threat={threat}
+            readOnly={readOnly}
+          />
         )}
+
+        <Box sx={{ marginTop: "10px" }}>
+          <Links objectType={"threat"} objectId={threat.id} />
+        </Box>
       </CardContent>
     </Card>
   );

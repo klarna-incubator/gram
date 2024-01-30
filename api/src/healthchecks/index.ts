@@ -4,18 +4,17 @@ import physical from "express-physical";
 //   notificationsFailedCheck,
 //   notificationsStalledCheck,
 // } from "./notificationsCheck.js";
-import {
-  postgresAvailableConnectionsCheck,
-  postgresSimpleQueryCheck,
-} from "./postgresCheck.js";
+import { postgresSimpleQueryCheck } from "./postgresCheck.js";
 import { selfCheck } from "./selfCheck.js";
+import { actionItemExportCheck } from "./actionItemExportCheck.js";
 
 export const createHealthChecks = (dal: DataAccessLayer) =>
   //TODO ability to extend with deployment specific healtchecks
   physical([
     selfCheck,
     postgresSimpleQueryCheck(dal),
-    postgresAvailableConnectionsCheck(dal),
+    // postgresAvailableConnectionsCheck(dal), // Disabled, since it's not working as intended.
+    actionItemExportCheck(dal),
     // Disabled for now, since they are too noisy.
     // notificationsFailedCheck(dal),
     // notificationsStalledCheck(dal),

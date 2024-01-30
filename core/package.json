@@ -2,9 +2,10 @@
   "name": "@gram/core",
   "private": true,
   "type": "module",
-  "version": "4.8.1",
+  "version": "4.9.0",
   "description": "Core library for Gram backend stuff",
   "scripts": {
+    "clean": "rimraf ./dist",
     "build": "tsc -p tsconfig.build.json",
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",

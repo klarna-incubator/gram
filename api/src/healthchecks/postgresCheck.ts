@@ -4,14 +4,14 @@ import log4js from "log4js";
 
 const log = log4js.getLogger("postgresCheck");
 
-export async function postgresSimpleQueryCheck(dal: DataAccessLayer) {
+export function postgresSimpleQueryCheck(dal: DataAccessLayer) {
   return async (done: any) => {
     const check: any = {
       name: "@gram/api-postgres",
       actionable: true,
       healthy: true,
       dependentOn: "postgres",
-      type: physical.type.EXTERNAL_DEPENDENCY,
+      type: physical.type.INFRASTRUCTURE,
     };
 
     try {
@@ -28,19 +28,24 @@ export async function postgresSimpleQueryCheck(dal: DataAccessLayer) {
   };
 }
 
-export async function postgresAvailableConnectionsCheck(dal: DataAccessLayer) {
-  return async (done: any) => {
-    const check: any = {
-      name: "@gram/api-postgres-available-connections",
-      actionable: true,
-      healthy: dal.pool._pool.waitingCount === 0,
-      dependentOn: "postgres",
-      type: physical.type.EXTERNAL_DEPENDENCY,
-      severity: physical.severity.WARNING,
-      message:
-        "The internal Postgres connection pool has been exhausted and clients are waiting. This means that queries are left hanging",
-    };
+// export function postgresAvailableConnectionsCheck(dal: DataAccessLayer) {
+//   return async (done: any) => {
+//     const check: any = {
+//       name: "@gram/api-postgres-available-connections",
+//       actionable: true,
+//       healthy: dal.pool._pool.waitingCount === 0,
+//       dependentOn: "postgres",
+//       type: physical.type.INFRASTRUCTURE,
+//       severity:
+//         dal.pool._pool.waitingCount === 0
+//           ? undefined
+//           : physical.severity.WARNING,
+//       message:
+//         dal.pool._pool.waitingCount === 0
+//           ? undefined
+//           : "The internal Postgres connection pool has been exhausted and clients are waiting. This means that queries are left hanging",
+//     };
 
-    done(physical.response(check));
-  };
-}
+//     done(physical.response(check));
+//   };
+// }

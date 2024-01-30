@@ -11,6 +11,7 @@ import { Client, custom, generators, Issuer } from "openid-client";
 import { aes256gcm } from "./util.js";
 import { Secret } from "@gram/core/dist/config/Secret.js";
 import { config } from "@gram/core/dist/config/index.js";
+import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
 
 const log = log4js.getLogger("OIDCIdentityProvider");
 
@@ -39,7 +40,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
         scheduling: "lifo",
         proxy: config.httpsProxy,
       });
-      custom.setHttpOptionsDefaults({ agent });
+      custom.setHttpOptionsDefaults({ agent: createHttpsProxyAgent() });
     }
 
     this.discover();

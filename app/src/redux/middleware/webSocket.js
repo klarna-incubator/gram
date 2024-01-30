@@ -99,6 +99,7 @@ function bind(dispatch, modelId) {
         "Controls",
         "Mitigations",
         "Suggestions",
+        "ActionItems",
       ])
     );
   };
@@ -136,6 +137,10 @@ function refetch(dispatch, event, modelId) {
       dispatch(api.util.invalidateTags(["Threats"]));
       break;
 
+    case "action-items":
+      dispatch(api.util.invalidateTags(["ActionItems"]));
+      break;
+
     case "controls":
       dispatch(api.util.invalidateTags(["Controls"]));
       break;
@@ -146,19 +151,25 @@ function refetch(dispatch, event, modelId) {
 
     case "review":
       dispatch(api.util.invalidateTags(["Review"]));
-      // dispatch(
-      //   api.endpoints.getReview.initiate(
-      //     { modelId },
-      //     { subscribe: false, forceRefetch: true }
-      //   )
-      // );
-      // causes two updates on the client which made the change
-      // to fix we need to refactor how we use ws in backend for all non-model updates
-      // luckily RTK Query has some caching behavior so we never send two requests from the editing client
       break;
 
     case "suggestions":
       dispatch(api.util.invalidateTags(["Suggestions"]));
+      break;
+
+    case "links":
+      // dispatch(api.util.invalidateTags(["Links"]));
+      // For some reason the below didn't work.
+      console.log(event);
+
+      dispatch(
+        api.util.invalidateTags([
+          {
+            type: "Links",
+            id: `${event.args.objectType}-${event.args.objectId}`,
+          },
+        ])
+      );
       break;
 
     // case "model":

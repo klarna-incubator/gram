@@ -26,5 +26,6 @@ export async function _deleteAllTheThings(
   await pool.query("TRUNCATE TABLE notifications CASCADE");
   await pool.query("TRUNCATE TABLE suggested_controls CASCADE");
   await pool.query("TRUNCATE TABLE suggested_threats CASCADE");
+  await pool.query("TRUNCATE TABLE action_item_failed_exports CASCADE");
   await pool.query("DELETE FROM models");
 }

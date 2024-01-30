@@ -7,9 +7,11 @@ import { EditNote } from "../../model/modals/EditNote";
 import { RequestMeeting } from "../../model/modals/RequestMeeting";
 import { RequestReview } from "../../model/modals/RequestReview";
 import { ChangeReviewer } from "../../model/modals/ChangeReviewer";
+import { AddLink } from "../../model/modals/AddLink";
 import { Tutorial } from "../../model/tutorial/Tutorial";
 import { CancelReview } from "../../reviews/modals/CancelReview";
 import { DeclineReview } from "../../reviews/modals/DeclineReview";
+import { ExportActionItem } from "../../model/modals/ExportActionItem";
 
 export const MODALS = {
   ChangeReviewer,
@@ -22,6 +24,8 @@ export const MODALS = {
   DeleteSelected,
   DeclineReview,
   CancelReview,
+  AddLink,
+  ExportActionItem,
 };
 
 export function ModalManager() {

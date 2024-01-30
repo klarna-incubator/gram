@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/klarna/gram/compare/v4.8.1...v4.9.0) (2024-01-29)
+
+### Bug Fixes
+
+- control/ops api not correctly routing healthchecks and metadata. Also fix healthchecks with faulty logic. Adds new healthcheck for faulty action item exports. ([9d01102](https://github.com/klarna/gram/commit/9d01102e028fb4936cb71712f8b678773e1bf899))
+- improve rendering of validation when creating links and fix javascript url check ([4ff6cab](https://github.com/klarna/gram/commit/4ff6cabd4ae1763f692d8f1a5e36f4ab7b15fe71))
+- zod errors should now return why they failed in the API response. Add some tests for /api/links ([9ea9a1d](https://github.com/klarna/gram/commit/9ea9a1de98007bb0319c35611fc51ab12e62848e))
+
+### Features
+
+- Ability to add custom links to threats/controls ([b237532](https://github.com/klarna/gram/commit/b237532dbdbfffc2c476fc0f6c45d332a9fcb817))
+- add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([9943fff](https://github.com/klarna/gram/commit/9943fff9f23876e38aa86ff072a76f3b4243d2d5))
+
 ## [4.8.1](https://github.com/klarna/gram/compare/v4.8.0...v4.8.1) (2024-01-02)
 
 **Note:** Version bump only for package @gram/api

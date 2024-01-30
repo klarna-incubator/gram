@@ -9,6 +9,7 @@ import { DummyUserProvider } from "../auth/UserHandler.js";
 import { DummySystemProvider } from "../data/systems/DummySystemProvider.js";
 import { DummyIdentityProvider } from "../auth/DummyIdentityProvider.js";
 import { DummyAuthzProvider } from "../auth/DummyAuthzProvider.js";
+import { DummyActionItemExporter } from "../action-items/DummyActionItemExporter.js";
 
 export const testConfig: GramConfiguration = {
   appPort: 8080,
@@ -83,6 +84,7 @@ export const testConfig: GramConfiguration = {
       userProvider: new DummyUserProvider(),
       systemProvider: new DummySystemProvider(),
       suggestionSources: [],
+      actionItemExporters: [new DummyActionItemExporter()],
     };
   },
 };

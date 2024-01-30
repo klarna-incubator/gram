@@ -7,9 +7,10 @@ import {
   fallbackReviewer,
 } from "./KlarnaReviewerProvider.js";
 import * as Sentry from "@sentry/node";
-import cron from "node-cron";
 import { OctaneSystemProvider } from "./index.js";
 import { LDAPCache } from "@gram/ldap/dist/index.js";
+import cron from "node-cron";
+// import { CronJob } from "cron";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;
 const REQUESTED_REMIND_AFTER_X_DAYS = 14;
@@ -32,41 +33,21 @@ export class KlarnaCronJob {
     crontab: string,
     jobFunction: Function
   ) {
-    cron.schedule(crontab, async () => {
-      const checkInId = Sentry.captureCheckIn(
-        {
-          monitorSlug,
-          status: "in_progress",
-        },
-        {
-          schedule: {
-            // Specify your schedule options here
-            type: "crontab",
-            value: crontab,
-          },
-          /* Number of minutes before a check-in is considered missed. */
-          checkinMargin: 10,
-          /* Number of a minutes before an in-progress check-in is marked timed out. */
-          maxRuntime: 20,
-        }
-      );
-      try {
-        await jobFunction();
-        Sentry.captureCheckIn({
-          checkInId,
-          monitorSlug,
-          status: "ok",
-        });
-      } catch (err) {
-        Sentry.captureCheckIn({
-          checkInId,
-          monitorSlug,
-          status: "error",
-        });
-        log.error(err);
-      }
-    });
-    log.info(`${monitorSlug} cronjob schedule for ${crontab}`);
+    // const cronWithCheckIn = Sentry.cron.instrumentNodeCron(cron);
+    // const CronJobWithCheckIn = Sentry.cron.instrumentCron(
+    //   CronJob,
+    //   "my-cron-job"
+    // );
+
+    cron.schedule(
+      crontab,
+      () => {
+        jobFunction();
+      },
+      { name: monitorSlug, timezone: "Europe/Stockholm" }
+    );
+
+    log.info(`${monitorSlug} cronjob schedule for ${monitorSlug} - ${crontab}`);
   }
 
   async sendRemindersForMeetingRequested() {
