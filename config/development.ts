@@ -59,7 +59,7 @@ export const developmentConfig: GramConfiguration = {
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
-    if (process.env.JIRA_HOST) {
+    if (process.env.JIRA_USER && process.env.JIRA_API_TOKEN) {
       const jiraActionItemExporter = createJiraActionItemExporter(
         this,
         dal,
