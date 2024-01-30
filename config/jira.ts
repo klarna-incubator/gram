@@ -52,14 +52,19 @@ export function createJiraActionItemExporter(
 ) {
   const jiraActionItemExporterConfig: JiraActionItemExporterConfig = {
     exportOnReviewApproved: true,
+
     auth: {
       user: new EnvSecret("JIRA_USER"),
       apiToken: new EnvSecret("JIRA_API_TOKEN"),
     },
+
     reporterMode: "reviewer-as-reporter",
-    host: "sandbox"
-      ? "https://klarna-sandbox-343.atlassian.net"
-      : "https://klarna.atlassian.net",
+
+    host:
+      jiraEnvironment == "sandbox"
+        ? "https://klarna-sandbox-343.atlassian.net"
+        : "https://klarna.atlassian.net",
+
     modelToIssueFields: async (dal, actionItem) => {
       const controls = await dal.controlService.list(actionItem.modelId);
       const mitigations = await dal.mitigationService.list(actionItem.modelId);
