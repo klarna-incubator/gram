@@ -111,3 +111,36 @@ docker run -p 127.0.0.1:8080:8080 -v $(pwd)/api/config:/home/klarna/config -e C2
 ## Backups
 
 See [docs/Backups.md](docs/Backups.md).
+
+## Handling failed Action Item Exports
+
+Failed Action Item Exports should result in a failed healthcheck. This could happen if the jira integration fails for whatever reason.
+
+Check the `action_item_failed_exports` table for more details on what failed:
+
+```sql
+SELECT * FROM action_item_failed_exports;
+```
+
+To retry the export that happens automatically on review approval, you can try the following admin endpoint. Change `<your token>` and pass the threat model ID as `$1`
+
+```sh
+curl 'https://gram.klarna.net/api/v1/admin/retry_review_approval' \
+  -H 'authority: gram.klarna.net' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en;q=0.9,sv-SE;q=0.8,sv;q=0.7,en-US;q=0.6' \
+  -H 'authorization: bearer <your token>' \
+  -H 'if-none-match: W/"e71-qk0vEuWOsdb/a7NSNS137u9JERo"' \
+  -H 'sec-ch-ua: "Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Linux"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' \
+  -H 'Content-Type: application/json' \
+  -d "{\"modelId\": \"$1\"}"
+```
+
+When fixed, you can delete from the `action_item_failed_exports` table to make
+the healthcheck green again.
