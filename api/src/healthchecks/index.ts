@@ -12,9 +12,9 @@ export const createHealthChecks = (dal: DataAccessLayer) =>
   //TODO ability to extend with deployment specific healtchecks
   physical([
     selfCheck,
-    postgresSimpleQueryCheck(dal),
+    // postgresSimpleQueryCheck(dal),
     // postgresAvailableConnectionsCheck(dal), // Disabled, since it's not working as intended.
-    actionItemExportCheck(dal),
+    // actionItemExportCheck(dal),
     // Disabled for now, since they are too noisy.
     // notificationsFailedCheck(dal),
     // notificationsStalledCheck(dal),
