@@ -32,6 +32,7 @@ import { Links } from "../../../elements/Links";
 import { useDispatch } from "react-redux";
 import { modalActions } from "../../../../redux/modalSlice";
 import { MODALS } from "../../../elements/modal/ModalManager";
+import { useListExportersQuery } from "../../../../api/gram/action-items";
 
 export function Threat({
   threat,
@@ -50,6 +51,7 @@ export function Threat({
   const [createControl] = useCreateControlMutation();
   const [createMitigation] = useCreateMitigationMutation();
   const [acceptSuggestion] = useAcceptSuggestionMutation();
+  const { data: exporters } = useListExportersQuery();
 
   const openExportActionItemModal = () =>
     dispatch(
@@ -200,7 +202,7 @@ export function Threat({
               />
 
               <Box sx={{ marginLeft: "auto", alignSelf: "flex-start" }}>
-                {!readOnly && !hideExport && (
+                {!readOnly && !hideExport && exporters?.length > 0 && (
                   <Tooltip title="Export Threat">
                     <IconButton
                       onClick={openExportActionItemModal}
