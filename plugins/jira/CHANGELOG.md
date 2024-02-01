@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.1](https://github.com/klarna-incubator/gram/compare/v4.9.0...v4.9.1) (2024-02-01)
+
+### Bug Fixes
+
+- correctly check reporter is set ([20d4688](https://github.com/klarna-incubator/gram/commit/20d4688e3ffc89593cdd28b7a3bb02c9a6a5f28f))
+- make JiraActionItemExporter fallback on the token account as reporter if the reviewer cannot be found (e.g. due to offboarding) ([be90c6f](https://github.com/klarna-incubator/gram/commit/be90c6f503489e91d6694fdb2f9401e1c4e13874))
+- missing await ([01a1d10](https://github.com/klarna-incubator/gram/commit/01a1d1087ca2ba11632e274dbabb53a923173c0f))
+
 # [4.9.0](https://github.com/klarna-incubator/gram/compare/v4.8.1...v4.9.0) (2024-01-29)
 
 ### Bug Fixes
