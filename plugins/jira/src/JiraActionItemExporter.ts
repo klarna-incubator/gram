@@ -176,7 +176,7 @@ export class JiraActionItemExporter implements ActionItemExporter {
       return { id: await this.getAccountIdCurrentUser() };
     }
 
-    const reporterId = this.getAccountIdForEmail(review.reviewedBy);
+    const reporterId = await this.getAccountIdForEmail(review.reviewedBy);
 
     if (!reporterId) {
       // Fall back to token user if reviewer cannot be found in Jira

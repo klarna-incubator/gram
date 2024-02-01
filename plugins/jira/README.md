@@ -8,6 +8,9 @@ Currently includes:
 
 ## JiraActionItemExporter Example
 
+Check the Atlassian Developer docs on how to the format of fields works. This
+ADF Builder is particularily helpful: https://developer.atlassian.com/cloud/jira/platform/apis/document/playground/
+
 ```ts
 export function createJiraActionItemExporter(
   config: GramConfiguration,
