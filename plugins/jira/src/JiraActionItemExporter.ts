@@ -176,7 +176,17 @@ export class JiraActionItemExporter implements ActionItemExporter {
       return { id: await this.getAccountIdCurrentUser() };
     }
 
-    return { id: await this.getAccountIdForEmail(review.reviewedBy) };
+    const reporter = { id: await this.getAccountIdForEmail(review.reviewedBy) };
+
+    if (!reporter) {
+      // Fall back to token user if no reviewer is assigned
+      log.info(
+        `Could not find account id for reviewer ${review.reviewedBy}, using token user as reporter`
+      );
+      return { id: await this.getAccountIdCurrentUser() };
+    }
+
+    return { id: reporter };
   }
 
   async createIssue(actionItem: Threat) {
@@ -288,14 +298,11 @@ export class JiraActionItemExporter implements ActionItemExporter {
 
     const data = (await resp.json()) as any;
 
-    if (resp.status !== 200) {
-      throw new Error(
+    if (resp.status !== 200 || data.length === 0) {
+      log.warn(
         `Failed to get account id for email ${email}: ${JSON.stringify(data)}`
       );
-    }
-
-    if (data.length === 0) {
-      throw new Error(`No account found for email ${email}`);
+      return null;
     }
 
     if (data.length > 1) {
