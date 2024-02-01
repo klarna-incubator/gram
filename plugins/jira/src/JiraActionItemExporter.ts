@@ -176,17 +176,17 @@ export class JiraActionItemExporter implements ActionItemExporter {
       return { id: await this.getAccountIdCurrentUser() };
     }
 
-    const reporter = { id: await this.getAccountIdForEmail(review.reviewedBy) };
+    const reporterId = this.getAccountIdForEmail(review.reviewedBy);
 
-    if (!reporter) {
-      // Fall back to token user if no reviewer is assigned
+    if (!reporterId) {
+      // Fall back to token user if reviewer cannot be found in Jira
       log.info(
         `Could not find account id for reviewer ${review.reviewedBy}, using token user as reporter`
       );
       return { id: await this.getAccountIdCurrentUser() };
     }
 
-    return { id: reporter };
+    return { id: reporterId };
   }
 
   async createIssue(actionItem: Threat) {
