@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.1](https://github.com/klarna-incubator/gram/compare/v4.9.0...v4.9.1) (2024-02-01)
+
+### Bug Fixes
+
+- hide exporter button if no exporters are configured ([a1c5556](https://github.com/klarna-incubator/gram/commit/a1c55566cc760005b82ae3b62c154a8311d3c7f5))
+
 # [4.9.0](https://github.com/klarna-incubator/gram/compare/v4.8.1...v4.9.0) (2024-01-29)
 
 ### Bug Fixes

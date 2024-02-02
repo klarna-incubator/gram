@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.1](https://github.com/klarna-incubator/gram/compare/v4.9.0...v4.9.1) (2024-02-01)
+
+### Bug Fixes
+
+- correctly check reporter is set ([20d4688](https://github.com/klarna-incubator/gram/commit/20d4688e3ffc89593cdd28b7a3bb02c9a6a5f28f))
+- hide exporter button if no exporters are configured ([a1c5556](https://github.com/klarna-incubator/gram/commit/a1c55566cc760005b82ae3b62c154a8311d3c7f5))
+- make JiraActionItemExporter fallback on the token account as reporter if the reviewer cannot be found (e.g. due to offboarding) ([be90c6f](https://github.com/klarna-incubator/gram/commit/be90c6f503489e91d6694fdb2f9401e1c4e13874))
+- missing await ([01a1d10](https://github.com/klarna-incubator/gram/commit/01a1d1087ca2ba11632e274dbabb53a923173c0f))
+
 # [4.9.0](https://github.com/klarna-incubator/gram/compare/v4.8.1...v4.9.0) (2024-01-29)
 
 ### Bug Fixes
@@ -24,7 +33,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - add the ability to export action items outside of the review flow. Also make the feature to automatically exporter action items on review approve a boolean config option. ([9943fff](https://github.com/klarna-incubator/gram/commit/9943fff9f23876e38aa86ff072a76f3b4243d2d5))
 - exported action items are also copied on imported models ([6f549e8](https://github.com/klarna-incubator/gram/commit/6f549e8a639f10a6dc103c84fb1b8128c73468f4))
 - new Jira Action Item exporter ([7c127e4](https://github.com/klarna-incubator/gram/commit/7c127e4d8e711289077254aec23c134917fcafef))
-
 
 ## [4.8.1](https://github.com/klarna-incubator/gram/compare/v4.8.0...v4.8.1) (2024-01-02)
 

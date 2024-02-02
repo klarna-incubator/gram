@@ -7,7 +7,6 @@ export { NGOVSystemContextProvider } from "./system/NGOVSystemContextProvider.js
 export { KlarnaReviewerProvider } from "./KlarnaReviewerProvider.js";
 export { HSFContextProvider } from "./HSFContextProvider.js";
 export { KlarnaCronJob } from "./KlarnaCronJob.js";
-export { hookIntoReviewApproval } from "./RiskManagement.js";
 import classes from "./classes.js";
 import * as url from "url";
 

@@ -5,7 +5,7 @@ import log4js from "log4js";
 const log = log4js.getLogger("postgresCheck");
 
 export function postgresSimpleQueryCheck(dal: DataAccessLayer) {
-  return async (done: any) => {
+  return (done: any) => {
     const check: any = {
       name: "@gram/api-postgres",
       actionable: true,
@@ -14,17 +14,17 @@ export function postgresSimpleQueryCheck(dal: DataAccessLayer) {
       type: physical.type.INFRASTRUCTURE,
     };
 
-    try {
-      await dal.pool.query("SELECT 1;");
-    } catch (error: any) {
-      log.error(error);
-      check.healthy = false;
-      check.message =
-        "Postgres went down. Please check error log for more info";
-      check.severity = physical.severity.CRITICAL;
-    }
-
-    done(physical.response(check));
+    dal.pool
+      .query("SELECT 1;")
+      .then(() => done(physical.response(check)))
+      .catch((error: any) => {
+        log.error(error);
+        check.healthy = false;
+        check.message =
+          "Postgres went down. Please check error log for more info";
+        check.severity = physical.severity.CRITICAL;
+        done(physical.response(check));
+      });
   };
 }
 
