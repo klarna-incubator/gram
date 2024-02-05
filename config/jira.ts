@@ -91,12 +91,68 @@ export function createJiraActionItemExporter(
                   type: "text",
                   text:
                     control.title +
-                    (control.description ? " - " + control.description : ""),
+                    (control.description ? " - " + control.description : "") +
+                    (control.inPlace ? " (in place)" : ""),
+                  marks: control.inPlace
+                    ? [
+                        {
+                          type: "strike",
+                        },
+                      ]
+                    : undefined,
                 },
               ],
             },
           ],
         }));
+
+      const descriptionContent: any = [
+        {
+          type: "paragraph",
+          content: [
+            {
+              type: "text",
+              text: `Threat of "${actionItem.title}" on ${componentName}`,
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          content: [
+            {
+              type: "text",
+              text: actionItem.description || "(no description)",
+            },
+          ],
+        },
+      ];
+
+      if (controlsList.length > 0) {
+        [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "The following controls were suggested as ways to mitigate the threat:",
+              },
+            ],
+          },
+          {
+            type: "bulletList",
+            content: controlsList,
+          },
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "Once you have implemented enough of the suggested controls enough that it mitigates or fixes this threat, you can move this threat to the mitigated status.",
+              },
+            ],
+          },
+        ].forEach((c) => descriptionContent.push(c));
+      }
 
       let fields: Partial<JiraIssueFields> = {
         summary: actionItem.title,
@@ -104,48 +160,7 @@ export function createJiraActionItemExporter(
         description: {
           type: "doc",
           version: 1,
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: `Threat of "${actionItem.title}" on ${componentName}`,
-                },
-              ],
-            },
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: actionItem.description || "(no description)",
-                },
-              ],
-            },
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: "The following controls were suggested as ways to mitigate the threat:",
-                },
-              ],
-            },
-            {
-              type: "bulletList",
-              content: controlsList,
-            },
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: "Once you have implemented enough of the suggested controls enough that it mitigates or fixes this threat, you can move this threat to the mitigated status.",
-                },
-              ],
-            },
-          ],
+          content: descriptionContent,
         },
       };
 
