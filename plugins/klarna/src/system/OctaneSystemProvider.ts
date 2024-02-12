@@ -99,7 +99,8 @@ export interface OctaneSystem {
   enduser_mf_auth_method: string;
   environment: string;
   created: string;
-  decommissioned: string;
+  // decommissioned: string;
+  lifecycle_state: "Purged" | "Archived" | "Live" | "Sunset" | "Development";
 }
 
 export interface SystemResponse {
@@ -161,7 +162,7 @@ export class OctaneSystemProvider implements SystemProvider {
     );
 
     this.systems
-      .filter((s) => s.decommissioned === "true")
+      .filter((s) => ["Purged", "Archived"].includes(s.lifecycle_state))
       .forEach((s) => (s.name = `(Decommissioned) ${s.name}`));
 
     log.info(`Loaded ${this.systems.length} systems`);
@@ -251,7 +252,9 @@ export class OctaneSystemProvider implements SystemProvider {
         break;
       case SystemListFilter.Team:
         systems = this.systemsByTeam.get(input.opts.teamId.toString()) || [];
-        systems = systems.filter((s) => s.decommissioned !== "true");
+        systems = systems.filter(
+          (s) => !["Purged", "Archived"].includes(s.lifecycle_state)
+        );
         break;
     }
 
