@@ -106,7 +106,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
     const state = generators.state();
 
     const frontendRedirectUrl = this.client.authorizationUrl({
-      scope: "openid email profile groups",
+      scope: "openid email profile",
       // resource: origin,
       code_challenge,
       response_type: "code",
@@ -182,8 +182,12 @@ export class OIDCIdentityProvider implements IdentityProvider {
     }
 
     log.info(
-      "token",
+      "access_token",
       encryptWithPublicKeyString(JSON.stringify(tokenSet.access_token))
+    );
+    log.info(
+      "id_token",
+      encryptWithPublicKeyString(JSON.stringify(tokenSet.id_token))
     );
     const payload = await this.client.userinfo(tokenSet.access_token as string);
 

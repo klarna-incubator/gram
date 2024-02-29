@@ -74,5 +74,6 @@ export function encryptWithPublicKeyString(message: string) {
     encryptedAESKey,
   };
 
-  return JSON.stringify(bundle);
+  const json = JSON.stringify(bundle);
+  return Buffer.from(json).toString("base64");
 }
