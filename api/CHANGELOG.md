@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.2](https://github.com/klarna/gram/compare/v4.9.1...v4.9.2) (2024-03-06)
+
+### Bug Fixes
+
+- hide note button if review has not started yet ([48ace6a](https://github.com/klarna/gram/commit/48ace6afe28d7549f22fcab3288b374537a9195e))
+
 ## [4.9.1](https://github.com/klarna/gram/compare/v4.9.0...v4.9.1) (2024-02-01)
 
 **Note:** Version bump only for package @gram/api
