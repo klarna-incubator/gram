@@ -43,14 +43,16 @@ const ReviewContent = (review) => {
     default: {
       title: "Threat model not reviewed",
       description: 'Press the "Request Review" button below to get started!',
+      showNoteButton: false,
       buttons: [],
-      button: RequestReviewButton,
+      mainButton: RequestReviewButton,
       components: [],
       color: "error",
     },
     requested: {
       title: "Threat model under review",
       description: "",
+      showNoteButton: true,
       buttons: [
         ApproveButton,
         RequestMeetingButton,
@@ -69,6 +71,7 @@ const ReviewContent = (review) => {
       description: `Approved by ${review?.reviewer?.name} on ${new Date(
         review?.approved_at
       ).toLocaleDateString()} and valid until ${validUntil.toLocaleDateString()}. To update this model, create a new model based on this one and have it reviewed again.`,
+      showNoteButton: true,
       buttons: [],
       components: [],
       color: hasExpired ? "error" : aboutToExpire ? "warning" : "success",
@@ -76,8 +79,9 @@ const ReviewContent = (review) => {
     canceled: {
       title: "Threat model not reviewed",
       description: 'Press the "Request Review" button below to get started!',
+      showNoteButton: false,
       buttons: [],
-      button: RequestReviewButton,
+      mainButton: RequestReviewButton,
       components: [],
       color: "error",
     },
@@ -86,6 +90,7 @@ const ReviewContent = (review) => {
       description: review?.reviewer?.calendarLink
         ? `Please use the link below to schedule a threat modelling session with ${review?.reviewer?.name}.`
         : "",
+      showNoteButton: true,
       buttons: [
         ApproveButton,
         ScheduleMeetingButton,
@@ -433,14 +438,16 @@ export function Review() {
               </>
             ) : (
               <>
-                <EditNoteButton
-                  permissions={permissions}
-                  review={review}
-                  modelId={modelId}
-                />
+                {content.showNoteButton && (
+                  <EditNoteButton
+                    permissions={permissions}
+                    review={review}
+                    modelId={modelId}
+                  />
+                )}
 
-                {content.button && (
-                  <content.button
+                {content.mainButton && (
+                  <content.mainButton
                     permissions={permissions}
                     review={review}
                     modelId={modelId}

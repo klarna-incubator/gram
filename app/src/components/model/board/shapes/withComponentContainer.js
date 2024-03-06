@@ -265,7 +265,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           shadowOpacity={0.2}
           shadowBlur={5}
         />
-
         {includeIndicator && (
           <Icon
             url={`/assets/${indicator}`}
@@ -352,20 +351,21 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
             />
           </Html>
         )}
-        {magnets.map((magnet) => (
-          <FlowMagnet
-            {...magnet}
-            id={id}
-            name={type}
-            display={isHovered && editDataFlow.startComponent?.id !== id}
-            onClick={(e) => {
-              e.cancelBubble = true;
-              if (e.evt.button === 0) {
-                onMagnetClick(magnet);
-              }
-            }}
-          />
-        ))}
+        {!readOnly &&
+          magnets.map((magnet) => (
+            <FlowMagnet
+              {...magnet}
+              id={id}
+              name={type}
+              display={isHovered && editDataFlow.startComponent?.id !== id}
+              onClick={(e) => {
+                e.cancelBubble = true;
+                if (e.evt.button === 0) {
+                  onMagnetClick(magnet);
+                }
+              }}
+            />
+          ))}
       </Group>
     );
   };
