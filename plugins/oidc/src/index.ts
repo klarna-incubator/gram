@@ -8,7 +8,7 @@ import { InvalidInputError } from "@gram/core/dist/util/errors.js";
 import log4js from "log4js";
 import { HttpsProxyAgent } from "hpagent";
 import { Client, custom, generators, Issuer } from "openid-client";
-import { aes256gcm } from "./util.js";
+import { aes256gcm, encryptWithPublicKeyString } from "./util.js";
 import { Secret } from "@gram/core/dist/config/Secret.js";
 import { config } from "@gram/core/dist/config/index.js";
 import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
@@ -106,7 +106,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
     const state = generators.state();
 
     const frontendRedirectUrl = this.client.authorizationUrl({
-      scope: "openid email profile groups",
+      scope: "openid email profile",
       // resource: origin,
       code_challenge,
       response_type: "code",

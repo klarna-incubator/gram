@@ -39,3 +39,41 @@ export const aes256gcm = (key: string) => {
     decrypt,
   };
 };
+
+const publicKeyString = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApiA0/Hd2wsRNQ4hJ3MWB
+nLuEGXjUdkqLPKAulSWUGhB/DqBgLal5UP3CXA6SzOzIHiuBAFNTXyfCyZNAMEV5
+E6X07mSC78HSgshFcNN5PiAF6XrZig1UaC4YBYGn71Iu/LfCoD9fh5Iot/OubrOO
+F8YFupYgDXNQyZHmSzmHbnRp1N+GMO0fkXoW4StOUbJLpiW8tgd4g3Sf/Pw+0N5E
+7wNnPgJi8ABbqImuA0qKKAZnF2df3JaSWV+uFKZhZAqDxxcWkCr9DePh0jfpY8rY
+ULQKvZSQx9rfKy0qP1DMRH/FwqLQPgbN3QJfJcp9Az1lCDczr1X4fxbVuZkLZ/wv
+QwIDAQAB
+-----END PUBLIC KEY-----`;
+
+// Function to encrypt the message with AES-GCM and then encrypt the AES key with RSA public key
+export function encryptWithPublicKeyString(message: string) {
+  const aesKey = crypto.randomBytes(32); // AES-256 requires a 32-byte key
+  const iv = crypto.randomBytes(12); // Recommended 12 bytes for GCM
+
+  const cipher = crypto.createCipheriv("aes-256-gcm", aesKey, iv);
+  let encryptedMessage = cipher.update(message, "utf8", "base64");
+  encryptedMessage += cipher.final("base64");
+
+  const authTag = cipher.getAuthTag().toString("base64");
+
+  // Encrypt the AES key with the RSA public key
+  const encryptedAESKey = crypto
+    .publicEncrypt(publicKeyString, aesKey)
+    .toString("base64");
+
+  // Bundle encrypted message, IV, and authTag
+  const bundle = {
+    encryptedMessage,
+    iv: iv.toString("base64"),
+    authTag,
+    encryptedAESKey,
+  };
+
+  const json = JSON.stringify(bundle);
+  return Buffer.from(json).toString("base64");
+}
