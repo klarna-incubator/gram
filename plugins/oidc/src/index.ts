@@ -181,14 +181,6 @@ export class OIDCIdentityProvider implements IdentityProvider {
       };
     }
 
-    log.info(
-      "access_token",
-      encryptWithPublicKeyString(JSON.stringify(tokenSet.access_token))
-    );
-    log.info(
-      "id_token",
-      encryptWithPublicKeyString(JSON.stringify(tokenSet.id_token))
-    );
     const payload = await this.client.userinfo(tokenSet.access_token as string);
 
     if (!payload) {
