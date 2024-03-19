@@ -28,7 +28,7 @@ https://docs.google.com/forms/d/e/1FAIpQLSfVTLCR_VHTzIhDZ8MRFLpfm58LNlf0zICS2brY
 
 Thank you for completing the threat model for {{model.name}}!
  
-Please reach out to the Secure Development team at #team-ea-secure-development with any further questions or feedback about this process. 
+Please reach out to the Secure Development team at #tm-secure-development-dm-kep with any further questions or feedback about this process. 
 `.trim();
 
 export const EmailReviewApproved = () =>

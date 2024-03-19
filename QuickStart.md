@@ -25,6 +25,7 @@ Clone your own private repository and add Klarna upstream to pull updates from (
 
 ```sh
 git clone <your private repo>
+cd <local gram folder>
 git remote add github https://github.com/klarna-incubator/gram.git
 ```
 

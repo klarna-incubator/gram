@@ -1,5 +1,5 @@
 import { AddLink as AddLinkIcon } from "@mui/icons-material";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useDeleteLinkMutation, useListLinksQuery } from "../../api/gram/links";
 import { modalActions } from "../../redux/modalSlice";
@@ -27,14 +27,16 @@ export function Links({ objectType, objectId }) {
   return (
     <Box>
       {!readOnly && (
-        <IconButton onClick={openAddLinkModal}>
-          <AddLinkIcon
-            sx={{
-              fontSize: 20,
-              color: "#ccc",
-            }}
-          />
-        </IconButton>
+        <Tooltip title="Add custom link">
+          <IconButton onClick={openAddLinkModal}>
+            <AddLinkIcon
+              sx={{
+                fontSize: 20,
+                color: "#ccc",
+              }}
+            />
+          </IconButton>
+        </Tooltip>
       )}
 
       {links &&

@@ -32,7 +32,7 @@ https://calendar.google.com/calendar/selfsched?sstoken=UUdBOVg2MXlrZ0k1fGRlZmF1b
 
 ---
     
-Please reach out to the Secure Development team at  #team-ea-secure-development with any further questions or feedback about this process. 
+Please reach out to the Secure Development team at  #tm-secure-development-dm-kep with any further questions or feedback about this process. 
 `.trim();
 
 export const EmailReviewMeetingRequestedReminder = () =>
