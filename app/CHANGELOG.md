@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.3](https://github.com/klarna-incubator/gram/compare/v4.9.2...v4.9.3) (2024-03-19)
+
+### Bug Fixes
+
+- add tooltip to the add link button ([4bc94c1](https://github.com/klarna-incubator/gram/commit/4bc94c1e9abf14d38768785cf2b8d3abb3daa1a8))
+
 ## [4.9.2](https://github.com/klarna-incubator/gram/compare/v4.9.1...v4.9.2) (2024-03-06)
 
 ### Bug Fixes
