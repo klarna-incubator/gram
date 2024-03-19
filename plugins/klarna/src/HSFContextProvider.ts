@@ -1,18 +1,18 @@
-import aws from "aws-sdk";
-import { execSync } from "child_process";
-import fs from "fs";
-import _ from "lodash";
-import readline from "readline";
-import { Readable } from "stream";
-import log4js from "log4js";
-import { isDevelopment } from "@gram/core/dist/util/env.js";
+import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { SystemPropertyProvider } from "@gram/core/dist/data/system-property/SystemPropertyProvider.js";
 import {
   SystemProperty,
   SystemPropertyValue,
 } from "@gram/core/dist/data/system-property/types.js";
-import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
-import { ProxyAgent } from "proxy-agent";
+import { isDevelopment } from "@gram/core/dist/util/env.js";
+import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
+import aws from "aws-sdk";
+import { execSync } from "child_process";
+import fs from "fs";
+import _ from "lodash";
+import log4js from "log4js";
+import readline from "readline";
+import { Readable } from "stream";
 import * as url from "url";
 
 const log = log4js.getLogger("HSFContextProvider");
@@ -62,7 +62,7 @@ async function assumeRole(
       httpOptions: {
         // STS is not whitelisted by C2C, so we need to use the proxy to access it.
         // https://stash.int.klarna.net/projects/DEVSERV/repos/docs/pull-requests/1985/diff#content/documentation/c2c-platform/05_explanations/c2c_networking.md
-        agent: process.env.HTTP_PROXY ? new ProxyAgent() : undefined,
+        agent: createHttpsProxyAgent(),
       },
     },
     masterCredentials,
