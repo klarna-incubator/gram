@@ -228,7 +228,7 @@ export function createJiraActionItemExporter(
         fields["customfield_10311"] = model?.systemId;
       }
 
-      log.debug("creating jira issue with fields: ", fields);
+      log.debug("setting jira issue fields: ", fields);
 
       return fields as JiraIssueFields;
     },
