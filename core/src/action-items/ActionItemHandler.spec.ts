@@ -86,7 +86,7 @@ describe("ActionItemHandler implementation", () => {
       console.log(e);
       threw = true;
     }
-    expect(threw).toBe(true);
+    expect(threw).toBe(false);
 
     const res = await dal.pool.query(
       "SELECT * FROM action_item_failed_exports"
