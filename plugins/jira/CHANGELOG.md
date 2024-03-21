@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.4](https://github.com/klarna-incubator/gram/compare/v4.9.3...v4.9.4) (2024-03-21)
+
+### Bug Fixes
+
+- update jira issues if they already exist with new values ([60c5505](https://github.com/klarna-incubator/gram/commit/60c5505b3aa7f8ee7970602cee379cee556bbd3b))
+
 ## [4.9.3](https://github.com/klarna-incubator/gram/compare/v4.9.2...v4.9.3) (2024-03-19)
 
 **Note:** Version bump only for package @gram/jira
