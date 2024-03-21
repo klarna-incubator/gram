@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.4](https://github.com/klarna-incubator/gram/compare/v4.9.3...v4.9.4) (2024-03-21)
+
+### Bug Fixes
+
+- component tab should no longer disappear if another tab is selected. instead it should stick around so long as a component is selected. ([2c01c8c](https://github.com/klarna-incubator/gram/commit/2c01c8c67fcfc8a44f76939c6bada880ba420f7e))
+- reload action items if threat is deleted. Fixes [#95](https://github.com/klarna-incubator/gram/issues/95) ([0273603](https://github.com/klarna-incubator/gram/commit/0273603452610ed6c5084cde2f6785902cca1830))
+
 ## [4.9.3](https://github.com/klarna-incubator/gram/compare/v4.9.2...v4.9.3) (2024-03-19)
 
 ### Bug Fixes

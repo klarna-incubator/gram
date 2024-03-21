@@ -1,6 +1,6 @@
 import { ActionItemExporter } from "@gram/core/dist/action-items/ActionItemExporter.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import { LinkObjectType } from "@gram/core/dist/data/links/Link.js";
+import { Link, LinkObjectType } from "@gram/core/dist/data/links/Link.js";
 import Threat from "@gram/core/dist/data/threats/Threat.js";
 import log4js from "log4js";
 import fetch from "node-fetch";
@@ -100,9 +100,13 @@ export class JiraActionItemExporter implements ActionItemExporter {
           actionItem.id!
         );
 
-        if (links.find((e) => e.createdBy === this.key)) {
+        const existingLinks = links.filter((e) => e.createdBy === this.key);
+        if (existingLinks.length > 0) {
           // Already exported
-          log.info(`Action item ${actionItem.id} is already exported`);
+          log.info(
+            `Action item ${actionItem.id} is already exported to one or more tickets. Updating...`
+          );
+          await this.updateIssues(existingLinks, actionItem);
           return;
         }
 
@@ -127,31 +131,6 @@ export class JiraActionItemExporter implements ActionItemExporter {
       ? this.config.host
       : "https://" + this.config.host;
   }
-
-  // async getFields() {
-  //   const user = await this.config.auth.user.getValue();
-  //   const token = await this.config.auth.apiToken.getValue();
-  //   const response = await fetch(`${this.config.host}/rest/api/3/field`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Basic ${Buffer.from(`${user}:${token}`).toString(
-  //         "base64"
-  //       )}`,
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //      agent: this.agent,
-  //   });
-
-  //   if (!response.ok) {
-  //     throw new Error(
-  //       `Failed to fetch Jira fields: ${response.status} ${response.statusText}`
-  //     );
-  //   }
-
-  //   const fields = await response.json();
-  //   return fields;
-  // }
 
   async getReporter(actionItem: Threat) {
     const user = await this.config.auth.user.getValue();
@@ -187,6 +166,68 @@ export class JiraActionItemExporter implements ActionItemExporter {
     }
 
     return { id: reporterId };
+  }
+
+  async updateIssues(existingLinks: Link[], actionItem: Threat) {
+    await Promise.all(
+      existingLinks.map(async (link) => {
+        await this.updateIssue(link, actionItem);
+      })
+    );
+  }
+
+  async updateIssue(existingLink: Link, actionItem: Threat) {
+    const fields = await this.config.modelToIssueFields(this.dal, actionItem);
+    const issueId = existingLink.label;
+
+    // Ensure issueId is a Jira ticket format (i.e. ABC-123)
+    // It can be set by the user, so we need to validate it
+    if (!issueId.match(/[A-Z]+-\d+/)) {
+      throw new Error(`Invalid issue id: ${issueId}`);
+    }
+
+    if (!fields.description) {
+      fields.description = {
+        type: "doc",
+        version: 1,
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: actionItem.description || "(no description)",
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    const user = await this.config.auth.user.getValue();
+    const token = await this.config.auth.apiToken.getValue();
+    const resp = await fetch(`${this.host()}/rest/api/3/issue/${issueId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${user}:${token}`).toString(
+          "base64"
+        )}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fields,
+      }),
+      agent: this.agent,
+    });
+
+    if (resp.status !== 204) {
+      throw new Error(
+        `Failed to update issue for action item ${actionItem.id}`
+      );
+    }
+
+    log.info(`Updated issue ${issueId} for action item ${actionItem.id}`);
   }
 
   async createIssue(actionItem: Threat) {
