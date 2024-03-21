@@ -44,7 +44,7 @@ const threatApi = api.injectEndpoints({
         method: "DELETE",
       }),
       transformResponse: (response, meta, arg) => response,
-      invalidatesTags: ["Threats"],
+      invalidatesTags: ["Threats", "ActionItems"],
     }),
   }),
 });
