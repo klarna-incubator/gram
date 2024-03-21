@@ -34,11 +34,7 @@ export class ActionItemHandler {
     const promises = this.exporters
       .filter((exporter) => exporter.exportOnReviewApproved)
       .map(async (exporter) => {
-        try {
-          await this.runExport(exporter, actionItems);
-        } catch (e) {
-          // Handled within runExport
-        }
+        await this.runExport(exporter, actionItems);
       });
 
     await Promise.all(promises);
@@ -66,7 +62,6 @@ export class ActionItemHandler {
       // Handle errors gracefully to avoid fatal errors crashing the entire app
       log.error(`Failed to export to ${exporter.key}`, e);
       await this.trackFailedExports(exporter, actionItems);
-      throw e;
     }
   }
 
