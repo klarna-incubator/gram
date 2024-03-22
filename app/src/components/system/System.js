@@ -62,7 +62,9 @@ export function System() {
 
           <Typography className="dimmed">
             {system.owners?.map((owner) => (
-              <Link to={`/team/${owner.id}`}>{owner.name}</Link>
+              <Link className="dimmed" to={`/team/${owner.id}`}>
+                {owner.name}
+              </Link>
             ))}{" "}
             &mdash;{" "}
             <span className="description">
@@ -90,5 +92,3 @@ export function System() {
     </div>
   );
 }
-
-export default System;
