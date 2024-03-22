@@ -2,6 +2,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Divider,
   List,
   ListItemButton,
   ListItemText,
@@ -16,35 +17,52 @@ import Loading from "../../loading";
 import "../Systems.css";
 import { useGetTeamQuery } from "../../../api/gram/team";
 
-export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
+export function TeamSystemsPageList({
+  teamId,
+  pagesize = 10,
+  maxHeight = "500px",
+}) {
   const [page, setPage] = useState(0);
 
   const opts = { filter: "team", teamId, pagesize, page };
-  const { data, isLoading, isFetching } = useListSystemsQuery(opts);
+  const {
+    data: teamSystems,
+    isLoading,
+    isFetching,
+  } = useListSystemsQuery(opts);
   const { data: team } = useGetTeamQuery({ teamId });
   const pageCount =
-    data?.total && data?.pageSize ? Math.ceil(data?.total / data?.pageSize) : 0;
+    teamSystems?.total && teamSystems?.pageSize
+      ? Math.ceil(teamSystems?.total / teamSystems?.pageSize)
+      : 0;
+
+  const systems = teamSystems ? [...teamSystems?.systems] : [];
 
   return (
-    <Card sx={{ height: "100%" }}>
+    <Card>
       <CardContent>
         <Typography variant="h5">
           <Link to={`/team/${teamId}`}>{team?.name}</Link>
         </Typography>
 
-        <List sx={{ height: "500px", overflow: "auto" }}>
+        <List sx={{ maxHeight, overflow: "auto" }}>
           {isLoading || isFetching ? (
             <Loading />
-          ) : data.systems ? (
-            data.systems.map((system) => (
-              <ListItemButton
-                component={Link}
-                to={`/system/${system.id}`}
-                key={system.id}
-              >
-                <ListItemText primary={system.displayName} />
-                <SystemComplianceBadge compliance={system.compliance} />
-              </ListItemButton>
+          ) : systems ? (
+            systems.map((system, i) => (
+              <>
+                <ListItemButton
+                  component={Link}
+                  to={`/system/${system.id}`}
+                  key={system.id}
+                >
+                  <ListItemText primary={system.displayName} />
+                  <SystemComplianceBadge compliance={system.compliance} />
+                </ListItemButton>
+                {i < teamSystems.systems.length - 1 && (
+                  <Divider component="li" />
+                )}
+              </>
             ))
           ) : (
             <ListItemText primary="No team systems available." />
