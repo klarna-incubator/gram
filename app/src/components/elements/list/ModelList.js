@@ -1,5 +1,3 @@
-import React from "react";
-import Loading from "../../loading";
 import {
   Card,
   CardContent,
@@ -7,13 +5,14 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  Paper,
 } from "@mui/material";
+import React from "react";
 import { Link } from "react-router-dom";
+import Loading from "../../loading";
 import { SystemName } from "../../reviews/SystemName";
 import { DateLabel } from "../DateLabel";
-import { ModelComplianceBadge } from "../ModelComplianceBadge";
 import { ErrorLine } from "../ErrorLine";
+import { ModelComplianceBadge } from "../ModelComplianceBadge";
 
 export function ModelList({
   models = [],
