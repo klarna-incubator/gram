@@ -38,7 +38,7 @@
     "@sentry/node": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
     "cookie-parser": "^1.4.6",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "express-async-error-wrapper": "^1.0.4",
     "express-physical": "^2.0.0",
     "express-prom-bundle": "^6.4.1",
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/lodash": "^4.14.177",
     "@types/node": "^14.17.9",
