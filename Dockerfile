@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202404051655-builder AS builder
-=======
-FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202403251603-builder AS builder
->>>>>>> UPD-542 Update Klarna Docker images
 
 USER root
 
