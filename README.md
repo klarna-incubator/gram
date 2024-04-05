@@ -9,6 +9,19 @@ Gram is Klarna's own [threat model][owasp-tm] diagramming tool developed interna
 
 ![Screenshot](screenshot.png)
 
+## Features ✨
+* Fully featured diagramming tool specialized for threat modeling.
+
+* Collaborative editing with multiple users over websocket
+
+* Tightly couples to your system/asset inventory
+
+* Automatic suggestions for threats and controls based on your tech stacks
+
+* Review system for use by your Security Champions and to ensure quality models
+
+* Integration for boring corporate stuff like Jira and SSO (Okta)
+
 ## Getting Started 🚀
 
 See [Quick Start](QuickStart.md).
