@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
-import { useGetUserQuery } from "../../api/gram/auth";
+import { useGetUserQuery } from "../../api/gram/user";
 import { useListModelsQuery } from "../../api/gram/model";
 import { ModelList } from "../elements/list/ModelList";
 import { TeamSystemsPageList } from "../systems/TeamSystems/TeamSystemsPageList";

@@ -28,7 +28,7 @@ import controlsV1 from "./resources/gram/v1/controls/index.js";
 import { linksRouter } from "./resources/gram/v1/links/router.js";
 import { getMenu } from "./resources/gram/v1/menu/get.js";
 import { mitigationsV1 } from "./resources/gram/v1/mitigations/index.js";
-import modelsV1 from "./resources/gram/v1/models/index.js";
+import { modelsRouter } from "./resources/gram/v1/models/router.js";
 import { listSystemCompliance } from "./resources/gram/v1/reports/system-compliance.js";
 import reviewsV1 from "./resources/gram/v1/reviews/index.js";
 import suggestionsV1 from "./resources/gram/v1/suggestions/index.js";
@@ -37,9 +37,9 @@ import systemsV1 from "./resources/gram/v1/systems/index.js";
 import { getTeam } from "./resources/gram/v1/team/get.js";
 import threatsV1 from "./resources/gram/v1/threats/index.js";
 import tokenV1 from "./resources/gram/v1/token/index.js";
-import userV1 from "./resources/gram/v1/user/index.js";
 import { errorWrap } from "./util/errorHandler.js";
 import { initSentry } from "./util/sentry.js";
+import { userRouter } from "./resources/gram/v1/user/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -87,7 +87,7 @@ export async function createApp(dal: DataAccessLayer) {
   // Authenticated routes
   const authenticatedRoutes = express.Router();
   authenticatedRoutes.use(authRequiredMiddleware);
-  authenticatedRoutes.get("/user", errorWrap(userV1.get));
+  authenticatedRoutes.use("/user", userRouter(dal));
 
   const systems = systemsV1(dal);
   authenticatedRoutes.get("/systems", errorWrap(systems.list));
@@ -102,21 +102,7 @@ export async function createApp(dal: DataAccessLayer) {
   );
 
   // Models
-  const models = modelsV1(dal.modelService);
-  authenticatedRoutes.get("/models", errorWrap(models.list));
-  authenticatedRoutes.post("/models", errorWrap(models.create));
-  authenticatedRoutes.get("/models/templates", errorWrap(models.templates)); // Model templates
-  authenticatedRoutes.patch("/models/:id", errorWrap(models.patch));
-  authenticatedRoutes.delete("/models/:id", errorWrap(models.delete));
-  authenticatedRoutes.get("/models/:id", errorWrap(models.get));
-  authenticatedRoutes.patch(
-    "/models/:id/set-template",
-    errorWrap(models.setTemplate)
-  );
-  authenticatedRoutes.get(
-    "/models/:id/permissions",
-    errorWrap(models.permissions)
-  );
+  authenticatedRoutes.use("/models", modelsRouter(dal));
 
   // Threats
   const threats = threatsV1(dal);

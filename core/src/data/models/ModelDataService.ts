@@ -488,6 +488,15 @@ export class ModelDataService extends EventEmitter {
     return res.rowCount > 0;
   }
 
+  async setSystemId(modelId: string, systemId: string | null) {
+    const res = await this.pool.query(
+      "UPDATE models SET system_id = $2::varchar WHERE id = $1::uuid",
+      [modelId, systemId]
+    );
+    this.emit("updated-for", { modelId });
+    return res.rowCount === 1;
+  }
+
   async setTemplate(modelId: string, isTemplate: boolean) {
     const res = await this.pool.query(
       "UPDATE models SET is_template = $2::boolean WHERE id = $1::uuid",
