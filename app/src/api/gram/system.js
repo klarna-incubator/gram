@@ -38,4 +38,5 @@ export const {
   useListSystemsQuery,
   useGetSystemQuery,
   useGetSystemPermissionsQuery,
+  useLazyListSystemsQuery,
 } = systemApi;

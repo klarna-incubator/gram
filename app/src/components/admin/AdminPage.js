@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { useSetRolesMutation } from "../../api/gram/admin";
-import { useGetUserQuery } from "../../api/gram/auth";
+import { useGetUserQuery } from "../../api/gram/user";
 import { useGetTemplatesQuery } from "../../api/gram/model";
 import "./AdminPage.css";
 

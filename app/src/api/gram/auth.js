@@ -7,11 +7,6 @@ const authApi = api.injectEndpoints({
       query: () => `/auth/params`,
       transformResponse: (response) => response,
     }),
-    getUser: build.query({
-      query: () => `/user`,
-      transformResponse: (response) => response,
-      providesTags: ["User"],
-    }),
     getGramToken: build.mutation({
       query: ({ provider, params }) => ({
         url: `/auth/token`,

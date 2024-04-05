@@ -24,18 +24,23 @@ import { EditableTypography } from "../right/EditableTypography";
 import { Review } from "./Review";
 import { SystemProperties } from "./SystemProperties";
 
+import { UserChip } from "../../../elements/UserChip";
+import { SystemLabel } from "./SystemLabel";
+
 export function SystemTab() {
   const modelId = useModelID();
   const { data: modelData } = useGetModelQuery(modelId);
   const { systemId } = modelData;
 
-  const { data: system } = useGetSystemQuery({ systemId });
+  const { data: system, isLoading: systemLoading } = useGetSystemQuery({
+    systemId,
+  });
 
   // Grab version from local state. This syncs differently than RTK API for ... reasons.
   const version = useSelector(({ model: { version } }) => version);
   const isTemplate = useSelector(({ model: { isTemplate } }) => isTemplate);
 
-  const systemLoading = !system || system.pending;
+  // const systemLoading = !system || system.pending;
   const [patchModel] = usePatchModelMutation();
   const [setTemplate] = useSetTemplateMutation();
 
@@ -78,16 +83,7 @@ export function SystemTab() {
       >
         <Card elevation={2}>
           <CardContent>
-            {!systemLoading && (
-              <>
-                <Typography sx={{ fontWeight: "bold" }}>System</Typography>
-                <Link component={RouterLink} to={`/system/${systemId}`}>
-                  <Typography sx={{ paddingBottom: "14px" }}>
-                    {system.displayName}
-                  </Typography>
-                </Link>
-              </>
-            )}
+            <SystemLabel systemId={systemId} />
 
             <Typography sx={{ fontWeight: "bold" }}>Version</Typography>
             <EditableTypography
@@ -100,10 +96,10 @@ export function SystemTab() {
               readOnly={readOnly}
             />
 
-            {!systemLoading && system.owners && (
+            <Typography sx={{ fontWeight: "bold" }}>Owner(s)</Typography>
+            {!systemLoading && systemId && system?.owners ? (
               <>
-                <Typography sx={{ fontWeight: "bold" }}>Owner(s)</Typography>
-                {system.owners.map((owner) => (
+                {system?.owners.map((owner) => (
                   <Link
                     key={`owner-link-${owner.id}`}
                     component={RouterLink}
@@ -115,6 +111,13 @@ export function SystemTab() {
                   </Link>
                 ))}
               </>
+            ) : (
+              <Typography sx={{ paddingBottom: "14px" }}>
+                <UserChip
+                  userId={modelData.createdBy}
+                  style={{ color: "white" }}
+                />
+              </Typography>
             )}
 
             {user?.roles.includes("admin") && (
@@ -137,10 +140,10 @@ export function SystemTab() {
               </>
             )}
 
-            {!systemLoading && system.description && (
+            {!systemLoading && system?.description && (
               <>
                 <Typography sx={{ fontWeight: "bold" }}>Description</Typography>
-                <Typography>{system.description}</Typography>
+                <Typography>{system?.description}</Typography>
               </>
             )}
           </CardContent>

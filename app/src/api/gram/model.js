@@ -46,7 +46,7 @@ const modelApi = api.injectEndpoints({
         body: model,
         method: "PATCH",
       }),
-      transformResponse: (response) => response.model,
+      transformResponse: (response) => response,
     }),
     deleteModel: build.mutation({
       query: ({ id }) => ({
@@ -65,6 +65,15 @@ const modelApi = api.injectEndpoints({
       transformResponse: (response) => response,
       invalidatesTags: ["Model", "Models", "Templates"],
     }),
+    setSystemId: build.mutation({
+      query: ({ id, systemId }) => ({
+        url: `/models/${id}/set-system-id`,
+        body: { systemId },
+        method: "PATCH",
+      }),
+      transformResponse: (response) => response,
+      invalidatesTags: ["Model", "Models", "Systems"],
+    }),
   }),
 });
 
@@ -77,4 +86,5 @@ export const {
   usePatchModelMutation,
   useDeleteModelMutation,
   useSetTemplateMutation,
+  useSetSystemIdMutation,
 } = modelApi;

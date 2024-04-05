@@ -3,12 +3,12 @@
  * @exports {function} handler
  */
 
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
 
-export default (dataModels: ModelDataService) => {
+export default (dal: DataAccessLayer) => {
   return async (req: Request, res: Response) => {
-    const templates = await dataModels.getTemplates();
+    const templates = await dal.modelService.getTemplates();
     return res.json({ templates });
   };
 };

@@ -5,13 +5,13 @@
 
 import { Request, Response } from "express";
 import {
-  ModelDataService,
   ModelFilter,
   ModelFilters,
   ModelListOptions,
 } from "@gram/core/dist/data/models/ModelDataService.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
-export default (dataModels: ModelDataService) =>
+export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const { filter } = req.query;
 
@@ -29,6 +29,6 @@ export default (dataModels: ModelDataService) =>
       systemId: req.query.systemId?.toString(),
     };
 
-    const models = await dataModels.list(filter as ModelFilter, opts);
+    const models = await dal.modelService.list(filter as ModelFilter, opts);
     return res.json({ models: models.map((model) => model.toJSON()) });
   };

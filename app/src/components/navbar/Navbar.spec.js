@@ -11,6 +11,12 @@ jest.mock("../../api/gram/menu", () => ({
   useGetMenuQuery: jest.fn(() => ({ isLoading: false, data: [] })),
 }));
 
+jest.mock("../../api/gram/auth", () => ({
+  ...jest.requireActual("react-redux"),
+  useGetUserQuery: jest.fn(() => ({ data: { sub: "test", roles: ["user"] } })),
+  useLogoutMutation: jest.fn(() => [jest.fn()]),
+}));
+
 const store = createMockStore({
   navbar: { troll: "no" },
   user: { picture: "", name: "testname" },
