@@ -3,13 +3,13 @@
  * @exports {function} handler
  */
 
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
 
-export default (dataModels: ModelDataService) =>
+export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    const model = await dataModels.getById(id);
+    const model = await dal.modelService.getById(id);
     if (model === null) {
       return res.sendStatus(404);
     }

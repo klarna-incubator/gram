@@ -3,14 +3,14 @@
  * @exports {function} handler
  */
 
-import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization.js";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Request, Response } from "express";
 
-export default (dataModels: ModelDataService) =>
+export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const id = req.params.id;
     await req.authz.hasPermissionsForModelId(id, Permission.Delete);
-    const result = await dataModels.delete(id);
+    const result = await dal.modelService.delete(id);
     return res.json({ deleted: result });
   };
