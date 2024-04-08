@@ -20,6 +20,7 @@ function convertToModel(row: any) {
   model.reviewApprovedAt = row.review_approved_at;
   model.reviewStatus = row.review_status;
   model.isTemplate = row.is_template;
+  model.shouldReviewActionItems = row.should_review_action_items;
   if (row.data) model.data = row.data;
   return model;
 }
@@ -127,7 +128,8 @@ export class ModelDataService extends EventEmitter {
         created_by,
         extract(epoch from created_at) as created_at,
         extract(epoch from updated_at) as updated_at,
-        is_template
+        is_template,
+        should_review_action_items
       FROM models
       WHERE id = $1::uuid
       AND deleted_at IS NULL
@@ -173,8 +175,8 @@ export class ModelDataService extends EventEmitter {
     createdFrom: string | null = null
   ): Promise<string> {
     const query = `
-     INSERT INTO models (system_id, version, data, created_by, created_from)
-     VALUES ($1::varchar, $2::varchar, $3::json, $4::varchar, $5)
+     INSERT INTO models (system_id, version, data, created_by, created_from, should_review_action_items)
+     VALUES ($1::varchar, $2::varchar, $3::json, $4::varchar, $5, $6::boolean)
      RETURNING id;
     `;
     const res = await this.pool.query(query, [
@@ -183,6 +185,7 @@ export class ModelDataService extends EventEmitter {
       JSON.stringify(model.data),
       model.createdBy,
       createdFrom,
+      model.shouldReviewActionItems,
     ]);
 
     this.emit("updated-for", { modelId: res.rows[0].id });
@@ -229,6 +232,13 @@ export class ModelDataService extends EventEmitter {
       };
     });
 
+    const threats = await this.dal.threatService.list(srcModel.id!);
+    const controls = await this.dal.controlService.list(srcModel.id!);
+    const mitigations = await this.dal.mitigationService.list(srcModel.id!);
+
+    targetModel.shouldReviewActionItems =
+      threats.filter((t) => t.isActionItem).length > 0;
+
     const targetModelId = await this.create(targetModel, srcModelId);
     uuid.set(srcModel.id!, targetModelId);
 
@@ -237,10 +247,6 @@ export class ModelDataService extends EventEmitter {
       targetModelId,
       uuid
     );
-
-    const threats = await this.dal.threatService.list(srcModel.id!);
-    const controls = await this.dal.controlService.list(srcModel.id!);
-    const mitigations = await this.dal.mitigationService.list(srcModel.id!);
 
     const queryThreats = `
         INSERT INTO threats ( 
@@ -501,6 +507,18 @@ export class ModelDataService extends EventEmitter {
     const res = await this.pool.query(
       "UPDATE models SET is_template = $2::boolean WHERE id = $1::uuid",
       [modelId, isTemplate]
+    );
+    this.emit("updated-for", { modelId });
+    return res.rowCount === 1;
+  }
+
+  async setShouldReviewActionItems(
+    modelId: string,
+    shouldReviewActionItems: boolean
+  ) {
+    const res = await this.pool.query(
+      "UPDATE models SET should_review_action_items = $2::boolean WHERE id = $1::uuid",
+      [modelId, shouldReviewActionItems]
     );
     this.emit("updated-for", { modelId });
     return res.rowCount === 1;

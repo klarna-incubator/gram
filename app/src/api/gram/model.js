@@ -74,6 +74,15 @@ const modelApi = api.injectEndpoints({
       transformResponse: (response) => response,
       invalidatesTags: ["Model", "Models", "Systems"],
     }),
+    setShouldReviewActionItems: build.mutation({
+      query: ({ id, shouldReviewActionItems }) => ({
+        url: `/models/${id}/set-should-review-action-items`,
+        body: { shouldReviewActionItems },
+        method: "PATCH",
+      }),
+      transformResponse: (response) => response,
+      invalidatesTags: ["Model", "Models", "Systems"],
+    }),
   }),
 });
 
@@ -87,4 +96,5 @@ export const {
   useDeleteModelMutation,
   useSetTemplateMutation,
   useSetSystemIdMutation,
+  useSetShouldReviewActionItemsMutation,
 } = modelApi;

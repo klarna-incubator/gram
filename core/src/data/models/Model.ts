@@ -129,6 +129,9 @@ export default class Model {
   reviewApprovedAt?: Date;
   isTemplate?: boolean;
 
+  //
+  shouldReviewActionItems?: boolean;
+
   constructor(
     public systemId: string | null,
     public version: string,
@@ -149,6 +152,7 @@ export default class Model {
       reviewApprovedAt: this.reviewApprovedAt,
       reviewStatus: this.reviewStatus,
       isTemplate: this.isTemplate,
+      shouldReviewActionItems: this.shouldReviewActionItems,
     };
   }
 }

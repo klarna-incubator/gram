@@ -9,16 +9,17 @@ import {
   useGetModelQuery,
 } from "../../api/gram/model";
 import { useModelSync } from "../../hooks/useModelSync";
-import { modalActions } from "../../redux/modalSlice";
+import { useOpenModal } from "../../hooks/useOpenModal";
 import { webSocketActions } from "../../redux/webSocketSlice";
+import { ErrorPage } from "../elements/ErrorPage";
 import { LoadingPage } from "../elements/loading/loading-page/LoadingPage";
+import { MODALS } from "../elements/modal/ModalManager";
+import "./Model.css";
 import Board from "./board/Board";
 import ConnectivityCheck from "./connectivity/ConnectivityCheck";
 import { PERMISSIONS } from "./constants";
-import "./Model.css";
 import { LeftPanel } from "./panels/left/LeftPanel";
 import { RightPanel } from "./panels/right/RightPanel";
-import { ErrorPage } from "../elements/ErrorPage";
 
 export function Model() {
   const dispatch = useDispatch();
@@ -30,16 +31,18 @@ export function Model() {
     model && dispatch(loadModel(model));
   }, [dispatch, model]);
 
+  const openModal = useOpenModal();
+
   // clear the model state from redux on component unload
   useEffect(() => {
     return () => {
       dispatch(modelActions.clearReduxState());
-      dispatch(modalActions.close());
     };
   }, [dispatch]);
 
   const { data: permissions } = useGetModelPermissionsQuery({ modelId: id });
   const readAllowed = permissions?.includes(PERMISSIONS.READ);
+  const writeAllowed = permissions?.includes(PERMISSIONS.WRITE);
 
   // create a WS client and close when component is unloaded
   useEffect(() => {
@@ -48,6 +51,13 @@ export function Model() {
       return () => dispatch(webSocketActions.disconnect());
     }
   }, [id, readAllowed, dispatch]);
+
+  useEffect(() => {
+    if (writeAllowed) {
+      model?.shouldReviewActionItems &&
+        openModal(MODALS.RevisitActionItems.name);
+    }
+  }, [model, writeAllowed, openModal]);
 
   // if write permission sync model changes (patch component) to the backend
   useModelSync();

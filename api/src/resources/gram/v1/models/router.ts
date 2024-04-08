@@ -10,6 +10,7 @@ import permissions from "./permissions.js";
 import setSystemId from "./setSystemId.js";
 import setTemplate from "./setTemplate.js";
 import templates from "./templates.js";
+import setShouldReviewActionItems from "./setShouldReviewActionItems.js";
 
 export function modelsRouter(dal: DataAccessLayer): express.Router {
   const router = express.Router();
@@ -22,5 +23,9 @@ export function modelsRouter(dal: DataAccessLayer): express.Router {
   router.patch("/:id/set-template", errorWrap(setTemplate(dal)));
   router.patch("/:id/set-system-id", errorWrap(setSystemId(dal)));
   router.get("/:id/permissions", errorWrap(permissions(dal)));
+  router.patch(
+    "/:id/set-should-review-action-items",
+    errorWrap(setShouldReviewActionItems(dal))
+  );
   return router;
 }
