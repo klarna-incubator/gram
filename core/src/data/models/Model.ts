@@ -10,93 +10,94 @@ export interface DataFlow {
 
 type ComponentType = "ee" | "ds" | "proc";
 
-type AuthenticationType =
-  | "json-web-token"
-  | "basic-authentication/user-pass"
-  | "one-time-password/single-sign-on"
-  | "iam";
+// type AuthenticationType =
+//   | "json-web-token"
+//   | "basic-authentication/user-pass"
+//   | "one-time-password/single-sign-on"
+//   | "iam";
 
-type InjectionMitigationType =
-  | "input-sanitation"
-  | "stored-procedures"
-  | "parameterized-queries"
-  | "schema-validation";
+// type InjectionMitigationType =
+//   | "input-sanitation"
+//   | "stored-procedures"
+//   | "parameterized-queries"
+//   | "schema-validation";
 
-type SecretsStorageType =
-  | "plaintext"
-  | "git-crypt"
-  | "aws-secrets-manager"
-  | "aws-systems-manager"
-  | "c2c-secrets";
-export interface Attributes {
-  /* 
-    Protocol
-  */
-  protocolTLS?: boolean;
+// type SecretsStorageType =
+//   | "plaintext"
+//   | "git-crypt"
+//   | "aws-secrets-manager"
+//   | "aws-systems-manager"
+//   | "c2c-secrets";
 
-  /* 
-    Logging
-  */
-  logs?: boolean;
-  auditLogs?: boolean;
-  accessLogs?: boolean;
-  sensitiveDataMaskedInLogs?: boolean;
-  logIntegrityProtection?: boolean;
-  restrictedLogAccess?: boolean;
+// export interface Attributes {
+//   /*
+//     Protocol
+//   */
+//   protocolTLS?: boolean;
 
-  /* 
-    Authentication and Authorization
+//   /*
+//     Logging
+//   */
+//   logs?: boolean;
+//   auditLogs?: boolean;
+//   accessLogs?: boolean;
+//   sensitiveDataMaskedInLogs?: boolean;
+//   logIntegrityProtection?: boolean;
+//   restrictedLogAccess?: boolean;
 
-    Skipping for now:
-      * is the authentication weak or strong?
-      * are there security controls on all the endpoints?
-  */
-  authentication?: boolean | AuthenticationType;
-  individualAccounts?: boolean;
-  individualRolesPerUser?: boolean;
+//   /*
+//     Authentication and Authorization
 
-  /* 
-    Data
+//     Skipping for now:
+//       * is the authentication weak or strong?
+//       * are there security controls on all the endpoints?
+//   */
+//   authentication?: boolean | AuthenticationType;
+//   individualAccounts?: boolean;
+//   individualRolesPerUser?: boolean;
 
-    Skipping for now:
-      * SSRF
-      * EVCC
-      * user generated data
-  */
-  inputValidation?: boolean;
-  injectionMitigation?: boolean | InjectionMitigationType;
+//   /*
+//     Data
 
-  /* 
-    Denial of service
-  */
+//     Skipping for now:
+//       * SSRF
+//       * EVCC
+//       * user generated data
+//   */
+//   inputValidation?: boolean;
+//   injectionMitigation?: boolean | InjectionMitigationType;
 
-  // Ask if exposed to the internet
-  ddosProtection?: boolean;
+//   /*
+//     Denial of service
+//   */
 
-  /* 
-    Secret storage
-  */
-  secureSecretsStorage?: boolean | SecretsStorageType;
+//   // Ask if exposed to the internet
+//   ddosProtection?: boolean;
 
-  /* 
-    Access to production restricted
-  */
-  limitedTeamAccessToProductionAsset?: boolean;
+//   /*
+//     Secret storage
+//   */
+//   secureSecretsStorage?: boolean | SecretsStorageType;
 
-  /* 
-    Errors
+//   /*
+//     Access to production restricted
+//   */
+//   limitedTeamAccessToProductionAsset?: boolean;
 
-    Skipping for now:
-      * sensitive data/information in error messages
-  */
+//   /*
+//     Errors
 
-  /* 
-    Data store
-  */
-  encryptionAtRest?: boolean;
-  safeCredentialStorage?: boolean;
-  backups?: boolean;
-}
+//     Skipping for now:
+//       * sensitive data/information in error messages
+//   */
+
+//   /*
+//     Data store
+//   */
+//   encryptionAtRest?: boolean;
+//   safeCredentialStorage?: boolean;
+//   backups?: boolean;
+// }
 
 export interface Component {
   id: string;
@@ -106,7 +107,7 @@ export interface Component {
   name: string;
   classes?: ComponentClass[];
   description?: string;
-  attributes?: Attributes;
+  // attributes?: Attributes;
 }
 
 export interface ModelData {
