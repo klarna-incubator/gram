@@ -10,7 +10,7 @@ import { Request, Response } from "express";
 
 export const getById =
   (dal: DataAccessLayer) => async (req: Request, res: Response) => {
-    const userId = req.params.id;
+    const userId = req.params.userId;
 
     const user = await dal.userHandler.lookupUser(
       { currentRequest: req },
