@@ -9,9 +9,10 @@ const userApi = api.injectEndpoints({
         result ? [{ type: "User", id: result?.sub }] : [],
     }),
     getOtherUserById: build.query({
-      query: ({ userId }) => `/users/${encodeURIComponent(userId)}`,
+      query: ({ userId }) => `/user/${encodeURIComponent(userId)}`,
       transformResponse: (response) => response,
-      providesTags: (result) => [{ type: "User", id: result.sub }],
+      providesTags: (result) =>
+        result ? [{ type: "User", id: result?.sub }] : [],
     }),
   }),
 });
