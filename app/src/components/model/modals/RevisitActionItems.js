@@ -18,7 +18,7 @@ import { useModelID } from "../hooks/useModelID";
 export function RevisitActionItems() {
   const closeModal = useCloseModal();
   const modelId = useModelID();
-  const [setShouldReview, _] = useSetShouldReviewActionItemsMutation();
+  const [setShouldReview] = useSetShouldReviewActionItemsMutation();
 
   useEffect(() => {
     modelId && setShouldReview({ id: modelId, shouldReviewActionItems: false });
