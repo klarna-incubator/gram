@@ -8,14 +8,12 @@ import {
   useSelector,
 } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { addComponent } from "../../../actions/model/addComponent";
 import { addDataFlow } from "../../../actions/model/addDataFlow";
 import { CURSOR_PAN } from "../../../actions/model/controlsToolbarActions";
 import { copyNodes } from "../../../actions/model/copyNodes";
 import { deleteSelected } from "../../../actions/model/deleteSelected";
 import { moveComponents } from "../../../actions/model/moveSelected";
 import { patchComponent } from "../../../actions/model/patchComponent";
-import { patchDataFlow } from "../../../actions/model/patchDataFlow";
 import {
   setMultipleSelected,
   setSelected,
@@ -48,6 +46,7 @@ import { DataStore } from "./shapes/DataStore";
 import { ExternalEntity } from "./shapes/ExternalEntity";
 import { Process } from "./shapes/Process";
 import { getAbsolutePosition } from "./util";
+import { useAddComponent } from "../hooks/useAddComponent";
 
 export default function Board() {
   const dispatch = useDispatch();
@@ -546,35 +545,19 @@ export default function Board() {
     }
   }
 
-  function onAddComponent(name, type, x, y) {
-    const id = uuidv4();
+  const addComponent = useAddComponent();
 
-    dispatch(
-      addComponent(
-        {
-          name,
-          type,
-          x: (x ? x : lastPointerPosition.stage.x) - COMPONENT_SIZE.WIDTH / 2,
-          y: (y ? y : lastPointerPosition.stage.y) - COMPONENT_SIZE.HEIGHT / 2,
-        },
-        id
-      )
-    );
+  // function onAddComponent(name, type, x, y) {
+  //   const id = addComponent(
+  //     name,
+  //     type,
+  //     (x ? x : lastPointerPosition.stage.x) - COMPONENT_SIZE.WIDTH / 2,
+  //     (y ? y : lastPointerPosition.stage.y) - COMPONENT_SIZE.HEIGHT / 2
+  //   );
 
-    dispatch(setMultipleSelected([id]));
-    setChangingComponentName(id);
-
-    hideStageDialog();
-  }
-
-  function onToggleBidirectional(id) {
-    dispatch(
-      patchDataFlow(id, {
-        bidirectional: !dataFlows.find((df) => df.id === id).bidirectional,
-      })
-    );
-    hideStageDialog();
-  }
+  //   dispatch(setMultipleSelected([id]));
+  //   setChangingComponentName(id);
+  // }
 
   function copyComponents() {
     setClipboard(selected);
@@ -623,7 +606,7 @@ export default function Board() {
           if (stageRef.current) {
             pos = getAbsolutePosition(stageRef.current, pos);
           }
-          onAddComponent(name, type, pos.x, pos.y);
+          addComponent(name, type, pos.x, pos.y);
         }}
       />
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
@@ -635,8 +618,7 @@ export default function Board() {
         open={stageDialog.type === DIALOG.CONTEXT_MENU}
         x={lastPointerPosition.window.x}
         y={lastPointerPosition.window.y}
-        onToggleBidirectional={onToggleBidirectional}
-        onAddComponent={onAddComponent}
+        onClose={hideStageDialog}
       />
 
       {/* Canvas */}
