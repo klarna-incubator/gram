@@ -153,42 +153,38 @@ export class SuggestionDataService extends EventEmitter {
         ]);
       }
 
-      let bulkThreats: Promise<QueryResult<any>>[] = [];
-      if (suggestions.threats.length > 0) {
-        bulkThreats = suggestions.threats.map((threat) => {
-          return client.query(threatQuery, [
-            threat.id.val,
-            modelId,
-            threat.status || SuggestionStatus.New,
-            threat.componentId,
-            threat.title,
-            threat.description,
-            threat.reason,
-            threat.source,
-          ]);
-        });
+      for (const threat of suggestions.threats) {
+        // This will get very slow for large threat models
+        // ideally we should be able to batch insert these
+        // Hope to revisit soon.
+        await client.query(threatQuery, [
+          threat.id.val,
+          modelId,
+          threat.status || SuggestionStatus.New,
+          threat.componentId,
+          threat.title,
+          threat.description,
+          threat.reason,
+          threat.source,
+        ]);
       }
 
-      let bulkControls: Promise<QueryResult<any>>[] = [];
-      if (suggestions.controls.length > 0) {
-        bulkControls = suggestions.controls.map((control) =>
-          client.query(controlQuery, [
-            control.id.val,
-            modelId,
-            control.status || SuggestionStatus.New,
-            control.componentId,
-            control.title,
-            control.description,
-            control.reason,
-            JSON.stringify(control.mitigates),
-            control.source,
-          ])
-        );
+      for (const control of suggestions.controls) {
+        await client.query(controlQuery, [
+          control.id.val,
+          modelId,
+          control.status || SuggestionStatus.New,
+          control.componentId,
+          control.title,
+          control.description,
+          control.reason,
+          JSON.stringify(control.mitigates),
+          control.source,
+        ]);
       }
-      const queries = bulkThreats.concat(bulkControls);
-      await Promise.all(queries);
+
       log.debug(
-        `inserted ${bulkThreats.length} suggested threats, ${bulkControls.length} suggested controls.`
+        `inserted ${suggestions.threats.length} suggested threats, ${suggestions.controls.length} suggested controls.`
       );
       this.emit("updated-for", {
         modelId,
