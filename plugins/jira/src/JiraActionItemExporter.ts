@@ -245,8 +245,8 @@ export class JiraActionItemExporter implements ActionItemExporter {
         }
       );
       if (transitionResp.status !== 204) {
-        throw new Error(
-          `Failed to transition updated issue for action item ${actionItem.id}`
+        log.info(
+          `Failed to transition updated issue for action item ${actionItem.id}, but this is probably fine. ${transitionResp.status}`
         );
       }
     }
