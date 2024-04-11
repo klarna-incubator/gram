@@ -1,11 +1,11 @@
+import { randomUUID } from "crypto";
 import { EventEmitter } from "events";
-import pg from "pg";
 import log4js from "log4js";
 import { SuggestionID } from "../../suggestions/models.js";
 import { DataAccessLayer } from "../dal.js";
+import { GramConnectionPool } from "../postgres.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
 import Control from "./Control.js";
-import { GramConnectionPool } from "../postgres.js";
 
 export function convertToControl(row: any) {
   const control = new Control(
@@ -250,5 +250,62 @@ export class ControlDataService extends EventEmitter {
       return convertToControl(res.rows[0]);
     }
     return false;
+  }
+
+  async copyControlsBetweenModels(
+    srcModelId: string,
+    targetModelId: string,
+    uuid: Map<string, string>
+  ): Promise<void> {
+    const controls = await this.list(srcModelId);
+
+    const queryControls = `
+      INSERT INTO controls ( 
+      id, model_id, component_id, title, description, in_place, created_by, suggestion_id, created_at
+      )
+      SELECT $1::uuid as id ,
+            $2::uuid as model_id,
+            $3::uuid as component_id,
+            title,
+            description,
+            in_place,
+            created_by,
+            $4::text as suggestion_id,
+            created_at
+      FROM controls 
+      WHERE id = $5::uuid
+      AND deleted_at IS NULL;
+    `;
+
+    for (const control of controls) {
+      if (!uuid.has(control.componentId)) {
+        // skip, component no longer exists
+        continue;
+      }
+
+      const newUuid = randomUUID();
+
+      try {
+        await this.pool.query(queryControls, [
+          newUuid,
+          uuid.get(srcModelId),
+          uuid.get(control.componentId),
+          control.suggestionId
+            ? uuid.get(control.componentId) +
+              "/" +
+              control.suggestionId.partialId
+            : null,
+          control.id,
+        ]);
+      } catch (ex) {
+        // Can happen in the odd case where suggestion_id is not found
+        this.log.error(
+          `Failed to copy control ${control.id} from model ${srcModelId} to model ${targetModelId}: ${ex}`
+        );
+        continue;
+      }
+
+      uuid.set(control.id!, newUuid);
+    }
   }
 }

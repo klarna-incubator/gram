@@ -1,8 +1,8 @@
 import log4js from "log4js";
+import { EventEmitter } from "node:events";
 import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import { Link, LinkObjectId, LinkObjectType } from "./Link.js";
-import { EventEmitter } from "node:events";
 
 export class LinkDataService extends EventEmitter {
   constructor(private dal: DataAccessLayer) {
@@ -133,5 +133,76 @@ export class LinkDataService extends EventEmitter {
     if (modelId) {
       this.emit("updated-for", { modelId, objectType, objectId });
     }
+  }
+
+  async copyLinksBetweenModels(
+    srcModelId: string,
+    targetModelId: string,
+    uuid: Map<string, string>
+  ): Promise<void> {
+    const queryLinks = `
+      INSERT INTO links ( 
+        id, object_type, object_id, icon, url, label, created_by, created_at, updated_at
+      )
+      SELECT id, 
+            object_type, 
+            $1 as object_id, 
+            icon, 
+            url, 
+            label, 
+            created_by, 
+            created_at, 
+            updated_at              
+      FROM links 
+      WHERE object_type = $3 AND object_id = $2;
+    `;
+
+    const threats = await this.dal.threatService.list(srcModelId);
+
+    for (const threat of threats) {
+      if (!uuid.has(threat.id!)) {
+        continue;
+      }
+      try {
+        await this.pool.query(queryLinks, [
+          uuid.get(threat.id!),
+          threat.id,
+          LinkObjectType.Threat,
+        ]);
+      } catch (ex) {
+        // Can happen in the odd case where suggestion_id is not found
+        this.log.error(
+          `Failed to copy links for threat ${threat.id} from model ${srcModelId} to model ${targetModelId}: ${ex}`
+        );
+        continue;
+      }
+    }
+
+    const controls = await this.dal.controlService.list(srcModelId);
+
+    for (const control of controls) {
+      if (!uuid.has(control.id!)) {
+        continue;
+      }
+      try {
+        await this.pool.query(queryLinks, [
+          uuid.get(control.id!),
+          control.id,
+          LinkObjectType.Control,
+        ]);
+      } catch (ex) {
+        // Can happen in the odd case where suggestion_id is not found
+        this.log.error(
+          `Failed to copy links for control ${control.id} from model ${srcModelId} to model ${targetModelId}: ${ex}`
+        );
+        continue;
+      }
+    }
+
+    await this.pool.query(queryLinks, [
+      uuid.get(srcModelId),
+      srcModelId,
+      LinkObjectType.Model,
+    ]);
   }
 }

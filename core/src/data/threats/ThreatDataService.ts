@@ -11,6 +11,7 @@ import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
 import Threat, { ThreatSeverity } from "./Threat.js";
+import { randomUUID } from "crypto";
 
 export function convertToThreat(row: any): Threat {
   const threat = new Threat(
@@ -297,5 +298,61 @@ export class ThreatDataService extends EventEmitter {
     await Promise.all(promises);
 
     return result;
+  }
+
+  async copyThreatsBetweenModels(
+    srcModelId: string,
+    targetModelId: string,
+    uuid: Map<string, string>
+  ): Promise<void> {
+    const threats = await this.list(srcModelId);
+
+    const queryThreats = `
+        INSERT INTO threats ( 
+        id, model_id, component_id, title, description, created_by, suggestion_id, is_action_item, severity, created_at
+        )
+        SELECT $1::uuid as id,
+              $2::uuid as model_id,
+              $3::uuid as component_id,
+              title,
+              description,
+              created_by,
+              $4::text as suggestion_id,
+              is_action_item,
+              severity,
+              created_at
+        FROM threats 
+        WHERE id = $5::uuid
+        AND deleted_at IS NULL;
+      `;
+
+    for (const threat of threats) {
+      if (!uuid.has(threat.componentId)) {
+        // skip, component no longer exists
+        continue;
+      }
+
+      const newUuid = randomUUID();
+
+      try {
+        await this.pool.query(queryThreats, [
+          newUuid,
+          targetModelId,
+          uuid.get(threat.componentId),
+          threat.suggestionId
+            ? uuid.get(threat.componentId) + "/" + threat.suggestionId.partialId
+            : null,
+          threat.id,
+        ]);
+      } catch (ex) {
+        // Can happen in the odd case where suggestion_id is not found
+        this.log.error(
+          `Failed to copy threat ${threat.id} from model ${srcModelId} to model ${targetModelId}: ${ex}`
+        );
+        continue;
+      }
+
+      uuid.set(threat.id!, newUuid);
+    }
   }
 }

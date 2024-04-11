@@ -1,5 +1,4 @@
 import { EventEmitter } from "events";
-import { Pool, QueryResult } from "pg";
 import log4js from "log4js";
 import {
   EngineSuggestedResult,
@@ -9,15 +8,15 @@ import Control from "../controls/Control.js";
 import { convertToControl } from "../controls/ControlDataService.js";
 import { DataAccessLayer } from "../dal.js";
 import Mitigation from "../mitigations/Mitigation.js";
+import { GramConnectionPool } from "../postgres.js";
 import Threat from "../threats/Threat.js";
 import { convertToThreat } from "../threats/ThreatDataService.js";
 import {
-  isControl,
   SuggestedControl,
   SuggestedThreat,
   SuggestionStatus,
+  isControl,
 } from "./Suggestion.js";
-import { GramConnectionPool } from "../postgres.js";
 
 function convertToSuggestionControl(row: any) {
   const control = new SuggestedControl(
