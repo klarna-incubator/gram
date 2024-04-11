@@ -24,16 +24,28 @@ export interface JiraActionItemExporterConfig extends JiraConfig {
   exportOnReviewApproved: boolean;
 
   /**
-   * (Required) Translates the action item in Gram to the correct fields in your Jira project.
+   * Translates the action item in Gram to the correct fields in your Jira project for
+   * when an action item is being exported to a new issue. This function should return
+   * the fields that are required to create or update an issue in Jira based on the action item.
    *
    * @param dal
    * @param actionItem
    * @returns
    */
-  modelToIssueFields: (
+  issueFieldsTranslator: (
     dal: DataAccessLayer,
-    actionItem: Threat
+    actionItem: Threat,
+    existingIssue?: string
   ) => Promise<JiraIssueFields>;
+
+  /**
+   * Transition to perform when updating an existing issue. If not set, no transition will be performed.
+   * Jira requires that you use a transition when updating an issue, so you must set this if you want to update issues
+   * to a different status.
+   *
+   * Should be the transition id, e.g. "21"
+   */
+  transitionOnUpdateExistingIssue?: string;
 }
 
 export interface JiraIssueFields {
@@ -63,16 +75,14 @@ export interface JiraIssueFields {
     // Jira account id
     id: string;
   };
-
   /**
    * The summary/title of the issue.
    */
   summary?: string;
-
   /**
    * The description of the issue.
    */
-  description?: { type: string; version: number; content: any[] };
+  description: { type: string; version: number; content: any[] };
 
   // Any other fields
   [name: string]: any;
@@ -177,7 +187,6 @@ export class JiraActionItemExporter implements ActionItemExporter {
   }
 
   async updateIssue(existingLink: Link, actionItem: Threat) {
-    const fields = await this.config.modelToIssueFields(this.dal, actionItem);
     const issueId = existingLink.label;
 
     // Ensure issueId is a Jira ticket format (i.e. ABC-123)
@@ -186,23 +195,11 @@ export class JiraActionItemExporter implements ActionItemExporter {
       throw new Error(`Invalid issue id: ${issueId}`);
     }
 
-    if (!fields.description) {
-      fields.description = {
-        type: "doc",
-        version: 1,
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: actionItem.description || "(no description)",
-              },
-            ],
-          },
-        ],
-      };
-    }
+    const fields = await this.config.issueFieldsTranslator(
+      this.dal,
+      actionItem,
+      issueId
+    );
 
     const user = await this.config.auth.user.getValue();
     const token = await this.config.auth.apiToken.getValue();
@@ -223,8 +220,35 @@ export class JiraActionItemExporter implements ActionItemExporter {
 
     if (resp.status !== 204) {
       throw new Error(
-        `Failed to update issue for action item ${actionItem.id}`
+        `Failed to update issue for action item ${
+          actionItem.id
+        }: ${await resp.text()}`
       );
+    }
+
+    if (this.config.transitionOnUpdateExistingIssue) {
+      const transitionResp = await fetch(
+        `${this.host()}/rest/api/3/issue/${issueId}/transitions`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${Buffer.from(`${user}:${token}`).toString(
+              "base64"
+            )}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            transition: { id: this.config.transitionOnUpdateExistingIssue },
+          }),
+          agent: this.agent,
+        }
+      );
+      if (transitionResp.status !== 204) {
+        throw new Error(
+          `Failed to transition updated issue for action item ${actionItem.id}`
+        );
+      }
     }
 
     log.info(`Updated issue ${issueId} for action item ${actionItem.id}`);
@@ -237,7 +261,10 @@ export class JiraActionItemExporter implements ActionItemExporter {
     //   JSON.stringify(await this.getFields(), null, 4)
     // );
 
-    const fields = await this.config.modelToIssueFields(this.dal, actionItem);
+    const fields = await this.config.issueFieldsTranslator(
+      this.dal,
+      actionItem
+    );
 
     if (!fields.reporter) {
       fields.reporter = await this.getReporter(actionItem);
