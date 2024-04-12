@@ -17,7 +17,7 @@ import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
 const log = log4js.getLogger("KlarnaReviewerProvider");
 
 const secdevCalendarLink =
-  "https://calendar.google.com/calendar/u/0/selfsched?sstoken=UUdBOVg2MXlrZ0k1fGRlZmF1bHR8YTQ2YzFlODRlMDk1OGI0YTkxYjY2ZjE5MzljNWQxYzU";
+  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0oEj1Db0QiUHOUTkhdAKV0Z1RcN6eGkZE5euU2lwPsZYe3ZMBCcoYceK9cRnCgmmf_XVMcXfgh";
 
 export const fallbackReviewer: Reviewer = {
   sub: "secure-development@klarna.com",
