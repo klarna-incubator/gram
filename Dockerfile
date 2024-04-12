@@ -1,4 +1,4 @@
-FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202404051655-builder AS builder
+FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202404090611-builder AS builder
 
 USER root
 
@@ -34,7 +34,7 @@ RUN cp api/assets/* assets/
 RUN npm prune --omit=dev
 
 
-FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202404051655
+FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202404090611
 
 USER klarna
 
