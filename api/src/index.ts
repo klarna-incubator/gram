@@ -39,12 +39,12 @@ const listen = async () => {
   const appServer = http.createServer(app);
   // Attach websocket handler
   attachWebsocketServer(appServer, dal);
-  await appServer.listen(appPort);
+  appServer.listen(appPort);
   log.info(`appServer - listening to ${appPort}`);
 
   const controlPort = config.controlPort;
   const controlServer = http.createServer(controlApp);
-  await controlServer.listen(controlPort);
+  controlServer.listen(controlPort);
   log.info(`controlServer - listening to ${controlPort}`);
 
   // Set up async processes (notification sender)

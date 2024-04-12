@@ -146,4 +146,47 @@ export class MitigationDataService extends EventEmitter {
     }
     return false;
   }
+
+  async copyMitigationsBetweenModels(
+    srcModelId: string,
+    targetModelId: string,
+    uuid: Map<string, string>
+  ): Promise<void> {
+    const mitigations = await this.list(srcModelId);
+
+    const queryMitigations = `
+        INSERT INTO mitigations ( 
+        threat_id, control_id, created_by
+        )
+        SELECT $1::uuid as threat_id,
+              $2::uuid as control_id,
+              created_by
+        FROM mitigations
+        WHERE threat_id = $3::uuid
+        AND control_id = $4::uuid
+        AND deleted_at IS NULL;
+      `;
+
+    for (const mit of mitigations) {
+      if (!uuid.has(mit.controlId) || !uuid.has(mit.threatId)) {
+        // skip, component no longer exists
+        continue;
+      }
+
+      try {
+        await this.pool.query(queryMitigations, [
+          uuid.get(mit.threatId),
+          uuid.get(mit.controlId),
+          mit.threatId,
+          mit.controlId,
+        ]);
+      } catch (ex) {
+        // Can happen in the odd case where suggestion_id is not found
+        this.log.error(
+          `Failed to copy mitigation ${mit.controlId}->${mit.threatId} from model ${srcModelId} to model ${targetModelId}: ${ex}`
+        );
+        continue;
+      }
+    }
+  }
 }
