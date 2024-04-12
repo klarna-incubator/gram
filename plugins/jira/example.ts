@@ -1,10 +1,11 @@
 import { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import { ThreatSeverity } from "@gram/core/dist/data/threats/Threat.js";
+import Threat, { ThreatSeverity } from "@gram/core/dist/data/threats/Threat.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
 import {
   JiraActionItemExporterConfig,
   JiraActionItemExporter,
+  JiraIssueFields,
 } from "@gram/jira";
 
 export function createJiraActionItemExporter(
@@ -26,34 +27,41 @@ export function createJiraActionItemExporter(
     /**
      * (Required) Translates the action item in Gram to the correct fields in your Jira project.
      */
-    modelToIssueFields: async (dal, actionItem) => {
-      const controls = await dal.controlService.list(actionItem.modelId);
-      const mitigations = await dal.mitigationService.list(actionItem.modelId);
+    issueFieldsTranslator: async (
+      dal: DataAccessLayer,
+      actionItem: Threat,
+      existingIssue?: string
+    ): Promise<JiraIssueFields> => {
+      const controls = await dal.controlService.listByThreatId(actionItem.id!);
+      const model = await dal.modelService.getById(actionItem.modelId);
+      const componentName =
+        model?.data.components.find((c) => c.id === actionItem.componentId)
+          ?.name || "unknown component";
 
-      const mitigationsForThreat = new Set(
-        mitigations
-          .filter((m) => m.threatId === actionItem.id)
-          .map((m) => m.controlId)
-      );
-
-      const controlsList = controls
-        .filter((control) => mitigationsForThreat.has(control.id!))
-        .map((control) => ({
-          type: "listItem",
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text:
-                    control.title +
-                    (control.description ? " - " + control.description : ""),
-                },
-              ],
-            },
-          ],
-        }));
+      const controlsList = controls.map((control) => ({
+        type: "listItem",
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text:
+                  control.title +
+                  (control.description ? " - " + control.description : "") +
+                  (control.inPlace ? " (in place)" : ""),
+                marks: control.inPlace
+                  ? [
+                      {
+                        type: "strike",
+                      },
+                    ]
+                  : undefined,
+              },
+            ],
+          },
+        ],
+      }));
 
       return {
         project: {
@@ -70,6 +78,15 @@ export function createJiraActionItemExporter(
           type: "doc",
           version: 1,
           content: [
+            {
+              type: "paragraph",
+              content: [
+                {
+                  type: "text",
+                  text: `Threat of "${actionItem.title}" on ${componentName}`,
+                },
+              ],
+            },
             {
               type: "paragraph",
               content: [
