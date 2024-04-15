@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.10.0](https://github.com/klarna-incubator/gram/compare/v4.9.4...v4.10.0) (2024-04-15)
+
+### Bug Fixes
+
+- JiraActionItemExporter should not error if the transition fails - this happens if the object is already in the right status ([d4cb4f7](https://github.com/klarna-incubator/gram/commit/d4cb4f7a1393e21b0523259ba5ee7fb4c204371c))
+
 ## [4.9.4](https://github.com/klarna-incubator/gram/compare/v4.9.3...v4.9.4) (2024-03-21)
 
 ### Bug Fixes

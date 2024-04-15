@@ -6,22 +6,48 @@ import {
   Paper,
 } from "@mui/material";
 import React from "react";
-import { COMPONENT_TYPE, CONTEXT_MENU_VARIANT } from "../../constants";
+import { setMultipleSelected } from "../../../../../actions/model/setSelected";
+import { useAddComponent } from "../../../hooks/useAddComponent";
+import { usePatchDataFlow } from "../../../hooks/usePatchDataFlow";
+import {
+  COMPONENT_TYPE,
+  COMPONENT_SIZE,
+  CONTEXT_MENU_VARIANT,
+} from "../../constants";
 import { ContextMenuWrapper } from "./ContextMenuWrapper";
+import { useDispatch } from "react-redux";
 
 export const ContextMenu = React.memo(
-  (props) => {
-    const {
-      onAddComponent,
-      onToggleBidirectional,
-      open,
-      stageDialog,
-      x,
-      y,
-      children,
-      stage,
-    } = props;
-    const variant = stageDialog.variant;
+  ({ open, stageDialog, x, y, children, stage, onClose }) => {
+    const patchDataFlow = usePatchDataFlow();
+    const addComponent = useAddComponent();
+    const dispatch = useDispatch();
+
+    function onToggleBidirectional(id) {
+      patchDataFlow(id, (data) => ({
+        bidirectional: !data.bidirectional,
+      }));
+      onClose();
+    }
+
+    function onSwitchDirection(id) {
+      patchDataFlow(id, (df) => ({
+        startComponent: df.endComponent,
+        endComponent: df.startComponent,
+      }));
+      onClose();
+    }
+
+    function onAddComponent(name, type) {
+      const id = addComponent(
+        name,
+        type,
+        x - COMPONENT_SIZE.WIDTH / 2,
+        y - COMPONENT_SIZE.HEIGHT / 2
+      );
+      dispatch(setMultipleSelected([id]));
+      onClose();
+    }
 
     return (
       <ContextMenuWrapper
@@ -33,7 +59,8 @@ export const ContextMenu = React.memo(
       >
         <Paper elevation={6} sx={{ width: 220, maxWidth: "100%" }}>
           <MenuList>
-            {variant === CONTEXT_MENU_VARIANT.TOGGLE_BIDIRECTIONAL && [
+            {stageDialog.variant ===
+              CONTEXT_MENU_VARIANT.TOGGLE_BIDIRECTIONAL && [
               <MenuItem
                 key={"toggle_bidirectional"}
                 onClick={() => {
@@ -41,6 +68,14 @@ export const ContextMenu = React.memo(
                 }}
               >
                 <ListItemText>Toggle bidirectional</ListItemText>
+              </MenuItem>,
+              <MenuItem
+                key={"switch_direction"}
+                onClick={() => {
+                  onSwitchDirection(stageDialog.id);
+                }}
+              >
+                <ListItemText>Switch direction</ListItemText>
               </MenuItem>,
               <Divider key={"toggle_bidirectional_divider"} />,
             ]}

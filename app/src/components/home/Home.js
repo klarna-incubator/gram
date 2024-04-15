@@ -1,8 +1,8 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
-import { useGetUserQuery } from "../../api/gram/auth";
 import { useListModelsQuery } from "../../api/gram/model";
+import { useGetUserQuery } from "../../api/gram/user";
 import { ModelList } from "../elements/list/ModelList";
 import { TeamSystemsPageList } from "../systems/TeamSystems/TeamSystemsPageList";
 
@@ -24,8 +24,8 @@ export default function Home() {
         <Grid
           item
           xs={6}
-          maxHeight="80vh"
-          sx={{ display: "flex", flexDirection: "column" }}
+          maxHeight="88vh"
+          sx={{ display: "flex", flexFlow: "column" }}
         >
           <Typography variant="h5">Recent Threat Models</Typography>
           <Typography className="dimmed">
@@ -38,23 +38,41 @@ export default function Home() {
           />
         </Grid>
         {user?.teams?.length > 0 && (
-          <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
+          <Grid
+            item
+            xs={6}
+            maxHeight="88vh"
+            sx={{ display: "flex", flexFlow: "column" }}
+          >
             <Typography variant="h5">Team Systems</Typography>
             <Typography className="dimmed">
               Systems owned by the accountable teams you're in
             </Typography>
-            <Box maxHeight="80vh" sx={{ overflow: "auto", marginTop: "25px" }}>
-              <Stack spacing={2}>
+            <Box
+              sx={{
+                overflow: "auto",
+                marginTop: "25px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Grid
+                container
+                direction="column"
+                spacing={2}
+                style={{ flex: "2" }}
+              >
                 {user?.teams &&
                   user.teams.map((team, i) => (
-                    <TeamSystemsPageList
-                      key={team.id}
-                      teamId={team.id}
-                      listHeight={user.teams.length > 1 ? "350px" : "852px"}
-                      // marginBottom={i !== user.teams.length - 1 ? "15px" : ""}
-                    />
+                    <Grid item xs={6}>
+                      <TeamSystemsPageList
+                        key={team.id}
+                        teamId={team.id}
+                        pagesize={user?.teams.length > 1 ? 5 : 10}
+                      />
+                    </Grid>
                   ))}
-              </Stack>
+              </Grid>
             </Box>
           </Grid>
         )}

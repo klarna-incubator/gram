@@ -10,7 +10,6 @@ import { EventEmitter } from "node:events";
 import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import Model, { ModelData } from "./Model.js";
-import { LinkObjectType } from "../links/Link.js";
 
 function convertToModel(row: any) {
   const model = new Model(row.system_id, row.version, row.created_by);
@@ -20,6 +19,7 @@ function convertToModel(row: any) {
   model.reviewApprovedAt = row.review_approved_at;
   model.reviewStatus = row.review_status;
   model.isTemplate = row.is_template;
+  model.shouldReviewActionItems = row.should_review_action_items;
   if (row.data) model.data = row.data;
   return model;
 }
@@ -127,7 +127,8 @@ export class ModelDataService extends EventEmitter {
         created_by,
         extract(epoch from created_at) as created_at,
         extract(epoch from updated_at) as updated_at,
-        is_template
+        is_template,
+        should_review_action_items
       FROM models
       WHERE id = $1::uuid
       AND deleted_at IS NULL
@@ -173,8 +174,8 @@ export class ModelDataService extends EventEmitter {
     createdFrom: string | null = null
   ): Promise<string> {
     const query = `
-     INSERT INTO models (system_id, version, data, created_by, created_from)
-     VALUES ($1::varchar, $2::varchar, $3::json, $4::varchar, $5)
+     INSERT INTO models (system_id, version, data, created_by, created_from, should_review_action_items)
+     VALUES ($1::varchar, $2::varchar, $3::json, $4::varchar, $5, $6::boolean)
      RETURNING id;
     `;
     const res = await this.pool.query(query, [
@@ -183,6 +184,7 @@ export class ModelDataService extends EventEmitter {
       JSON.stringify(model.data),
       model.createdBy,
       createdFrom,
+      model.shouldReviewActionItems,
     ]);
 
     this.emit("updated-for", { modelId: res.rows[0].id });
@@ -197,13 +199,17 @@ export class ModelDataService extends EventEmitter {
       return null;
     }
 
+    // This map keeps a translation of all old uuids to new uuids
     const uuid: Map<string, string> = new Map();
+
+    // Translate all component ids to new uuids
     targetModel.data.components = srcModel.data.components.map((c) => {
       const newId = randomUUID();
       uuid.set(c.id, newId);
       return { ...c, id: newId };
     });
 
+    // Translate all dataflow component ids to new uuids
     targetModel.data.dataFlows = srcModel.data.dataFlows.map((c) => {
       const newId = randomUUID();
       uuid.set(c.id, newId);
@@ -229,161 +235,56 @@ export class ModelDataService extends EventEmitter {
       };
     });
 
+    const threats = await this.dal.threatService.list(srcModel.id!);
+    const controls = await this.dal.controlService.list(srcModel.id!);
+
+    // If any of the threats are action items, we should mark the new model as needing review
+    // this will make the "Revisit Action Items" popup appear when the model is opened
+    targetModel.shouldReviewActionItems =
+      threats.filter((t) => t.isActionItem).length > 0;
+
+    // Create the new threat model object
     const targetModelId = await this.create(targetModel, srcModelId);
     uuid.set(srcModel.id!, targetModelId);
 
+    // Now we copy over all attached data models
+
+    // Suggestions first since threats and controls might refer to them
     await this.dal.suggestionService.copySuggestions(
       srcModel.id!,
       targetModelId,
       uuid
     );
 
-    const threats = await this.dal.threatService.list(srcModel.id!);
-    const controls = await this.dal.controlService.list(srcModel.id!);
-    const mitigations = await this.dal.mitigationService.list(srcModel.id!);
+    await this.dal.threatService.copyThreatsBetweenModels(
+      srcModelId,
+      targetModelId,
+      uuid
+    );
 
-    const queryThreats = `
-        INSERT INTO threats ( 
-        id, model_id, component_id, title, description, created_by, suggestion_id, is_action_item, severity, created_at
-        )
-        SELECT $1::uuid as id,
-              $2::uuid as model_id,
-              $3::uuid as component_id,
-              title,
-              description,
-              created_by,
-              $4::text as suggestion_id,
-              is_action_item,
-              severity,
-              created_at
-        FROM threats 
-        WHERE id = $5::uuid
-        AND deleted_at IS NULL;
-      `;
+    await this.dal.controlService.copyControlsBetweenModels(
+      srcModelId,
+      targetModelId,
+      uuid
+    );
 
-    const queryLinks = `
-        INSERT INTO links ( 
-          id, object_type, object_id, icon, url, label, created_by, created_at, updated_at
-        )
-        SELECT id, 
-               object_type, 
-               $1 as object_id, 
-               icon, 
-               url, 
-               label, 
-               created_by, 
-               created_at, 
-               updated_at              
-        FROM links 
-        WHERE object_type = $3 AND object_id = $2;        
-      `;
+    // Mitigations require threat/control
+    await this.dal.mitigationService.copyMitigationsBetweenModels(
+      srcModelId,
+      targetModelId,
+      uuid
+    );
 
-    const queryControls = `
-        INSERT INTO controls ( 
-        id, model_id, component_id, title, description, in_place, created_by, suggestion_id, created_at
-        )
-        SELECT $1::uuid as id ,
-              $2::uuid as model_id,
-              $3::uuid as component_id,
-              title,
-              description,
-              in_place,
-              created_by,
-              $4::text as suggestion_id,
-              created_at
-        FROM controls 
-        WHERE id = $5::uuid
-        AND deleted_at IS NULL;
-      `;
+    // Links are attached to model, threat and control
+    await this.dal.linkService.copyLinksBetweenModels(
+      srcModelId,
+      targetModelId,
+      uuid
+    );
 
-    const queryMitigations = `
-        INSERT INTO mitigations ( 
-        threat_id, control_id, created_by
-        )
-        SELECT $1::uuid as threat_id,
-              $2::uuid as control_id,
-              created_by
-        FROM mitigations
-        WHERE threat_id = $3::uuid
-        AND control_id = $4::uuid
-        AND deleted_at IS NULL;
-      `;
+    this.emit("updated-for", { modelId: uuid.get(srcModelId) });
 
-    const anyInvalidUuid = (...uuids: string[]) =>
-      uuids.reduce((p: boolean, c) => p || !uuid.has(c), false);
-
-    await this.pool.runTransaction(async (client) => {
-      for (const threat of threats) {
-        uuid.set(threat.id!, randomUUID());
-        if (anyInvalidUuid(threat.id!, threat.componentId)) {
-          // skip, component or threat no longer exists
-          continue;
-        }
-        await client.query(queryThreats, [
-          uuid.get(threat.id!),
-          uuid.get(srcModel.id!),
-          uuid.get(threat.componentId),
-          threat.suggestionId
-            ? uuid.get(threat.componentId) + "/" + threat.suggestionId.partialId
-            : null,
-          threat.id,
-        ]);
-
-        await client.query(queryLinks, [
-          uuid.get(threat.id!),
-          threat.id,
-          LinkObjectType.Threat,
-        ]);
-      }
-
-      for (const control of controls) {
-        uuid.set(control.id!, randomUUID());
-        if (anyInvalidUuid(control.id!, control.componentId)) {
-          // skip, component or threat no longer exists
-          continue;
-        }
-        await client.query(queryControls, [
-          uuid.get(control.id!),
-          uuid.get(srcModel.id!),
-          uuid.get(control.componentId),
-          control.suggestionId
-            ? uuid.get(control.componentId) +
-              "/" +
-              control.suggestionId.partialId
-            : null,
-          control.id,
-        ]);
-
-        await client.query(queryLinks, [
-          uuid.get(control.id!),
-          control.id,
-          LinkObjectType.Control,
-        ]);
-      }
-
-      for (const mitigation of mitigations) {
-        if (anyInvalidUuid(mitigation.threatId, mitigation.controlId)) {
-          // skip, component or threat no longer exists
-          continue;
-        }
-        await client.query(queryMitigations, [
-          uuid.get(mitigation.threatId),
-          uuid.get(mitigation.controlId),
-          mitigation.threatId,
-          mitigation.controlId,
-        ]);
-      }
-
-      await client.query(queryLinks, [
-        uuid.get(srcModel.id!),
-        srcModel.id,
-        LinkObjectType.Model,
-      ]);
-    });
-
-    this.emit("updated-for", { modelId: uuid.get(srcModel.id!) });
-
-    return uuid.get(srcModel.id!) as string;
+    return uuid.get(srcModelId) as string;
   }
 
   /**
@@ -488,10 +389,31 @@ export class ModelDataService extends EventEmitter {
     return res.rowCount > 0;
   }
 
+  async setSystemId(modelId: string, systemId: string | null) {
+    const res = await this.pool.query(
+      "UPDATE models SET system_id = $2::varchar WHERE id = $1::uuid",
+      [modelId, systemId]
+    );
+    this.emit("updated-for", { modelId });
+    return res.rowCount === 1;
+  }
+
   async setTemplate(modelId: string, isTemplate: boolean) {
     const res = await this.pool.query(
       "UPDATE models SET is_template = $2::boolean WHERE id = $1::uuid",
       [modelId, isTemplate]
+    );
+    this.emit("updated-for", { modelId });
+    return res.rowCount === 1;
+  }
+
+  async setShouldReviewActionItems(
+    modelId: string,
+    shouldReviewActionItems: boolean
+  ) {
+    const res = await this.pool.query(
+      "UPDATE models SET should_review_action_items = $2::boolean WHERE id = $1::uuid",
+      [modelId, shouldReviewActionItems]
     );
     this.emit("updated-for", { modelId });
     return res.rowCount === 1;

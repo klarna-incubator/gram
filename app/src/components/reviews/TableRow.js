@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
-import { useGetUserQuery } from "../../api/gram/auth";
+import { useGetUserQuery } from "../../api/gram/user";
 import { useChangeReviewerMutation } from "../../api/gram/review";
 import { modalActions } from "../../redux/modalSlice";
 import { DateLabel } from "../elements/DateLabel";

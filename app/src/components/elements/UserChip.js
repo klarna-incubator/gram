@@ -1,8 +1,25 @@
 import { Chip, IconButton } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import ChatIcon from "@mui/icons-material/Chat";
+import { useGetOtherUserByIdQuery } from "../../api/gram/user";
 
-export function UserChip({ user }) {
+export function UserChip({ user, userId, ...props }) {
+  if (user) {
+    return <UserChipWithUser user={user} {...props} />;
+  }
+  if (userId) {
+    return <UserChipWithId userId={userId} {...props} />;
+  }
+  return null;
+}
+
+function UserChipWithId({ userId, ...props }) {
+  const { data: user } = useGetOtherUserByIdQuery({ userId });
+
+  return <UserChipWithUser user={user} {...props} />;
+}
+
+function UserChipWithUser({ user, ...props }) {
   return (
     <Chip
       size="small"
@@ -10,7 +27,7 @@ export function UserChip({ user }) {
         color: (theme) => theme.palette.review.text,
       }}
       variant="outlined"
-      label={user.name}
+      label={user?.name}
       icon={
         <>
           {user?.slackUrl && (
@@ -37,6 +54,7 @@ export function UserChip({ user }) {
           )}
         </>
       }
+      {...props}
     />
   );
 }

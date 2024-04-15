@@ -10,7 +10,7 @@ resource "random_password" "initial_password" {
 
 resource "aws_db_subnet_group" "default" {
   name       = "main"
-  subnet_ids = data.aws_subnet_ids.private_subnets.ids
+  subnet_ids = data.aws_subnets.private_subnets.ids
 
   tags = {
     Name     = "Gram DB subnet group"
@@ -22,7 +22,7 @@ resource "aws_db_subnet_group" "default" {
 resource "aws_rds_cluster" "encrypted_db_cluster" {
   cluster_identifier                  = "gram-production-database-cluster"
   engine                              = "aurora-postgresql"
-  engine_version                      = "14.5"
+  engine_version                      = "16.1"
 
   availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   database_name                       = "gram"
@@ -40,6 +40,9 @@ resource "aws_rds_cluster" "encrypted_db_cluster" {
     OhPoliceNamespace = "gram"
     "kep:kbsd:enableDisasterRecoveryBackup" = "true"
   }
+
+  allow_major_version_upgrade = true
+  apply_immediately = false
 }
 
 resource "aws_db_instance" "encrypted_db" {
@@ -47,11 +50,11 @@ resource "aws_db_instance" "encrypted_db" {
   storage_type      = "aurora"
   engine            = "aurora-postgresql"
     
-  instance_class    = "db.t4g.medium"
-  name              = "gram"
+  instance_class    = "db.t4g.medium"  
   username          = "gram"
   # password                = random_password.initial_password.result
-  parameter_group_name    = "default.aurora-postgresql14"
+  # parameter_group_name    = "default.aurora-postgresql16"
+  
   db_subnet_group_name    = aws_db_subnet_group.default.id
   identifier              = "gram-production-database"
   

@@ -1,11 +1,11 @@
+import { randomUUID } from "crypto";
 import { EventEmitter } from "events";
-import pg from "pg";
 import log4js from "log4js";
 import { SuggestionID } from "../../suggestions/models.js";
 import { DataAccessLayer } from "../dal.js";
+import { GramConnectionPool } from "../postgres.js";
 import { SuggestionStatus } from "../suggestions/Suggestion.js";
 import Control from "./Control.js";
-import { GramConnectionPool } from "../postgres.js";
 
 export function convertToControl(row: any) {
   const control = new Control(
@@ -34,10 +34,8 @@ export class ControlDataService extends EventEmitter {
   log: any;
   /**
    * Create a control object of specified id
-   * @param {Control} control - Control creation object
-   * @returns {string}
    */
-  async create(control: Control) {
+  async create(control: Control): Promise<string> {
     const query = `
       INSERT INTO controls (
         title, in_place, model_id, component_id, created_by, suggestion_id, description
@@ -73,10 +71,8 @@ export class ControlDataService extends EventEmitter {
 
   /**
    * Retrieve a control object
-   * @param {string} id - Control identifier
-   * @returns {Control}
    */
-  async getById(id: string) {
+  async getById(id: string): Promise<Control | null> {
     const query = `
       SELECT
         id,
@@ -105,10 +101,8 @@ export class ControlDataService extends EventEmitter {
 
   /**
    * Retrieve the controls objects
-   * @param {string} modelId - Model identifier
-   * @returns {Control}
    */
-  async list(modelId: string) {
+  async list(modelId: string): Promise<Control[]> {
     const query = `
       SELECT
         id,
@@ -135,11 +129,35 @@ export class ControlDataService extends EventEmitter {
     return res.rows.map((record) => convertToControl(record));
   }
 
+  async listByThreatId(threatId: string): Promise<Control[]> {
+    const query = `
+      SELECT
+        c.id,
+        c.title,
+        c.description,
+        c.in_place,
+        c.model_id,
+        c.component_id,
+        c.suggestion_id,
+        c.created_by,
+        extract(epoch from c.created_at) as created_at,
+        extract(epoch from c.updated_at) as updated_at
+      FROM controls c
+      JOIN mitigations m ON c.id = m.control_id
+      WHERE m.threat_id = $1::uuid
+      ORDER BY c.created_at DESC
+    `;
+    const res = await this.pool.query(query, [threatId]);
+
+    if (res.rows.length === 0) {
+      return [];
+    }
+
+    return res.rows.map((record) => convertToControl(record));
+  }
+
   /**
    * Delete control by model id and component id
-   * @param modelId
-   * @param componentIds
-   * @returns
    */
   async deleteByComponentId(modelId: string, componentIds: string[]) {
     const ids = (await this.list(modelId))
@@ -150,9 +168,8 @@ export class ControlDataService extends EventEmitter {
 
   /**
    * Delete control by id(s)
-   * @param id
    */
-  async delete(modelId: string, ...ids: string[]) {
+  async delete(modelId: string, ...ids: string[]): Promise<boolean> {
     if (!ids || ids.length === 0) {
       return false;
     }
@@ -204,14 +221,12 @@ export class ControlDataService extends EventEmitter {
 
   /**
    * Update control fields by id
-   * @param id
-   * @param fields
    */
   async update(
     modelId: string,
     id: string,
     fields: { inPlace?: boolean; title?: string; description?: string }
-  ) {
+  ): Promise<Control | boolean> {
     const fieldStatements = [];
     const params = [];
     if (fields.inPlace !== undefined) {
@@ -250,5 +265,62 @@ export class ControlDataService extends EventEmitter {
       return convertToControl(res.rows[0]);
     }
     return false;
+  }
+
+  async copyControlsBetweenModels(
+    srcModelId: string,
+    targetModelId: string,
+    uuid: Map<string, string>
+  ): Promise<void> {
+    const controls = await this.list(srcModelId);
+
+    const queryControls = `
+      INSERT INTO controls ( 
+      id, model_id, component_id, title, description, in_place, created_by, suggestion_id, created_at
+      )
+      SELECT $1::uuid as id ,
+            $2::uuid as model_id,
+            $3::uuid as component_id,
+            title,
+            description,
+            in_place,
+            created_by,
+            $4::text as suggestion_id,
+            created_at
+      FROM controls 
+      WHERE id = $5::uuid
+      AND deleted_at IS NULL;
+    `;
+
+    for (const control of controls) {
+      if (!uuid.has(control.componentId)) {
+        // skip, component no longer exists
+        continue;
+      }
+
+      const newUuid = randomUUID();
+
+      try {
+        await this.pool.query(queryControls, [
+          newUuid,
+          uuid.get(srcModelId),
+          uuid.get(control.componentId),
+          control.suggestionId
+            ? uuid.get(control.componentId) +
+              "/" +
+              control.suggestionId.partialId
+            : null,
+          control.id,
+        ]);
+      } catch (ex) {
+        // Can happen in the odd case where suggestion_id is not found
+        this.log.error(
+          `Failed to copy control ${control.id} from model ${srcModelId} to model ${targetModelId}: ${ex}`
+        );
+        continue;
+      }
+
+      uuid.set(control.id!, newUuid);
+    }
   }
 }

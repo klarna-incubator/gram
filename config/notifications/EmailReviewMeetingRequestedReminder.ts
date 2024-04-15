@@ -27,7 +27,7 @@ You can access and review the threat model here: {{model.link}}
 
 {{#if reviewIsSecDev}}
 Please schedule a session by selecting a slot on this calendar: 
-https://calendar.google.com/calendar/selfsched?sstoken=UUdBOVg2MXlrZ0k1fGRlZmF1bHR8YTQ2YzFlODRlMDk1OGI0YTkxYjY2ZjE5MzljNWQxYzU  
+https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0oEj1Db0QiUHOUTkhdAKV0Z1RcN6eGkZE5euU2lwPsZYe3ZMBCcoYceK9cRnCgmmf_XVMcXfgh  
 {{/if}}
 
 ---

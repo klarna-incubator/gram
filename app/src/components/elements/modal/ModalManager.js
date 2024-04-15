@@ -12,6 +12,7 @@ import { Tutorial } from "../../model/tutorial/Tutorial";
 import { CancelReview } from "../../reviews/modals/CancelReview";
 import { DeclineReview } from "../../reviews/modals/DeclineReview";
 import { ExportActionItem } from "../../model/modals/ExportActionItem";
+import { RevisitActionItems } from "../../model/modals/RevisitActionItems";
 
 export const MODALS = {
   ChangeReviewer,
@@ -26,6 +27,7 @@ export const MODALS = {
   CancelReview,
   AddLink,
   ExportActionItem,
+  RevisitActionItems,
 };
 
 export function ModalManager() {
