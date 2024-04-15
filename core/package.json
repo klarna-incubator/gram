@@ -2,7 +2,7 @@
   "name": "@gram/core",
   "private": true,
   "type": "module",
-  "version": "4.9.4",
+  "version": "4.10.0",
   "description": "Core library for Gram backend stuff",
   "scripts": {
     "clean": "rimraf ./dist",
