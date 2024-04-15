@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.10.0](https://github.com/klarna/gram/compare/v4.9.4...v4.10.0) (2024-04-15)
+
+### Bug Fixes
+
+- faulty user lookup by id ([adc9841](https://github.com/klarna/gram/commit/adc9841afeed5f072698af69cd3280d68fff881c))
+
+### Features
+
+- add ability for admins to change system-id on threat model. Creator of the threat model is now also displayed as the owner in case the threat model is not connected to a system. ([f91bd80](https://github.com/klarna/gram/commit/f91bd80aa3e381bdcf7d4f09c5b813646cab1494))
+- show popup after importing a threat model to remind users to review the action items marked in a previous threat model. ([327935a](https://github.com/klarna/gram/commit/327935a7b024caa08dd0a7b93fa793113e708194))
+
 ## [4.9.4](https://github.com/klarna/gram/compare/v4.9.3...v4.9.4) (2024-03-21)
 
 **Note:** Version bump only for package @gram/api

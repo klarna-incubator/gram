@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.10.0](https://github.com/klarna-incubator/gram/compare/v4.9.4...v4.10.0) (2024-04-15)
+
+### Bug Fixes
+
+- deadlock on transaction inserting suggestions in parallel ([62e9099](https://github.com/klarna-incubator/gram/commit/62e9099777284d4e1d31c182b599f0c4041dff46))
+- faulty user lookup by id ([adc9841](https://github.com/klarna-incubator/gram/commit/adc9841afeed5f072698af69cd3280d68fff881c))
+- Importing/Copying a threat model should no longer crash on indiviual threats/controls failing to copy ([d9e8871](https://github.com/klarna-incubator/gram/commit/d9e88711c3d24f3fa638b95b7a26d33e1400d01c))
+- JiraActionItemExporter should not error if the transition fails - this happens if the object is already in the right status ([d4cb4f7](https://github.com/klarna-incubator/gram/commit/d4cb4f7a1393e21b0523259ba5ee7fb4c204371c))
+- small css fix on team name on system page ([d164b0a](https://github.com/klarna-incubator/gram/commit/d164b0a967d70d233eed12be1f93c0af8d50bfb1))
+- tidy up the Home page and model lists ([6a0b8fd](https://github.com/klarna-incubator/gram/commit/6a0b8fde040841bdbf28168767c4c10d39dbd6ef))
+
+### Features
+
+- add ability for admins to change system-id on threat model. Creator of the threat model is now also displayed as the owner in case the threat model is not connected to a system. ([f91bd80](https://github.com/klarna-incubator/gram/commit/f91bd80aa3e381bdcf7d4f09c5b813646cab1494))
+- add toggle to switch direction of dataflow. Fixes [#97](https://github.com/klarna-incubator/gram/issues/97) ([db5db24](https://github.com/klarna-incubator/gram/commit/db5db24c6db95b65533b39a667751b868e781ac6))
+- show popup after importing a threat model to remind users to review the action items marked in a previous threat model. ([327935a](https://github.com/klarna-incubator/gram/commit/327935a7b024caa08dd0a7b93fa793113e708194))
+
 ## [4.9.4](https://github.com/klarna-incubator/gram/compare/v4.9.3...v4.9.4) (2024-03-21)
 
 ### Bug Fixes

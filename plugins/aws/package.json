@@ -6,7 +6,7 @@
   "files": [
     "dist"
   ],
-  "version": "4.9.4",
+  "version": "4.10.0",
   "description": "AWS icons for Gram",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.9.4",
+    "@gram/core": "^4.10.0",
     "path": "^0.12.7"
   },
   "private": true,
