@@ -17,11 +17,7 @@ import Loading from "../../loading";
 import "../Systems.css";
 import { useGetTeamQuery } from "../../../api/gram/team";
 
-export function TeamSystemsPageList({
-  teamId,
-  pagesize = 10,
-  maxHeight = "500px",
-}) {
+export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
   const [page, setPage] = useState(0);
 
   const opts = { filter: "team", teamId, pagesize, page };
@@ -45,7 +41,7 @@ export function TeamSystemsPageList({
           <Link to={`/team/${teamId}`}>{team?.name}</Link>
         </Typography>
 
-        <List sx={{ maxHeight, overflow: "auto" }}>
+        <List sx={{ overflow: "auto" }}>
           {isLoading || isFetching ? (
             <Loading />
           ) : systems ? (
@@ -59,9 +55,7 @@ export function TeamSystemsPageList({
                   <ListItemText primary={system.displayName} />
                   <SystemComplianceBadge compliance={system.compliance} />
                 </ListItemButton>
-                {i < teamSystems.systems.length - 1 && (
-                  <Divider component="li" />
-                )}
+                {i < systems.length - 1 && <Divider component="li" />}
               </>
             ))
           ) : (
