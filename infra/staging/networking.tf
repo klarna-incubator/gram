@@ -5,8 +5,13 @@ data "aws_vpc" "klarna_vpc" {
   }
 }
 
-data "aws_subnet_ids" "private_subnets" {
-  vpc_id = data.aws_vpc.klarna_vpc.id
+data "aws_subnets" "private_subnets" {
+  filter {
+    name = "vpc-id"
+    values = [data.aws_vpc.klarna_vpc.id]
+
+  }
+  
   filter {
     name   = "tag:Name"
     values = ["Private subnet 1A", "Private subnet 2A", "Private subnet 3A"]
