@@ -14,7 +14,9 @@ RDSHOST=gram-staging-database-cluster.cluster-ctfvbr0ed3wr.eu-west-1.rds.amazona
 USERNAME=gram.IdP_admin
 DBNAME=gram
 
-curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem --output rds-ca-2019-root.pem
+if [ ! -f aws-global-bundle.pem ]; then
+  curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem --output aws-global-bundle.pem
+fi
 
 # connect to PostgreSQL via IAM DB auth
 PGPASSWORD="$( aws rds generate-db-auth-token  \
@@ -23,5 +25,5 @@ PGPASSWORD="$( aws rds generate-db-auth-token  \
   --username $USERNAME \
   --region $REGION)"
 
-docker run -v "$(pwd)/rds-ca-2019-root.pem:/rds-ca-2019-root.pem" -it --rm postgres psql "sslmode=verify-full sslrootcert=/rds-ca-2019-root.pem host=$RDSHOST dbname=$DBNAME user=$USERNAME password=$PGPASSWORD"
-rm rds-ca-2019-root.pem
+docker run -v "$(pwd)/aws-global-bundle.pem:/aws-global-bundle.pem" -it --rm postgres psql "sslmode=verify-full sslrootcert=/aws-global-bundle.pem host=$RDSHOST dbname=$DBNAME user=$USERNAME password=$PGPASSWORD"
+
