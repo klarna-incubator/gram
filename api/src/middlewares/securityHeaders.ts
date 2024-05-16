@@ -7,6 +7,7 @@ const helmet = require("helmet");
 export function securityHeaders() {
   const allowedImgs: string[] = config.allowedSrc.img;
   const allowedConnects: string[] = config.allowedSrc.connect;
+  const allowedAncestors: string[] = config.allowedSrc.frameAncestors;
 
   return helmet({
     contentSecurityPolicy: {
@@ -18,6 +19,8 @@ export function securityHeaders() {
         "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
         "font-src": ["https://fonts.gstatic.com"],
         "img-src": ["'self'", "data:", ...allowedImgs],
+        "frame-ancestors": ["'self'", ...allowedAncestors],
+        "frame-src": ["'self'"],
       },
     },
     // allows loading resources from other domains, e.g. github avatar, without explicit CORS headers set on the other domains' end https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy

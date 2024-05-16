@@ -5,6 +5,7 @@ import { useListModelsQuery } from "../../api/gram/model";
 import { useGetUserQuery } from "../../api/gram/user";
 import { ModelList } from "../elements/list/ModelList";
 import { TeamSystemsPageList } from "../systems/TeamSystems/TeamSystemsPageList";
+import { CenteredPage } from "../elements/CenteredPage";
 
 export default function Home() {
   const { data: user } = useGetUserQuery();
@@ -19,7 +20,7 @@ export default function Home() {
   });
 
   return (
-    <div className="container">
+    <CenteredPage>
       <Grid container spacing={2} alignItems="stretch">
         <Grid
           item
@@ -77,6 +78,6 @@ export default function Home() {
           </Grid>
         )}
       </Grid>
-    </div>
+    </CenteredPage>
   );
 }

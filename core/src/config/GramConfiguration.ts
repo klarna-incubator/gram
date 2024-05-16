@@ -108,6 +108,7 @@ export interface GramConfiguration {
   allowedSrc: {
     img: string[];
     connect: string[];
+    frameAncestors: string[];
   };
 
   /**

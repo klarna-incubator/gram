@@ -13,9 +13,14 @@ import {
 
 import { AddComponentButton } from "./AddComponentButton";
 import { DownloadImageButton } from "./DownloadImageButton";
+import { useReadOnly } from "../../../../hooks/useReadOnly";
+import { useIsFramed } from "../../../../hooks/useIsFramed";
 
 export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
   const dispatch = useDispatch();
+
+  const readOnly = useReadOnly();
+  const isFramed = useIsFramed();
 
   let { cursorMode } = useSelector(({ model }) => ({
     cursorMode: model.cursorType,
@@ -32,29 +37,31 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
         border: (theme) => `1px solid ${theme.palette.divider}`,
       }}
     >
-      <ToggleButtonGroup
-        value={cursorMode}
-        exclusive
-        onChange={(_, mode) => dispatch(changeCursorMode(mode))}
-        aria-label="cursor mode"
-      >
-        <ToggleButton value={CURSOR_POINTER} aria-label="pointer mode">
-          <Tooltip
-            title={"Toggle pointer mode - allows you to select components"}
-          >
-            <HighlightAltIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton value={CURSOR_PAN} aria-label="pan mode">
-          <Tooltip
-            title={
-              "Toggle pan mode - allows you move the diagram. Hint: you can also hold space"
-            }
-          >
-            <PanToolIcon />
-          </Tooltip>
-        </ToggleButton>
-      </ToggleButtonGroup>
+      {!isFramed && (
+        <ToggleButtonGroup
+          value={cursorMode}
+          exclusive
+          onChange={(_, mode) => dispatch(changeCursorMode(mode))}
+          aria-label="cursor mode"
+        >
+          <ToggleButton value={CURSOR_POINTER} aria-label="pointer mode">
+            <Tooltip
+              title={"Toggle pointer mode - allows you to select components"}
+            >
+              <HighlightAltIcon />
+            </Tooltip>
+          </ToggleButton>
+          <ToggleButton value={CURSOR_PAN} aria-label="pan mode">
+            <Tooltip
+              title={
+                "Toggle pan mode - allows you move the diagram. Hint: you can also hold space"
+              }
+            >
+              <PanToolIcon />
+            </Tooltip>
+          </ToggleButton>
+        </ToggleButtonGroup>
+      )}
       <ToggleButtonGroup>
         <ToggleButton value="zoom-in" onClick={() => zoomInCenter(-1)}>
           <ZoomInIcon />
@@ -63,7 +70,7 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
           <ZoomOutIcon />
         </ToggleButton>
         <DownloadImageButton />
-        <AddComponentButton onAddComponent={onAddComponent} />
+        {!readOnly && <AddComponentButton onAddComponent={onAddComponent} />}
       </ToggleButtonGroup>
     </Paper>
   );

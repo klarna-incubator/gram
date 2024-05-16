@@ -6,8 +6,7 @@ exports[`Search renders Search 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="container"
-        id="systems"
+        class="page bump MuiBox-root css-0"
       >
         <div
           class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1b048bk-MuiPaper-root-MuiCard-root"
@@ -37,8 +36,7 @@ exports[`Search renders Search 1`] = `
   </body>,
   "container": <div>
     <div
-      class="container"
-      id="systems"
+      class="page bump MuiBox-root css-0"
     >
       <div
         class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1b048bk-MuiPaper-root-MuiCard-root"
