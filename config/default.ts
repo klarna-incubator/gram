@@ -77,6 +77,7 @@ export const defaultConfig: GramConfiguration = {
   allowedSrc: {
     img: ["https:"],
     connect: [],
+    frameAncestors: [],
   },
 
   menu: [
