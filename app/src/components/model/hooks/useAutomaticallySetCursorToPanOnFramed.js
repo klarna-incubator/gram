@@ -17,5 +17,5 @@ export function useAutomaticallySetCursorToPanOnFramed() {
 
     // If the app is framed, then the cursor should be set to pan mode as the diagram is simplified
     dispatch(changeCursorMode(CURSOR_PAN));
-  }, [isFramed]);
+  }, [dispatch, isFramed]);
 }
