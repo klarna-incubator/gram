@@ -12,6 +12,7 @@ import { ModelList } from "../elements/list/ModelList";
 import Loading from "../loading";
 import { PERMISSIONS } from "../model/constants";
 import "./System.css";
+import { CenteredPage } from "../elements/CenteredPage";
 
 export function System() {
   const match = useMatch("/system/:id");
@@ -52,7 +53,7 @@ export function System() {
   }
 
   return (
-    <div className="container">
+    <CenteredPage>
       <Grid container>
         <Grid item xs={6}>
           <Typography variant={"h5"}>
@@ -89,6 +90,6 @@ export function System() {
           />
         </Grid>
       </Grid>
-    </div>
+    </CenteredPage>
   );
 }

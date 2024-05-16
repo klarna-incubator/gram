@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useListModelsQuery } from "../../../api/gram/model";
 import { useTitle } from "../../../hooks/useTitle";
 import { ModelList } from "../../elements/list/ModelList";
+import { CenteredPage } from "../../elements/CenteredPage";
 
 export default function UserModels() {
   const {
@@ -15,7 +16,7 @@ export default function UserModels() {
   useTitle("My Models");
 
   return (
-    <div className="container">
+    <CenteredPage>
       <Grid container>
         <Grid item xs={6}>
           <Typography variant={"h5"}>Your Models</Typography>
@@ -44,6 +45,6 @@ export default function UserModels() {
           />
         </Grid>
       </Grid>
-    </div>
+    </CenteredPage>
   );
 }

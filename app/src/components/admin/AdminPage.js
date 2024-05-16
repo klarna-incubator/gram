@@ -4,6 +4,7 @@ import { useSetRolesMutation } from "../../api/gram/admin";
 import { useGetUserQuery } from "../../api/gram/user";
 import { useGetTemplatesQuery } from "../../api/gram/model";
 import "./AdminPage.css";
+import { CenteredPage } from "../elements/CenteredPage";
 
 export default function AdminPage() {
   const { data: user } = useGetUserQuery();
@@ -12,7 +13,7 @@ export default function AdminPage() {
   const [setRoles] = useSetRolesMutation();
 
   return (
-    <div className="container">
+    <CenteredPage>
       <h1 id="intro" className="with-bottom-padding">
         Admin{" "}
         {user?.roles.includes("admin")
@@ -59,6 +60,6 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
-    </div>
+    </CenteredPage>
   );
 }

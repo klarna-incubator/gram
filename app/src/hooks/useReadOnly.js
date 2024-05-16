@@ -1,6 +1,8 @@
 import { PERMISSIONS } from "../components/model/constants";
 import { useHasModelPermissions } from "./useHasModelPermissions";
+import { useIsFramed } from "./useIsFramed";
 
 export function useReadOnly() {
-  return !useHasModelPermissions(PERMISSIONS.WRITE);
+  const isFramed = useIsFramed();
+  return !useHasModelPermissions(PERMISSIONS.WRITE) || isFramed;
 }

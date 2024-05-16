@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
 import { useListSystemsQuery } from "../../../api/gram/system";
 import { SystemComplianceBadge } from "../../elements/SystemComplianceBadge";
 import Loading from "../../loading";
-import "../Systems.css";
 import { useGetTeamQuery } from "../../../api/gram/team";
 
 export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
@@ -37,8 +36,22 @@ export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5">
-          <Link to={`/team/${teamId}`}>{team?.name}</Link>
+        <Typography
+          variant="h5"
+          sx={{
+            color: "#eee",
+            textDecoration: "none",
+          }}
+        >
+          <Link
+            to={`/team/${teamId}`}
+            style={{
+              color: "#eee",
+              textDecoration: "none",
+            }}
+          >
+            {team?.name}
+          </Link>
         </Typography>
 
         <List sx={{ overflow: "auto" }}>

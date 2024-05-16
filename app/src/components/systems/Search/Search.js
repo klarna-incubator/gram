@@ -12,7 +12,8 @@ import { uniq } from "lodash";
 import { useListSystemsQuery } from "../../../api/gram/system";
 import { SystemComplianceBadge } from "../../elements/SystemComplianceBadge";
 import Loading from "../../loading";
-import "../Systems.css";
+
+import { CenteredPage } from "../../elements/CenteredPage";
 
 export default function Search() {
   const { search } = useLocation();
@@ -25,7 +26,7 @@ export default function Search() {
   });
 
   return (
-    <div id="systems" className="container">
+    <CenteredPage>
       <Card sx={{ maxWidth: "md", width: "33%", margin: "25px" }}>
         <CardContent>
           <Typography variant="h5">
@@ -53,6 +54,6 @@ export default function Search() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </CenteredPage>
   );
 }

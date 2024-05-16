@@ -1,10 +1,4 @@
-import {
-  Box,
-  CssBaseline,
-  darkScrollbar,
-  Toolbar,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, CssBaseline, darkScrollbar, useMediaQuery } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,8 +6,8 @@ import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { getAuthToken } from "./api/gram/util/authToken";
 import "./App.css";
 import AdminPage from "./components/admin/AdminPage";
-import { ModalManager } from "./components/elements/modal/ModalManager";
 import { ErrorPage } from "./components/elements/ErrorPage";
+import { ModalManager } from "./components/elements/modal/ModalManager";
 import Home from "./components/home/Home";
 import { Login } from "./components/login/Login";
 import { LoginCallback } from "./components/login/LoginCallback";
@@ -25,7 +19,9 @@ import { System } from "./components/system/System";
 import Search from "./components/systems/Search/Search";
 import { TeamSystemsPage } from "./components/systems/TeamSystems/TeamSystemPage";
 import UserModels from "./components/user-models/UserModels/UserModels";
+import { useIsFramed } from "./hooks/useIsFramed";
 import { authActions } from "./redux/authSlice";
+import { LatestSystem } from "./components/system/LatestSystem";
 
 function LoginRedirect() {
   const navigate = useNavigate();
@@ -49,6 +45,7 @@ function LoginRedirect() {
 export default function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const authenticated = useSelector(({ auth }) => auth.authenticated);
+  const isFramed = useIsFramed();
 
   const theme = React.useMemo(
     () =>
@@ -93,7 +90,7 @@ export default function App() {
             width: "100%",
           }}
         >
-          <Navbar />
+          {!isFramed && <Navbar />}
           <Box
             sx={{
               display: "flex",
@@ -102,7 +99,6 @@ export default function App() {
               width: "100%",
             }}
           >
-            <Toolbar />
             <Box component="main" sx={{ flexGrow: 1, minHeight: 0 }}>
               <LoginRedirect />
               <ModalManager />
@@ -115,6 +111,10 @@ export default function App() {
                 {authenticated && (
                   <>
                     <Route path="/" element={<Home />} />
+                    <Route
+                      path="/system/:systemId/latest"
+                      element={<LatestSystem />}
+                    />
                     <Route path="/system/:id" element={<System />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/team">

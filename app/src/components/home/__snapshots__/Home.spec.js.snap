@@ -6,7 +6,7 @@ exports[`Home renders Home 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="container"
+        class="page bump MuiBox-root css-0"
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
@@ -52,7 +52,7 @@ exports[`Home renders Home 1`] = `
   </body>,
   "container": <div>
     <div
-      class="container"
+      class="page bump MuiBox-root css-0"
     >
       <div
         class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"

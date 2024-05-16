@@ -20,9 +20,11 @@ import ConnectivityCheck from "./connectivity/ConnectivityCheck";
 import { PERMISSIONS } from "./constants";
 import { LeftPanel } from "./panels/left/LeftPanel";
 import { RightPanel } from "./panels/right/RightPanel";
+import { useIsFramed } from "../../hooks/useIsFramed";
 
 export function Model() {
   const dispatch = useDispatch();
+  const isFramed = useIsFramed();
 
   const { id } = useParams("/model/:id");
   const { data: model, isError, error } = useGetModelQuery(id);
@@ -42,7 +44,7 @@ export function Model() {
 
   const { data: permissions } = useGetModelPermissionsQuery({ modelId: id });
   const readAllowed = permissions?.includes(PERMISSIONS.READ);
-  const writeAllowed = permissions?.includes(PERMISSIONS.WRITE);
+  const writeAllowed = !isFramed && permissions?.includes(PERMISSIONS.WRITE);
 
   // create a WS client and close when component is unloaded
   useEffect(() => {
@@ -98,9 +100,9 @@ export function Model() {
   return (
     <Box sx={{ display: "flex", height: "100%", backgroundColor: "#fff" }}>
       <ConnectivityCheck modelId={id} />
-      <LeftPanel />
+      {!isFramed && <LeftPanel />}
       <Board />
-      <RightPanel />
+      {!isFramed && <RightPanel />}
     </Box>
   );
 }
