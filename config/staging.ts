@@ -30,7 +30,7 @@ export const stagingConfig: GramConfiguration = {
 
   allowedSrc: {
     ...defaultConfig.allowedSrc,
-    frameAncestors: ["https://*.klarna.net", "localhost:*"],
+    frameAncestors: ["https://*.klarna.net", "http://localhost:*"],
   },
 
   async bootstrapProviders(dal) {
