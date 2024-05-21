@@ -16,9 +16,10 @@ import {
 } from "../../constants";
 import { ContextMenuWrapper } from "./ContextMenuWrapper";
 import { useDispatch } from "react-redux";
+import { getAbsolutePosition } from "../../util";
 
 export const ContextMenu = React.memo(
-  ({ open, stageDialog, x, y, children, stage, onClose }) => {
+  ({ open, stageDialog, x, y, stage, stageRef, onClose }) => {
     const patchDataFlow = usePatchDataFlow();
     const addComponent = useAddComponent();
     const dispatch = useDispatch();
@@ -39,24 +40,19 @@ export const ContextMenu = React.memo(
     }
 
     function onAddComponent(name, type) {
+      const pos = getAbsolutePosition(stageRef.current, { x, y });
       const id = addComponent(
         name,
         type,
-        x - COMPONENT_SIZE.WIDTH / 2,
-        y - COMPONENT_SIZE.HEIGHT / 2
+        pos.x - COMPONENT_SIZE.WIDTH / 2,
+        pos.y - COMPONENT_SIZE.HEIGHT / 2
       );
       dispatch(setMultipleSelected([id]));
       onClose();
     }
 
     return (
-      <ContextMenuWrapper
-        open={open}
-        x={x}
-        y={y}
-        children={children}
-        stage={stage}
-      >
+      <ContextMenuWrapper open={open} x={x} y={y} stage={stage}>
         <Paper elevation={6} sx={{ width: 220, maxWidth: "100%" }}>
           <MenuList>
             {stageDialog.variant ===

@@ -495,11 +495,10 @@ export default function Board() {
   }
 
   function onDragEnd(e) {
-    const newStagePos = e.currentTarget.position();
     setStage({
       ...stage,
-      x: newStagePos.x,
-      y: newStagePos.y,
+      x: e.currentTarget.attrs.x,
+      y: e.currentTarget.attrs.y,
       action: STAGE_ACTION.DRAG,
     });
   }
@@ -610,6 +609,7 @@ export default function Board() {
 
       <ContextMenu
         stage={stage}
+        stageRef={stageRef}
         stageDialog={stageDialog}
         open={stageDialog.type === DIALOG.CONTEXT_MENU}
         x={lastPointerPosition.window.x}
@@ -640,30 +640,21 @@ export default function Board() {
               isStage
             >
               <Provider store={store}>
-                <Grid {...stage} />
+                <Grid
+                  x={stage.x}
+                  y={stage.y}
+                  width={stage.width}
+                  height={stage.height}
+                  scale={stage.scale}
+                  action={stage.action}
+                />
 
-                {/* <Layer key="debug-layer">
-                  <Text
-                    x={0}
-                    y={0}
-                    width={1000}
-                    height={1000}
-                    text={JSON.stringify(
-                      {
-                        lastPointerPosition,
-                        stage,
-                        abs: stageRef.current
-                          ? getAbsolutePosition(stageRef.current, {
-                              x: stage.width / 2,
-                              y: stage.height / 2,
-                            })
-                          : undefined,
-                      },
-                      null,
-                      4
-                    )}
-                  ></Text>
-                </Layer> */}
+                {/* 
+                <DebugLayer
+                  lastPointerPosition={lastPointerPosition}
+                  stage={stage}
+                  stageRef={stageRef}
+                /> */}
 
                 <Layer key="layer-components">
                   {components

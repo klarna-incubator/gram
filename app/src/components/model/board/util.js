@@ -176,3 +176,22 @@ export function lineIntersectsWithRect(line, rect) {
 
   return lines.some((l) => lineIntersectsWithLine(line, l));
 }
+
+export const scales = [0.12, 0.25, 0.5, 1.0, 1.2];
+
+export function getScaleLevel(scale) {
+  for (let i = 1; i < scales.length; i++) {
+    if (scale <= scales[i]) {
+      return i;
+    }
+  }
+  return scales.length - 1;
+}
+
+export function getNormalizedScale(scale, i = 0) {
+  let adjusted = getScaleLevel(scale) + i;
+  if (adjusted < 0) {
+    adjusted = 0;
+  }
+  return scales[adjusted];
+}
