@@ -12,12 +12,13 @@ export const ToggleLeftPanelButton = () => {
   const { leftPanelCollapsed } = useSelector(({ model }) => ({
     leftPanelCollapsed: model.leftPanelCollapsed,
   }));
-  // style for button attached to right panel
+  // style for button attached to left panel
   let style = {
     borderRadius: "0px",
     color: "white",
     position: "relative",
     right: "-40px",
+    top: "64px",
     width: "40px",
     height: "48px",
     backgroundColor: "#272727",
