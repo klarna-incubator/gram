@@ -6,7 +6,60 @@ exports[`Home renders Home 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="page bump MuiBox-root css-0"
+        class="MuiGrid-root MuiGrid-container css-go2vvz-MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item css-oo6ucr-MuiGrid-root"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-14uoix4-MuiGrid-root"
+            >
+              <h5
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              >
+                Recent Threat Models
+              </h5>
+              <p
+                class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
+              >
+                Threat models you recently interacted with
+              </p>
+              <div
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-d5ceyd-MuiPaper-root-MuiCard-root"
+              >
+                <div
+                  class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+                >
+                  <ul
+                    class="MuiList-root MuiList-padding css-h4y409-MuiList-root"
+                  >
+                    <div
+                      class="MuiListItemText-root css-tlelie-MuiListItemText-root"
+                    >
+                      <span
+                        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
+                      >
+                        No models exist
+                      </span>
+                    </div>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="MuiGrid-root MuiGrid-container css-go2vvz-MuiGrid-root"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-item css-oo6ucr-MuiGrid-root"
       >
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
@@ -44,51 +97,6 @@ exports[`Home renders Home 1`] = `
                   </div>
                 </ul>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="page bump MuiBox-root css-0"
-    >
-      <div
-        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-1fwwhll-MuiGrid-root"
-      >
-        <div
-          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-14uoix4-MuiGrid-root"
-        >
-          <h5
-            class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-          >
-            Recent Threat Models
-          </h5>
-          <p
-            class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
-          >
-            Threat models you recently interacted with
-          </p>
-          <div
-            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-d5ceyd-MuiPaper-root-MuiCard-root"
-          >
-            <div
-              class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
-            >
-              <ul
-                class="MuiList-root MuiList-padding css-h4y409-MuiList-root"
-              >
-                <div
-                  class="MuiListItemText-root css-tlelie-MuiListItemText-root"
-                >
-                  <span
-                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
-                  >
-                    No models exist
-                  </span>
-                </div>
-              </ul>
             </div>
           </div>
         </div>
