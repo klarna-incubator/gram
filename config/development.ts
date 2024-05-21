@@ -43,7 +43,7 @@ export const developmentConfig: GramConfiguration = {
 
   allowedSrc: {
     ...defaultConfig.allowedSrc,
-    frameAncestors: ["https://*.klarna.net", "http://localhost"],
+    frameAncestors: ["https://*.klarna.net", "localhost:*"],
   },
 
   log: {
