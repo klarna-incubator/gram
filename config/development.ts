@@ -41,11 +41,6 @@ export const developmentConfig: GramConfiguration = {
     },
   },
 
-  allowedSrc: {
-    ...defaultConfig.allowedSrc,
-    frameAncestors: ["https://*.klarna.net", "http://localhost:*"],
-  },
-
   log: {
     layout: "coloured",
     level: "debug",
