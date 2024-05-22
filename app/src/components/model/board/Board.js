@@ -21,10 +21,14 @@ import {
 import { useListControlsQuery } from "../../../api/gram/controls";
 import { useListMitigationsQuery } from "../../../api/gram/mitigations";
 import { useListThreatsQuery } from "../../../api/gram/threats";
+import { useIsFramed } from "../../../hooks/useIsFramed";
 import { useReadOnly } from "../../../hooks/useReadOnly";
 import { modalActions } from "../../../redux/modalSlice";
 import { MODALS } from "../../elements/modal/ModalManager";
 import Loading from "../../loading";
+import { useAddComponent } from "../hooks/useAddComponent";
+import { useAutomaticallySetCursorToPanOnFramed } from "../hooks/useAutomaticallySetCursorToPanOnFramed";
+import { useAutomaticallySetToCenter } from "../hooks/useAutomaticallySetToCenter";
 import { useModelID } from "../hooks/useModelID";
 import { ActiveUsers } from "../panels/ActiveUsers";
 import { ControlsToolBar } from "./components/ControlsToolBar";
@@ -46,14 +50,30 @@ import { DataStore } from "./shapes/DataStore";
 import { ExternalEntity } from "./shapes/ExternalEntity";
 import { Process } from "./shapes/Process";
 import { getAbsolutePosition } from "./util";
-import { useAddComponent } from "../hooks/useAddComponent";
+
+// Local variables
+const componentTypes = {
+  ee: ExternalEntity,
+  proc: Process,
+  ds: DataStore,
+};
+
+function grabbingCursor() {
+  document.body.style.cursor = "grabbing";
+}
+
+function pointerCursor() {
+  document.body.style.cursor = "pointer";
+}
 
 export default function Board() {
   const dispatch = useDispatch();
   const diagramContainerRef = useRef();
   const stageRef = useRef();
+  const isFramed = useIsFramed();
 
   const modelId = useModelID();
+  useAutomaticallySetCursorToPanOnFramed();
 
   const { data: modelThreats } = useListThreatsQuery({ modelId });
   const threats = modelThreats?.threats || {};
@@ -117,6 +137,8 @@ export default function Board() {
   const [editDataFlow, setEditDataFlow] = useState(false);
   const [clipboard, setClipboard] = useState([]);
 
+  useAutomaticallySetToCenter(setStage, stageRef.current);
+
   // Check read only mode
   const [changingComponentName, setChangingComponentName] = useState(false);
 
@@ -129,17 +151,11 @@ export default function Board() {
     {}
   );
   const jsonComponentsPosObj = JSON.stringify(componentsPosObj);
+
   useEffect(() => {
-    setComponentsPos(componentsPosObj);
+    setComponentsPos(componentsPosObj); // What is this cursed thing??
     // eslint-disable-next-line
   }, [components, jsonComponentsPosObj]);
-
-  // Local variables
-  const componentTypes = {
-    ee: ExternalEntity,
-    proc: Process,
-    ds: DataStore,
-  };
 
   // Resize functionality
   function resize() {
@@ -479,21 +495,12 @@ export default function Board() {
   }
 
   function onDragEnd(e) {
-    const newStagePos = e.currentTarget.position();
     setStage({
       ...stage,
-      x: newStagePos.x,
-      y: newStagePos.y,
+      x: e.currentTarget.attrs.x,
+      y: e.currentTarget.attrs.y,
       action: STAGE_ACTION.DRAG,
     });
-  }
-
-  function grabbingCursor() {
-    document.body.style.cursor = "grabbing";
-  }
-
-  function pointerCursor() {
-    document.body.style.cursor = "pointer";
   }
 
   function onSelectionDragEnd(e) {
@@ -546,18 +553,6 @@ export default function Board() {
   }
 
   const addComponent = useAddComponent();
-
-  // function onAddComponent(name, type, x, y) {
-  //   const id = addComponent(
-  //     name,
-  //     type,
-  //     (x ? x : lastPointerPosition.stage.x) - COMPONENT_SIZE.WIDTH / 2,
-  //     (y ? y : lastPointerPosition.stage.y) - COMPONENT_SIZE.HEIGHT / 2
-  //   );
-
-  //   dispatch(setMultipleSelected([id]));
-  //   setChangingComponentName(id);
-  // }
 
   function copyComponents() {
     setClipboard(selected);
@@ -614,6 +609,7 @@ export default function Board() {
 
       <ContextMenu
         stage={stage}
+        stageRef={stageRef}
         stageDialog={stageDialog}
         open={stageDialog.type === DIALOG.CONTEXT_MENU}
         x={lastPointerPosition.window.x}
@@ -644,30 +640,21 @@ export default function Board() {
               isStage
             >
               <Provider store={store}>
-                <Grid {...stage} />
+                <Grid
+                  x={stage.x}
+                  y={stage.y}
+                  width={stage.width}
+                  height={stage.height}
+                  scale={stage.scale}
+                  action={stage.action}
+                />
 
-                {/* <Layer key="debug-layer">
-                  <Text
-                    x={0}
-                    y={0}
-                    width={1000}
-                    height={1000}
-                    text={JSON.stringify(
-                      {
-                        lastPointerPosition,
-                        stage,
-                        abs: stageRef.current
-                          ? getAbsolutePosition(stageRef.current, {
-                              x: stage.width / 2,
-                              y: stage.height / 2,
-                            })
-                          : undefined,
-                      },
-                      null,
-                      4
-                    )}
-                  ></Text>
-                </Layer> */}
+                {/* 
+                <DebugLayer
+                  lastPointerPosition={lastPointerPosition}
+                  stage={stage}
+                  stageRef={stageRef}
+                /> */}
 
                 <Layer key="layer-components">
                   {components
@@ -721,7 +708,7 @@ export default function Board() {
                       ]}
                       selected={df.id in selected}
                       onClick={onComponentClick(df.id)}
-                      getStagePointerPosition={() => getStagePointerPosition()}
+                      getStagePointerPosition={getStagePointerPosition}
                     />
                   ))}
                 </Layer>
@@ -816,7 +803,7 @@ export default function Board() {
         <Loading />
       )}
 
-      <ActiveUsers />
+      {!isFramed && <ActiveUsers />}
     </div>
   );
 }

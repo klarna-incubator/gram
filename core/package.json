@@ -2,7 +2,7 @@
   "name": "@gram/core",
   "private": true,
   "type": "module",
-  "version": "4.10.0",
+  "version": "4.11.0",
   "description": "Core library for Gram backend stuff",
   "scripts": {
     "clean": "rimraf ./dist",
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/klarna/gram#readme",
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "dependencies": {
     "@sentry/integrations": "^7.6.0",

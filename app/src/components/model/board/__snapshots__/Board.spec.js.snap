@@ -147,28 +147,6 @@ exports[`Board renders Board 1`] = `
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
-            <button
-              class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
-              tabindex="0"
-              type="button"
-              value="add-component"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-                data-testid="AddIcon"
-                focusable="false"
-                value="add-component"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-              />
-            </button>
           </div>
         </div>
         <div
@@ -334,28 +312,6 @@ exports[`Board renders Board 1`] = `
               />
               <path
                 d="M6.5 7.5H9V6H5v4h1.5zM19 12h-1.5v2.5H15V16h4z"
-              />
-            </svg>
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-          <button
-            class="MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-standard css-ueukts-MuiButtonBase-root-MuiToggleButton-root"
-            tabindex="0"
-            type="button"
-            value="add-component"
-          >
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-              data-testid="AddIcon"
-              focusable="false"
-              value="add-component"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
               />
             </svg>
             <span

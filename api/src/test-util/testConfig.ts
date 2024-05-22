@@ -65,6 +65,7 @@ export const testConfig: GramConfiguration = {
   allowedSrc: {
     img: ["https:"],
     connect: [],
+    frameAncestors: [],
   },
 
   menu: [

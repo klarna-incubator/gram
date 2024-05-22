@@ -164,14 +164,14 @@ export class OIDCIdentityProvider implements IdentityProvider {
         code_verifier,
         state,
       });
-      log.info(
-        "access_token",
-        encryptWithPublicKeyString(JSON.stringify(tokenSet.access_token))
-      );
-      log.info(
-        "id_token",
-        encryptWithPublicKeyString(JSON.stringify(tokenSet.id_token))
-      );
+      // log.info(
+      //   "access_token",
+      //   encryptWithPublicKeyString(JSON.stringify(tokenSet.access_token))
+      // );
+      // log.info(
+      //   "id_token",
+      //   encryptWithPublicKeyString(JSON.stringify(tokenSet.id_token))
+      // );
     } catch (error: any) {
       let message = error.toString();
       if (error?.error === "invalid_grant") {

@@ -5,6 +5,7 @@ import { useGetUserQuery } from "../../../api/gram/auth";
 import { useTitle } from "../../../hooks/useTitle";
 import { TeamSystemsPageList } from "./TeamSystemsPageList";
 import { TeamHeader } from "./TeamHeader";
+import { CenteredPage } from "../../elements/CenteredPage";
 
 export function TeamSystemsPage() {
   const { teamId } = useParams("/team/:teamId");
@@ -20,7 +21,7 @@ export function TeamSystemsPage() {
   useTitle("Team");
 
   return (
-    <div className="container">
+    <CenteredPage>
       {!teamId ? (
         <>
           <Typography variant={"h5"}>Your Team Systems</Typography>
@@ -45,6 +46,6 @@ export function TeamSystemsPage() {
           </Grid>
         ))}
       </Grid>
-    </div>
+    </CenteredPage>
   );
 }

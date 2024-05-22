@@ -96,6 +96,7 @@ export const defaultConfig: GramConfiguration = {
   allowedSrc: {
     img: ["https:"],
     connect: ["o24547.ingest.sentry.io"],
+    frameAncestors: ["https://*.klarna.net"],
   },
 
   menu: [

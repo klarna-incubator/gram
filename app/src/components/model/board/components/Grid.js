@@ -1,21 +1,11 @@
 import React from "react";
 import { Group, Layer, Line } from "react-konva";
-
+import { getScaleLevel, scales } from "../util";
 import { STAGE_ACTION } from "../constants";
 
-const scales = [0.1, 0.2, 0.4, 0.8, 1.6, 3];
-
-function getScaleLevel(scale) {
-  for (let i = 1; i < scales.length; i++) {
-    if (scale <= scales[i]) {
-      return i;
-    }
-  }
-}
-
 export const Grid = React.memo(
-  (props) => {
-    const { width, height, x, y, scale } = props;
+  ({ width, height, x, y, scale }) => {
+    // console.log("Grid", width, height, x, y, scale);
     const scaleLevel = getScaleLevel(scale);
 
     const denominator = Math.pow(2, scaleLevel - 1);
@@ -36,7 +26,8 @@ export const Grid = React.memo(
       Math.floor((-stagePosY - stageHeight) / blockSize) * blockSize;
     const endY =
       Math.floor((-stagePosY + stageHeight * 2) / blockSize) * blockSize;
-    var lines = [];
+
+    const lines = [];
     for (let y = startY; y < endY; y += blockSize) {
       let strokeWidth =
         (y / blockSize) % 4

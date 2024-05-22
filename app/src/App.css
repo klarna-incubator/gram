@@ -95,15 +95,6 @@ textarea {
   margin-bottom: 10px;
 }
 
-.container,
-.container-fluid {
-  margin-right: auto;
-  margin-left: auto;
-  width: 80%;
-  margin-top: 20px;
-  color: white;
-}
-
 .row {
   box-sizing: border-box;
   display: flex;

@@ -1,5 +1,4 @@
 import {
-  Grid,
   Paper,
   Table,
   TableBody,
@@ -17,6 +16,7 @@ import { TableHeader } from "./TableHeader";
 import { TablePaginationActions } from "./TablePaginationActions";
 import { TableRow } from "./TableRow";
 import { TableToolbar } from "./TableToolbar";
+import { CenteredPage } from "../elements/CenteredPage";
 
 export function Reviews() {
   useTitle("Reviews");
@@ -120,50 +120,42 @@ export function Reviews() {
   }
 
   return (
-    <Grid
-      container
-      spacing={0}
-      direction={"row"}
-      alignItems={"center"}
-      justifyContent={"center"}
-    >
-      <Grid item width={"80%"} marginTop={"50px"}>
-        <Paper>
-          <TableToolbar
-            selectedStatuses={selectedStatuses}
-            selectedProperties={selectedProperties}
-            onStatusFilterChange={handleStatusFilterChange}
-            onPropertyFilterChange={handlePropertyFilterChange}
-            onReviewerSelected={handleReviewerSelected}
-            reviewedBy={reviewedBy}
-          />
-          <LoadingPage isLoading={reviewsIsFetching} />
-          <TableContainer>
-            <Table size={"small"}>
-              <TableHeader order={order} toggleOrder={handleToggleOrder} />
-              <TableBody>
-                {reviews?.total === 0 && <EmptyTableRow />}
-                {reviews?.items.map((review) => (
-                  <TableRow key={review.modelId} review={review} />
-                ))}
-              </TableBody>
-              <TableFooter>
-                <MuiTableRow style={{ borderBottom: "none" }}>
-                  <TablePagination
-                    style={{ borderBottom: "none" }}
-                    rowsPerPageOptions={[rowsPerPage]}
-                    count={reviews?.total || 0}
-                    rowsPerPage={rowsPerPage}
-                    page={page - 1}
-                    onPageChange={handleChangePage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </MuiTableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Grid>
-    </Grid>
+    <CenteredPage>
+      <Paper>
+        <TableToolbar
+          selectedStatuses={selectedStatuses}
+          selectedProperties={selectedProperties}
+          onStatusFilterChange={handleStatusFilterChange}
+          onPropertyFilterChange={handlePropertyFilterChange}
+          onReviewerSelected={handleReviewerSelected}
+          reviewedBy={reviewedBy}
+        />
+        <LoadingPage isLoading={reviewsIsFetching} />
+        <TableContainer>
+          <Table size={"small"}>
+            <TableHeader order={order} toggleOrder={handleToggleOrder} />
+            <TableBody>
+              {reviews?.total === 0 && <EmptyTableRow />}
+              {reviews?.items.map((review) => (
+                <TableRow key={review.modelId} review={review} />
+              ))}
+            </TableBody>
+            <TableFooter>
+              <MuiTableRow style={{ borderBottom: "none" }}>
+                <TablePagination
+                  style={{ borderBottom: "none" }}
+                  rowsPerPageOptions={[rowsPerPage]}
+                  count={reviews?.total || 0}
+                  rowsPerPage={rowsPerPage}
+                  page={page - 1}
+                  onPageChange={handleChangePage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </MuiTableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </CenteredPage>
   );
 }

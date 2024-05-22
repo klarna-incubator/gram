@@ -1,10 +1,10 @@
 {
   "name": "@gram/app",
   "proxy": "http://localhost:8080",
-  "version": "4.10.0",
+  "version": "4.11.0",
   "private": true,
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

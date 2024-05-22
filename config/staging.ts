@@ -28,6 +28,11 @@ export const stagingConfig: GramConfiguration = {
     },
   },
 
+  allowedSrc: {
+    ...defaultConfig.allowedSrc,
+    frameAncestors: ["https://*.klarna.net", "http://localhost:*"],
+  },
+
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
