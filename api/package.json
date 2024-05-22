@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/klarna/gram#readme",
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "dependencies": {
     "@gram/config": "^4.10.0",
