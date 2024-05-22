@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.11.0](https://github.com/klarna-incubator/gram/compare/v4.10.0...v4.11.0) (2024-05-22)
+
+### Bug Fixes
+
+- toggle panel buttons now visible again ([72060f6](https://github.com/klarna-incubator/gram/commit/72060f6e8d57fbe21c10391b72dd7196c24332ca))
+- try to fix automatic centering to be more accurate and scale properly ([b242383](https://github.com/klarna-incubator/gram/commit/b2423832c30911ae0a71c16503bb47bc0b289ef9))
+
+### Features
+
+- Diagrams can now be iframed. Preview when creating model and importing. Diagram should now center and scale automatically to try to fit everything on initial load. New url for quickly accessing the latest threat model for a system: /system/<system-id>/latest (also works with iframes!) ([f90fbad](https://github.com/klarna-incubator/gram/commit/f90fbada1897de979c016cf8c60da6515b52d138))
+
 # [4.10.0](https://github.com/klarna-incubator/gram/compare/v4.9.4...v4.10.0) (2024-04-15)
 
 ### Bug Fixes
