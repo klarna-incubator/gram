@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.11.0](https://github.com/klarna/gram/compare/v4.10.0...v4.11.0) (2024-05-22)
+
+### Features
+
+- allow/enforce setting CSP frame-ancestors via config ([518ad0d](https://github.com/klarna/gram/commit/518ad0dbce2090567fa8216a67fa0d91da00504c))
+
 # [4.10.0](https://github.com/klarna/gram/compare/v4.9.4...v4.10.0) (2024-04-15)
 
 ### Bug Fixes
