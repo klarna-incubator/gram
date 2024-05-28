@@ -1,10 +1,4 @@
-import {
-  Autocomplete,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, MenuItem, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLazyListSystemsQuery } from "../../api/gram/system";
 
@@ -39,18 +33,20 @@ export function SystemDropdown({ value, onChange, ...props }) {
 
   return (
     <Autocomplete
+      fullWidth
       value={value}
       onChange={(e, newValue) => {
         onChange(newValue.value);
       }}
-      disableClearable
       loading={isLoading}
       options={options}
-      renderInput={(params) => (
-        <FormControl sx={{ m: 1, minWidth: 250 }}>
-          <InputLabel shrink={true}>System</InputLabel>
-          <TextField fullWidth size="small" variant="outlined" {...params} />
-        </FormControl>
+      renderInput={(props) => (
+        <TextField
+          variant="standard"
+          label={"System"}
+          helperText={"Type to search for a system"}
+          {...props}
+        />
       )}
       onInputChange={(_, newInputValue) => {
         setInputValue(newInputValue);
@@ -63,7 +59,8 @@ export function SystemDropdown({ value, onChange, ...props }) {
       renderOption={(props, opt) => {
         return (
           <MenuItem {...props} value={opt.value} key={opt.value}>
-            {opt.label}
+            {opt.label}&nbsp;
+            {opt.value && <span style={{ color: "gray" }}> ({opt.value})</span>}
           </MenuItem>
         );
       }}

@@ -178,6 +178,9 @@ export const defaultConfig: GramConfiguration = {
       ),
     ];
 
+    const systemProvider = new StaticSystemProvider(sampleSystems);
+    const teamProvider = new StaticTeamProvider(sampleTeams, teamMap);
+
     return {
       assetFolders: [
         AWSAssets,
@@ -206,12 +209,17 @@ export const defaultConfig: GramConfiguration = {
         [sampleUsers[2].sub]
       ),
       userProvider: new StaticUserProvider(sampleUsers),
-      systemProvider: new StaticSystemProvider(sampleSystems),
+      systemProvider: systemProvider,
       suggestionSources: [
         new ThreatLibSuggestionProvider(),
         new StrideSuggestionProvider(),
       ],
-      teamProvider: new StaticTeamProvider(sampleTeams, teamMap),
+      teamProvider: teamProvider,
+      searchProviders: [
+        systemProvider, // Without a system search provider, certain features will not work
+        teamProvider, // completely optional
+        dal.modelService,
+      ],
     };
   },
 };

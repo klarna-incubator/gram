@@ -6,8 +6,14 @@ import {
   SystemListInput,
   SystemListResult,
 } from "@gram/core/dist/data/systems/systems.js";
+import {
+  SearchFilter,
+  SearchProvider,
+  SearchProviderResult,
+  SearchType,
+} from "@gram/core/dist/search/SearchHandler.js";
 
-export class StaticSystemProvider implements SystemProvider {
+export class StaticSystemProvider implements SystemProvider, SearchProvider {
   key: string = "static";
   systemMap: Map<string, System> = new Map();
 
@@ -15,6 +21,40 @@ export class StaticSystemProvider implements SystemProvider {
     systems.forEach((s) => {
       this.systemMap.set(s.id, s);
     });
+  }
+
+  searchType: SearchType = { key: "system", label: "System" };
+  async search(filter: SearchFilter): Promise<SearchProviderResult> {
+    const result: SearchProviderResult = {
+      items: [],
+      count: 0,
+      type: this.searchType.key,
+    };
+
+    // Very inefficient filters - If you have a lot of systems, use an index.
+    const searchText = filter.searchText.toLowerCase();
+    result.items = this.systems
+      .filter(
+        (s) =>
+          s.shortName.toLowerCase().includes(searchText) ||
+          s.displayName.toLowerCase().includes(searchText) ||
+          s.id.toLowerCase().includes(searchText)
+      )
+      .map((s) => ({
+        id: s.id,
+        label: s.displayName,
+        url: `/system/${s.id}`,
+      }));
+
+    result.count = result.items.length;
+
+    // Simulate paging
+    result.items = result.items.slice(
+      filter.page * filter.pageSize,
+      (filter.page + 1) * filter.pageSize
+    );
+
+    return result;
   }
 
   async getSystem(
@@ -45,6 +85,9 @@ export class StaticSystemProvider implements SystemProvider {
 
       // Filters by a list of system ids
       case SystemListFilter.Batch:
+        if (!input.opts.ids || input.opts.ids.length === 0) {
+          return result;
+        }
         result.systems = input.opts.ids
           .map((id) => this.systemMap.get(id))
           .filter((s) => !!s) as System[];

@@ -13,6 +13,7 @@ import type { Secret } from "./Secret.js";
 import type { Migration } from "../data/Migration.js";
 import type { TeamProvider } from "../auth/TeamProvider.js";
 import type { ActionItemExporter } from "../action-items/ActionItemExporter.js";
+import type { SearchProvider } from "../search/SearchHandler.js";
 
 export interface Providers {
   /**
@@ -34,6 +35,7 @@ export interface Providers {
   suggestionSources?: SuggestionSource[];
   teamProvider?: TeamProvider;
   actionItemExporters?: ActionItemExporter[];
+  searchProviders?: SearchProvider[];
 }
 
 export interface GramConfiguration {

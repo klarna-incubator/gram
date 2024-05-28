@@ -7,6 +7,12 @@
 import { randomUUID } from "crypto";
 import log4js from "log4js";
 import { EventEmitter } from "node:events";
+import {
+  SearchFilter,
+  SearchProvider,
+  SearchProviderResult,
+  SearchType,
+} from "../../search/SearchHandler.js";
 import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
 import Model, { ModelData } from "./Model.js";
@@ -37,11 +43,48 @@ export interface ModelListOptions {
   systemId?: string;
 }
 
-export class ModelDataService extends EventEmitter {
+export class ModelDataService extends EventEmitter implements SearchProvider {
   constructor(private dal: DataAccessLayer) {
     super();
     this.pool = dal.pool;
     this.log = log4js.getLogger("ModelDataService");
+  }
+
+  key = "model";
+  searchType: SearchType = { key: "model", label: "Threat Model" };
+
+  async search(filter: SearchFilter): Promise<SearchProviderResult> {
+    const query = `
+      SELECT m.id as id, m.version as label
+      FROM models m
+      WHERE m.deleted_at IS NULL AND m.version LIKE '%' || $1::varchar || '%'
+      ORDER BY m.updated_at DESC
+      LIMIT $2::int
+      OFFSET $3::int      
+    `;
+    const res = await this.pool.query(query, [
+      filter.searchText,
+      filter.pageSize,
+      filter.page * filter.pageSize,
+    ]);
+
+    const countQuery = `
+      SELECT count(*)
+      FROM models m
+      WHERE m.deleted_at IS NULL AND m.version LIKE '%' || $1::varchar || '%'
+    `;
+
+    const countRes = await this.pool.query(countQuery, [filter.searchText]);
+
+    return {
+      type: this.searchType.key,
+      count: countRes.rows[0].count,
+      items: res.rows.map((row) => ({
+        id: row.id,
+        label: row.label,
+        url: `/model/${row.id}`,
+      })),
+    };
   }
 
   private pool: GramConnectionPool;

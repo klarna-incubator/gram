@@ -16,7 +16,7 @@ import { NewWizard } from "./components/model/New";
 import { Navbar } from "./components/navbar/Navbar";
 import { Reviews } from "./components/reviews/Reviews";
 import { System } from "./components/system/System";
-import Search from "./components/systems/Search/Search";
+import Search from "./components/search/Search";
 import { TeamSystemsPage } from "./components/systems/TeamSystems/TeamSystemPage";
 import UserModels from "./components/user-models/UserModels/UserModels";
 import { useIsFramed } from "./hooks/useIsFramed";

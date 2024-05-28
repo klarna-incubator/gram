@@ -40,6 +40,7 @@ import tokenV1 from "./resources/gram/v1/token/index.js";
 import { errorWrap } from "./util/errorHandler.js";
 import { initSentry } from "./util/sentry.js";
 import { userRouter } from "./resources/gram/v1/user/router.js";
+import { searchRouter } from "./resources/gram/v1/search/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -88,6 +89,9 @@ export async function createApp(dal: DataAccessLayer) {
   const authenticatedRoutes = express.Router();
   authenticatedRoutes.use(authRequiredMiddleware);
   authenticatedRoutes.use("/user", userRouter(dal));
+
+  // Search
+  authenticatedRoutes.use("/search", searchRouter(dal));
 
   const systems = systemsV1(dal);
   authenticatedRoutes.get("/systems", errorWrap(systems.list));
