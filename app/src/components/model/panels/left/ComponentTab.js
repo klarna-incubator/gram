@@ -159,6 +159,7 @@ export function ComponentTab() {
                   console.log("new val", v);
                   updateFields({ systems: v });
                 }}
+                readOnly={readOnly}
               />
 
               <TextField

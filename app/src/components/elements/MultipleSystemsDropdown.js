@@ -8,6 +8,7 @@ export function MultipleSystemsDropdown({
   systems,
   onChange,
   multiple,
+  readOnly,
   ...props
 }) {
   const [options, setOptions] = useState([]);
@@ -18,7 +19,6 @@ export function MultipleSystemsDropdown({
     useLazySearchQuery();
 
   const systemList = result?.systems;
-  const readOnly = useReadOnly();
 
   useEffect(() => {
     const newOptions = [];
@@ -67,8 +67,9 @@ export function MultipleSystemsDropdown({
       autoHighlight
       fullWidth
       freeSolo
-      readOnly={readOnly}
       filterSelectedOptions
+      readOnly={readOnly}
+      disabled={readOnly}
       value={systems.map((s) => options.find((o) => o.value === s))}
       getOptionLabel={(option) => (option.label ? option.label : option.value)}
       isOptionEqualToValue={(option, value) => option.value === value.value}
