@@ -1,6 +1,6 @@
 import React from "react";
 import { cleanup, render } from "@testing-library/react";
-import Search from "./Search";
+import SearchPage from "./SearchPage";
 import { BrowserRouter as Router } from "react-router-dom";
 import { createMockStore } from "redux-test-utils";
 import { Provider } from "react-redux";
@@ -11,7 +11,7 @@ const renderComponent = (props) =>
   render(
     <Provider store={store}>
       <Router>
-        <Search {...props} />
+        <SearchPage {...props} />
       </Router>
     </Provider>
   );

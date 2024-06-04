@@ -15,10 +15,10 @@ const searchApi = api.injectEndpoints({
       transformResponse: (response, meta, arg) => response.results,
     }),
     getSearchTypes: build.query({
-      query: ({ systemId }) => ({
+      query: () => ({
         url: `/search/types`,
       }),
-      transformResponse: (response, meta, arg) => response,
+      transformResponse: (response, meta, arg) => response.searchTypes,
     }),
   }),
 });

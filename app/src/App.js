@@ -1,10 +1,10 @@
 import { Box, CssBaseline, darkScrollbar, useMediaQuery } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { getAuthToken } from "./api/gram/util/authToken";
 import "./App.css";
+import { getAuthToken } from "./api/gram/util/authToken";
 import AdminPage from "./components/admin/AdminPage";
 import { ErrorPage } from "./components/elements/ErrorPage";
 import { ModalManager } from "./components/elements/modal/ModalManager";
@@ -15,13 +15,13 @@ import { Model } from "./components/model/Model";
 import { NewWizard } from "./components/model/New";
 import { Navbar } from "./components/navbar/Navbar";
 import { Reviews } from "./components/reviews/Reviews";
+import SearchPage from "./components/search/SearchPage";
+import { LatestSystem } from "./components/system/LatestSystem";
 import { System } from "./components/system/System";
-import Search from "./components/search/Search";
 import { TeamSystemsPage } from "./components/systems/TeamSystems/TeamSystemPage";
 import UserModels from "./components/user-models/UserModels/UserModels";
 import { useIsFramed } from "./hooks/useIsFramed";
 import { authActions } from "./redux/authSlice";
-import { LatestSystem } from "./components/system/LatestSystem";
 
 function LoginRedirect() {
   const navigate = useNavigate();
@@ -116,7 +116,7 @@ export default function App() {
                       element={<LatestSystem />}
                     />
                     <Route path="/system/:id" element={<System />} />
-                    <Route path="/search" element={<Search />} />
+                    <Route path="/search" element={<SearchPage />} />
                     <Route path="/team">
                       <Route index element={<TeamSystemsPage />} />
                       <Route path=":teamId" element={<TeamSystemsPage />} />
