@@ -4,15 +4,10 @@ import { DummySystemProvider } from "./DummySystemProvider.js";
 
 export enum SystemListFilter {
   Batch = "batch",
-  Search = "search",
   Team = "team",
 }
 
 export type SystemListInput =
-  | {
-      filter: SystemListFilter.Search;
-      opts: { search: string };
-    }
   | { filter: SystemListFilter.Batch; opts: { ids: string[] } }
   | { filter: SystemListFilter.Team; opts: { teamId: string } };
 

@@ -33,7 +33,6 @@ import { listSystemCompliance } from "./resources/gram/v1/reports/system-complia
 import reviewsV1 from "./resources/gram/v1/reviews/index.js";
 import suggestionsV1 from "./resources/gram/v1/suggestions/index.js";
 import systemPropertyRoutesV1 from "./resources/gram/v1/system-properties/index.js";
-import systemsV1 from "./resources/gram/v1/systems/index.js";
 import { getTeam } from "./resources/gram/v1/team/get.js";
 import threatsV1 from "./resources/gram/v1/threats/index.js";
 import tokenV1 from "./resources/gram/v1/token/index.js";
@@ -41,6 +40,7 @@ import { errorWrap } from "./util/errorHandler.js";
 import { initSentry } from "./util/sentry.js";
 import { userRouter } from "./resources/gram/v1/user/router.js";
 import { searchRouter } from "./resources/gram/v1/search/router.js";
+import { systemsRouter } from "./resources/gram/v1/systems/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -93,17 +93,8 @@ export async function createApp(dal: DataAccessLayer) {
   // Search
   authenticatedRoutes.use("/search", searchRouter(dal));
 
-  const systems = systemsV1(dal);
-  authenticatedRoutes.get("/systems", errorWrap(systems.list));
-  authenticatedRoutes.get("/systems/:id", errorWrap(systems.get));
-  authenticatedRoutes.get(
-    "/systems/:id/permissions",
-    errorWrap(systems.permission)
-  );
-  authenticatedRoutes.get(
-    "/systems/:id/compliance",
-    errorWrap(systems.compliance)
-  );
+  // Systems
+  authenticatedRoutes.use("/systems", systemsRouter(dal));
 
   // Models
   authenticatedRoutes.use("/models", modelsRouter(dal));

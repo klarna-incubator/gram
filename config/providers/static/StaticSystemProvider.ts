@@ -92,17 +92,6 @@ export class StaticSystemProvider implements SystemProvider, SearchProvider {
           .map((id) => this.systemMap.get(id))
           .filter((s) => !!s) as System[];
         break;
-
-      // Filter by system name
-      case SystemListFilter.Search:
-        const searchText = input.opts.search.toLowerCase();
-        result.systems = this.systems.filter(
-          (s) =>
-            s.shortName.toLowerCase().includes(searchText) ||
-            s.displayName.toLowerCase().includes(searchText) ||
-            s.id.toLowerCase().includes(searchText)
-        );
-        break;
     }
 
     result.total = result.systems.length;

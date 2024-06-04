@@ -17,7 +17,6 @@ export function MultipleSystemsDropdown({
   const [searchLazy, { data: searchResult, isLoading: searchIsLoading }] =
     useLazySearchQuery();
 
-  console.log(result, searchResult);
   const systemList = result?.systems;
   const readOnly = useReadOnly();
 
@@ -67,6 +66,7 @@ export function MultipleSystemsDropdown({
       multiple
       autoHighlight
       fullWidth
+      freeSolo
       readOnly={readOnly}
       filterSelectedOptions
       value={systems.map((s) => options.find((o) => o.value === s))}
