@@ -52,14 +52,22 @@ describe("systems.list", () => {
     });
 
     const res = await request(app)
-      .get("/api/v1/systems?filter=search")
+      .get("/api/v1/systems?filter=batch")
       .set("Authorization", token);
     expect(res.status).toBe(500);
   });
 
   it("should return 200 with dummy results", async () => {
     const res = await request(app)
-      .get("/api/v1/systems?filter=search")
+      .get("/api/v1/systems?filter=batch")
+      .set("Authorization", token);
+    expect(res.status).toBe(200);
+    expect(res.body.systems[0]).toEqual(sampleOwnedSystem);
+  });
+
+  it("should return 200 with dummy results (team filter)", async () => {
+    const res = await request(app)
+      .get("/api/v1/systems?filter=team")
       .set("Authorization", token);
     expect(res.status).toBe(200);
     expect(res.body.systems[0]).toEqual(sampleOwnedSystem);
