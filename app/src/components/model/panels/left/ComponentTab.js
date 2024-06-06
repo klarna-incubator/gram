@@ -156,7 +156,6 @@ export function ComponentTab() {
               <MultipleSystemsDropdown
                 systems={systems ?? []}
                 onChange={(v) => {
-                  console.log("new val", v);
                   updateFields({ systems: v });
                 }}
                 readOnly={readOnly}

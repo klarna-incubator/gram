@@ -2,7 +2,6 @@ import { Autocomplete, Chip, MenuItem, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLazySearchQuery } from "../../api/gram/search";
 import { useLazyListSystemsQuery } from "../../api/gram/system";
-import { useReadOnly } from "../../hooks/useReadOnly";
 
 export function MultipleSystemsDropdown({
   systems,
