@@ -34,7 +34,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export function Search() {
+export function Search(props) {
   const navigate = useNavigate();
 
   const [searchValue, setSearchValue] = useState("");
@@ -46,7 +46,7 @@ export function Search() {
   }
 
   return (
-    <SearchBar>
+    <SearchBar {...props}>
       <SearchIconWrapper>
         <SearchIcon
           sx={{
@@ -55,7 +55,7 @@ export function Search() {
         />
       </SearchIconWrapper>
       <StyledInputBase
-        placeholder="Search system…"
+        placeholder="Search …"
         inputProps={{ "aria-label": "search" }}
         onChange={(e) => setSearchValue(e.target.value)}
         onKeyPress={(e) => {

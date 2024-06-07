@@ -186,10 +186,13 @@ export const defaultConfig: GramConfiguration = {
           email: ldapEntry["mail"].toString(),
         }),
         searchBase: LDAPTeamSearchBase,
-        searchFilter: (teamIds) => {
+        lookupByIdFilter: (teamIds) => {
           return `(|${teamIds
             .map((teamId) => `(klarnaProjectCode=${teamId})`)
             .join("")})`;
+        },
+        searchFilter: (searchText) => {
+          return `(&(displayName=*${searchText}*)(klarnaProjectCode=*))`;
         },
       },
       userLookup: {
@@ -235,7 +238,7 @@ export const defaultConfig: GramConfiguration = {
             "(&(memberOfGroupId=security-champions)(kreditorEnabledUser=TRUE))",
           ],
           attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
-          attributesToReviewer: async (ldapUser) => {
+          attributesToReviewer: async (ldapUser: any) => {
             const user: Reviewer = {
               sub: ldapUser["mail"].toString(),
               mail: ldapUser["mail"].toString(),
@@ -247,11 +250,11 @@ export const defaultConfig: GramConfiguration = {
         },
         reviewerLookup: {
           searchBase: LDAPUserSearchBase,
-          searchFilter: (sub) => {
+          searchFilter: (sub: string) => {
             return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
           },
           attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
-          attributesToReviewer: async (ldapUser) => {
+          attributesToReviewer: async (ldapUser: any) => {
             const user: Reviewer = {
               sub: ldapUser["mail"].toString(),
               mail: ldapUser["mail"].toString(),
@@ -271,6 +274,9 @@ export const defaultConfig: GramConfiguration = {
 
     const klarnaCronJob = new KlarnaCronJob(dal);
     klarnaCronJob.bootstrap(reviewerProvider, systemProvider);
+
+    // const systemProvider = new StaticSystemProvider(sampleSystems);
+    // const teamProvider = new StaticTeamProvider(sampleTeams, teamMap);
 
     return {
       assetFolders: [
@@ -298,6 +304,11 @@ export const defaultConfig: GramConfiguration = {
       userProvider: ldapUserProvider,
       teamProvider: ldapTeamProvider,
       suggestionSources: [threatsaurus, new StrideSuggestionProvider()],
+      searchProviders: [
+        systemProvider, // Without a system search provider, certain features will not work
+        ldapTeamProvider, // completely optional
+        dal.modelService,
+      ],
     };
   },
 };

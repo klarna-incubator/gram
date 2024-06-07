@@ -33,6 +33,7 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   providers.systemPropertyProviders?.forEach((spp) =>
     bt.registerSystemPropertyProvider(spp)
   );
+  providers.searchProviders?.forEach((sp) => bt.registerSearchProvider(sp));
 
   if (providers.teamProvider) {
     bt.setTeamProvider(providers.teamProvider);

@@ -57,7 +57,7 @@ exports[`Navbar renders Navbar 1`] = `
               <input
                 aria-label="search"
                 class="MuiInputBase-input css-yz9k0d-MuiInputBase-input"
-                placeholder="Search system…"
+                placeholder="Search …"
                 type="text"
                 value=""
               />
@@ -209,7 +209,7 @@ exports[`Navbar renders Navbar 1`] = `
             <input
               aria-label="search"
               class="MuiInputBase-input css-yz9k0d-MuiInputBase-input"
-              placeholder="Search system…"
+              placeholder="Search …"
               type="text"
               value=""
             />

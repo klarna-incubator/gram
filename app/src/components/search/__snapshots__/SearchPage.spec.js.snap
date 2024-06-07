@@ -12,7 +12,7 @@ exports[`Search renders Search 1`] = `
           class="MuiGrid-root MuiGrid-item css-oo6ucr-MuiGrid-root"
         >
           <div
-            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1b048bk-MuiPaper-root-MuiCard-root"
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1k3rt34-MuiPaper-root-MuiCard-root"
           >
             <div
               class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
@@ -24,15 +24,20 @@ exports[`Search renders Search 1`] = `
                 
                 "
               </h5>
-              <div
-                class="loading"
-              >
-                <div />
-                <div />
-                <div />
-                <div />
-              </div>
             </div>
+          </div>
+          <br />
+          <hr
+            class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+          />
+          <br />
+          <div
+            class="loading"
+          >
+            <div />
+            <div />
+            <div />
+            <div />
           </div>
         </div>
       </div>
@@ -46,7 +51,7 @@ exports[`Search renders Search 1`] = `
         class="MuiGrid-root MuiGrid-item css-oo6ucr-MuiGrid-root"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1b048bk-MuiPaper-root-MuiCard-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1k3rt34-MuiPaper-root-MuiCard-root"
         >
           <div
             class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
@@ -58,15 +63,20 @@ exports[`Search renders Search 1`] = `
               
               "
             </h5>
-            <div
-              class="loading"
-            >
-              <div />
-              <div />
-              <div />
-              <div />
-            </div>
           </div>
+        </div>
+        <br />
+        <hr
+          class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+        />
+        <br />
+        <div
+          class="loading"
+        >
+          <div />
+          <div />
+          <div />
+          <div />
         </div>
       </div>
     </div>

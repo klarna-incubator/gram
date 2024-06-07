@@ -26,6 +26,7 @@ import {
 } from "./postgres.js";
 import { ActionItemHandler } from "../action-items/ActionItemHandler.js";
 import { LinkDataService } from "./links/LinkDataService.js";
+import { SearchHandler } from "../search/SearchHandler.js";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
@@ -55,6 +56,7 @@ export class DataAccessLayer {
   reviewerHandler: ReviewerHandler;
   teamHandler: TeamHandler;
   actionItemHandler: ActionItemHandler;
+  searchHandler: SearchHandler;
 
   get authzProvider(): AuthzProvider {
     return authzProvider;
@@ -77,6 +79,7 @@ export class DataAccessLayer {
     this.teamHandler = new TeamHandler();
     this.userHandler = new UserHandler();
     this.reviewerHandler = new ReviewerHandler();
+    this.searchHandler = new SearchHandler();
 
     // Initialize Data Services
     this.modelService = new ModelDataService(this);
