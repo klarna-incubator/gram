@@ -12,7 +12,6 @@ export interface SearchResult {
 export interface SearchType {
   key: string;
   label: string;
-  color?: string;
 }
 
 export interface SearchProviderResult {
