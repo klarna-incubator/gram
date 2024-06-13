@@ -6,7 +6,7 @@ export interface SearchFilter {
 }
 
 export interface SearchResult {
-  results: SearchProviderResult[];
+  results: WrappedSearchProviderResult[];
 }
 
 export interface SearchType {
@@ -15,9 +15,12 @@ export interface SearchType {
 }
 
 export interface SearchProviderResult {
-  type: string;
   count: number;
   items: SearchResultItem[];
+}
+
+export interface WrappedSearchProviderResult extends SearchProviderResult {
+  type: string;
 }
 
 export interface SearchResultItem {
@@ -57,8 +60,10 @@ export class SearchHandler {
               filter.types.includes(provider.searchType.key)
             )
             .map(
-              (provider): Promise<SearchProviderResult> =>
-                provider.search(filter)
+              async (provider): Promise<WrappedSearchProviderResult> => ({
+                ...(await provider.search(filter)),
+                type: provider.searchType.key,
+              })
             )
         )),
       ],

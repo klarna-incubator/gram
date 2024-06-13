@@ -77,7 +77,6 @@ export class ModelDataService extends EventEmitter implements SearchProvider {
     const countRes = await this.pool.query(countQuery, [filter.searchText]);
 
     return {
-      type: this.searchType.key,
       count: countRes.rows[0].count,
       items: res.rows.map((row) => ({
         id: row.id,
