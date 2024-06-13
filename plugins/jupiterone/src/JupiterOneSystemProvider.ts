@@ -44,7 +44,6 @@ export class JupiterOneSystemProvider
     );
 
     return {
-      type: this.searchType.key,
       count: result.length,
       items: pagedResult.map((row: any) => {
         return {

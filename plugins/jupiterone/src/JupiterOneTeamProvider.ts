@@ -67,7 +67,6 @@ export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
     );
 
     return {
-      type: this.searchType.key,
       count: result.length,
       items: pagedResult.map((team: any) => {
         return {

@@ -150,7 +150,6 @@ export class OctaneSystemProvider implements SystemProvider, SearchProvider {
           url: `/system/${system.system_id}`,
         })),
       count: systems.length,
-      type: this.searchType.key,
     };
   }
 
