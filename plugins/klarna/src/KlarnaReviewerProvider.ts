@@ -13,6 +13,10 @@ import log4js from "log4js";
 import { HSFContextProvider } from "./HSFContextProvider.js";
 import { getDomainMembers } from "./ldap.js";
 import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
+import {
+  JupiterOneSystemPropertyProvider,
+  JupiterOneSystemProvider,
+} from "@gram/jupiterone";
 
 const log = log4js.getLogger("KlarnaReviewerProvider");
 
@@ -34,7 +38,7 @@ const calendarEventDescription = `
 <link here>
 
 📄 For more information about the threat modeling process, please read our documentation at:
-https://kep.klarna.net/docs/secure-development/threat_modeling/threat_modeling/
+https://wiki.klarna.net/wiki/KEP_Wiki_Docs/Secure_Development_-_Threat_Modeling_-_Threat_Modeling_Process
 `;
 
 export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
@@ -48,8 +52,8 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
 
   constructor(
     private dal: DataAccessLayer,
-    private systemProvider: OctaneSystemProvider,
-    private hsf: HSFContextProvider,
+    private systemProvider: JupiterOneSystemProvider,
+    private hsf: JupiterOneSystemPropertyProvider,
     private ldapProviderSettings: Omit<
       LDAPGroupBasedReviewerProviderSettings,
       "fallbackReviewer"
@@ -203,26 +207,27 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
     let recommend = (dn: string) => false;
 
     // Check if the system is HSF
-    const hsfProp = model.systemId
+    const props = model.systemId
       ? await this.hsf.provideSystemProperties(ctx, model.systemId, false)
       : [];
-    const isHSF = hsfProp.length > 0 && hsfProp[0].value !== "false";
+    const isHSF =
+      props.find(
+        (p) => p.id === "tag.srb2:system-risk-level" && p.value === "hsf"
+      ) !== undefined;
 
     // Recommend reviewer based on the reviewer being in the same domain as
     // the system.
     const system = model.systemId
-      ? await this.systemProvider.getOctaneSystem(model.systemId)
+      ? await this.systemProvider.getJ1System(model.systemId)
       : null;
 
-    const domain = system?.team?.domain;
+    const domain = system?.domain?.properties?.accountabilityCode;
 
-    if (domain?.accountability_code !== undefined) {
+    if (domain !== undefined) {
       // TODO: Special case: use domain reviewer group if there's one for that domain.
 
       // Otherwise compare domain of system to reviewer.
-      const members = new Set(
-        await this.getDomainMembers(domain.accountability_code)
-      );
+      const members = new Set(await this.getDomainMembers(domain));
       // Create recommendation function based on system domain
       recommend = (mail: string) => {
         return members.has(mail);

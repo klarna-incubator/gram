@@ -33,6 +33,7 @@
     "@gram/cncf": "*",
     "@gram/core": "*",
     "@gram/jira": "*",
+    "@gram/jupiterone": "^4.9.4",
     "@gram/klarna": "*",
     "@gram/kubernetes": "*",
     "@gram/ldap": "*",

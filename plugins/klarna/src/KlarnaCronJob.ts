@@ -6,7 +6,6 @@ import {
   KlarnaReviewerProvider,
   fallbackReviewer,
 } from "./KlarnaReviewerProvider.js";
-import * as Sentry from "@sentry/node";
 import { OctaneSystemProvider } from "./index.js";
 import { LDAPCache } from "@gram/ldap/dist/index.js";
 import cron from "node-cron";
@@ -26,7 +25,13 @@ function differenceInDays(dateToCompare: Date) {
 const log = log4js.getLogger("klarnaCronJob");
 
 export class KlarnaCronJob {
-  constructor(private dal: DataAccessLayer) {}
+  constructor(
+    private dal: DataAccessLayer,
+    private reviewerProvider: KlarnaReviewerProvider,
+    private octaneSystemProvider: OctaneSystemProvider
+  ) {
+    this.bootstrap();
+  }
 
   async scheduleJob(
     monitorSlug: string,
@@ -173,10 +178,7 @@ export class KlarnaCronJob {
     );
   }
 
-  async bootstrap(
-    reviewerProvider: KlarnaReviewerProvider,
-    systemProvider: OctaneSystemProvider
-  ) {
+  async bootstrap() {
     // runs every day at 06:00 AM
     this.scheduleJob("reminder-meeting-requested", "0 6 * * *", async () =>
       this.sendRemindersForMeetingRequested()
@@ -192,14 +194,14 @@ export class KlarnaCronJob {
     this.scheduleJob(
       "preload-reviewers",
       "*/30 * * * *",
-      async () => await reviewerProvider.preloadReviewers()
+      async () => await this.reviewerProvider.preloadReviewers()
     );
 
     // runs every 10 minutes
     this.scheduleJob(
       "load-systems",
       "*/10 * * * *",
-      async () => await systemProvider.loadSystems()
+      async () => await this.octaneSystemProvider.loadSystems()
     );
 
     // runs every 30 minutes

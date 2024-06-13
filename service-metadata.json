@@ -116,7 +116,8 @@
       "OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" },
       "THREATSAURUS_URL": {
         "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
-      }
+      },
+      "J1_KEY": { "secret": "/j1.key" }
     }
   }
 }

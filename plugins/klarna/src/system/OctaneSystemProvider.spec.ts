@@ -42,14 +42,14 @@ describe("SystemProvider Octane Integration Test", () => {
       expect(systems[0].displayName).toBeDefined();
     });
 
-    it('should return available systems from "search" filter', async () => {
+    it('should return available systems from "batch" filter', async () => {
       const systems = (
         await systemProvider.listSystems(
           {},
           {
-            filter: SystemListFilter.Search,
+            filter: SystemListFilter.Batch,
             opts: {
-              search: "gram",
+              ids: ["gram"],
             },
           }
         )
