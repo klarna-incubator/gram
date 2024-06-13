@@ -15,7 +15,7 @@ import { useSearchQuery } from "../../api/gram/search";
 export function SearchResultBox({ searchText, type }) {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useSearchQuery({
+  const { data, isLoading, isFetching } = useSearchQuery({
     searchText,
     types: [type.key],
     page: page - 1,
@@ -23,8 +23,16 @@ export function SearchResultBox({ searchText, type }) {
 
   const r = isLoading ? null : data[0];
 
-  if (isLoading || !r) {
-    return <CircularProgress />;
+  if (isFetching || isLoading) {
+    return (
+      <Card sx={{ maxWidth: "sm" }}>
+        <CardContent>
+          <Typography variant="h5">{type.label}s</Typography>
+          <br />
+          <CircularProgress />
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
