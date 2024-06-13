@@ -69,12 +69,7 @@
     "public_loadbalancer": false,
     "egress": {
       "allowed_destinations": [
-        { "destination": "www.googleapis.com", "ports": [443] },
-        { "destination": "oauth2.googleapis.com", "ports": [443] },
-        { "destination": "accounts.google.com", "ports": [443] },
-        { "destination": "iam.googleapis.com", "ports": [443] },
-        { "destination": "openidconnect.googleapis.com", "ports": [443] },
-        { "destination": "www.googleapis.com", "ports": [443] },
+        { "destination": "api.eu.jupiterone.io", "ports": [443] },
         { "destination": "o24547.ingest.sentry.io", "ports": [443] },
         { "destination": "octane.klarna.net", "ports": [443] },
         { "destination": "sso.klarna.net", "ports": [443] },
