@@ -3,6 +3,10 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import Model from "@gram/core/dist/data/models/Model.js";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import {
+  JupiterOneSystemPropertyProvider,
+  JupiterOneSystemProvider,
+} from "@gram/jupiterone";
+import {
   LDAPGroupBasedReviewerProvider,
   connectLdapClient,
   escapeFilterValue,
@@ -10,13 +14,7 @@ import {
 } from "@gram/ldap";
 import { LDAPGroupBasedReviewerProviderSettings } from "@gram/ldap/dist/LDAPGroupBasedReviewerProvider.js";
 import log4js from "log4js";
-import { HSFContextProvider } from "./HSFContextProvider.js";
 import { getDomainMembers } from "./ldap.js";
-import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
-import {
-  JupiterOneSystemPropertyProvider,
-  JupiterOneSystemProvider,
-} from "@gram/jupiterone";
 
 const log = log4js.getLogger("KlarnaReviewerProvider");
 
@@ -212,7 +210,7 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
       : [];
     const isHSF =
       props.find(
-        (p) => p.id === "tag.srb2:system-risk-level" && p.value === "hsf"
+        (p: any) => p.id === "tag.srb2:system-risk-level" && p.value === "hsf"
       ) !== undefined;
 
     // Recommend reviewer based on the reviewer being in the same domain as

@@ -3,9 +3,7 @@ import { ComponentClass } from "@gram/core/dist/data/component-classes";
 import { join } from "path";
 
 export { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
-export { NGOVSystemContextProvider } from "./system/NGOVSystemContextProvider.js";
 export { KlarnaReviewerProvider } from "./KlarnaReviewerProvider.js";
-export { HSFContextProvider } from "./HSFContextProvider.js";
 export { KlarnaCronJob } from "./KlarnaCronJob.js";
 export { KlarnaSystemProvider } from "./KlarnaSystemProvider.js";
 import classes from "./classes.js";

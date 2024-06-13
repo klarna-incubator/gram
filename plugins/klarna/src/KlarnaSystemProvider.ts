@@ -1,8 +1,10 @@
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import System from "@gram/core/dist/data/systems/System.js";
-import { JupiterOneSystemProvider } from "@gram/jupiterone";
+import {
+  JupiterOneSystemProvider,
+  OverloadedJupiterOneClient,
+} from "@gram/jupiterone";
 import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
-import { OverloadedJupiterOneClient } from "@gram/jupiterone";
 
 export class KlarnaSystemProvider extends JupiterOneSystemProvider {
   constructor(
