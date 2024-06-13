@@ -28,7 +28,6 @@ export class StaticSystemProvider implements SystemProvider, SearchProvider {
     const result: SearchProviderResult = {
       items: [],
       count: 0,
-      type: this.searchType.key,
     };
 
     // Very inefficient filters - If you have a lot of systems, use an index.

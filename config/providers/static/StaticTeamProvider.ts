@@ -21,7 +21,6 @@ export class StaticTeamProvider implements TeamProvider, SearchProvider {
     const result: SearchProviderResult = {
       items: [],
       count: 0,
-      type: this.searchType.key,
     };
 
     // Very inefficient filters - If you have a lot of teams, use an index.
