@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "lerna run test",
-    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build",
+    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build --concurrency 1",
     "build-backend": "lerna run --scope=@gram/api --include-dependencies build",
     "build-all": "lerna run build",
     "dev": "npm run build-backend && lerna run start --parallel",
