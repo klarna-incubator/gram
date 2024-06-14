@@ -133,6 +133,15 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "lodi-g",
+      "name": "Grégoire Lodi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4528943?v=4",
+      "profile": "https://github.com/lodi-g",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
