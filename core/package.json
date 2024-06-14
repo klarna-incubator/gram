@@ -39,6 +39,7 @@
     "@sentry/tracing": "^7.6.0",
     "emailjs": "^4.0.3",
     "express": "^4.19.2",
+    "global-agent": "^3.0.0",
     "handlebars": "^4.7.7",
     "jsonwebtoken": "^9.0.0",
     "log4js": "^6.6.1",

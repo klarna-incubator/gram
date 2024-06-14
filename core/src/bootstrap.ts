@@ -1,12 +1,12 @@
 import { bootstrap as bootstra } from "global-agent";
-import log4js from "log4js";
-import { Bootstrapper } from "./Bootstrapper.js";
 import { config } from "./config/index.js";
-import { migrate } from "./data/Migration.js";
 import { DataAccessLayer } from "./data/dal.js";
 import { createPostgresPool } from "./data/postgres.js";
+import { Bootstrapper } from "./Bootstrapper.js";
+import { migrate } from "./data/Migration.js";
+import log4js from "log4js";
 
-const log = log4js.getLogger("Bootstrap");
+const log = log4js.getLogger("bootstrap");
 
 export async function bootstrap(): Promise<DataAccessLayer> {
   const pool = await createPostgresPool();
@@ -15,7 +15,7 @@ export async function bootstrap(): Promise<DataAccessLayer> {
 
   await migrate();
 
-  // Set https proxy for outgoing requests on C2C
+  // Set https proxy for outgoing requests
   if (config.httpsProxy) {
     bootstra();
     (global as any).GLOBAL_AGENT.HTTPS_PROXY = config.httpsProxy;

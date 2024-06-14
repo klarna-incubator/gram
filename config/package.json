@@ -42,8 +42,7 @@
     "@gram/svgporn": "*",
     "@gram/threatlib": "*",
     "@gram/threatsaurus": "*",
-    "dotenv": "^16.3.1",
-    "global-agent": "^3.0.0"
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
