@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "private": true,
-  "version": "4.12.0",
+  "version": "4.12.1",
   "description": "Gram Configuration",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -33,7 +33,7 @@
     "@gram/cncf": "*",
     "@gram/core": "*",
     "@gram/jira": "*",
-    "@gram/jupiterone": "^4.9.4",
+    "@gram/jupiterone": "*",
     "@gram/klarna": "*",
     "@gram/kubernetes": "*",
     "@gram/ldap": "*",
