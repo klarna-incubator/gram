@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.12.0](https://github.com/klarna-incubator/gram/compare/v4.11.0...v4.12.0) (2024-06-14)
+
+### Bug Fixes
+
+- pass readonly to MultipleSystemsDropdown via props. Make it disabled if readonly. ([e58381c](https://github.com/klarna-incubator/gram/commit/e58381c9bcc93dc7d1c3a874fc046c662567b1cf))
+
+### Features
+
+- Component now has a System dropdown for selecting multiple systems. ([80ad59b](https://github.com/klarna-incubator/gram/commit/80ad59b67765d62149dc92b11519bbb2621df025)), closes [#103](https://github.com/klarna-incubator/gram/issues/103)
+- handle cases where the reviewer's name is null ([8cdd9c2](https://github.com/klarna-incubator/gram/commit/8cdd9c2bb164a84e492b5a6863df827c1397d360))
+- handle null reviewer name in all cases in the Review page ([bbd98ba](https://github.com/klarna-incubator/gram/commit/bbd98ba828ffd73eff9d2398d4ff79c75375c00e))
+
 # [4.11.0](https://github.com/klarna-incubator/gram/compare/v4.10.0...v4.11.0) (2024-05-22)
 
 ### Bug Fixes

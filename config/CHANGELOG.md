@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.12.0](https://github.com/klarna/gram/compare/v4.11.0...v4.12.0) (2024-06-14)
+
+### Features
+
+- Component now has a System dropdown for selecting multiple systems. ([80ad59b](https://github.com/klarna/gram/commit/80ad59b67765d62149dc92b11519bbb2621df025)), closes [#103](https://github.com/klarna/gram/issues/103)
+
 # [4.11.0](https://github.com/klarna/gram/compare/v4.10.0...v4.11.0) (2024-05-22)
 
 ### Features
