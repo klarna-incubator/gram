@@ -9,7 +9,7 @@ export function createHttpsProxyAgent() {
     return undefined;
   }
 
-  log.info("Creating HttpsProxyAgent with proxy", config.httpsProxy);
+  log.info(`Creating HttpsProxyAgent with proxy ${config.httpsProxy}`);
 
   const agent = new HttpsProxyAgent({
     keepAlive: true,
