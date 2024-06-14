@@ -69,8 +69,6 @@
     "public_loadbalancer": false,
     "egress": {
       "allowed_destinations": [
-        { "destination": "api.eu.jupiterone.io", "ports": [443] },
-        { "destination": "results.eu.jupiterone.io", "ports": [443] },
         { "destination": ".eu.jupiterone.io", "ports": [443] },
         { "destination": "o24547.ingest.sentry.io", "ports": [443] },
         { "destination": "octane.klarna.net", "ports": [443] },
