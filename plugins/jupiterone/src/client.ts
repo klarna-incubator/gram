@@ -5,6 +5,7 @@ import {
 } from "@jupiterone/jupiterone-client-nodejs";
 import log4js from "log4js";
 import Cache from "@gram/core/dist/util/cache.js";
+// import { config } from "@gram/core/dist/config/index.js";
 
 const log = log4js.getLogger("OverloadedJupiterOneClient");
 
@@ -45,8 +46,14 @@ export async function createJ1Client(
   account: string,
   apiBaseUrl: string
 ): Promise<OverloadedJupiterOneClient> {
+  const accessToken = await apiKey.getValue();
+
+  if (!accessToken) {
+    throw new Error("JupiterOne API key is missing");
+  }
+
   const options: JupiterOneClientOptions = {
-    accessToken: await apiKey.getValue(),
+    accessToken,
     apiBaseUrl, //: "https://api.eu.jupiterone.io",
     account,
   };

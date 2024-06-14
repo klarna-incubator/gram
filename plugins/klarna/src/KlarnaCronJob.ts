@@ -200,7 +200,7 @@ export class KlarnaCronJob {
     // runs every 10 minutes
     this.scheduleJob(
       "load-systems",
-      "*/10 * * * *",
+      "*/30 * * * *",
       async () => await this.octaneSystemProvider.loadSystems()
     );
 
