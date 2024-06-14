@@ -134,7 +134,8 @@ export const defaultConfig: GramConfiguration = {
     // Set https proxy for outgoing requests on C2C
     bootstrap();
     // process.env.GLOBAL_AGENT_HTTPS_PROXY = process.env.HTTPS_PROXY;
-    (global as any).GLOBAL_AGENT.HTTPS_PROXY = process.env.HTTPS_PROXY;
+    // (global as any).GLOBAL_AGENT.HTTPS_PROXY = process.env.HTTPS_PROXY;
+    (global as any).GLOBAL_AGENT.HTTP_PROXY = process.env.HTTPS_PROXY;
 
     const oidc = new OIDCIdentityProvider(
       (await new EnvSecret("OIDC_CLIENT_DISCOVER_URL").getValue()) as string,
