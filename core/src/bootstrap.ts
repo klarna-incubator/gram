@@ -18,7 +18,7 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   // Set https proxy for outgoing requests on C2C
   if (config.httpsProxy) {
     bootstra();
-    (global as any).GLOBAL_AGENT.HTTPS_PROXY = config.httpsProxy;
+    // (global as any).GLOBAL_AGENT.HTTPS_PROXY = config.httpsProxy;
     (global as any).GLOBAL_AGENT.HTTP_PROXY = config.httpsProxy;
     log.info(`Setting global agent proxy to ${config.httpsProxy}`);
   }
