@@ -68,7 +68,9 @@ const ReviewContent = (review) => {
         : aboutToExpire
         ? "Approved (will soon expire)"
         : "Approved",
-      description: `Approved by ${review?.reviewer?.name} on ${new Date(
+      description: `Approved by ${
+        review?.reviewer?.name ?? "an unknown user"
+      } on ${new Date(
         review?.approved_at
       ).toLocaleDateString()} and valid until ${validUntil.toLocaleDateString()}. To update this model, create a new model based on this one and have it reviewed again.`,
       showNoteButton: true,
