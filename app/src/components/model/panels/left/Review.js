@@ -39,6 +39,8 @@ const ReviewContent = (review) => {
     review?.approved_at
   );
 
+  const reviewerName = review?.reviewer?.name ?? "an unknown user";
+
   return {
     default: {
       title: "Threat model not reviewed",
@@ -68,9 +70,7 @@ const ReviewContent = (review) => {
         : aboutToExpire
         ? "Approved (will soon expire)"
         : "Approved",
-      description: `Approved by ${
-        review?.reviewer?.name ?? "an unknown user"
-      } on ${new Date(
+      description: `Approved by ${reviewerName} on ${new Date(
         review?.approved_at
       ).toLocaleDateString()} and valid until ${validUntil.toLocaleDateString()}. To update this model, create a new model based on this one and have it reviewed again.`,
       showNoteButton: true,
@@ -90,7 +90,7 @@ const ReviewContent = (review) => {
     "meeting-requested": {
       title: "Meeting requested",
       description: review?.reviewer?.calendarLink
-        ? `Please use the link below to schedule a threat modelling session with ${review?.reviewer?.name}.`
+        ? `Please use the link below to schedule a threat modelling session with ${reviewerName}.`
         : "",
       showNoteButton: true,
       buttons: [
