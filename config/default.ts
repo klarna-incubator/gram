@@ -36,6 +36,8 @@ import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import defaultNotifications from "./notifications/index.js";
 import { bootstrap } from "global-agent";
+import http from "http";
+import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -132,10 +134,15 @@ export const defaultConfig: GramConfiguration = {
     dal: DataAccessLayer
   ): Promise<Providers> {
     // Set https proxy for outgoing requests on C2C
-    bootstrap();
+    // bootstrap();
+    const agent = createHttpsProxyAgent();
+    if (agent) {
+      http.globalAgent = agent;
+    }
     // process.env.GLOBAL_AGENT_HTTPS_PROXY = process.env.HTTPS_PROXY;
     // (global as any).GLOBAL_AGENT.HTTPS_PROXY = process.env.HTTPS_PROXY;
-    (global as any).GLOBAL_AGENT.HTTP_PROXY = process.env.HTTPS_PROXY;
+    //   global as any
+    // ).GLOBAL_AGENT.HTTP_PROXY = process.env.HTTPS_PROXY;
 
     const oidc = new OIDCIdentityProvider(
       (await new EnvSecret("OIDC_CLIENT_DISCOVER_URL").getValue()) as string,
