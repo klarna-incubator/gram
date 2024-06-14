@@ -7,7 +7,6 @@ import { Secret } from "@gram/core/dist/config/Secret.js";
 import { config } from "@gram/core/dist/config/index.js";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
 import { InvalidInputError } from "@gram/core/dist/util/errors.js";
-import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
 import log4js from "log4js";
 import { Client, Issuer, custom, generators } from "openid-client";
 import { aes256gcm } from "./util.js";
@@ -32,7 +31,6 @@ export class OIDCIdentityProvider implements IdentityProvider {
 
     if (config.httpsProxy) {
       custom.setHttpOptionsDefaults({
-        agent: createHttpsProxyAgent(),
         timeout: 10000,
       });
     }

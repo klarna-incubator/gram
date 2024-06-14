@@ -5,7 +5,7 @@ import Threat from "@gram/core/dist/data/threats/Threat.js";
 import log4js from "log4js";
 import fetch from "node-fetch";
 import { JiraConfig } from "./JiraConfig.js";
-import { createHttpsProxyAgent } from "@gram/core/dist/util/proxyAgent.js";
+
 import { Agent } from "https";
 
 const log = log4js.getLogger("JiraActionItemExporter");
@@ -98,7 +98,6 @@ export class JiraActionItemExporter implements ActionItemExporter {
     private dal: DataAccessLayer
   ) {
     this.exportOnReviewApproved = config.exportOnReviewApproved;
-    this.agent = createHttpsProxyAgent();
   }
 
   async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {
