@@ -37,6 +37,7 @@
   "private": true,
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
+    "@types/global-agent": "^2.1.3",
     "@types/jest": "^29.4.0",
     "@types/node": "^20.4.2",
     "all-contributors-cli": "^6.26.1",

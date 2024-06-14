@@ -35,6 +35,7 @@ import { StrideSuggestionProvider } from "@gram/stride";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import defaultNotifications from "./notifications/index.js";
+import { bootstrap } from "global-agent";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -130,6 +131,11 @@ export const defaultConfig: GramConfiguration = {
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {
+    // Set https proxy for outgoing requests on C2C
+    bootstrap();
+    // process.env.GLOBAL_AGENT_HTTPS_PROXY = process.env.HTTPS_PROXY;
+    (global as any).GLOBAL_AGENT.HTTPS_PROXY = process.env.HTTPS_PROXY;
+
     const oidc = new OIDCIdentityProvider(
       (await new EnvSecret("OIDC_CLIENT_DISCOVER_URL").getValue()) as string,
       new EnvSecret("OIDC_CLIENT_ID"),
