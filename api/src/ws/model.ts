@@ -1,4 +1,4 @@
-import WebSocket from "ws";
+import WebSocket, { WebSocketServer } from "ws";
 import {
   getPermissionsForModel,
   Permission,
@@ -19,7 +19,7 @@ export class ModelWebsocketServer {
     this.id = model.id!;
     this.model = model;
     this.dal = dal;
-    this.server = new WebSocket.Server({ noServer: true });
+    this.server = new WebSocketServer({ noServer: true });
     this.log = log4js.getLogger(`ModelWebsocketServer [${this.id}]`);
     this.bind();
   }
@@ -27,7 +27,7 @@ export class ModelWebsocketServer {
   id: string;
   model: Model;
   dal: DataAccessLayer;
-  server: WebSocket.Server;
+  server: WebSocketServer;
   log: any;
 
   VALID_TYPES = [
