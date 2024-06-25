@@ -2,7 +2,7 @@
   "name": "@gram/core",
   "private": true,
   "type": "module",
-  "version": "4.12.1",
+  "version": "4.12.2",
   "description": "Core library for Gram backend stuff",
   "scripts": {
     "clean": "rimraf ./dist",
@@ -56,7 +56,6 @@
     "@types/node-fetch": "^2.5.12",
     "@types/pg": "^8.6.5",
     "@types/supertest": "^2.0.11",
-    "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "eslint": "^8.15.0",

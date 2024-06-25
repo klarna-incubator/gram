@@ -88,7 +88,7 @@ export class JupiterOneSystemProvider
     return new System(
       row.system.properties.systemId,
       row.system.properties.systemId,
-      row.system.entity.displayName,
+      row.system.properties.systemId,
       [
         {
           id: row.team.properties.accountabilityCode,
