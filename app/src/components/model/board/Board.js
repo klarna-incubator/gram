@@ -540,7 +540,7 @@ export default function Board() {
 
   function onSelectionDragEnd() {
     const selectedIds = Object.keys(selected);
-    console.log("onSelectionDragEnd", selectedIds, componentsPos);
+    // console.log("onSelectionDragEnd", selectedIds, componentsPos);
 
     dispatch(
       moveComponents(
