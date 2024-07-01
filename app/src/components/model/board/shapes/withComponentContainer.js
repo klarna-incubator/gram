@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Group, Text } from "react-konva";
-import { Html } from "react-konva-utils";
-import { usePatchComponent } from "../../hooks/usePatchComponent";
+import React, { useEffect, useState } from "react";
+import { Group } from "react-konva";
 import { COMPONENT_SIZE } from "../constants";
+import { ComponentLabel } from "./ComponentLabel";
 import { Icon } from "./Icon";
 import { Magnets } from "./Magnets";
 import "./withComponentContainer.css";
@@ -71,38 +70,19 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
       draggable,
       readOnly,
       classes,
-      changingComponentName,
-      setChangingComponentName,
       onMagnetClick,
       onDragStart,
       onDragMove,
       onDragEnd,
       onClick,
-      focusDiagramContainer,
       editDataFlow,
     } = props;
 
-    const nameRef = useRef();
-    const editNameRef = useRef();
-    const patchComponent = usePatchComponent(id);
     const localWidth = width || COMPONENT_SIZE.WIDTH;
     const localHeight = height || COMPONENT_SIZE.HEIGHT;
 
     const [isHovered, setHovered] = useState();
-    const [newName, setNewName] = useState(name);
     const [classesWithIcon, setClassesWithIcon] = useState([]);
-
-    useEffect(() => {
-      setNewName(name);
-    }, [name]);
-
-    useEffect(() => {
-      if (changingComponentName === id && editNameRef.current) {
-        editNameRef.current.focus({ preventScroll: true });
-        editNameRef.current.select();
-      }
-      // eslint-disable-next-line
-    }, [changingComponentName]);
 
     useEffect(() => {
       setIcons(classes, setClassesWithIcon);
@@ -155,30 +135,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
     function onMouseLeave() {
       document.body.style.cursor = "default";
       setHovered(false);
-    }
-
-    function editName() {
-      if (selected && !readOnly) {
-        setChangingComponentName(id);
-      }
-    }
-
-    function onNameKeyDown(e) {
-      if (e.key === "Escape") {
-        // Reset name change
-        setNewName(name);
-        setChangingComponentName(false);
-        focusDiagramContainer();
-      } else if (e.key === "Enter") {
-        submitNameChange();
-        setChangingComponentName(false);
-        focusDiagramContainer();
-      }
-    }
-
-    function submitNameChange() {
-      patchComponent({ name: newName });
-      setChangingComponentName(false);
     }
 
     return (
@@ -234,71 +190,15 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
             width={c.width}
           />
         ))}
-        <Text
-          visible={changingComponentName !== id || readOnly}
-          transformsEnabled={"position"}
-          ref={nameRef}
-          id={id}
-          type={
-            type
-          } /* Used to communicate upwards (onContextMenu) what type of component was clicked. */
-          text={name}
-          fontSize={12}
-          fontFamily={"Open Sans"}
-          fill={"black"}
-          width={localWidth}
-          align="center"
-          y={localHeight / 2 - (classesWithIcon.length > 0 ? 20 : 7)}
+        <ComponentLabel
+          componentId={id}
           x={0}
-          wrap={"none"}
-          ellipsis={true}
-          onClick={() => editName()}
-          onMouseEnter={() => {
-            if (!readOnly) {
-              document.body.style.cursor = "text";
-            }
-          }}
-          onMouseLeave={() => {
-            if (!readOnly) {
-              document.body.style.cursor = "pointer";
-            }
-          }}
+          y={localHeight / 2 - (classesWithIcon.length > 0 ? 20 : 7)}
+          maxWidth={localWidth}
+          type={type}
+          name={name}
+          stage={stage}
         />
-        {changingComponentName === id && !readOnly && (
-          <Html
-            transform={true}
-            transformFunc={(attrs) => ({
-              ...attrs,
-              x: nameRef.current.getAbsolutePosition().x,
-              y: nameRef.current.getAbsolutePosition().y,
-              scaleX: stage.scale,
-              scaleY: stage.scale,
-            })}
-            divProps={{ veryUglyHackToForceUpdate: stage }}
-          >
-            <input
-              className={"editComponentName"}
-              style={{
-                display: changingComponentName === id,
-                width: localWidth + "px",
-              }}
-              spellCheck={false}
-              ref={editNameRef}
-              id={id}
-              type={"textarea"}
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyDown={(e) => onNameKeyDown(e)}
-              onBlur={(e) => {
-                // If mouse click or touch caused blur
-                if (e.nativeEvent.sourceCapabilities) {
-                  submitNameChange();
-                }
-                setChangingComponentName(false);
-              }}
-            />
-          </Html>
-        )}
         {!readOnly && (
           <Magnets
             x={x}

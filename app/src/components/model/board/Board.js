@@ -138,9 +138,6 @@ export default function Board() {
 
   useAutomaticallySetToCenter(setStage, stageRef.current);
 
-  // Check read only mode
-  const [changingComponentName, setChangingComponentName] = useState(false);
-
   const componentsPosObj = components.reduce(
     (acc, c) => ({ ...acc, [c.id]: { x: c.x, y: c.y } }),
     {}
@@ -185,7 +182,7 @@ export default function Board() {
   // Event handlers - Input Events
   // --------------------------------------------------------------------------
   function onKeyDown(e) {
-    if (e.repeat || (changingComponentName && e.key !== "Delete")) {
+    if (e.repeat) {
       return;
     }
 
@@ -210,7 +207,8 @@ export default function Board() {
       // Delete
       if (
         (e.key === "Delete" || e.key === "Backspace") &&
-        Object.keys(selected).length !== 0
+        Object.keys(selected).length !== 0 &&
+        !e.target.tagName.toLowerCase().match(/input|textarea/)
       ) {
         let selectedComponents = components.filter((c) => c.id in selected);
         if (
@@ -409,7 +407,6 @@ export default function Board() {
 
   function onComponentClick(id) {
     return function (e) {
-      console.log("onComponentClick");
       // If not left click
       if (e.evt.button !== 0) {
         return;
@@ -705,11 +702,6 @@ export default function Board() {
                             stageRef={stageRef}
                             stage={stage}
                             readOnly={readOnly}
-                            changingComponentName={changingComponentName}
-                            setChangingComponentName={setChangingComponentName}
-                            focusDiagramContainer={() =>
-                              focusDiagramContainer()
-                            }
                             editDataFlow={editDataFlow}
                             selected={c.selected}
                             onDragStart={(e) => onSelectionDragStart(e, c.id)}
