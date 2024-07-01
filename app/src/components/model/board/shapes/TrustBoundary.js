@@ -2,17 +2,21 @@ import { useEffect, useRef } from "react";
 import { Rect, Transformer } from "react-konva";
 import { usePatchComponent } from "../../hooks/usePatchComponent";
 import { COMPONENT_TYPE } from "../constants";
+import { ComponentLabel } from "./ComponentLabel";
 
 export function TrustBoundary({
   id,
   selected,
   x,
   y,
+  stage,
+  name,
   width,
   height,
   draggable,
   onClick,
   onDragEnd,
+  onDragMove,
   onDragStart,
 }) {
   const shapeRef = useRef();
@@ -33,15 +37,17 @@ export function TrustBoundary({
         x={x}
         y={y}
         type={COMPONENT_TYPE.TRUST_BOUNDARY}
-        onDragEnd={onDragEnd}
         onDragStart={onDragStart}
+        onDragMove={onDragMove}
+        onDragEnd={onDragEnd}
         draggable={draggable}
         ref={shapeRef}
         width={width}
+        cornerRadius={20}
         height={height}
-        dash={[10, 10]}
+        dash={[3, 3]}
         fill={null}
-        stroke={selected ? "#FFB3C7" : "#D7BBD4"}
+        stroke={selected ? "#FFB3C7" : "#000000"}
         strokeWidth={2}
         onClick={onClick}
         onTransformEnd={(e) => {
@@ -59,8 +65,8 @@ export function TrustBoundary({
             x: node.x(),
             y: node.y(),
             // set minimal value
-            width: Math.max(5, node.width() * scaleX),
-            height: Math.max(node.height() * scaleY),
+            width: Math.max(50, node.width() * scaleX),
+            height: Math.max(50, node.height() * scaleY),
           });
         }}
       />
@@ -80,6 +86,19 @@ export function TrustBoundary({
           }}
         />
       )}
+
+      <ComponentLabel
+        x={x + 30}
+        y={y - 10}
+        componentId={id}
+        maxWidth={width - 70}
+        stage={stage}
+        name={name}
+        align="left"
+        type={COMPONENT_TYPE.TRUST_BOUNDARY}
+        border
+        expand
+      />
     </>
   );
 }
