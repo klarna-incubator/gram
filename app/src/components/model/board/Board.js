@@ -1,6 +1,6 @@
 import Konva from "konva";
 import React, { useEffect, useRef, useState } from "react";
-import { Group, Layer, Stage } from "react-konva";
+import { Layer, Stage } from "react-konva";
 import {
   Provider,
   ReactReduxContext,
@@ -13,11 +13,6 @@ import { CURSOR_PAN } from "../../../actions/model/controlsToolbarActions";
 import { copyNodes } from "../../../actions/model/copyNodes";
 import { deleteSelected } from "../../../actions/model/deleteSelected";
 import { moveComponents } from "../../../actions/model/moveSelected";
-import { patchComponent } from "../../../actions/model/patchComponent";
-import {
-  setMultipleSelected,
-  setSelected,
-} from "../../../actions/model/setSelected";
 import { useListControlsQuery } from "../../../api/gram/controls";
 import { useListMitigationsQuery } from "../../../api/gram/mitigations";
 import { useListThreatsQuery } from "../../../api/gram/threats";
@@ -30,6 +25,8 @@ import { useAddComponent } from "../hooks/useAddComponent";
 import { useAutomaticallySetCursorToPanOnFramed } from "../hooks/useAutomaticallySetCursorToPanOnFramed";
 import { useAutomaticallySetToCenter } from "../hooks/useAutomaticallySetToCenter";
 import { useModelID } from "../hooks/useModelID";
+import { useSetMultipleSelected } from "../hooks/useSetMultipleSelected";
+import { useSetSelected } from "../hooks/useSetSelected";
 import { ActiveUsers } from "../panels/ActiveUsers";
 import { ControlsToolBar } from "./components/ControlsToolBar";
 import { Grid } from "./components/Grid";
@@ -49,6 +46,7 @@ import { DataFlow } from "./shapes/DataFlow";
 import { DataStore } from "./shapes/DataStore";
 import { ExternalEntity } from "./shapes/ExternalEntity";
 import { Process } from "./shapes/Process";
+import { TrustBoundary } from "./shapes/TrustBoundary";
 import { getAbsolutePosition } from "./util";
 
 // Local variables
@@ -56,6 +54,7 @@ const componentTypes = {
   ee: ExternalEntity,
   proc: Process,
   ds: DataStore,
+  tb: TrustBoundary,
 };
 
 function grabbingCursor() {
@@ -146,16 +145,16 @@ export default function Board() {
     (acc, c) => ({ ...acc, [c.id]: { x: c.x, y: c.y } }),
     {}
   );
+  // Position of components, kept in state to avoid too many redux updates while moving components which is laggy.
   const [componentsPos, setComponentsPos] = useState(componentsPosObj);
-  const [selectedComponentsStartPos, setSelectedComponentsStartPos] = useState(
-    {}
-  );
   const jsonComponentsPosObj = JSON.stringify(componentsPosObj);
-
   useEffect(() => {
     setComponentsPos(componentsPosObj); // What is this cursed thing??
     // eslint-disable-next-line
   }, [components, jsonComponentsPosObj]);
+
+  const setSelected = useSetSelected();
+  const setMultipleSelected = useSetMultipleSelected();
 
   // Resize functionality
   function resize() {
@@ -243,7 +242,7 @@ export default function Board() {
   }
 
   // close context modal if open
-  function onMouseDown(e) {
+  function onStageMouseDown(e) {
     if (e.target.attrs.isStage) {
       if (stageDialog.type === DIALOG.CONTEXT_MENU) {
         hideStageDialog();
@@ -264,7 +263,7 @@ export default function Board() {
     }
   }
 
-  function onMouseMove() {
+  function onStageMouseMove() {
     if (editDataFlow || selectionRectangle.visible) {
       requestAnimationFrame(() => {
         const stagePos = getStagePointerPosition();
@@ -292,7 +291,7 @@ export default function Board() {
     }
   }
 
-  function onMouseUp(e) {
+  function onStageMouseUp(e) {
     if (selectionRectangle.visible) {
       let selectedComponents = [
         ...components.filter((c) =>
@@ -311,7 +310,7 @@ export default function Board() {
           .filter((s) => !(s in selectedComponents))
           .reduce((a, s) => ({ ...a, [s]: true }), {});
       }
-      dispatch(setMultipleSelected(Object.keys(selectedComponents)));
+      setMultipleSelected(Object.keys(selectedComponents));
       setSelectionRectangle({
         x: 0,
         y: 0,
@@ -340,8 +339,8 @@ export default function Board() {
       Math.min(
         ZOOM.MAX,
         direction < 0
-          ? stage.scale * (ZOOM.SCALE_BY * 1.2)
-          : stage.scale / (ZOOM.SCALE_BY * 1.2)
+          ? stage.scale * ZOOM.SCALE_BY
+          : stage.scale / ZOOM.SCALE_BY
       )
     );
 
@@ -404,23 +403,24 @@ export default function Board() {
   }
 
   function onComponentClick(id) {
-    return function (e, closestMagnet) {
+    return function (e) {
+      console.log("onComponentClick");
       // If not left click
       if (e.evt.button !== 0) {
         return;
       }
 
-      if (editDataFlow && closestMagnet && !readOnly) {
-        onMagnetClick(id)(closestMagnet);
+      if (editDataFlow && !readOnly) {
+        onMagnetClick(id)();
         return;
       }
 
       if (e.evt.shiftKey) {
-        dispatch(setSelected(id, true));
+        setSelected(id, true);
       } else if (e.evt.ctrlKey || e.evt.metaKey) {
-        dispatch(setSelected(id, false));
+        setSelected(id, false);
       } else {
-        dispatch(setMultipleSelected([id]));
+        setMultipleSelected([id]);
       }
     };
   }
@@ -482,9 +482,11 @@ export default function Board() {
         id: e.target.attrs.id,
       });
     } else if (
-      e.target.attrs.name === COMPONENT_TYPE.DATA_STORE ||
-      e.target.attrs.name === COMPONENT_TYPE.EXTERNAL_ENTITY ||
-      e.target.attrs.name === COMPONENT_TYPE.PROCESS
+      e.target.attrs.type === COMPONENT_TYPE.DATA_STORE ||
+      e.target.attrs.type === COMPONENT_TYPE.EXTERNAL_ENTITY ||
+      e.target.attrs.type === COMPONENT_TYPE.PROCESS
+      // e.target.attrs.type === COMPONENT_TYPE.TRUST_BOUNDARY // TODO: fix right click context menu on component click
+      // TODO: fix right click on trust boundary not opening contextMenu
     ) {
       setStageDialog({
         type: DIALOG.CONTEXT_MENU,
@@ -494,7 +496,7 @@ export default function Board() {
     }
   }
 
-  function onDragEnd(e) {
+  function onStageDragEnd(e) {
     setStage({
       ...stage,
       x: e.currentTarget.attrs.x,
@@ -503,37 +505,66 @@ export default function Board() {
     });
   }
 
-  function onSelectionDragEnd(e) {
-    e.target.setPosition(0, 0); // move group back to origin but change coords of all moved components
+  function onSelectionDragStart(e, draggedComponentId) {
+    // console.log("onSelectionDragStart");
+    if (!(draggedComponentId in selected)) {
+      // Handles the case where no component is selected yet a component is still dragged, by setting it as the only selected component
+      setMultipleSelected([draggedComponentId], true);
+    }
+    grabbingCursor();
+  }
+
+  function onSelectionDragMove(e, draggedComponentId) {
+    const currPos = e.target.position();
+    const diff = {
+      x: currPos.x - componentsPos[draggedComponentId].x,
+      y: currPos.y - componentsPos[draggedComponentId].y,
+    };
+    const selectedIds = Object.keys(selected);
+    // console.log("onSelectionDragMove", selectedIds, componentsPos);
+
+    const newComponentsPos = selectedIds
+      .filter((id) => id in componentsPos)
+      .reduce(
+        (acc, id) => ({
+          ...acc,
+          [id]: {
+            x: componentsPos[id].x + diff.x,
+            y: componentsPos[id].y + diff.y,
+          },
+        }),
+        {}
+      );
+
+    // console.log(
+    //   "onSelectionDragMove",
+    //   selectedIds,
+    //   componentsPos,
+    //   newComponentsPos
+    // );
+
+    setComponentsPos((prevComponentsPos) => ({
+      ...prevComponentsPos,
+      ...newComponentsPos,
+    }));
+  }
+
+  function onSelectionDragEnd() {
+    const selectedIds = Object.keys(selected);
+    console.log("onSelectionDragEnd", selectedIds, componentsPos);
+
     dispatch(
       moveComponents(
-        Object.keys(selected).map((id) => ({ ...componentsPos[id], id: id }))
+        selectedIds
+          .filter((id) => id in componentsPos)
+          .map((id) => ({
+            x: componentsPos[id].x,
+            y: componentsPos[id].y,
+            id,
+          }))
       )
     );
     pointerCursor();
-  }
-
-  function onComponentDragStart() {
-    return function (e) {
-      e.target.moveToTop();
-      grabbingCursor();
-    };
-  }
-
-  function onComponentDragEnd(id) {
-    return function (e) {
-      dispatch(patchComponent(id, componentsPos[id]));
-      pointerCursor();
-    };
-  }
-
-  function onComponentDragMove(id) {
-    return function (position) {
-      setComponentsPos({
-        ...componentsPos,
-        [id]: { ...position },
-      });
-    };
   }
 
   // --------------------------------------------------------------------------
@@ -571,12 +602,6 @@ export default function Board() {
     setClipboard([]);
   }
 
-  function changeComponentName(id) {
-    return function (newName) {
-      dispatch(patchComponent(id, { name: newName }));
-    };
-  }
-
   return (
     <div
       id="diagram-container"
@@ -601,7 +626,7 @@ export default function Board() {
           if (stageRef.current) {
             pos = getAbsolutePosition(stageRef.current, pos);
           }
-          addComponent(name, type, pos.x, pos.y);
+          addComponent({ name, type, x: pos.x, y: pos.y });
         }}
       />
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
@@ -628,13 +653,13 @@ export default function Board() {
               width={stage.width}
               height={stage.height}
               draggable={stage.panning}
-              onContextMenu={(e) => onContextMenu(e)}
-              onMouseDown={(e) => onMouseDown(e)}
-              onMouseMove={() => onMouseMove()}
-              onMouseUp={(e) => onMouseUp(e)}
-              onDragEnd={(e) => onDragEnd(e)}
-              onClick={(e) => onStageClick(e)}
-              onWheel={(e) => onStageWheel(e)}
+              onContextMenu={onContextMenu}
+              onMouseDown={onStageMouseDown}
+              onMouseMove={onStageMouseMove}
+              onMouseUp={onStageMouseUp}
+              onDragEnd={onStageDragEnd}
+              onClick={onStageClick}
+              onWheel={onStageWheel}
               scaleX={stage.scale}
               scaleY={stage.scale}
               isStage
@@ -657,35 +682,46 @@ export default function Board() {
                 /> */}
 
                 <Layer key="layer-components">
-                  {components
-                    .filter((c) => !(c.id in selected))
-                    .map((c) => {
-                      const ComponentType = componentTypes[c.type];
-                      return (
-                        <ComponentType
-                          {...c}
-                          key={c.id}
-                          id={c.id}
-                          onDragMove={onComponentDragMove(c.id)}
-                          onMagnetClick={onMagnetClick(c.id)}
-                          onClickP={onComponentClick(c.id)}
-                          threats={threats ? threats[c.id] : []}
-                          controls={controls ? controls[c.id] : []}
-                          mitigations={mitigations}
-                          draggable={!stage.panning && !readOnly}
-                          stageRef={stageRef}
-                          stage={stage}
-                          readOnly={readOnly}
-                          changingComponentName={changingComponentName}
-                          setChangingComponentName={setChangingComponentName}
-                          changeComponentName={changeComponentName(c.id)}
-                          focusDiagramContainer={() => focusDiagramContainer()}
-                          onDragStart={onComponentDragStart()}
-                          onDragEnd={onComponentDragEnd(c.id)}
-                          editDataFlow={editDataFlow}
-                        />
-                      );
-                    })}
+                  {components &&
+                    components
+                      .slice()
+                      .map((c) => ({ ...c, selected: c.id in selected }))
+                      .sort(
+                        (a, b) =>
+                          (a.type === COMPONENT_TYPE.TRUST_BOUNDARY ? -1 : 1) -
+                          (b.type === COMPONENT_TYPE.TRUST_BOUNDARY ? -1 : 1)
+                      )
+                      .map((c) => {
+                        const ComponentType = componentTypes[c.type];
+                        return (
+                          <ComponentType
+                            {...c}
+                            x={componentsPos[c.id]?.x || c.x}
+                            y={componentsPos[c.id]?.y || c.y}
+                            key={c.id}
+                            id={c.id}
+                            onMagnetClick={onMagnetClick(c.id)}
+                            onClick={onComponentClick(c.id)}
+                            threats={threats ? threats[c.id] : []}
+                            controls={controls ? controls[c.id] : []}
+                            mitigations={mitigations}
+                            draggable={!stage.panning && !readOnly}
+                            stageRef={stageRef}
+                            stage={stage}
+                            readOnly={readOnly}
+                            changingComponentName={changingComponentName}
+                            setChangingComponentName={setChangingComponentName}
+                            focusDiagramContainer={() =>
+                              focusDiagramContainer()
+                            }
+                            editDataFlow={editDataFlow}
+                            selected={c.selected}
+                            onDragStart={(e) => onSelectionDragStart(e, c.id)}
+                            onDragMove={(e) => onSelectionDragMove(e, c.id)}
+                            onDragEnd={() => onSelectionDragEnd()}
+                          />
+                        );
+                      })}
                   {dataFlows.map((df) => (
                     <DataFlow
                       key={df.id}
@@ -711,71 +747,6 @@ export default function Board() {
                       getStagePointerPosition={getStagePointerPosition}
                     />
                   ))}
-                </Layer>
-
-                <Layer key="selected-layer-components">
-                  <Group
-                    draggable={!stage.panning && !readOnly}
-                    onDragStart={(e) => {
-                      grabbingCursor();
-                      setSelectedComponentsStartPos(
-                        e.target.children.map((child) => ({
-                          id: child.attrs.id,
-                          x: child.attrs.x,
-                          y: child.attrs.y,
-                        }))
-                      );
-                    }}
-                    onDragMove={(e) => {
-                      const newGroupPos = e.target.position();
-                      const newComponentsPos = selectedComponentsStartPos
-                        .map((c) => ({
-                          ...c,
-                          x: c.x + newGroupPos.x,
-                          y: c.y + newGroupPos.y,
-                        }))
-                        .reduce(
-                          (a, v) => ({ ...a, [v.id]: { x: v.x, y: v.y } }),
-                          {}
-                        );
-                      setComponentsPos((prevComponentsPos) => ({
-                        ...prevComponentsPos,
-                        ...newComponentsPos,
-                      }));
-                    }}
-                    onDragEnd={(e) => onSelectionDragEnd(e)}
-                  >
-                    {components
-                      .filter((c) => c.id in selected)
-                      .map((c) => {
-                        const ComponentType = componentTypes[c.type];
-                        return (
-                          <ComponentType
-                            {...c}
-                            key={c.id}
-                            id={c.id}
-                            onDragMove={onComponentDragMove(c.id)}
-                            onMagnetClick={onMagnetClick(c.id)}
-                            onClickP={onComponentClick(c.id)}
-                            threats={threats ? threats[c.id] : []}
-                            controls={controls ? controls[c.id] : []}
-                            mitigations={mitigations}
-                            draggable={false}
-                            stageRef={stageRef}
-                            stage={stage}
-                            readOnly={readOnly}
-                            changingComponentName={changingComponentName}
-                            setChangingComponentName={setChangingComponentName}
-                            changeComponentName={changeComponentName(c.id)}
-                            focusDiagramContainer={() =>
-                              focusDiagramContainer()
-                            }
-                            editDataFlow={editDataFlow}
-                            selected
-                          />
-                        );
-                      })}
-                  </Group>
                 </Layer>
 
                 <Layer key="new-data-flow" listening={false}>

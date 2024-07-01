@@ -11,16 +11,11 @@ import { useListComponentClassesQuery } from "../../../../api/gram/component-cla
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { uniqueId } from "lodash";
 
-function CustomPaper(props) {
-  return (
-    <Paper {...props} sx={{ colorScheme: (theme) => theme.palette.mode }} />
-  );
-}
-
 const componentTypes = {
   ee: "external",
   proc: "process",
   ds: "datastore",
+  tb: "trust-boundary",
 };
 
 export function TechStacksDropdown({ component, techStacks, setTechStacks }) {
@@ -42,7 +37,9 @@ export function TechStacksDropdown({ component, techStacks, setTechStacks }) {
       filterSelectedOptions
       freeSolo
       forcePopupIcon
-      PaperComponent={CustomPaper}
+      PaperComponent={(props) => (
+        <Paper {...props} sx={{ colorScheme: (theme) => theme.palette.mode }} />
+      )}
       disabled={readOnly}
       value={techStacks}
       options={techStackOptions}

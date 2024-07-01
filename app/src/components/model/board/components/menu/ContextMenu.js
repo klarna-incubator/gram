@@ -41,12 +41,12 @@ export const ContextMenu = React.memo(
 
     function onAddComponent(name, type) {
       const pos = getAbsolutePosition(stageRef.current, { x, y });
-      const id = addComponent(
+      const id = addComponent({
         name,
         type,
-        pos.x - COMPONENT_SIZE.WIDTH / 2,
-        pos.y - COMPONENT_SIZE.HEIGHT / 2
-      );
+        x: pos.x - COMPONENT_SIZE.WIDTH / 2,
+        y: pos.y - COMPONENT_SIZE.HEIGHT / 2,
+      });
       dispatch(setMultipleSelected([id]));
       onClose();
     }
@@ -97,10 +97,18 @@ export const ContextMenu = React.memo(
             <MenuItem
               key={"add_ds"}
               onClick={() => {
-                onAddComponent("Data store", COMPONENT_TYPE.DATA_STORE);
+                onAddComponent("Data Store", COMPONENT_TYPE.DATA_STORE);
               }}
             >
-              <ListItemText>Add Data store</ListItemText>
+              <ListItemText>Add Data Store</ListItemText>
+            </MenuItem>
+            <MenuItem
+              key={"add_tb"}
+              onClick={() => {
+                onAddComponent("Trust Boundary", COMPONENT_TYPE.TRUST_BOUNDARY);
+              }}
+            >
+              <ListItemText>Add Trust Boundary</ListItemText>
             </MenuItem>
           </MenuList>
         </Paper>

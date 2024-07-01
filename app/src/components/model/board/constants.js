@@ -8,6 +8,7 @@ export const COMPONENT_TYPE = {
   PROCESS: "proc",
   DATA_STORE: "ds",
   DATA_FLOW: "df",
+  TRUST_BOUNDARY: "tb",
 };
 
 export const DIALOG = {
@@ -24,7 +25,7 @@ export const CONTEXT_MENU_VARIANT = {
 export const ZOOM = {
   MIN: 0.1,
   MAX: 3,
-  SCALE_BY: 1.05,
+  SCALE_BY: 1.1,
 };
 
 export const STAGE_ACTION = {

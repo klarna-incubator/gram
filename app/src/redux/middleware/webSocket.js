@@ -160,7 +160,7 @@ function refetch(dispatch, event, modelId) {
     case "links":
       // dispatch(api.util.invalidateTags(["Links"]));
       // For some reason the below didn't work.
-      console.log(event);
+      // console.log(event);
 
       dispatch(
         api.util.invalidateTags([
