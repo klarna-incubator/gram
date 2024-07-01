@@ -14,7 +14,6 @@ import { copyNodes } from "../../../actions/model/copyNodes";
 import { deleteSelected } from "../../../actions/model/deleteSelected";
 import { moveComponents } from "../../../actions/model/moveSelected";
 import { useListControlsQuery } from "../../../api/gram/controls";
-import { useListMitigationsQuery } from "../../../api/gram/mitigations";
 import { useListThreatsQuery } from "../../../api/gram/threats";
 import { useIsFramed } from "../../../hooks/useIsFramed";
 import { useReadOnly } from "../../../hooks/useReadOnly";
@@ -79,9 +78,6 @@ export default function Board() {
 
   const { data: modelControls } = useListControlsQuery({ modelId });
   const controls = modelControls?.controls || {};
-
-  const { data: modelMitigations } = useListMitigationsQuery({ modelId });
-  const mitigations = modelMitigations?.mitigations || [];
 
   // Redux variables
   const {
@@ -695,9 +691,6 @@ export default function Board() {
                             id={c.id}
                             onMagnetClick={onMagnetClick(c.id)}
                             onClick={onComponentClick(c.id)}
-                            threats={threats ? threats[c.id] : []}
-                            controls={controls ? controls[c.id] : []}
-                            mitigations={mitigations}
                             draggable={!stage.panning && !readOnly}
                             stageRef={stageRef}
                             stage={stage}

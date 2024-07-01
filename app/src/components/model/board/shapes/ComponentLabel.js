@@ -8,13 +8,12 @@ export function ComponentLabel({
   x,
   y,
   name,
-  maxWidth,
+  width,
   componentId,
   type,
   stage,
   align = "center",
-  border = false,
-  expand = false,
+  onChange,
 }) {
   const readOnly = useReadOnly();
   const nameRef = useRef();
@@ -26,11 +25,6 @@ export function ComponentLabel({
   useEffect(() => {
     setNewName(name);
   }, [name]);
-
-  const guesstimatedLabelWidth = 10 + newName.length * 6;
-  const width = expand
-    ? Math.max(0, Math.min(maxWidth, guesstimatedLabelWidth))
-    : maxWidth;
 
   function onNameKeyDown(e) {
     if (e.key === "Escape") {
@@ -44,33 +38,17 @@ export function ComponentLabel({
   }
 
   function onClick(e) {
-    if (e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey) {
+    if (e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey || readOnly) {
       return; // Modifier keys are used for multi-select, so we don't want to start editing.
     }
 
     e.cancelBubble = true; // Prevents the event from bubbling up to component and selecting it, which would cause re-render and loss of focus.
-
-    if (!readOnly) {
-      setEditing(true);
-      editNameRef.current.select();
-    }
+    setEditing(true);
+    editNameRef.current.select();
   }
 
   return (
     <>
-      {border && (
-        <Rect
-          y={y}
-          x={x}
-          width={width + 10}
-          height={22}
-          //   stroke={"#000000"}
-          onClick={onClick}
-          fill={"#FFFFFF"}
-          cornerRadius={5}
-        />
-      )}
-
       <Text
         visible={readOnly || !editing}
         transformsEnabled={"position"}
@@ -84,8 +62,8 @@ export function ComponentLabel({
         fill={"black"}
         width={width}
         align={align}
-        y={border ? y + 5 : y}
-        x={border ? x + 5 : x}
+        y={y}
+        x={x}
         wrap={"none"}
         ellipsis={true}
         onClick={onClick}
@@ -123,7 +101,10 @@ export function ComponentLabel({
             spellCheck={false}
             ref={editNameRef}
             value={newName}
-            onChange={(e) => setNewName(e.target.value)}
+            onChange={(e) => {
+              setNewName(e.target.value);
+              onChange && onChange(e.target.value);
+            }}
             onKeyDown={(e) => onNameKeyDown(e)}
             onBlur={(e) => {
               // If mouse click or touch caused blur
