@@ -30,14 +30,14 @@ export const DataStore = withComponentContainer(
           transformsEnabled="position"
           points={[0, 0, width, 0]}
           id={id}
-          name={COMPONENT_TYPE.DATA_STORE}
+          type={COMPONENT_TYPE.DATA_STORE}
           {...lineProps}
         />
         <Line
           transformsEnabled="position"
           points={[0, height, width, height]}
           id={id}
-          name={COMPONENT_TYPE.DATA_STORE}
+          type={COMPONENT_TYPE.DATA_STORE}
           {...lineProps}
         />
         <Rect
@@ -45,7 +45,7 @@ export const DataStore = withComponentContainer(
           fill={fill}
           width={width}
           height={height}
-          name={COMPONENT_TYPE.DATA_STORE}
+          type={COMPONENT_TYPE.DATA_STORE}
           id={id}
         />
       </Group>

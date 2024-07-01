@@ -149,9 +149,9 @@ export default function Board() {
   const [componentsPos, setComponentsPos] = useState(componentsPosObj);
   const jsonComponentsPosObj = JSON.stringify(componentsPosObj);
   useEffect(() => {
-    setComponentsPos(componentsPosObj); // What is this cursed thing??
+    setComponentsPos(componentsPosObj); // Update local state with new component positions if they've been updated from elsewhere
     // eslint-disable-next-line
-  }, [components, jsonComponentsPosObj]);
+  }, [components, jsonComponentsPosObj]); // Slight hack to detect changes in components via JSON string comparison
 
   const setSelected = useSetSelected();
   const setMultipleSelected = useSetMultipleSelected();
@@ -188,8 +188,10 @@ export default function Board() {
     if (e.repeat || (changingComponentName && e.key !== "Delete")) {
       return;
     }
+
     if (e.key === "Escape") {
       hideStageDialog();
+      return;
     }
 
     if (stageDialog.type !== DIALOG.NONE) {
@@ -201,6 +203,7 @@ export default function Board() {
         ...prevStage,
         panning: true,
       }));
+      return;
     }
 
     if (!readOnly) {
@@ -246,6 +249,7 @@ export default function Board() {
     if (e.target.attrs.isStage) {
       if (stageDialog.type === DIALOG.CONTEXT_MENU) {
         hideStageDialog();
+        return;
       }
 
       if (!stage.panning && e.evt.button === 0) {
@@ -369,6 +373,7 @@ export default function Board() {
     //e.stopPropagation(); maybe helps prev page issue
     if (stageDialog.type === DIALOG.CONTEXT_MENU) {
       hideStageDialog();
+      return;
     }
 
     // Ctrl or Cmd zooms
@@ -470,7 +475,10 @@ export default function Board() {
     const stagePos = getStagePointerPosition();
     setLastPointerPosition({ window: windowPos, stage: stagePos });
     hideStageDialog();
-    if (e.target === stageRef.current) {
+    if (
+      e.target === stageRef.current ||
+      e.target.attrs.type === COMPONENT_TYPE.TRUST_BOUNDARY
+    ) {
       setStageDialog({
         type: DIALOG.CONTEXT_MENU,
         variant: CONTEXT_MENU_VARIANT.ADD_COMPONENT,
@@ -479,18 +487,6 @@ export default function Board() {
       setStageDialog({
         type: DIALOG.CONTEXT_MENU,
         variant: CONTEXT_MENU_VARIANT.TOGGLE_BIDIRECTIONAL,
-        id: e.target.attrs.id,
-      });
-    } else if (
-      e.target.attrs.type === COMPONENT_TYPE.DATA_STORE ||
-      e.target.attrs.type === COMPONENT_TYPE.EXTERNAL_ENTITY ||
-      e.target.attrs.type === COMPONENT_TYPE.PROCESS
-      // e.target.attrs.type === COMPONENT_TYPE.TRUST_BOUNDARY // TODO: fix right click context menu on component click
-      // TODO: fix right click on trust boundary not opening contextMenu
-    ) {
-      setStageDialog({
-        type: DIALOG.CONTEXT_MENU,
-        variant: CONTEXT_MENU_VARIANT.EDIT_COMPONENT,
         id: e.target.attrs.id,
       });
     }
@@ -722,25 +718,20 @@ export default function Board() {
                           />
                         );
                       })}
+
                   {dataFlows.map((df) => (
                     <DataFlow
                       key={df.id}
                       id={df.id}
                       bidirectional={df.bidirectional}
                       points={[
-                        componentsPos[df.startComponent.id]
-                          ? componentsPos[df.startComponent.id].x
-                          : df.points[0],
-                        componentsPos[df.startComponent.id]
-                          ? componentsPos[df.startComponent.id].y
-                          : df.points[1],
+                        componentsPos[df.startComponent.id]?.x || df.points[0],
+                        componentsPos[df.startComponent.id]?.y || df.points[1],
                         ...df.points.slice(2, -2),
-                        componentsPos[df.endComponent.id]
-                          ? componentsPos[df.endComponent.id].x
-                          : df.points[df.points.length - 2],
-                        componentsPos[df.endComponent.id]
-                          ? componentsPos[df.endComponent.id].y
-                          : df.points[df.points.length - 1],
+                        componentsPos[df.endComponent.id]?.x ||
+                          df.points.slice(-2)[0],
+                        componentsPos[df.endComponent.id]?.y ||
+                          df.points.slice(-2)[1],
                       ]}
                       selected={df.id in selected}
                       onClick={onComponentClick(df.id)}
