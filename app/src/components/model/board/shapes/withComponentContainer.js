@@ -5,6 +5,7 @@ import { ComponentLabel } from "./ComponentLabel";
 import { Icon } from "./Icon";
 import { Magnets } from "./Magnets";
 import "./withComponentContainer.css";
+import { Indicator } from "./Indicator";
 
 const classIconHeight = 24;
 const classIconPadding = 1;
@@ -63,9 +64,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
       width,
       height,
       stage,
-      controls,
-      threats,
-      mitigations,
       selected,
       draggable,
       readOnly,
@@ -87,41 +85,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
     useEffect(() => {
       setIcons(classes, setClassesWithIcon);
     }, [classes]);
-
-    let indicator = "unknown.svg";
-
-    if (threats) {
-      let controlsPendingThreats = 0;
-      let controlsInPlaceThreats = 0;
-      for (const threat of threats) {
-        const controlIds = mitigations
-          ?.filter((m) => m.threatId === threat.id)
-          ?.map((m) => m.controlId);
-
-        if (
-          controlIds?.length > 0 &&
-          controls?.reduce(
-            (p, c) => (controlIds.includes(c.id) ? c.inPlace && p : p),
-            true
-          )
-        ) {
-          controlsInPlaceThreats += 1;
-        } else if (controlIds?.length > 0) {
-          controlsPendingThreats += 1;
-        }
-      }
-
-      if (controlsInPlaceThreats === threats.length) {
-        indicator = "secure.svg";
-      } else if (
-        controlsInPlaceThreats + controlsPendingThreats ===
-        threats.length
-      ) {
-        indicator = "almost-secure.svg";
-      } else {
-        indicator = "vulnerable.svg";
-      }
-    }
 
     // --------------------------------------------------------------------------
     // Event handlers
@@ -169,16 +132,7 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           shadowBlur={5}
           selected={selected}
         />
-        {includeIndicator && (
-          <Icon
-            url={`/assets/${indicator}`}
-            id={id}
-            x={0}
-            y={-20}
-            height={16}
-            width={16}
-          />
-        )}
+        {includeIndicator && <Indicator x={0} y={-20} componentId={id} />}
         {classesWithIcon.map((c) => (
           <Icon
             key={c.icon}
@@ -194,7 +148,7 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           componentId={id}
           x={0}
           y={localHeight / 2 - (classesWithIcon.length > 0 ? 20 : 7)}
-          maxWidth={localWidth}
+          width={localWidth}
           type={type}
           name={name}
           stage={stage}

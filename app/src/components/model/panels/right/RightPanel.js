@@ -12,6 +12,7 @@ import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThr
 import { useSelectedComponentControls } from "../../hooks/useSelectedComponentControls";
 import { useListMitigationsQuery } from "../../../../api/gram/mitigations";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { COMPONENT_TYPE } from "../../board/constants";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -93,8 +94,11 @@ export function RightPanel() {
         anchor="right"
       >
         <Toolbar />
-        {selectedComponent?.type === "ds" ||
-        selectedComponent?.type === "proc" ? (
+        {[
+          COMPONENT_TYPE.DATA_STORE,
+          COMPONENT_TYPE.PROCESS,
+          COMPONENT_TYPE.TRUST_BOUNDARY,
+        ].includes(selectedComponent?.type) ? (
           <>
             <RightTabsHeader tab={tab} setTab={setTab} />
             <TabPanel value={tab} index={TAB.SUGGESTIONS}>

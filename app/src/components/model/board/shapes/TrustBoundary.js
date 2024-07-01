@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Rect, Transformer } from "react-konva";
 import { usePatchComponent } from "../../hooks/usePatchComponent";
-import { COMPONENT_TYPE } from "../constants";
+import { COMPONENT_SIZE, COMPONENT_TYPE } from "../constants";
 import { ComponentLabel } from "./ComponentLabel";
+import { Indicator } from "./Indicator";
 
 export function TrustBoundary({
   id,
@@ -23,6 +24,9 @@ export function TrustBoundary({
   const trRef = useRef();
   const patchComponent = usePatchComponent(id);
 
+  // Only using this to adjust the size of the label automatically
+  const [currentInputName, setCurrentInputName] = useState(name);
+
   useEffect(() => {
     if (selected && trRef.current) {
       // we need to attach transformer manually
@@ -30,6 +34,13 @@ export function TrustBoundary({
       trRef.current.getLayer().batchDraw();
     }
   }, [selected]);
+
+  useEffect(() => {
+    setCurrentInputName(name);
+  }, [name]);
+
+  const guesstimatedLabelWidth = 10 + currentInputName.length * 6;
+  const labelWidth = Math.max(0, Math.min(width - 100, guesstimatedLabelWidth));
 
   return (
     <>
@@ -65,8 +76,8 @@ export function TrustBoundary({
             x: node.x(),
             y: node.y(),
             // set minimal value
-            width: Math.max(50, node.width() * scaleX),
-            height: Math.max(50, node.height() * scaleY),
+            width: Math.max(COMPONENT_SIZE.WIDTH, node.width() * scaleX),
+            height: Math.max(COMPONENT_SIZE.HEIGHT, node.height() * scaleY),
           });
         }}
       />
@@ -87,18 +98,29 @@ export function TrustBoundary({
         />
       )}
 
-      <ComponentLabel
-        x={x + 30}
+      <Rect
         y={y - 10}
+        x={x + 22}
+        width={labelWidth + 50}
+        height={22}
+        onClick={onClick}
+        fill={"#FFFFFF"}
+        cornerRadius={5}
+      />
+
+      <ComponentLabel
+        x={x + 50}
+        y={y - 5}
         componentId={id}
-        maxWidth={width - 70}
+        width={labelWidth}
         stage={stage}
         name={name}
         align="left"
         type={COMPONENT_TYPE.TRUST_BOUNDARY}
-        border
-        expand
+        onChange={(name) => setCurrentInputName(name)}
       />
+
+      <Indicator x={x + 30} y={y - 8} componentId={id} />
     </>
   );
 }
