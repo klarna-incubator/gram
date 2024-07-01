@@ -2,7 +2,7 @@ import React from "react";
 import { Circle } from "react-konva";
 
 export function FlowMagnet(props) {
-  const { display, width, onClick, x, y, id, name } = props;
+  const { display, width, onClick, x, y, id } = props;
 
   return (
     <Circle
@@ -13,7 +13,6 @@ export function FlowMagnet(props) {
       onClick={onClick}
       fill="#333"
       id={id}
-      name={name}
       x={x}
       y={y}
       isMagnet={true} // Used by parent component (Board) to determine that a click came from this.

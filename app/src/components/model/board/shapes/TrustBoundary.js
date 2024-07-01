@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Rect, Transformer } from "react-konva";
 import { usePatchComponent } from "../../hooks/usePatchComponent";
+import { COMPONENT_TYPE } from "../constants";
 
 export function TrustBoundary({
   id,
@@ -31,6 +32,7 @@ export function TrustBoundary({
       <Rect
         x={x}
         y={y}
+        type={COMPONENT_TYPE.TRUST_BOUNDARY}
         onDragEnd={onDragEnd}
         onDragStart={onDragStart}
         draggable={draggable}

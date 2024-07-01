@@ -184,14 +184,13 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
     return (
       <Group
         id={id}
-        name={type}
         x={x}
         y={y}
         onClick={onClick}
         onMouseEnter={() => onMouseEnter()}
         onMouseLeave={() => onMouseLeave()}
         onDragStart={onDragStart}
-        onDragMove={onDragMove} // consider adding back in order to update dataflows in real time (or send ws updates)
+        onDragMove={onDragMove}
         onDragEnd={onDragEnd}
         draggable={draggable}
       >
@@ -218,7 +217,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           <Icon
             url={`/assets/${indicator}`}
             id={id}
-            name={type}
             x={0}
             y={-20}
             height={16}
@@ -229,7 +227,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           <Icon
             key={c.icon}
             id={id}
-            name={type}
             image={c.image}
             x={c.x}
             y={c.y}
@@ -242,7 +239,9 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           transformsEnabled={"position"}
           ref={nameRef}
           id={id}
-          name={type}
+          type={
+            type
+          } /* Used to communicate upwards (onContextMenu) what type of component was clicked. */
           text={name}
           fontSize={12}
           fontFamily={"Open Sans"}
