@@ -1,49 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Group, Text } from "react-konva";
 import { Html } from "react-konva-utils";
+import { usePatchComponent } from "../../hooks/usePatchComponent";
 import { COMPONENT_SIZE } from "../constants";
-import { getAbsolutePosition } from "../util";
-import { FlowMagnet } from "./FlowMagnet";
 import { Icon } from "./Icon";
+import { Magnets } from "./Magnets";
 import "./withComponentContainer.css";
 
-const magnetSize = COMPONENT_SIZE.WIDTH * 0.05;
 const classIconHeight = 24;
 const classIconPadding = 1;
 const maxClassIconBarLength = 130;
-
-const initMagnets = (px, py, id) => {
-  return [...Array(4).keys()].flatMap((side) => {
-    const offsetX =
-      side % 2 === 1 ? (side === 1 ? 0 : COMPONENT_SIZE.WIDTH) : 0;
-    const offsetY =
-      side % 2 === 0 ? (side === 0 ? 0 : COMPONENT_SIZE.HEIGHT) : 0;
-    const x = side % 2 === 1 ? offsetX : offsetX + COMPONENT_SIZE.WIDTH / 2;
-    const y = side % 2 === 0 ? offsetY : offsetY + COMPONENT_SIZE.HEIGHT / 2;
-    return {
-      key: `${id}-magnet-${side}`,
-      width: magnetSize,
-      height: magnetSize,
-      x,
-      globalX: x + px,
-      globalY: y + py,
-      y,
-      componentId: id,
-    };
-  });
-};
-
-const closest = (ref, points) => {
-  const res = points.reduce(
-    (prev, point) => {
-      const d =
-        Math.pow(point.globalX - ref.x, 2) + Math.pow(point.globalY - ref.y, 2);
-      return prev === undefined || d < prev.min ? { min: d, point } : prev;
-    },
-    { min: Number.MAX_VALUE, point: null }
-  );
-  return res.point;
-};
 
 async function setIcons(classes, setClassesWithIcon) {
   let totalClassIconBarLength = 0;
@@ -95,6 +61,8 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
       name,
       x,
       y,
+      width,
+      height,
       stage,
       controls,
       threats,
@@ -102,29 +70,30 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
       selected,
       draggable,
       readOnly,
-      stageRef,
       classes,
       changingComponentName,
       setChangingComponentName,
-      onDragMove,
       onMagnetClick,
-      onClickP,
+      onDragStart,
+      onDragMove,
       onDragEnd,
+      onClick,
       focusDiagramContainer,
-      changeComponentName,
       editDataFlow,
     } = props;
 
     const nameRef = useRef();
     const editNameRef = useRef();
+    const patchComponent = usePatchComponent(id);
+    const localWidth = width || COMPONENT_SIZE.WIDTH;
+    const localHeight = height || COMPONENT_SIZE.HEIGHT;
 
     const [isHovered, setHovered] = useState();
-    const [componentName, setComponentName] = useState(name);
+    const [newName, setNewName] = useState(name);
     const [classesWithIcon, setClassesWithIcon] = useState([]);
-    const magnets = initMagnets(x, y, id);
 
     useEffect(() => {
-      setComponentName(name);
+      setNewName(name);
     }, [name]);
 
     useEffect(() => {
@@ -178,20 +147,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
     // Event handlers
     // --------------------------------------------------------------------------
 
-    function onClick(e) {
-      e.cancelBubble = true;
-      onClickP(
-        e,
-        closest(
-          getAbsolutePosition(
-            stageRef.current,
-            stageRef.current.getPointerPosition()
-          ),
-          magnets
-        )
-      );
-    }
-
     function onMouseEnter() {
       document.body.style.cursor = "pointer";
       setHovered(true);
@@ -202,10 +157,6 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
       setHovered(false);
     }
 
-    function onDragStart() {
-      document.body.style.cursor = "grabbing";
-    }
-
     function editName() {
       if (selected && !readOnly) {
         setChangingComponentName(id);
@@ -214,7 +165,8 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
 
     function onNameKeyDown(e) {
       if (e.key === "Escape") {
-        setComponentName(name);
+        // Reset name change
+        setNewName(name);
         setChangingComponentName(false);
         focusDiagramContainer();
       } else if (e.key === "Enter") {
@@ -224,12 +176,8 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
       }
     }
 
-    function onNameChange(e) {
-      setComponentName(e.target.value);
-    }
-
     function submitNameChange() {
-      changeComponentName(componentName);
+      patchComponent({ name: newName });
       setChangingComponentName(false);
     }
 
@@ -239,19 +187,19 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
         name={type}
         x={x}
         y={y}
-        onClick={(e) => onClick(e)}
+        onClick={onClick}
         onMouseEnter={() => onMouseEnter()}
         onMouseLeave={() => onMouseLeave()}
-        onDragStart={() => onDragStart()}
-        onDragMove={(e) => onDragMove(e.target.position())}
+        onDragStart={onDragStart}
+        onDragMove={onDragMove} // consider adding back in order to update dataflows in real time (or send ws updates)
         onDragEnd={onDragEnd}
-        draggable={draggable && !selected}
+        draggable={draggable}
       >
         <Entity
           id={id}
           transformsEnabled="position"
-          height={COMPONENT_SIZE.HEIGHT}
-          width={COMPONENT_SIZE.WIDTH}
+          height={localHeight}
+          width={localWidth}
           fill={
             isHovered && editDataFlow && editDataFlow.startComponent.id !== id
               ? "#ebebeb"
@@ -264,6 +212,7 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           shadowFill="#D7BBD4"
           shadowOpacity={0.2}
           shadowBlur={5}
+          selected={selected}
         />
         {includeIndicator && (
           <Icon
@@ -298,9 +247,9 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
           fontSize={12}
           fontFamily={"Open Sans"}
           fill={"black"}
-          width={COMPONENT_SIZE.WIDTH}
+          width={localWidth}
           align="center"
-          y={COMPONENT_SIZE.HEIGHT / 2 - (classesWithIcon.length > 0 ? 20 : 7)}
+          y={localHeight / 2 - (classesWithIcon.length > 0 ? 20 : 7)}
           x={0}
           wrap={"none"}
           ellipsis={true}
@@ -332,14 +281,14 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
               className={"editComponentName"}
               style={{
                 display: changingComponentName === id,
-                width: COMPONENT_SIZE.WIDTH + "px",
+                width: localWidth + "px",
               }}
               spellCheck={false}
               ref={editNameRef}
               id={id}
               type={"textarea"}
-              value={componentName}
-              onChange={(e) => onNameChange(e)}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
               onKeyDown={(e) => onNameKeyDown(e)}
               onBlur={(e) => {
                 // If mouse click or touch caused blur
@@ -351,21 +300,17 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
             />
           </Html>
         )}
-        {!readOnly &&
-          magnets.map((magnet) => (
-            <FlowMagnet
-              {...magnet}
-              id={id}
-              name={type}
-              display={isHovered && editDataFlow.startComponent?.id !== id}
-              onClick={(e) => {
-                e.cancelBubble = true;
-                if (e.evt.button === 0) {
-                  onMagnetClick(magnet);
-                }
-              }}
-            />
-          ))}
+        {!readOnly && (
+          <Magnets
+            x={x}
+            y={y}
+            id={id}
+            width={localWidth}
+            height={localHeight}
+            display={isHovered && editDataFlow.startComponent?.id !== id}
+            onMagnetClick={onMagnetClick}
+          />
+        )}
       </Group>
     );
   };

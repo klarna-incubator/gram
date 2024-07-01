@@ -77,13 +77,16 @@ const mutatorReducer = (state = initialState, action) => {
       const movedComponentsState = state.components.map((c) => {
         const movedComponent = action.components.find((ac) => ac.id === c.id);
         if (movedComponent) {
-          return { ...c, ...movedComponent, remote: !!action.remote };
-        } else {
-          return { ...c, remote: !!action.remote };
+          return { ...c, ...movedComponent };
         }
+        return { ...c };
       });
 
-      return { ...state, components: movedComponentsState };
+      return {
+        ...state,
+        components: movedComponentsState,
+        remote: !!action.remote,
+      };
 
     case PATCH_COMPONENT:
       i = state.components.findIndex((c) => c.id === action.id);

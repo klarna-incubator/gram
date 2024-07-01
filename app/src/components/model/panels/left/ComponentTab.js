@@ -126,24 +126,30 @@ export function ComponentTab() {
                 onKeyDown={(e) => shouldBlur(e)}
               />
 
-              <TextField
-                fullWidth
-                select
-                size="small"
-                variant="standard"
-                label="Type"
-                value={type}
-                disabled={readOnly}
-                onChange={(e) => updateFields({ type: e.target.value })}
-              >
-                <MenuItem value={COMPONENT_TYPE.PROCESS}>Process</MenuItem>
-                <MenuItem value={COMPONENT_TYPE.DATA_STORE}>
-                  Data store
-                </MenuItem>
-                <MenuItem value={COMPONENT_TYPE.EXTERNAL_ENTITY}>
-                  External entity
-                </MenuItem>
-              </TextField>
+              {type !== COMPONENT_TYPE.TRUST_BOUNDARY && (
+                <TextField
+                  fullWidth
+                  select
+                  size="small"
+                  variant="standard"
+                  label="Type"
+                  value={type}
+                  disabled={readOnly}
+                  onChange={(e) => updateFields({ type: e.target.value })}
+                >
+                  <MenuItem value={COMPONENT_TYPE.PROCESS}>Process</MenuItem>
+                  <MenuItem value={COMPONENT_TYPE.DATA_STORE}>
+                    Data Store
+                  </MenuItem>
+                  <MenuItem value={COMPONENT_TYPE.EXTERNAL_ENTITY}>
+                    External Entity
+                  </MenuItem>
+                  {/* Doesn't make much sense to switch to or from this component type from the others
+                  <MenuItem value={COMPONENT_TYPE.TRUST_BOUNDARY}>
+                    Trust Boundary
+                  </MenuItem> */}
+                </TextField>
+              )}
 
               <TechStacksDropdown
                 component={component}
