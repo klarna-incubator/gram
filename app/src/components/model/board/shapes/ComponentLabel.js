@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { Text } from "react-konva";
+import { Html } from "react-konva-utils";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { usePatchComponent } from "../../hooks/usePatchComponent";
-import { Rect, Text } from "react-konva";
-import { Html } from "react-konva-utils";
 
 export function ComponentLabel({
   x,
