@@ -4,6 +4,7 @@ import { usePatchComponent } from "../../hooks/usePatchComponent";
 import { COMPONENT_SIZE, COMPONENT_TYPE } from "../constants";
 import { ComponentLabel } from "./ComponentLabel";
 import { Indicator } from "./Indicator";
+import { TechStackIcons } from "./TechStackIcons";
 
 export function TrustBoundary({
   id,
@@ -19,6 +20,7 @@ export function TrustBoundary({
   onDragEnd,
   onDragMove,
   onDragStart,
+  classes,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -26,6 +28,7 @@ export function TrustBoundary({
 
   // Only using this to adjust the size of the label automatically
   const [currentInputName, setCurrentInputName] = useState(name);
+  const [transforming, setTransforming] = useState(false);
 
   useEffect(() => {
     if (selected && trRef.current) {
@@ -40,7 +43,14 @@ export function TrustBoundary({
   }, [name]);
 
   const guesstimatedLabelWidth = 10 + currentInputName.length * 6;
-  const labelWidth = Math.max(0, Math.min(width - 100, guesstimatedLabelWidth));
+  const labelWidth = Math.max(
+    0,
+    Math.min(
+      width - 100,
+      guesstimatedLabelWidth +
+        26 * Math.max(Math.min(3, classes?.length || 0), 0)
+    )
+  );
 
   return (
     <>
@@ -61,7 +71,11 @@ export function TrustBoundary({
         stroke={selected ? "#FFB3C7" : "#000000"}
         strokeWidth={2}
         onClick={onClick}
+        onTransformStart={(e) => {
+          setTransforming(true);
+        }}
         onTransformEnd={(e) => {
+          setTransforming(false);
           // transformer is changing scale of the node
           // and NOT its width or height
           // but in the store we have only width and height
@@ -98,29 +112,41 @@ export function TrustBoundary({
         />
       )}
 
-      <Rect
-        y={y - 10}
-        x={x + 22}
-        width={labelWidth + 50}
-        height={22}
-        onClick={onClick}
-        fill={"#FFFFFF"}
-        cornerRadius={5}
-      />
+      {!transforming && (
+        <>
+          <Rect
+            y={y - 12}
+            x={x + 25}
+            width={labelWidth + 50}
+            height={26}
+            onClick={onClick}
+            stroke={"#000000"}
+            strokeWidth={1}
+            fill={"#FFFFFF"}
+            cornerRadius={5}
+          />
 
-      <ComponentLabel
-        x={x + 50}
-        y={y - 5}
-        componentId={id}
-        width={labelWidth}
-        stage={stage}
-        name={name}
-        align="left"
-        type={COMPONENT_TYPE.TRUST_BOUNDARY}
-        onChange={(name) => setCurrentInputName(name)}
-      />
+          <ComponentLabel
+            x={x + 50}
+            y={y - 5}
+            componentId={id}
+            width={labelWidth}
+            stage={stage}
+            name={name}
+            align="left"
+            type={COMPONENT_TYPE.TRUST_BOUNDARY}
+            onChange={(name) => setCurrentInputName(name)}
+          />
 
-      <Indicator x={x + 30} y={y - 8} componentId={id} />
+          <Indicator x={x + 30} y={y - 8} componentId={id} />
+
+          <TechStackIcons
+            x={x + 45 + guesstimatedLabelWidth + 24} // Bit of a hack to center the icons. Assuming here that the icons are *roughly* 26px wide.
+            y={y - 11}
+            classes={(classes || []).slice(0, 3)}
+          />
+        </>
+      )}
     </>
   );
 }
