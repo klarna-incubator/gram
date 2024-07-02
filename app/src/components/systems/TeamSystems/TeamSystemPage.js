@@ -41,7 +41,12 @@ export function TeamSystemsPage() {
       >
         {/* Some employees have more than one team */}
         {teams.map((tid) => (
-          <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
+          <Grid
+            key={`team-grid-${tid}`}
+            item
+            xs={6}
+            sx={{ display: "flex", flexDirection: "column" }}
+          >
             <TeamSystemsPageList key={tid} teamId={tid} />
           </Grid>
         ))}
