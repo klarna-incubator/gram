@@ -64,7 +64,7 @@ export function TrustBoundary({
         draggable={draggable}
         ref={shapeRef}
         width={width}
-        cornerRadius={20}
+        cornerRadius={15}
         height={height}
         dash={[3, 3]}
         fill={null}
@@ -120,7 +120,7 @@ export function TrustBoundary({
             width={labelWidth + 50}
             height={26}
             onClick={onClick}
-            stroke={"#000000"}
+            stroke={selected ? "#FFB3C7" : "#000000"}
             strokeWidth={1}
             fill={"#FFFFFF"}
             cornerRadius={5}
@@ -141,7 +141,7 @@ export function TrustBoundary({
           <Indicator x={x + 30} y={y - 8} componentId={id} />
 
           <TechStackIcons
-            x={x + 45 + guesstimatedLabelWidth + 24} // Bit of a hack to center the icons. Assuming here that the icons are *roughly* 26px wide.
+            x={x + 45 + Math.min(labelWidth, guesstimatedLabelWidth) + 24} // Bit of a hack to center the icons. Assuming here that the icons are *roughly* 26px wide.
             y={y - 11}
             classes={(classes || []).slice(0, 3)}
           />
