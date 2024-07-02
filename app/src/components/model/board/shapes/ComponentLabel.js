@@ -76,7 +76,7 @@ export function ComponentLabel({
         }}
         onMouseLeave={() => {
           if (!readOnly) {
-            document.body.style.cursor = "pointer";
+            document.body.style.cursor = "default";
           }
         }}
       />

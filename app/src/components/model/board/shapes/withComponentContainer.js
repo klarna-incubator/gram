@@ -35,28 +35,14 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
 
     const [isHovered, setHovered] = useState();
 
-    // --------------------------------------------------------------------------
-    // Event handlers
-    // --------------------------------------------------------------------------
-
-    function onMouseEnter() {
-      document.body.style.cursor = "pointer";
-      setHovered(true);
-    }
-
-    function onMouseLeave() {
-      document.body.style.cursor = "default";
-      setHovered(false);
-    }
-
     return (
       <Group
         id={id}
         x={x}
         y={y}
         onClick={onClick}
-        onMouseEnter={() => onMouseEnter()}
-        onMouseLeave={() => onMouseLeave()}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         onDragStart={onDragStart}
         onDragMove={onDragMove}
         onDragEnd={onDragEnd}
