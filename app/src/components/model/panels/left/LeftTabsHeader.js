@@ -11,7 +11,7 @@ export function LeftTabsHeader({ tab, setTab }) {
   const selected = useSelectedComponent();
 
   // This fixes an annoying MUI console error when you deselect a component
-  const tabHck = !selected && tab == TAB.COMPONENT ? TAB.SYSTEM : tab;
+  const tabHck = !selected && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
 
   return (
     <AppBar position="static">
