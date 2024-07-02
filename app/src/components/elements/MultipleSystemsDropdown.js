@@ -101,7 +101,7 @@ export function MultipleSystemsDropdown({
         return value.map((option, index) => (
           <Chip
             {...getTagProps({ index })}
-            key={option?.value}
+            key={"syschip" + option?.value}
             label={option?.label}
             onDelete={() =>
               onChange(systems.filter((s) => s !== option?.value))

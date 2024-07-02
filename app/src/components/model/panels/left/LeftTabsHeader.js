@@ -1,15 +1,23 @@
 import { AppBar, Grow, Tab, Tabs } from "@mui/material";
-import { TAB } from "./constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+
+export const TAB = {
+  SYSTEM: 0,
+  ACTION_ITEMS: 1,
+  COMPONENT: 2,
+};
 
 export function LeftTabsHeader({ tab, setTab }) {
   const selected = useSelectedComponent();
+
+  // This fixes an annoying MUI console error when you deselect a component
+  const tabHck = !selected && tab == TAB.COMPONENT ? TAB.SYSTEM : tab;
 
   return (
     <AppBar position="static">
       <Grow in={true}>
         <Tabs
-          value={tab}
+          value={tabHck}
           onChange={(_, v) => setTab(v)}
           textColor="inherit"
           variant="fullWidth"
