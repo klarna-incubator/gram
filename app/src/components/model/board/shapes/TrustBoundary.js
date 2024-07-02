@@ -136,6 +136,7 @@ export function TrustBoundary({
             align="left"
             type={COMPONENT_TYPE.TRUST_BOUNDARY}
             onChange={(name) => setCurrentInputName(name)}
+            onClick={onClick}
           />
 
           <Indicator x={x + 30} y={y - 8} componentId={id} />

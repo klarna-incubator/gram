@@ -14,6 +14,7 @@ export function ComponentLabel({
   stage,
   align = "center",
   onChange,
+  onClick,
 }) {
   const readOnly = useReadOnly();
   const nameRef = useRef();
@@ -37,11 +38,12 @@ export function ComponentLabel({
     }
   }
 
-  function onClick(e) {
+  function onLocalClick(e) {
     if (e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey || readOnly) {
       return; // Modifier keys are used for multi-select, so we don't want to start editing.
     }
 
+    onClick && onClick(e);
     e.cancelBubble = true; // Prevents the event from bubbling up to component and selecting it, which would cause re-render and loss of focus.
     setEditing(true);
     editNameRef.current.select();
@@ -66,7 +68,7 @@ export function ComponentLabel({
         x={x}
         wrap={"none"}
         ellipsis={true}
-        onClick={onClick}
+        onClick={onLocalClick}
         onMouseEnter={() => {
           if (!readOnly) {
             document.body.style.cursor = "text";
