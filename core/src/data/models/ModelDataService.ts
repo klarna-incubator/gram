@@ -385,11 +385,11 @@ export class ModelDataService extends EventEmitter implements SearchProvider {
 
   /**
    * Update the model object of specified id
-   * @param {string} id - Model id to update
-   * @param {any} model - Model object to save
-   * @returns {boolean} - true if an update was performed
    */
-  async update(id: string, model: { version: string; data: ModelData }) {
+  async update(
+    id: string,
+    model: { version: string; data: ModelData }
+  ): Promise<boolean> {
     const previousModel = await this.getById(id);
     if (!previousModel) {
       this.log.warn(`Attempted to update non-existent model: ${id}`);
