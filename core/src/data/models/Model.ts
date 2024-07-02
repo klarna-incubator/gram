@@ -8,7 +8,7 @@ export interface DataFlow {
   bidirectional: boolean;
 }
 
-type ComponentType = "ee" | "ds" | "proc";
+type ComponentType = "ee" | "ds" | "proc" | "tb";
 
 // type AuthenticationType =
 //   | "json-web-token"
@@ -104,10 +104,11 @@ export interface Component {
   x: number;
   y: number;
   type: ComponentType;
+  width?: number;
+  height?: number;
   name: string;
   classes?: ComponentClass[];
   description?: string;
-  // attributes?: Attributes;
 }
 
 export interface ModelData {
