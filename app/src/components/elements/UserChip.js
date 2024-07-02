@@ -28,6 +28,7 @@ function UserChipWithUser({ user, ...props }) {
       }}
       variant="outlined"
       label={user?.name}
+      component="span"
       icon={
         <>
           {user?.slackUrl && (
