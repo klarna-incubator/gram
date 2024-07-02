@@ -9,7 +9,7 @@ import {
   Pagination,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useListSystemsQuery } from "../../../api/gram/system";
 import { SystemComplianceBadge } from "../../elements/SystemComplianceBadge";
@@ -59,17 +59,17 @@ export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
             <Loading />
           ) : systems ? (
             systems.map((system, i) => (
-              <>
+              <Fragment key={`sys-${system.id}`}>
                 <ListItemButton
                   component={Link}
                   to={`/system/${system.id}`}
-                  key={system.id}
+                  key={`sys-btn-${system.id}`}
                 >
                   <ListItemText primary={system.displayName} />
                   <SystemComplianceBadge compliance={system.compliance} />
                 </ListItemButton>
                 {i < systems.length - 1 && <Divider component="li" />}
-              </>
+              </Fragment>
             ))
           ) : (
             <ListItemText primary="No team systems available." />

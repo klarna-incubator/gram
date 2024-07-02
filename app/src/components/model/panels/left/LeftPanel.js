@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ToggleLeftPanelButton } from "../../board/components/ToggleLeftPanelButton";
 import { ComponentTab } from "./ComponentTab";
-import { TAB } from "./constants";
 import { LeftFooter } from "./Footer";
-import { LeftTabsHeader } from "./LeftTabsHeader";
+import { LeftTabsHeader, TAB } from "./LeftTabsHeader";
 import { SystemTab } from "./SystemTab";
 import { ActionItemTab } from "./ActionItemTab";
 
@@ -63,18 +62,18 @@ export function LeftPanel() {
         anchor="left"
       >
         <Toolbar />
+
         <LeftTabsHeader tab={tab} setTab={setTab} />
+
         <TabPanel value={tab} index={TAB.SYSTEM}>
           <SystemTab />
         </TabPanel>
         <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
           <ActionItemTab />
         </TabPanel>
-        {component && (
-          <TabPanel value={tab} index={TAB.COMPONENT}>
-            <ComponentTab />
-          </TabPanel>
-        )}
+        <TabPanel value={tab} index={TAB.COMPONENT}>
+          {component && <ComponentTab />}
+        </TabPanel>
         <LeftFooter />
       </Drawer>
     </Box>

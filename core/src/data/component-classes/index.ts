@@ -1,7 +1,16 @@
 import log4js from "log4js";
 
-export type ComponentType = "process" | "datastore" | "external";
-export const ComponentTypes = ["process", "datastore", "external"];
+export type ComponentType =
+  | "process"
+  | "datastore"
+  | "external"
+  | "trust-boundary";
+export const ComponentTypes = [
+  "process",
+  "datastore",
+  "external",
+  "trust-boundary",
+];
 
 /**
  * Used to classify components, i.e. specify certain technologies that are used.
