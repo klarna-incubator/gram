@@ -10,6 +10,12 @@ import log4js from "log4js";
 import { isDevelopment } from "@gram/core/dist/util/env.js";
 import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider.js";
 import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js";
+import {
+  SearchFilter,
+  SearchProvider,
+  SearchProviderResult,
+  SearchType,
+} from "@gram/core/dist/search/SearchHandler.js";
 
 const log = log4js.getLogger("OktaneSystemProvider");
 
@@ -110,7 +116,7 @@ export interface SystemResponse {
 
 const DevelopmentLocalFileCache = ".octane-systems.json";
 
-export class OctaneSystemProvider implements SystemProvider {
+export class OctaneSystemProvider implements SystemProvider, SearchProvider {
   key = "oktane";
   systems: OctaneSystem[] = [];
 
@@ -119,6 +125,32 @@ export class OctaneSystemProvider implements SystemProvider {
 
   constructor() {
     this.loadSystems();
+  }
+
+  searchType: SearchType = {
+    key: "system",
+    label: "System",
+  };
+
+  async search(filter: SearchFilter): Promise<SearchProviderResult> {
+    let systems = this.systems.filter((s) =>
+      s.name.toLowerCase().includes(filter.searchText.toLowerCase())
+    );
+
+    return {
+      items: systems
+        .slice(
+          filter.page * filter.pageSize,
+          (filter.page + 1) * filter.pageSize
+        )
+        .map((system) => ({
+          id: system.system_id,
+          label: system.name,
+          description: system.system_description,
+          url: `/system/${system.system_id}`,
+        })),
+      count: systems.length,
+    };
   }
 
   async loadSystems() {
@@ -240,11 +272,6 @@ export class OctaneSystemProvider implements SystemProvider {
     // console.log(input);
     let systems: OctaneSystem[] = [];
     switch (input.filter) {
-      case SystemListFilter.Search:
-        systems = this.systems.filter((s) =>
-          s.name.toLowerCase().includes(input.opts.search.toLowerCase())
-        );
-        break;
       case SystemListFilter.Batch:
         systems = input.opts.ids
           .map((id) => this.systemsById.get(id))

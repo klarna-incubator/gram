@@ -1,5 +1,5 @@
 /**
- * GET /api/v1/models/<id>/permissions
+ * GET /api/v1/models/<id>/compliance
  * @exports {function} handler
  */
 

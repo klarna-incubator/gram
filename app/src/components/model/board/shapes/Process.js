@@ -14,7 +14,7 @@ export const Process = withComponentContainer(
         y={height / 2}
         radiusX={width / 2}
         radiusY={height / 2}
-        name={COMPONENT_TYPE.PROCESS}
+        type={COMPONENT_TYPE.PROCESS}
       />
     );
   },

@@ -60,6 +60,7 @@ See our [changelog](CHANGELOG.md).
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MissMuffin"><img src="https://avatars.githubusercontent.com/u/2961854?v=4?s=100" width="100px;" alt="MissMuffin"/><br /><sub><b>MissMuffin</b></sub></a><br /><a href="#design-MissMuffin" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ogglas"><img src="https://avatars.githubusercontent.com/u/4015237?v=4?s=100" width="100px;" alt="Oscar Andersson"/><br /><sub><b>Oscar Andersson</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=Ogglas" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://pulko-app.com"><img src="https://avatars.githubusercontent.com/u/38206129?v=4?s=100" width="100px;" alt="Fedor Tkachenko"/><br /><sub><b>Fedor Tkachenko</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=Pulko" title="Documentation">📖</a> <a href="https://github.com/klarna-incubator/gram/commits?author=Pulko" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lodi-g"><img src="https://avatars.githubusercontent.com/u/4528943?v=4?s=100" width="100px;" alt="Grégoire Lodi"/><br /><sub><b>Grégoire Lodi</b></sub></a><br /><a href="https://github.com/klarna-incubator/gram/commits?author=lodi-g" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

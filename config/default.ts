@@ -11,27 +11,30 @@ import type {
 } from "@gram/core/dist/config/GramConfiguration.js";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import {
-  HSFContextProvider,
+  JupiterOneSystemPropertyProvider,
+  JupiterOneTeamProvider,
+  createJ1Client,
+} from "@gram/jupiterone";
+import {
   KlarnaAssets,
   KlarnaComponentClasses,
   KlarnaCronJob,
   KlarnaReviewerProvider,
-  NGOVSystemContextProvider,
+  KlarnaSystemProvider,
   OctaneSystemProvider,
 } from "@gram/klarna";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
   LDAPBasicAuthIdentityProvider,
   LDAPGroupBasedAuthzProvider,
-  LDAPTeamProvider,
   LDAPUserProvider,
 } from "@gram/ldap";
 import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings.js";
 import { OIDCIdentityProvider } from "@gram/oidc";
+import { StrideSuggestionProvider } from "@gram/stride";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import defaultNotifications from "./notifications/index.js";
-import { StrideSuggestionProvider } from "@gram/stride";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -127,6 +130,11 @@ export const defaultConfig: GramConfiguration = {
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {
+    // process.env.GLOBAL_AGENT_HTTPS_PROXY = process.env.HTTPS_PROXY;
+    // (global as any).GLOBAL_AGENT.HTTPS_PROXY = process.env.HTTPS_PROXY;
+    //   global as any
+    // ).GLOBAL_AGENT.HTTP_PROXY = process.env.HTTPS_PROXY;
+
     const oidc = new OIDCIdentityProvider(
       (await new EnvSecret("OIDC_CLIENT_DISCOVER_URL").getValue()) as string,
       new EnvSecret("OIDC_CLIENT_ID"),
@@ -176,53 +184,24 @@ export const defaultConfig: GramConfiguration = {
       },
     });
 
-    const ldapTeamProvider = new LDAPTeamProvider({
-      ldapSettings,
-      teamLookup: {
-        attributes: ["displayName", "klarnaProjectCode", "mail", "dn"],
-        attributesToTeam: async (ldapEntry) => ({
-          id: ldapEntry["klarnaProjectCode"].toString(),
-          name: ldapEntry["displayName"].toString(),
-          email: ldapEntry["mail"].toString(),
-        }),
-        searchBase: LDAPTeamSearchBase,
-        searchFilter: (teamIds) => {
-          return `(|${teamIds
-            .map((teamId) => `(klarnaProjectCode=${teamId})`)
-            .join("")})`;
-        },
-      },
-      userLookup: {
-        searchBase: LDAPUserSearchBase,
-        searchFilter: (sub) => {
-          return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
-        },
-        teamAttribute: "klarnaAccountableCode",
-      },
-    });
-
-    const systemProvider = new OctaneSystemProvider();
-
-    const hsf = {
-      bucket: process.env["HSF_S3_BUCKET"] as string,
-      key: process.env["HSF_S3_KEY"] as string,
-      awsRole: process.env["HSF_AWS_ROLE"] as string,
-      awsExternalId: process.env["HSF_AWS_EXTERNAL_ID"] as string,
-    };
-
-    const hsfProvider = new HSFContextProvider(
-      hsf.bucket,
-      hsf.key,
-      hsf.awsRole,
-      hsf.awsExternalId
+    const j1Client = await createJ1Client(
+      new EnvSecret("J1_KEY"),
+      "45377d01-965c-4c5c-a3c1-e6ac4f80cc48",
+      "https://api.eu.jupiterone.io"
     );
 
-    const ngovProvider = new NGOVSystemContextProvider(systemProvider);
+    const j1TeamProvider = new JupiterOneTeamProvider(j1Client);
+    const octaneSystemProvider = new OctaneSystemProvider();
+    const j1SystemProvider = new KlarnaSystemProvider(
+      octaneSystemProvider,
+      j1Client
+    );
+    const j1SysPropProvider = new JupiterOneSystemPropertyProvider(j1Client);
 
     const reviewerProvider = new KlarnaReviewerProvider(
       dal,
-      systemProvider,
-      hsfProvider,
+      j1SystemProvider,
+      j1SysPropProvider,
       {
         groupLookup: {
           searchBase: LDAPUserSearchBase,
@@ -235,7 +214,7 @@ export const defaultConfig: GramConfiguration = {
             "(&(memberOfGroupId=security-champions)(kreditorEnabledUser=TRUE))",
           ],
           attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
-          attributesToReviewer: async (ldapUser) => {
+          attributesToReviewer: async (ldapUser: any) => {
             const user: Reviewer = {
               sub: ldapUser["mail"].toString(),
               mail: ldapUser["mail"].toString(),
@@ -247,11 +226,11 @@ export const defaultConfig: GramConfiguration = {
         },
         reviewerLookup: {
           searchBase: LDAPUserSearchBase,
-          searchFilter: (sub) => {
+          searchFilter: (sub: string) => {
             return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
           },
           attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
-          attributesToReviewer: async (ldapUser) => {
+          attributesToReviewer: async (ldapUser: any) => {
             const user: Reviewer = {
               sub: ldapUser["mail"].toString(),
               mail: ldapUser["mail"].toString(),
@@ -269,8 +248,7 @@ export const defaultConfig: GramConfiguration = {
       process.env["THREATSAURUS_URL"] as string
     );
 
-    const klarnaCronJob = new KlarnaCronJob(dal);
-    klarnaCronJob.bootstrap(reviewerProvider, systemProvider);
+    new KlarnaCronJob(dal, reviewerProvider, octaneSystemProvider);
 
     return {
       assetFolders: [
@@ -292,12 +270,17 @@ export const defaultConfig: GramConfiguration = {
       identityProviders: [oidc, ldap],
       notificationTemplates: [...defaultNotifications],
       reviewerProvider,
-      systemProvider,
-      systemPropertyProviders: [hsfProvider, ngovProvider],
+      systemProvider: j1SystemProvider,
+      systemPropertyProviders: [j1SysPropProvider],
       authzProvider: ldapAuthz,
       userProvider: ldapUserProvider,
-      teamProvider: ldapTeamProvider,
+      teamProvider: j1TeamProvider,
       suggestionSources: [threatsaurus, new StrideSuggestionProvider()],
+      searchProviders: [
+        j1SystemProvider, // Without a system search provider, certain features will not work
+        j1TeamProvider, // completely optional
+        dal.modelService,
+      ],
     };
   },
 };

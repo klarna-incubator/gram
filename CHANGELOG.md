@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.13.0](https://github.com/klarna-incubator/gram/compare/v4.12.2...v4.13.0) (2024-07-04)
+
+### Bug Fixes
+
+- console.error from MUI due to chip using a div ([9e80a65](https://github.com/klarna-incubator/gram/commit/9e80a65287487e5d53cfdbdedb338cae04c64b77))
+
+### Features
+
+- add tutorial box for trust boundary ([1bf4c23](https://github.com/klarna-incubator/gram/commit/1bf4c23f193725a54a1e25a0073c2caaa095e872))
+
+## [4.12.2](https://github.com/klarna-incubator/gram/compare/v4.12.1...v4.12.2) (2024-06-25)
+
+### Bug Fixes
+
+- bump ws to fix a security vulnerability. bump and rearrange snyk/jest dependencies. ([6f5df6f](https://github.com/klarna-incubator/gram/commit/6f5df6fd0f487db3ffecc7507ea4afb77e2a6bae))
+
+## [4.12.1](https://github.com/klarna-incubator/gram/compare/v4.12.0...v4.12.1) (2024-06-14)
+
+**Note:** Version bump only for package gram
+
+# [4.12.0](https://github.com/klarna-incubator/gram/compare/v4.11.0...v4.12.0) (2024-06-14)
+
+### Bug Fixes
+
+- pass readonly to MultipleSystemsDropdown via props. Make it disabled if readonly. ([e58381c](https://github.com/klarna-incubator/gram/commit/e58381c9bcc93dc7d1c3a874fc046c662567b1cf))
+
+### Features
+
+- Component now has a System dropdown for selecting multiple systems. ([80ad59b](https://github.com/klarna-incubator/gram/commit/80ad59b67765d62149dc92b11519bbb2621df025)), closes [#103](https://github.com/klarna-incubator/gram/issues/103)
+- handle cases where the reviewer's name is null ([8cdd9c2](https://github.com/klarna-incubator/gram/commit/8cdd9c2bb164a84e492b5a6863df827c1397d360))
+- handle null reviewer name in all cases in the Review page ([bbd98ba](https://github.com/klarna-incubator/gram/commit/bbd98ba828ffd73eff9d2398d4ff79c75375c00e))
+
 # [4.11.0](https://github.com/klarna-incubator/gram/compare/v4.10.0...v4.11.0) (2024-05-22)
 
 ### Bug Fixes

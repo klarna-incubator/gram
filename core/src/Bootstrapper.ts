@@ -17,6 +17,7 @@ import { SystemPropertyProvider } from "./data/system-property/SystemPropertyPro
 import { getPool, migratePlugin } from "./plugins/data.js";
 import pg from "pg";
 import { TeamProvider } from "./auth/TeamProvider.js";
+import { SearchProvider } from "./search/SearchHandler.js";
 
 /* Could create a temporary directory instead */
 export const AssetDir = "assets";
@@ -110,6 +111,13 @@ export class Bootstrapper {
   registerIdentityProvider(authProvider: IdentityProvider) {
     this.log.info(`Registered Auth Provider: ${authProvider.key}`);
     IdentityProviderRegistry.set(authProvider.key, authProvider);
+  }
+
+  registerSearchProvider(searchProvider: SearchProvider) {
+    this.log.info(
+      `Registered Search Provider: ${searchProvider.searchType.key}`
+    );
+    this.dal.searchHandler.register(searchProvider);
   }
 
   setAuthorizationProvider(authzProvider: AuthzProvider) {

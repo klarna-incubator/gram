@@ -11,10 +11,21 @@ import {
   SystemListResult,
   systemProvider,
 } from "@gram/core/dist/data/systems/systems.js";
+import z from "zod";
+
+const ListQuerySchema = z.object({
+  filter: z.enum([SystemListFilter.Batch, SystemListFilter.Team]),
+  page: z.string().optional(), // Marked as string due to coming from query
+  pagesize: z.string().optional(),
+  teamId: z.string().optional(),
+  ids: z.string().optional(),
+});
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const { filter, page, pagesize, ...opts } = req.query;
+    const { filter, page, pagesize, ...opts } = ListQuerySchema.parse(
+      req.query
+    );
 
     if (
       !filter ||
@@ -29,9 +40,6 @@ export default (dal: DataAccessLayer) =>
     }
     if (opts.ids) {
       validatedOpts.ids = opts.ids.toString().split(","); // Sanitized by list function
-    }
-    if (opts.search) {
-      validatedOpts.search = opts.search.toString(); // Sanitized by list function
     }
 
     let pagination = { page: 0, pageSize: 10 };

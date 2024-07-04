@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.13.0](https://github.com/klarna/gram/compare/v4.12.2...v4.13.0) (2024-07-04)
+
+**Note:** Version bump only for package @gram/core
+
+## [4.12.2](https://github.com/klarna/gram/compare/v4.12.1...v4.12.2) (2024-06-25)
+
+### Bug Fixes
+
+- bump ws to fix a security vulnerability. bump and rearrange snyk/jest dependencies. ([6f5df6f](https://github.com/klarna/gram/commit/6f5df6fd0f487db3ffecc7507ea4afb77e2a6bae))
+
+## [4.12.1](https://github.com/klarna/gram/compare/v4.12.0...v4.12.1) (2024-06-14)
+
+**Note:** Version bump only for package @gram/core
+
+# [4.12.0](https://github.com/klarna/gram/compare/v4.11.0...v4.12.0) (2024-06-14)
+
+### Features
+
+- Component now has a System dropdown for selecting multiple systems. ([80ad59b](https://github.com/klarna/gram/commit/80ad59b67765d62149dc92b11519bbb2621df025)), closes [#103](https://github.com/klarna/gram/issues/103)
+
 # [4.11.0](https://github.com/klarna/gram/compare/v4.10.0...v4.11.0) (2024-05-22)
 
 ### Features

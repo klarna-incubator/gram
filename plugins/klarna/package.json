@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@gram/core": "*",
+    "@gram/jupiterone": "^4.9.4",
     "@gram/ldap": "^4.0.2",
     "@sentry/node": "^7.94.1",
     "aws-sdk": "^2.1465.0",
