@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.13.0](https://github.com/klarna-incubator/gram/compare/v4.12.2...v4.13.0) (2024-07-04)
+
+### Bug Fixes
+
+- console.error from MUI due to chip using a div ([9e80a65](https://github.com/klarna-incubator/gram/commit/9e80a65287487e5d53cfdbdedb338cae04c64b77))
+
+### Features
+
+- add tutorial box for trust boundary ([1bf4c23](https://github.com/klarna-incubator/gram/commit/1bf4c23f193725a54a1e25a0073c2caaa095e872))
+
 ## [4.12.2](https://github.com/klarna-incubator/gram/compare/v4.12.1...v4.12.2) (2024-06-25)
 
 ### Bug Fixes

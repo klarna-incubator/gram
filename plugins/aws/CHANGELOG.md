@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.13.0](https://github.com/klarna-incubator/gram/compare/v4.12.2...v4.13.0) (2024-07-04)
+
+**Note:** Version bump only for package @gram/aws
+
 ## [4.12.2](https://github.com/klarna-incubator/gram/compare/v4.12.1...v4.12.2) (2024-06-25)
 
 **Note:** Version bump only for package @gram/aws
