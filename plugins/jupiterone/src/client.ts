@@ -25,10 +25,16 @@ export class OverloadedJupiterOneClient extends JupiterOneClient {
     const cacheKey = query + JSON.stringify(params);
     const cachedResult = this.queryCache.get(cacheKey);
     if (cachedResult) {
-      log.debug("OverloadedJupiterOneClient.query", query, params, "Cache hit");
+      log.debug(
+        "OverloadedJupiterOneClient.query",
+        query,
+        params,
+        "(Cache hit)"
+      );
       return cachedResult;
     }
 
+    log.debug("OverloadedJupiterOneClient.query", query, params);
     const result = await super.queryV1(query, params);
     log.debug(
       "OverloadedJupiterOneClient.query",
