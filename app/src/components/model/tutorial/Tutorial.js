@@ -26,6 +26,7 @@ import creatingThreats from "./img/creatingthreats.gif";
 import dataflowImg from "./img/dataflow.gif";
 import datastoreImg from "./img/datastore.png";
 import externalEntityImg from "./img/externalentity.png";
+import trustBoundaryImg from "./img/trustboundary.png";
 import indicatorsImg from "./img/indicators.png";
 import processImg from "./img/process.png";
 import reviewRequestViewImg from "./img/reviewRequestView.png";
@@ -80,7 +81,7 @@ const General = () => (
       potential threats and controls.
     </Typography>
     <Typography>
-      The diagram is built from three different types of components. Let's go
+      The diagram is built from four different types of components. Let's go
       through each and explain what they are!
     </Typography>
   </>
@@ -124,6 +125,21 @@ const ExternalEntityExplanation = () => (
       Some concrete examples of processes could be: an API that your service
       interacts with owned by a different team, or a third party provider such
       as Google.
+    </Typography>
+  </>
+);
+
+const TrustBoundaryExplanation = () => (
+  <>
+    <Typography>
+      Trust Boundaries are represented by a resizeable circular box, and are
+      used to indicate a boundary which multiple sub-components are inside.
+    </Typography>
+    <Typography>
+      Some concrete examples of trust boundaries could be: the AWS account that
+      contains parts of your service's infrastructure, the network boundary that
+      separates your internal network from the internet, or an EC2 which has
+      multiple processes running on it.
     </Typography>
   </>
 );
@@ -529,6 +545,16 @@ const steps = [
     media: {
       image: externalEntityImg,
       alt: "what the external entity component looks like in the diagram",
+    },
+    highlighted: [],
+    position: "center",
+  },
+  {
+    title: "Trust Boundary",
+    body: TrustBoundaryExplanation,
+    media: {
+      image: trustBoundaryImg,
+      alt: "what the trust boundary component looks like in the diagram",
     },
     highlighted: [],
     position: "center",
