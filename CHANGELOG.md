@@ -11,7 +11,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
+- add trust boundary as a new component
 - add tutorial box for trust boundary ([1bf4c23](https://github.com/klarna-incubator/gram/commit/1bf4c23f193725a54a1e25a0073c2caaa095e872))
+
 
 ## [4.12.2](https://github.com/klarna-incubator/gram/compare/v4.12.1...v4.12.2) (2024-06-25)
 
