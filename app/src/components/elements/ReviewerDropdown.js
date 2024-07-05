@@ -16,7 +16,11 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
   ]);
   const first = options.length > 0 ? options[0].value : undefined;
 
-  const { data: reviewers, isLoading } = useReviewersQuery({
+  const {
+    data: reviewers,
+    isLoading,
+    isFetching,
+  } = useReviewersQuery({
     modelId,
   });
 
