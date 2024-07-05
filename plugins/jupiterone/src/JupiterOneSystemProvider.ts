@@ -14,6 +14,9 @@ import {
 } from "@gram/core/dist/search/SearchHandler.js";
 import { JupiterOneClientFactory } from "./client.js";
 import { sanitizeJ1QueryParam } from "./util.js";
+import log4js from "log4js";
+
+const log = log4js.getLogger("JupiterOneSystemProvider");
 
 export class JupiterOneSystemProvider
   implements SystemProvider, SearchProvider
@@ -63,15 +66,42 @@ export class JupiterOneSystemProvider
       `FIND KSystem with systemId = '${sanitizeJ1QueryParam(
         systemId
       )}' as system
-        THAT relates to Team as team
-        THAT relates to accountable_group as group
-        THAT relates to domain as domain
-        Return system, team, domain`,
+        THAT relates to Team as team                
+        Return system, team`,
       {}
     );
 
     if (result.length === 0) {
       return null;
+    }
+
+    return result[0];
+  }
+
+  async getSystemDomain(systemId: string): Promise<any | null> {
+    const row = await this.getJ1System(systemId);
+
+    if (!row) {
+      return null;
+    }
+
+    const j1Client = await this.j1ClientFactory();
+    const domainName = row.team.properties["tag.Domain"];
+
+    if (!domainName) {
+      return null;
+    }
+
+    const result = await j1Client.queryV1(
+      `FIND domain with displayName = '${sanitizeJ1QueryParam(domainName)}'`
+    );
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    if (result.length > 1) {
+      log.warn("Multiple domains found for system", systemId, domainName);
     }
 
     return result[0];

@@ -210,22 +210,22 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
       : [];
     const isHSF =
       props.find(
-        (p: any) => p.id === "tag.srb2:system-risk-level" && p.value === "hsf"
+        (p: any) => p.id === "system-risk-level" && p.value === "hsf"
       ) !== undefined;
 
     // Recommend reviewer based on the reviewer being in the same domain as
     // the system.
-    const system = model.systemId
-      ? await this.systemProvider.getJ1System(model.systemId)
+    const result = model.systemId
+      ? await this.systemProvider.getSystemDomain(model.systemId)
       : null;
 
-    const domain = system?.domain?.properties?.accountabilityCode;
+    const accountabilityCode = result?.properties?.accountabilityCode;
 
-    if (domain !== undefined) {
+    if (accountabilityCode !== undefined) {
       // TODO: Special case: use domain reviewer group if there's one for that domain.
 
       // Otherwise compare domain of system to reviewer.
-      const members = new Set(await this.getDomainMembers(domain));
+      const members = new Set(await this.getDomainMembers(accountabilityCode));
       // Create recommendation function based on system domain
       recommend = (mail: string) => {
         return members.has(mail);
