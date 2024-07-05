@@ -12,7 +12,7 @@ import {
   SearchProviderResult,
   SearchType,
 } from "@gram/core/dist/search/SearchHandler.js";
-import { JupiterOneClient } from "@jupiterone/jupiterone-client-nodejs";
+import { JupiterOneClientFactory } from "./client.js";
 import { sanitizeJ1QueryParam } from "./util.js";
 
 export class JupiterOneSystemProvider
@@ -23,7 +23,7 @@ export class JupiterOneSystemProvider
 
   integrationInstance: any;
 
-  constructor(private j1Client: JupiterOneClient) {}
+  constructor(private j1ClientFactory: JupiterOneClientFactory) {}
 
   searchType: SearchType = {
     key: "system",
@@ -32,7 +32,8 @@ export class JupiterOneSystemProvider
 
   async search(filter: SearchFilter): Promise<SearchProviderResult> {
     const text = sanitizeJ1QueryParam(filter.searchText);
-    const result = await this.j1Client!.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client!.queryV1(
       `FIND KSystem WITH lifecycleState = ('Development' OR 'Live' OR 'Sunset') AND systemId ~= '${text}' OR displayName ~= '${text}' as system
        THAT relates to Team as team
        Return system, team`
@@ -57,7 +58,8 @@ export class JupiterOneSystemProvider
   }
 
   async getJ1System(systemId: string): Promise<any> {
-    const result = await this.j1Client.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND KSystem with systemId = '${sanitizeJ1QueryParam(
         systemId
       )}' as system
@@ -103,7 +105,8 @@ export class JupiterOneSystemProvider
     teamId: string,
     pagination: { page: number; pageSize: number }
   ): Promise<SystemListResult> {
-    const result = await this.j1Client.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND Team with accountabilityCode = '${sanitizeJ1QueryParam(
         teamId
       )}' as team 
@@ -140,7 +143,8 @@ export class JupiterOneSystemProvider
     systemIds: string[],
     pagination: { page: number; pageSize: number }
   ): Promise<SystemListResult> {
-    const result = await this.j1Client.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND KSystem with systemId = (${systemIds
         .map((id) => `'${sanitizeJ1QueryParam(id)}'`)
         .join(" OR ")}) as system

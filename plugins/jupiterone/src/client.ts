@@ -67,3 +67,5 @@ export async function createJ1Client(
   await client.init();
   return client;
 }
+
+export type JupiterOneClientFactory = () => Promise<JupiterOneClient>;

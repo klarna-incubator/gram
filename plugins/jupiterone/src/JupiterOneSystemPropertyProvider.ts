@@ -4,7 +4,7 @@ import {
   SystemProperty,
   SystemPropertyValue,
 } from "@gram/core/dist/data/system-property/types.js";
-import { JupiterOneClient } from "@jupiterone/jupiterone-client-nodejs";
+import { JupiterOneClientFactory } from "./client.js";
 import { sanitizeJ1QueryParam } from "./util.js";
 
 export class JupiterOneSystemPropertyProvider
@@ -56,7 +56,7 @@ export class JupiterOneSystemPropertyProvider
     ["system-risk-level", "tag.[srb2:system-risk-level]"],
   ]);
 
-  constructor(private j1Client: JupiterOneClient) {}
+  constructor(private j1ClientFactory: JupiterOneClientFactory) {}
 
   async provideSystemProperties(
     ctx: RequestContext,
@@ -67,7 +67,8 @@ export class JupiterOneSystemPropertyProvider
       return [];
     }
 
-    const result = await this.j1Client!.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND KSystem with systemId = '${sanitizeJ1QueryParam(systemObjectId)}'`
     );
 
@@ -105,6 +106,7 @@ export class JupiterOneSystemPropertyProvider
   ): Promise<string[]> {
     const j1Property = this.reverseTranslatedIds.get(propertyId) || propertyId;
     const def = this.definitions.find((d) => d.id === propertyId);
+    const j1Client = await this.j1ClientFactory();
 
     const arg2 =
       def?.type !== "toggle"
@@ -112,7 +114,7 @@ export class JupiterOneSystemPropertyProvider
         : value === "true"
         ? "true"
         : "false";
-    const result = await this.j1Client!.queryV1(
+    const result = await j1Client!.queryV1(
       `FIND KSystem with ${j1Property} = ${arg2}`
     );
     return result.map((r: any) => r.properties.systemId);

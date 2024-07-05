@@ -2,16 +2,16 @@ import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js
 import System from "@gram/core/dist/data/systems/System.js";
 import {
   JupiterOneSystemProvider,
-  OverloadedJupiterOneClient,
+  JupiterOneClientFactory,
 } from "@gram/jupiterone";
 import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
 
 export class KlarnaSystemProvider extends JupiterOneSystemProvider {
   constructor(
     private octaneSystemProvider: OctaneSystemProvider,
-    j1client: OverloadedJupiterOneClient
+    j1clientFactory: JupiterOneClientFactory
   ) {
-    super(j1client);
+    super(j1clientFactory);
   }
 
   id: string = "klarna";
