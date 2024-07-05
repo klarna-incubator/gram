@@ -52,6 +52,15 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
     limit: 100,
   });
 
+  if (isLoading || isFetching) {
+    return (
+      <FormControl sx={{ m: 1, minWidth: 250 }}>
+        <InputLabel shrink={true}>Reviewer</InputLabel>
+        <TextField fullWidth disabled placeholder="Loading..." />
+      </FormControl>
+    );
+  }
+
   return (
     <Autocomplete
       value={options.find((opt) => opt.value === value)}
@@ -60,7 +69,6 @@ export function ReviewerDropdown({ modelId, value, onChange, anyOption }) {
       onChange={(e, newValue) => {
         onChange(newValue.value);
       }}
-      loading={isLoading}
       getOptionLabel={(option) => option.label}
       options={options}
       renderInput={(params) => (
