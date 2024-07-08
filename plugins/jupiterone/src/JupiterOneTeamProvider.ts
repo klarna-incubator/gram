@@ -7,7 +7,7 @@ import {
   SearchProviderResult,
   SearchType,
 } from "@gram/core/dist/search/SearchHandler.js";
-import { JupiterOneClient } from "@jupiterone/jupiterone-client-nodejs";
+import { JupiterOneClientFactory } from "./client.js";
 import { sanitizeJ1QueryParam } from "./util.js";
 
 export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
@@ -18,10 +18,11 @@ export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
     label: "Team",
   };
 
-  constructor(private j1Client: JupiterOneClient) {}
+  constructor(private j1ClientFactory: JupiterOneClientFactory) {}
 
   async lookup(ctx: RequestContext, teamIds: string[]): Promise<Team[]> {
-    const result = await this.j1Client.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND Team with accountabilityCode = (${teamIds
         .map((t) => `'${sanitizeJ1QueryParam(t)}'`)
         .join(" OR ")})`
@@ -38,11 +39,12 @@ export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
   }
 
   async getTeamsForUser(ctx: RequestContext, userId: string): Promise<Team[]> {
+    const j1Client = await this.j1ClientFactory();
     const query = `FIND Team WITH _type = 'startup_team' AND inactive != 'Yes' 
       That has Person
       WHERE Person.mail = '${sanitizeJ1QueryParam(userId)}'`;
 
-    const result = await this.j1Client.queryV1(query);
+    const result = await j1Client.queryV1(query);
     return result.map((team: any) => {
       return {
         id: team.properties.accountabilityCode,
@@ -54,12 +56,13 @@ export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
   }
 
   async search(filter: SearchFilter): Promise<SearchProviderResult> {
+    const j1Client = await this.j1ClientFactory();
     // Always fetches all results, which is pretty awkward. No real pagination available.
     // https://github.com/JupiterOne/jupiterone-client-nodejs/blob/main/src/index.ts#L48
     const query = `FIND Team with _type = 'startup_team' AND inactive != 'Yes' AND displayName ~= '${sanitizeJ1QueryParam(
       filter.searchText
     )}'`;
-    const result = await this.j1Client.queryV1(query, {});
+    const result = await j1Client.queryV1(query, {});
 
     const pagedResult = result.slice(
       filter.page * filter.pageSize,

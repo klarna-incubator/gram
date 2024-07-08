@@ -12,8 +12,11 @@ import {
   SearchProviderResult,
   SearchType,
 } from "@gram/core/dist/search/SearchHandler.js";
-import { JupiterOneClient } from "@jupiterone/jupiterone-client-nodejs";
+import { JupiterOneClientFactory } from "./client.js";
 import { sanitizeJ1QueryParam } from "./util.js";
+import log4js from "log4js";
+
+const log = log4js.getLogger("JupiterOneSystemProvider");
 
 export class JupiterOneSystemProvider
   implements SystemProvider, SearchProvider
@@ -23,7 +26,7 @@ export class JupiterOneSystemProvider
 
   integrationInstance: any;
 
-  constructor(private j1Client: JupiterOneClient) {}
+  constructor(private j1ClientFactory: JupiterOneClientFactory) {}
 
   searchType: SearchType = {
     key: "system",
@@ -32,7 +35,8 @@ export class JupiterOneSystemProvider
 
   async search(filter: SearchFilter): Promise<SearchProviderResult> {
     const text = sanitizeJ1QueryParam(filter.searchText);
-    const result = await this.j1Client!.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client!.queryV1(
       `FIND KSystem WITH lifecycleState = ('Development' OR 'Live' OR 'Sunset') AND systemId ~= '${text}' OR displayName ~= '${text}' as system
        THAT relates to Team as team
        Return system, team`
@@ -57,19 +61,47 @@ export class JupiterOneSystemProvider
   }
 
   async getJ1System(systemId: string): Promise<any> {
-    const result = await this.j1Client.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND KSystem with systemId = '${sanitizeJ1QueryParam(
         systemId
       )}' as system
-        THAT relates to Team as team
-        THAT relates to accountable_group as group
-        THAT relates to domain as domain
-        Return system, team, domain`,
+        THAT relates to Team as team                
+        Return system, team`,
       {}
     );
 
     if (result.length === 0) {
       return null;
+    }
+
+    return result[0];
+  }
+
+  async getSystemDomain(systemId: string): Promise<any | null> {
+    const row = await this.getJ1System(systemId);
+
+    if (!row) {
+      return null;
+    }
+
+    const j1Client = await this.j1ClientFactory();
+    const domainName = row.team.properties["tag.Domain"];
+
+    if (!domainName) {
+      return null;
+    }
+
+    const result = await j1Client.queryV1(
+      `FIND domain with displayName = '${sanitizeJ1QueryParam(domainName)}'`
+    );
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    if (result.length > 1) {
+      log.warn("Multiple domains found for system", systemId, domainName);
     }
 
     return result[0];
@@ -103,7 +135,8 @@ export class JupiterOneSystemProvider
     teamId: string,
     pagination: { page: number; pageSize: number }
   ): Promise<SystemListResult> {
-    const result = await this.j1Client.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND Team with accountabilityCode = '${sanitizeJ1QueryParam(
         teamId
       )}' as team 
@@ -140,7 +173,8 @@ export class JupiterOneSystemProvider
     systemIds: string[],
     pagination: { page: number; pageSize: number }
   ): Promise<SystemListResult> {
-    const result = await this.j1Client.queryV1(
+    const j1Client = await this.j1ClientFactory();
+    const result = await j1Client.queryV1(
       `FIND KSystem with systemId = (${systemIds
         .map((id) => `'${sanitizeJ1QueryParam(id)}'`)
         .join(" OR ")}) as system

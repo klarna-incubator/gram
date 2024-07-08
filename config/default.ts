@@ -184,19 +184,22 @@ export const defaultConfig: GramConfiguration = {
       },
     });
 
-    const j1Client = await createJ1Client(
-      new EnvSecret("J1_KEY"),
-      "45377d01-965c-4c5c-a3c1-e6ac4f80cc48",
-      "https://api.eu.jupiterone.io"
-    );
+    const j1ClientFactory = () =>
+      createJ1Client(
+        new EnvSecret("J1_KEY"),
+        "45377d01-965c-4c5c-a3c1-e6ac4f80cc48",
+        "https://api.eu.jupiterone.io"
+      );
 
-    const j1TeamProvider = new JupiterOneTeamProvider(j1Client);
+    const j1TeamProvider = new JupiterOneTeamProvider(j1ClientFactory);
     const octaneSystemProvider = new OctaneSystemProvider();
     const j1SystemProvider = new KlarnaSystemProvider(
       octaneSystemProvider,
-      j1Client
+      j1ClientFactory
     );
-    const j1SysPropProvider = new JupiterOneSystemPropertyProvider(j1Client);
+    const j1SysPropProvider = new JupiterOneSystemPropertyProvider(
+      j1ClientFactory
+    );
 
     const reviewerProvider = new KlarnaReviewerProvider(
       dal,
