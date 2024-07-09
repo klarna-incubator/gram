@@ -1,5 +1,5 @@
 {
-  "system_id": "offsec-ways-of-working",
+  "system_id": "threatsaurus",
   "artifact": "l-docker-offsec-production.artifactory.klarna.net/offsec/just-secdev-testing-auditbuild",
   "build_command": "docker build -t $artifact .",
   "agent": {
