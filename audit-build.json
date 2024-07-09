@@ -1,6 +1,6 @@
 {
-  "system_id": "threatsaurus",
-  "artifact": "l-docker-offsec-production.artifactory.klarna.net/offsec/just-secdev-testing-auditbuild",
+  "system_id": "gram",
+  "artifact": "l-docker-secure-development-production.artifactory.klarna.net",
   "build_command": "docker build -t $artifact .",
   "agent": {
     "image": "l-docker-jenkins-tools.artifactory.klarna.net/jenkins/jenkins-agent-amazon-docker:697",
