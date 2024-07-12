@@ -2,6 +2,12 @@ import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js"
 
 const classes: ComponentClass[] = [
   {
+    id: "6f860ca0-d093-462e-8724-345de463917d",
+    name: "AWS",
+    componentType: "any",
+    icon: "/assets/aws/Amazon_Web_Services_Logo.svg",
+  },
+  {
     id: "49efa71b-8484-4214-b23f-1f675ff37419",
     name: "AWS Sumerian",
     componentType: "any",
