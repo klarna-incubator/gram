@@ -6,3 +6,4 @@ export {
   JupiterOneClientFactory,
 } from "./client.js";
 export { JupiterOneSystemProvider } from "./JupiterOneSystemProvider.js";
+export { JupiterOneDomainSystemPropertyProvider } from "./JupiterOneDomainSystemPropertyProvider.js";
