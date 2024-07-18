@@ -3,7 +3,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "lerna run test",
+    "test": "lerna run --concurrency 1 test",
     "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build --concurrency 1",
     "build-backend": "lerna run --scope=@gram/api --include-dependencies build",
     "build-all": "lerna run build",
@@ -45,7 +45,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-mock": "^29.4.1",
-    "lerna": "^6.6.2",
+    "lerna": "^8.1.6",
     "prettier": "^2.3.2",
     "rimraf": "^4.1.2",
     "snyk": "^1.1291.1",

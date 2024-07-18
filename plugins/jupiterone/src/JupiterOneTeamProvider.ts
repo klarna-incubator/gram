@@ -40,7 +40,7 @@ export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
 
   async getTeamsForUser(ctx: RequestContext, userId: string): Promise<Team[]> {
     const j1Client = await this.j1ClientFactory();
-    const query = `FIND Team WITH _type = 'startup_team' AND inactive != 'Yes' 
+    const query = `FIND Team WITH inactive != 'Yes' 
       That has Person
       WHERE Person.mail = '${sanitizeJ1QueryParam(userId)}'`;
 
@@ -59,9 +59,9 @@ export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
     const j1Client = await this.j1ClientFactory();
     // Always fetches all results, which is pretty awkward. No real pagination available.
     // https://github.com/JupiterOne/jupiterone-client-nodejs/blob/main/src/index.ts#L48
-    const query = `FIND Team with _type = 'startup_team' AND inactive != 'Yes' AND displayName ~= '${sanitizeJ1QueryParam(
+    const query = `FIND Team with inactive != 'Yes' AND displayName = /${sanitizeJ1QueryParam(
       filter.searchText
-    )}'`;
+    )}/i`;
     const result = await j1Client.queryV1(query, {});
 
     const pagedResult = result.slice(

@@ -12,6 +12,7 @@ import type {
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import {
   JupiterOneSystemPropertyProvider,
+  JupiterOneDomainSystemPropertyProvider,
   JupiterOneTeamProvider,
   createJ1Client,
 } from "@gram/jupiterone";
@@ -200,6 +201,9 @@ export const defaultConfig: GramConfiguration = {
     const j1SysPropProvider = new JupiterOneSystemPropertyProvider(
       j1ClientFactory
     );
+    const j1DomainProvider = new JupiterOneDomainSystemPropertyProvider(
+      j1ClientFactory
+    );
 
     const reviewerProvider = new KlarnaReviewerProvider(
       dal,
@@ -274,7 +278,7 @@ export const defaultConfig: GramConfiguration = {
       notificationTemplates: [...defaultNotifications],
       reviewerProvider,
       systemProvider: j1SystemProvider,
-      systemPropertyProviders: [j1SysPropProvider],
+      systemPropertyProviders: [j1SysPropProvider, j1DomainProvider],
       authzProvider: ldapAuthz,
       userProvider: ldapUserProvider,
       teamProvider: j1TeamProvider,
