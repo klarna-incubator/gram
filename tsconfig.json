@@ -1,13 +1,12 @@
 {
   "extends": "./tsconfig.build.json",
-
   "compilerOptions": {
     "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {
-      "@gram/core/dist/*": ["./core/src/*"],
+      "@gram/*": ["./plugins/*/src"],
       "@gram/config/dist/": ["./config/*"],
-      "@gram/*": ["./plugins/*/src"]
+      "@gram/core/dist/*": ["./core/src/*"]
     }
   }
 }
