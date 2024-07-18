@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.14.0](https://github.com/klarna-incubator/gram/compare/v4.13.0...v4.14.0) (2024-07-18)
+
+### Features
+
+- add AWS (just the general AWS cloud service) to tech stacks ([0ed99dc](https://github.com/klarna-incubator/gram/commit/0ed99dc4531d0cda3ab33a9dd768d09af0d31dc5))
+
 # [4.13.0](https://github.com/klarna-incubator/gram/compare/v4.12.2...v4.13.0) (2024-07-04)
 
 **Note:** Version bump only for package @gram/aws
