@@ -76,7 +76,7 @@ export default function withComponentContainer(Entity, type, includeIndicator) {
         <ComponentLabel
           componentId={id}
           x={0}
-          y={localHeight / 2 - (classes?.length > 0 ? 20 : 1)}
+          y={localHeight / 2 - (classes?.length > 0 ? 20 : 6)}
           width={localWidth}
           type={type}
           name={name}

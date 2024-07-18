@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.14.0](https://github.com/klarna-incubator/gram/compare/v4.13.0...v4.14.0) (2024-07-18)
+
+### Bug Fixes
+
+- add loading text to reviewers dropdown instead of just displaying null ([bb221b9](https://github.com/klarna-incubator/gram/commit/bb221b925b06370f67740aca055980d8c9b65857))
+- adjust center position of component label slightly ([93afd51](https://github.com/klarna-incubator/gram/commit/93afd5193b06e4eb3d76e44ad58a4da35b36f591))
+- components inside trust boundaries should now be connectable again with data flows. Trust boundaries should not receive data flow click events ([70c4505](https://github.com/klarna-incubator/gram/commit/70c4505ae98197c820f9a6963a1f6da31838f978))
+
 # [4.13.0](https://github.com/klarna-incubator/gram/compare/v4.12.2...v4.13.0) (2024-07-04)
 
 ### Bug Fixes
