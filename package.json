@@ -3,7 +3,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "lerna run test",
+    "test": "lerna run --concurrency 1 test",
     "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build --concurrency 1",
     "build-backend": "lerna run --scope=@gram/api --include-dependencies build",
     "build-all": "lerna run build",
