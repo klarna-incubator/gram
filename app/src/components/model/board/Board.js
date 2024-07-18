@@ -408,7 +408,13 @@ export default function Board() {
         return;
       }
 
-      if (editDataFlow && !readOnly) {
+      const component = components.find((c) => c.id === id);
+
+      if (
+        editDataFlow &&
+        !readOnly &&
+        component?.type !== COMPONENT_TYPE.TRUST_BOUNDARY
+      ) {
         onMagnetClick(id)();
         return;
       }
