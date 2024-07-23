@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.14.1](https://github.com/klarna-incubator/gram/compare/v4.14.0...v4.14.1) (2024-07-23)
+
+### Bug Fixes
+
+- dataflows should no longer break when clicked after initially being added ([0ac54d3](https://github.com/klarna-incubator/gram/commit/0ac54d3d27af42d079244922459d6ac59ab13d2a))
+
 # [4.14.0](https://github.com/klarna-incubator/gram/compare/v4.13.0...v4.14.0) (2024-07-18)
 
 ### Bug Fixes
