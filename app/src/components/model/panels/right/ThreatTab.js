@@ -11,8 +11,7 @@ import {
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { useModelID } from "../../hooks/useModelID";
 
-export function ThreatTab(props) {
-  const { scrollToId, selectedId } = props;
+export function ThreatTab({ scrollToId, selectedId }) {
   const modelId = useModelID();
   const selectedComponent = useSelectedComponent();
   const [acceptSuggestion] = useAcceptSuggestionMutation();

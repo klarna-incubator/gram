@@ -98,7 +98,8 @@ export function RightPanel() {
           COMPONENT_TYPE.DATA_STORE,
           COMPONENT_TYPE.PROCESS,
           COMPONENT_TYPE.TRUST_BOUNDARY,
-        ].includes(selectedComponent?.type) ? (
+        ].includes(selectedComponent?.type) || // TODO: add type for data flow? would need to migrate all data flows to have a type property
+        selectedComponent?.startComponent ? (
           <>
             <RightTabsHeader tab={tab} setTab={setTab} />
             <TabPanel value={tab} index={TAB.SUGGESTIONS}>

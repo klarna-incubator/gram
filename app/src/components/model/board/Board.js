@@ -425,6 +425,23 @@ export default function Board() {
     }
   }
 
+  function onDataFlowClick(id) {
+    return function (e) {
+      // If not left click
+      if (e.evt.button !== 0) {
+        return;
+      }
+
+      if (e.evt.shiftKey) {
+        setSelected(id, true);
+      } else if (e.evt.ctrlKey || e.evt.metaKey) {
+        setSelected(id, false);
+      } else {
+        setMultipleSelected([id]);
+      }
+    };
+  }
+
   function onComponentClick(id) {
     return function (e) {
       // If not left click
@@ -746,7 +763,7 @@ export default function Board() {
                           df.points.slice(-2)[1],
                       ]}
                       selected={df.id in selected}
-                      onClick={onComponentClick(df.id)}
+                      onClick={onDataFlowClick(df.id)}
                       getStagePointerPosition={getStagePointerPosition}
                     />
                   ))}
@@ -763,7 +780,7 @@ export default function Board() {
                         componentsPos[editDataFlow.startComponent.id].y,
                         ...editDataFlow.points.slice(2),
                       ]}
-                      isEditing={true}
+                      isEditing
                     />
                   )}
                 </Layer>
