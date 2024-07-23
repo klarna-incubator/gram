@@ -413,6 +413,7 @@ export default function Board() {
       if (
         editDataFlow &&
         !readOnly &&
+        component &&
         component?.type !== COMPONENT_TYPE.TRUST_BOUNDARY
       ) {
         onMagnetClick(id)();
