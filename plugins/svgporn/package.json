@@ -17,9 +17,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.16.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.4.2"
+    "@gram/core": "^4.14.1"
   }
 }
