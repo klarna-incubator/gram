@@ -25,10 +25,6 @@ export function ComponentTab() {
   const { type, classes, systems } = component;
   const [name, setName] = useState(component.name);
   const [description, setDescription] = useState(component.description || "");
-  // const [type, setType] = useState(component.type);
-  // const [techStacks, setTechStacks] = useState(component.classes || []);
-
-  // const [systemId, setSystemId] = useState(component.systemId || "");
 
   // Update controlled states if redux changed from outside the component
   useEffect(() => {
@@ -41,18 +37,6 @@ export function ComponentTab() {
     );
   }, [component.description]);
 
-  // useEffect(() => {
-  //   setType(component.type);
-  // }, [component.type]);
-
-  // useEffect(() => {
-  //   setTechStacks(component.classes === undefined ? [] : component.classes);
-  // }, [component.classes]);
-
-  // useEffect(() => {
-  //   setSystemId(component.systemId === undefined ? "" : component.systemId);
-  // }, [component.systemId]);
-
   function updateFields(newFields) {
     dispatch(
       patchComponent(component.id, {
@@ -61,36 +45,6 @@ export function ComponentTab() {
       })
     );
   }
-
-  function updateDescription(description) {
-    updateFields({ description });
-  }
-
-  // // Update type
-  // useEffect(() => {
-  //   if (type !== component.type) {
-  //     updateFields();
-  //   }
-  // }, [component.type, type]);
-
-  // // Update techstacks
-  // useEffect(() => {
-  //   if (JSON.stringify(techStacks) !== JSON.stringify(component.classes)) {
-  //     updateFields();
-  //   }
-  // }, [component.classes, techStacks]);
-
-  // useEffect(() => {
-  //   if (description !== component.description) {
-  //     updateFields();
-  //   }
-  // }, [component.description, description]);
-
-  // useEffect(() => {
-  //   if (systemId !== component.systemId) {
-  //     updateFields();
-  //   }
-  // }, [component.systemId, systemId]);
 
   function shouldBlur(e) {
     if ((!e.shiftKey && e.key === "Enter") || e.key === "Escape") {

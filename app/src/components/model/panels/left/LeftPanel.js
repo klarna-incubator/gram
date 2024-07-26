@@ -1,13 +1,22 @@
-import { Drawer, Toolbar } from "@mui/material";
+import { AppBar, Drawer, Grow, Tab, Tabs, Toolbar } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ToggleLeftPanelButton } from "../../board/components/ToggleLeftPanelButton";
 import { ComponentTab } from "./ComponentTab";
 import { LeftFooter } from "./Footer";
-import { LeftTabsHeader, TAB } from "./LeftTabsHeader";
 import { SystemTab } from "./SystemTab";
 import { ActionItemTab } from "./ActionItemTab";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { DataFlowTab } from "./DataFlowTab";
+import { useSelectedDataFlow } from "../../hooks/useSelectedDataFlow";
+
+const TAB = {
+  SYSTEM: 0,
+  ACTION_ITEMS: 1,
+  COMPONENT: 2,
+  DATA_FLOW: 3,
+};
 
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -31,18 +40,29 @@ function TabPanel({ children, value, index, ...other }) {
 export function LeftPanel() {
   const [tab, setTab] = useState(TAB.SYSTEM);
 
-  const { leftPanelCollapsed, component } = useSelector(({ model }) => ({
-    component: model.components.find((c) => c.id in model.selected),
+  const selectedComponent = useSelectedComponent();
+  const selectedDataflow = useSelectedDataFlow();
+
+  const { leftPanelCollapsed } = useSelector(({ model }) => ({
     leftPanelCollapsed: model.leftPanelCollapsed,
   }));
 
   useEffect(() => {
-    setTab(component ? TAB.COMPONENT : TAB.SYSTEM);
-  }, [component]);
+    if (selectedComponent) {
+      setTab(TAB.COMPONENT);
+    } else if (selectedDataflow) {
+      setTab(TAB.DATA_FLOW);
+    } else {
+      setTab(TAB.SYSTEM);
+    }
+  }, [selectedComponent, selectedDataflow]);
 
   if (leftPanelCollapsed) {
     return null;
   }
+
+  // This fixes an annoying MUI console error when you deselect a component
+  const tabHck = !selectedComponent && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
 
   return (
     <Box id="panel-left">
@@ -63,7 +83,34 @@ export function LeftPanel() {
       >
         <Toolbar />
 
-        <LeftTabsHeader tab={tab} setTab={setTab} />
+        <AppBar position="static">
+          <Grow in={true}>
+            <Tabs
+              value={tabHck}
+              onChange={(_, v) => setTab(v)}
+              textColor="inherit"
+              variant="fullWidth"
+              sx={{
+                "& .MuiTabs-indicator": {
+                  backgroundColor: (theme) => theme.palette.common.gramPink,
+                },
+              }}
+            >
+              <Tab disableRipple label="SYSTEM" value={TAB.SYSTEM} />
+              <Tab
+                disableRipple
+                label="ACTION ITEMS"
+                value={TAB.ACTION_ITEMS}
+              />
+              {selectedComponent && (
+                <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
+              )}
+              {selectedDataflow && (
+                <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
+              )}
+            </Tabs>
+          </Grow>
+        </AppBar>
 
         <TabPanel value={tab} index={TAB.SYSTEM}>
           <SystemTab />
@@ -72,7 +119,10 @@ export function LeftPanel() {
           <ActionItemTab />
         </TabPanel>
         <TabPanel value={tab} index={TAB.COMPONENT}>
-          {component && <ComponentTab />}
+          {selectedComponent && <ComponentTab />}
+        </TabPanel>
+        <TabPanel value={tab} index={TAB.DATA_FLOW}>
+          {selectedDataflow && <DataFlowTab />}
         </TabPanel>
         <LeftFooter />
       </Drawer>

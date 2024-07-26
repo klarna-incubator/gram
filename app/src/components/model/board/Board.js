@@ -762,6 +762,7 @@ export default function Board() {
                         componentsPos[df.endComponent.id]?.y ||
                           df.points.slice(-2)[1],
                       ]}
+                      label={df.label}
                       selected={df.id in selected}
                       onClick={onDataFlowClick(df.id)}
                       getStagePointerPosition={getStagePointerPosition}

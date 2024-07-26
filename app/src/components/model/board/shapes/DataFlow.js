@@ -1,9 +1,10 @@
 import { memo, useEffect, useState } from "react";
-import { Arrow, Group } from "react-konva";
+import { Arrow, Circle, Group, Rect, Text } from "react-konva";
 import { useDispatch } from "react-redux";
 import { patchDataFlow } from "../../../../actions/model/patchDataFlow";
 import { COMPONENT_SIZE, COMPONENT_TYPE } from "../constants";
 import { Anchor } from "./Anchor";
+import { ComponentLabel } from "./ComponentLabel";
 
 function getMagnets([x, y]) {
   return [
@@ -85,6 +86,7 @@ export const DataFlow = memo(
       isEditing,
       onClick,
       getStagePointerPosition,
+      label,
     } = props;
 
     const dispatch = useDispatch();
@@ -93,11 +95,6 @@ export const DataFlow = memo(
     useEffect(() => {
       setDfPoints(points);
     }, [points]);
-
-    const DF_ID = {
-      id: id,
-      name: COMPONENT_TYPE.DATA_FLOW,
-    };
 
     // Start and end points are ALWAYS sent from parent and NEVER modified within this component
     const startComponentPos = points.slice(0, 2);
@@ -186,6 +183,26 @@ export const DataFlow = memo(
       setDfPoints(newPoints);
     }
 
+    const labelWidth = 100;
+    const labelHeight = 15;
+
+    let labelX = (dataFlowPoints[0] + dataFlowPoints[2]) / 2;
+    let labelY = (dataFlowPoints[1] + dataFlowPoints[3]) / 2;
+
+    if ((dataFlowPoints.length / 2) % 2 === 1) {
+      labelX = dataFlowPoints[dataFlowPoints.length / 2 - 1];
+      labelY = dataFlowPoints[dataFlowPoints.length / 2];
+    }
+
+    const rotation =
+      (Math.atan2(
+        dataFlowPoints[pointsLen - 3] - dataFlowPoints[pointsLen - 1],
+        dataFlowPoints[pointsLen - 4] - dataFlowPoints[pointsLen - 2]
+      ) /
+        Math.PI /
+        2) *
+      360;
+
     return (
       <Group
         onMouseEnter={() => (document.body.style.cursor = "pointer")}
@@ -193,7 +210,8 @@ export const DataFlow = memo(
         onClick={(e) => onClick(e)}
       >
         <Arrow
-          {...DF_ID}
+          id={id}
+          name={COMPONENT_TYPE.DATA_FLOW}
           points={dataFlowPoints}
           pointerAtBeginning={bidirectional}
           onDblClick={() => createAnchor()}
@@ -214,13 +232,61 @@ export const DataFlow = memo(
         {anchors.map((props) => (
           <Anchor
             {...props}
-            {...DF_ID}
+            id={id}
+            name={COMPONENT_TYPE.DATA_FLOW}
             onDragMove={(e) => dragAnchorMove(e, props.index)}
             onDragEnd={() => dragAnchorEnd()}
             onDblClick={() => deleteAnchor(props.index)}
             selected={selected}
           />
         ))}
+
+        {label?.length > 0 && (
+          <>
+            <Rect
+              x={labelX}
+              y={labelY}
+              rotation={rotation}
+              offsetX={labelWidth / 2}
+              offsetY={labelHeight / 2}
+              width={labelWidth}
+              height={labelHeight}
+              fill={"#FFFFFF"}
+              cornerRadius={2}
+              stroke="#333"
+              strokeWidth={1}
+            />
+
+            <Text
+              text={label}
+              ellipsis={true}
+              x={labelX}
+              y={labelY + 2}
+              offsetX={labelWidth / 2}
+              offsetY={labelHeight / 2}
+              rotation={Math.abs(rotation) > 90 ? rotation + 180 : rotation}
+              width={labelWidth}
+              align="center"
+            />
+          </>
+        )}
+
+        {/* <ComponentLabel
+          x={labelX}
+          y={labelY}
+          rotation={rotation}
+          name={label}
+          width={labelWidth}
+        /> */}
+
+        {/* <Circle
+          x={labelX}
+          y={labelY}
+          radius={3}
+          fill={"#333"}
+          stroke={"#333"}
+          strokeWidth={1}
+        /> */}
       </Group>
     );
   },
