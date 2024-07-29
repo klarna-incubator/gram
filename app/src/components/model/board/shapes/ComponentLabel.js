@@ -13,6 +13,7 @@ export function ComponentLabel({
   type,
   stage,
   align = "center",
+  rotation,
   onChange,
   onClick,
 }) {
@@ -55,6 +56,7 @@ export function ComponentLabel({
         visible={readOnly || !editing}
         transformsEnabled={"position"}
         ref={nameRef}
+        rotation={rotation}
         type={
           type
         } /* Used to communicate upwards (onContextMenu) what type of component was clicked. */
@@ -90,6 +92,7 @@ export function ComponentLabel({
             y: nameRef.current.getAbsolutePosition().y,
             scaleX: stage.scale,
             scaleY: stage.scale,
+            rotation,
           })}
           divProps={{ veryUglyHackToForceUpdate: stage }}
         >
