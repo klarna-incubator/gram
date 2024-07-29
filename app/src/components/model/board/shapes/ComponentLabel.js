@@ -18,7 +18,6 @@ export function ComponentLabel({
   onClick,
 }) {
   const readOnly = useReadOnly();
-  const nameRef = useRef();
   const editNameRef = useRef();
   const patchComponent = usePatchComponent(componentId);
   const [newName, setNewName] = useState(name);
@@ -55,7 +54,6 @@ export function ComponentLabel({
       <Text
         visible={readOnly || !editing}
         transformsEnabled={"position"}
-        ref={nameRef}
         rotation={rotation}
         type={
           type
@@ -84,24 +82,28 @@ export function ComponentLabel({
       />
 
       {editing && (
-        <Html
-          transform={true}
-          transformFunc={(attrs) => ({
-            ...attrs,
-            x: nameRef.current.getAbsolutePosition().x,
-            y: nameRef.current.getAbsolutePosition().y,
-            scaleX: stage.scale,
-            scaleY: stage.scale,
-            rotation,
-          })}
-          divProps={{ veryUglyHackToForceUpdate: stage }}
-        >
+        <Html>
           <input
             className={"editComponentName"}
             style={{
               textAlign: align,
-              //   display: editing ? "block" : "none",
               width: width + "px",
+              position: "absolute",
+              top: y - 4,
+              left: x,
+              border: "none",
+              fontSize: "12px",
+              padding: "0px",
+              margin: "0px",
+              overflow: "hidden",
+              background: "none",
+              outline: "none",
+              resize: "none",
+              lineHeight: 1,
+              fontFamily: "Open Sans",
+              transformOrigin: "left top",
+              textAlign: "center",
+              color: "black",
             }}
             spellCheck={false}
             ref={editNameRef}
