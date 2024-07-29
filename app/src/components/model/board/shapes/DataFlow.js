@@ -253,7 +253,7 @@ export const DataFlow = memo(
               height={labelHeight}
               fill={"#FFFFFF"}
               cornerRadius={2}
-              stroke="#333"
+              stroke={selected ? "#FFB3C7" : "#333"}
               strokeWidth={1}
             />
 

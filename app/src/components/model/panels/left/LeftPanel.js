@@ -3,13 +3,13 @@ import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ToggleLeftPanelButton } from "../../board/components/ToggleLeftPanelButton";
+import { COMPONENT_TYPE } from "../../board/constants";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { ActionItemTab } from "./ActionItemTab";
 import { ComponentTab } from "./ComponentTab";
+import { DataFlowTab } from "./DataFlowTab";
 import { LeftFooter } from "./Footer";
 import { SystemTab } from "./SystemTab";
-import { ActionItemTab } from "./ActionItemTab";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
-import { DataFlowTab } from "./DataFlowTab";
-import { useSelectedDataFlow } from "../../hooks/useSelectedDataFlow";
 
 const TAB = {
   SYSTEM: 0,
@@ -41,21 +41,25 @@ export function LeftPanel() {
   const [tab, setTab] = useState(TAB.SYSTEM);
 
   const selectedComponent = useSelectedComponent();
-  const selectedDataflow = useSelectedDataFlow();
 
   const { leftPanelCollapsed } = useSelector(({ model }) => ({
     leftPanelCollapsed: model.leftPanelCollapsed,
   }));
 
+  const isComponent =
+    selectedComponent && selectedComponent?.type !== COMPONENT_TYPE.DATA_FLOW;
+  const isDataFlow =
+    selectedComponent && selectedComponent?.type === COMPONENT_TYPE.DATA_FLOW;
+
   useEffect(() => {
-    if (selectedComponent) {
+    if (isComponent) {
       setTab(TAB.COMPONENT);
-    } else if (selectedDataflow) {
+    } else if (isDataFlow) {
       setTab(TAB.DATA_FLOW);
     } else {
       setTab(TAB.SYSTEM);
     }
-  }, [selectedComponent, selectedDataflow]);
+  }, [isComponent, isDataFlow]);
 
   if (leftPanelCollapsed) {
     return null;
@@ -102,10 +106,10 @@ export function LeftPanel() {
                 label="ACTION ITEMS"
                 value={TAB.ACTION_ITEMS}
               />
-              {selectedComponent && (
+              {isComponent && (
                 <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
               )}
-              {selectedDataflow && (
+              {isDataFlow && (
                 <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
               )}
             </Tabs>
@@ -119,10 +123,10 @@ export function LeftPanel() {
           <ActionItemTab />
         </TabPanel>
         <TabPanel value={tab} index={TAB.COMPONENT}>
-          {selectedComponent && <ComponentTab />}
+          {isComponent && <ComponentTab />}
         </TabPanel>
         <TabPanel value={tab} index={TAB.DATA_FLOW}>
-          {selectedDataflow && <DataFlowTab />}
+          {isDataFlow && <DataFlowTab />}
         </TabPanel>
         <LeftFooter />
       </Drawer>

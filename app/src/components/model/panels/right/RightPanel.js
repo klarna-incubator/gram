@@ -1,18 +1,18 @@
-import { Drawer, Toolbar, Box, Typography } from "@mui/material";
+import { Box, Drawer, Toolbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useListMitigationsQuery } from "../../../../api/gram/mitigations";
 import { ToggleRightPanelButton } from "../../board/components/ToggleRightPanelButton";
+import { COMPONENT_TYPE } from "../../board/constants";
+import { useModelID } from "../../hooks/useModelID";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { useSelectedComponentControls } from "../../hooks/useSelectedComponentControls";
+import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThreats";
 import { TAB } from "./constants";
 import { ControlTab } from "./ControlTab";
-import { SuggestionTab } from "./SuggestionTab";
 import { RightTabsHeader } from "./RightTabsHeader";
+import { SuggestionTab } from "./SuggestionTab";
 import { ThreatTab } from "./ThreatTab";
-import { useModelID } from "../../hooks/useModelID";
-import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThreats";
-import { useSelectedComponentControls } from "../../hooks/useSelectedComponentControls";
-import { useListMitigationsQuery } from "../../../../api/gram/mitigations";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
-import { COMPONENT_TYPE } from "../../board/constants";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,11 +51,9 @@ export function RightPanel() {
   const controlsMap = mitigations?.controlsMap || {};
   const selectedComponent = useSelectedComponent();
 
-  const { rightPanelCollapsed } = useSelector(({ model }) => {
-    return {
-      rightPanelCollapsed: model.rightPanelCollapsed,
-    };
-  });
+  const { rightPanelCollapsed } = useSelector(({ model }) => ({
+    rightPanelCollapsed: model.rightPanelCollapsed,
+  }));
 
   function scrollToId(id, tab) {
     setTab(tab);
@@ -98,8 +96,8 @@ export function RightPanel() {
           COMPONENT_TYPE.DATA_STORE,
           COMPONENT_TYPE.PROCESS,
           COMPONENT_TYPE.TRUST_BOUNDARY,
-        ].includes(selectedComponent?.type) || // TODO: add type for data flow? would need to migrate all data flows to have a type property
-        selectedComponent?.startComponent ? (
+          COMPONENT_TYPE.DATA_FLOW,
+        ].includes(selectedComponent?.type) ? (
           <>
             <RightTabsHeader tab={tab} setTab={setTab} />
             <TabPanel value={tab} index={TAB.SUGGESTIONS}>

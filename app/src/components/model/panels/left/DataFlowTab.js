@@ -1,11 +1,11 @@
 import { Box, Card, CardContent, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
-import { useSelectedDataFlow } from "../../hooks/useSelectedDataFlow";
 import { usePatchDataFlow } from "../../hooks/usePatchDataFlow";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export function DataFlowTab() {
-  const dataflow = useSelectedDataFlow();
+  const dataflow = useSelectedComponent();
   const readOnly = useReadOnly();
   const patchDataFlow = usePatchDataFlow(dataflow.id);
 
