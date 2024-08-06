@@ -11,9 +11,7 @@ export function ComponentLabel({
   width,
   componentId,
   type,
-  stage,
   align = "center",
-  rotation,
   onChange,
   onClick,
 }) {
@@ -54,7 +52,6 @@ export function ComponentLabel({
       <Text
         visible={readOnly || !editing}
         transformsEnabled={"position"}
-        rotation={rotation}
         type={
           type
         } /* Used to communicate upwards (onContextMenu) what type of component was clicked. */
@@ -69,16 +66,6 @@ export function ComponentLabel({
         wrap={"none"}
         ellipsis={true}
         onClick={onLocalClick}
-        onMouseEnter={() => {
-          if (!readOnly) {
-            document.body.style.cursor = "text";
-          }
-        }}
-        onMouseLeave={() => {
-          if (!readOnly) {
-            document.body.style.cursor = "default";
-          }
-        }}
       />
 
       {editing && (

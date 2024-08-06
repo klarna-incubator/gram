@@ -73,6 +73,59 @@ export const testConfig: GramConfiguration = {
     },
   ],
 
+  attributes: {
+    flow: [
+      {
+        key: "protocols",
+        type: "select",
+        defaultValue: [],
+        label: "Protocol(s)",
+        options: [
+          "HTTP",
+          "HTTPS",
+          "FTP",
+          "SSH",
+          "SMTP",
+          "POP3",
+          "IMAP",
+          "DNS",
+          "LDAP",
+          "SMB",
+          "gRPC",
+          "MQTT",
+          "AMQP",
+        ],
+        allowCustomValue: true,
+        allowMultiple: true,
+      },
+      {
+        key: "authentication",
+        type: "select",
+        defaultValue: [],
+        label: "Authentication",
+        options: ["Basic Auth", "JWT", "OIDC"],
+        allowCustomValue: true,
+        allowMultiple: true,
+      },
+      {
+        key: "data_type",
+        type: "select",
+        defaultValue: [],
+        label: "Type of Data",
+        options: ["Personal Information", "Transaction Data"],
+        allowCustomValue: true,
+        allowMultiple: true,
+      },
+      {
+        key: "description",
+        type: "text",
+        defaultValue: "",
+        label: "Description",
+        multiline: true,
+      },
+    ],
+  },
+
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {

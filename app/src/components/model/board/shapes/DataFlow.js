@@ -1,10 +1,8 @@
 import { memo, useEffect, useState } from "react";
-import { Arrow, Circle, Group, Rect, Text } from "react-konva";
-import { useDispatch } from "react-redux";
-import { patchDataFlow } from "../../../../actions/model/patchDataFlow";
+import { Arrow, Group, Rect, Text } from "react-konva";
+import { usePatchDataFlow } from "../../hooks/usePatchDataFlow";
 import { COMPONENT_SIZE, COMPONENT_TYPE } from "../constants";
 import { Anchor } from "./Anchor";
-import { ComponentLabel } from "./ComponentLabel";
 
 function getMagnets([x, y]) {
   return [
@@ -89,8 +87,8 @@ export const DataFlow = memo(
       label,
     } = props;
 
-    const dispatch = useDispatch();
     const [dfPoints, setDfPoints] = useState(points);
+    const patchDataFlow = usePatchDataFlow(id);
 
     useEffect(() => {
       setDfPoints(points);
@@ -156,7 +154,7 @@ export const DataFlow = memo(
         y,
         ...dfPoints.slice(index + 2),
       ];
-      dispatch(patchDataFlow(id, { points: newPoints }));
+      patchDataFlow({ points: newPoints });
       setDfPoints(newPoints);
     }
 
@@ -171,7 +169,7 @@ export const DataFlow = memo(
     }
 
     function dragAnchorEnd() {
-      dispatch(patchDataFlow(id, { points: dfPoints }));
+      patchDataFlow({ points: dfPoints });
     }
 
     function deleteAnchor(index) {
@@ -179,7 +177,7 @@ export const DataFlow = memo(
         ...dfPoints.slice(0, index),
         ...dfPoints.slice(index + 2),
       ];
-      dispatch(patchDataFlow(id, { points: newPoints }));
+      patchDataFlow({ points: newPoints });
       setDfPoints(newPoints);
     }
 
@@ -189,25 +187,34 @@ export const DataFlow = memo(
     let labelX = (dataFlowPoints[0] + dataFlowPoints[2]) / 2;
     let labelY = (dataFlowPoints[1] + dataFlowPoints[3]) / 2;
 
-    if ((dataFlowPoints.length / 2) % 2 === 1) {
-      labelX = dataFlowPoints[dataFlowPoints.length / 2 - 1];
-      labelY = dataFlowPoints[dataFlowPoints.length / 2];
-    }
+    // if (dataFlowPoints.length > 4) {
+    //   labelX = quadraticBezierCurve(
+    //     0.25,
+    //     dataFlowPoints[0],
+    //     dataFlowPoints[2],
+    //     dataFlowPoints[4]
+    //   );
+    //   labelY = quadraticBezierCurve(
+    //     0.25,
+    //     dataFlowPoints[1],
+    //     dataFlowPoints[3],
+    //     dataFlowPoints[5]
+    //   );
+    // }
 
     const rotation =
       (Math.atan2(
-        dataFlowPoints[pointsLen - 3] - dataFlowPoints[pointsLen - 1],
-        dataFlowPoints[pointsLen - 4] - dataFlowPoints[pointsLen - 2]
+        dataFlowPoints[1] - dataFlowPoints[3],
+        dataFlowPoints[0] - dataFlowPoints[2]
       ) /
-        Math.PI /
-        2) *
-      360;
+        Math.PI) *
+      180;
 
     return (
       <Group
         onMouseEnter={() => (document.body.style.cursor = "pointer")}
         onMouseLeave={() => (document.body.style.cursor = "default")}
-        onClick={(e) => onClick(e)}
+        onClick={onClick}
       >
         <Arrow
           id={id}
@@ -243,6 +250,7 @@ export const DataFlow = memo(
 
         {label?.length > 0 && (
           <>
+            {/* Would be nice if the label could be dragged along the curve */}
             <Rect
               x={labelX}
               y={labelY}
@@ -260,24 +268,17 @@ export const DataFlow = memo(
             <Text
               text={label}
               ellipsis={true}
-              x={labelX}
+              x={labelX - 1}
               y={labelY + 2}
               offsetX={labelWidth / 2}
               offsetY={labelHeight / 2}
               rotation={Math.abs(rotation) > 90 ? rotation + 180 : rotation}
+              fill={selected ? "#FFB3C7" : "#333"}
               width={labelWidth}
               align="center"
             />
           </>
         )}
-
-        {/* <ComponentLabel
-          x={labelX}
-          y={labelY}
-          rotation={rotation}
-          name={label}
-          width={labelWidth}
-        /> */}
 
         {/* <Circle
           x={labelX}
@@ -296,6 +297,7 @@ export const DataFlow = memo(
       prevProps.bidirectional !== nextProps.bidirectional ||
       prevProps.selected !== nextProps.selected ||
       prevProps.isEditing !== nextProps.isEditing ||
+      prevProps.label !== nextProps.label ||
       !nextProps.points.every((p, i) => p === prevProps.points[i])
     ) {
       return false;

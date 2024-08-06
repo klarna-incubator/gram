@@ -14,6 +14,7 @@ import type { Migration } from "../data/Migration.js";
 import type { TeamProvider } from "../auth/TeamProvider.js";
 import type { ActionItemExporter } from "../action-items/ActionItemExporter.js";
 import type { SearchProvider } from "../search/SearchHandler.js";
+import type { DynamicAttribute } from "../attributes/attributes.js";
 
 export interface Providers {
   /**
@@ -120,6 +121,13 @@ export interface GramConfiguration {
     name: string;
     path: string;
   }[];
+
+  /**
+   * Attribute customization.
+   */
+  attributes: {
+    flow: DynamicAttribute[];
+  };
 
   /**
    * Optional sentryDSN to connect to sentry.
