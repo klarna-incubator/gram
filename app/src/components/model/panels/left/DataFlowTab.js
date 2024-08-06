@@ -1,8 +1,27 @@
-import { Box, Card, CardContent, TextField, Typography } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { usePatchDataFlow } from "../../hooks/usePatchDataFlow";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { Flow } from "./Flow";
+
+function shouldBlur(e) {
+  if ((!e.shiftKey && e.key === "Enter") || e.key === "Escape") {
+    e.preventDefault();
+    e.target.blur();
+  }
+}
 
 export function DataFlowTab() {
   const dataflow = useSelectedComponent();
@@ -10,25 +29,12 @@ export function DataFlowTab() {
   const patchDataFlow = usePatchDataFlow(dataflow.id);
 
   const [label, setLabel] = useState(dataflow.label || "");
-  const [description, setDescription] = useState(dataflow.description || "");
+  const [flows, setFlows] = useState(dataflow.flows || []);
 
   // Update controlled states if redux changed from outside the component
   useEffect(() => {
     setLabel(dataflow.label);
   }, [dataflow.label]);
-
-  useEffect(() => {
-    setDescription(
-      dataflow.description === undefined ? "" : dataflow.description
-    );
-  }, [dataflow.description]);
-
-  function shouldBlur(e) {
-    if ((!e.shiftKey && e.key === "Enter") || e.key === "Escape") {
-      e.preventDefault();
-      e.target.blur();
-    }
-  }
 
   return (
     <Box
@@ -59,26 +65,47 @@ export function DataFlowTab() {
                 onChange={(e) => setLabel(e.target.value)}
                 onKeyDown={shouldBlur}
               />
-
-              <TextField
-                fullWidth
-                multiline
-                variant="standard"
-                label="Description"
-                disabled={readOnly}
-                value={description}
-                onBlur={() => patchDataFlow({ description })}
-                onChange={(e) => setDescription(e.target.value)}
-                onKeyDown={shouldBlur}
-              />
             </Box>
           </CardContent>
         </Card>
-        <Card elevation={2}>
-          <CardContent>
-            <Box display="flex" gap="20px" flexDirection="column">
-              <Typography variant="h6">Flows</Typography>
-            </Box>
+        <Card elevation={4}>
+          <CardHeader
+            title={
+              <Box display="flex" flexDirection="row">
+                <Typography variant="h6" sx={{ flexGrow: "1" }}>
+                  Flows
+                </Typography>
+
+                <Tooltip title="Add flow">
+                  <IconButton
+                    onClick={() =>
+                      setFlows([...flows, { summary: "New Flow" }])
+                    }
+                    size="small"
+                  >
+                    <AddCircleOutlineIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            }
+          />
+          <CardContent sx={{ padding: 0 }}>
+            {flows.map((flow, index) => (
+              <Flow
+                flow={flow}
+                setFlow={(newFlow) => {
+                  const newFlows = [...flows];
+                  newFlows[index] = newFlow;
+                  setFlows(newFlows);
+                }}
+                onDelete={() => {
+                  const newFlows = [...flows];
+                  newFlows.splice(index, 1);
+                  setFlows(newFlows);
+                }}
+                defaultExpanded={index === 0}
+              />
+            ))}
           </CardContent>
         </Card>
       </Box>
