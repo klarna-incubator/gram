@@ -42,6 +42,7 @@ import { userRouter } from "./resources/gram/v1/user/router.js";
 import { searchRouter } from "./resources/gram/v1/search/router.js";
 import { systemsRouter } from "./resources/gram/v1/systems/router.js";
 import { getFlowAttributes } from "./resources/gram/v1/attributes/get.js";
+import { flowsRouter } from "./resources/gram/v1/flows/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -122,6 +123,9 @@ export async function createApp(dal: DataAccessLayer) {
 
   // Links
   authenticatedRoutes.use("/links", linksRouter(dal));
+
+  // Flows
+  authenticatedRoutes.use("/flows", flowsRouter(dal));
 
   // Controls
   const controls = controlsV1(dal);

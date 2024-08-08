@@ -8,6 +8,8 @@ export const api = createApi({
   tagTypes: [
     "ActionItems",
     "Controls",
+    "Flow",
+    "Flows",
     "Mitigations",
     "Model",
     "Models",

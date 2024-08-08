@@ -11,10 +11,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import {
+  useCreateFlowMutation,
+  useListFlowsQuery,
+} from "../../../../api/gram/flows";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
+import { useModelID } from "../../hooks/useModelID";
 import { usePatchDataFlow } from "../../hooks/usePatchDataFlow";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { Flow } from "./Flow";
+import { useComponent } from "../../hooks/useComponent";
 
 function shouldBlur(e) {
   if ((!e.shiftKey && e.key === "Enter") || e.key === "Escape") {
@@ -26,10 +32,21 @@ function shouldBlur(e) {
 export function DataFlowTab() {
   const dataflow = useSelectedComponent();
   const readOnly = useReadOnly();
+  const modelId = useModelID();
   const patchDataFlow = usePatchDataFlow(dataflow.id);
 
+  const [createFlow] = useCreateFlowMutation();
+  const { data: flows, isLoading } = useListFlowsQuery({
+    modelId: modelId,
+    dataFlowId: dataflow.id,
+  });
+
   const [label, setLabel] = useState(dataflow.label || "");
-  const [flows, setFlows] = useState(dataflow.flows || []);
+
+  const startComponent = useComponent(dataflow.startComponent.id);
+  const endComponent = useComponent(dataflow.endComponent.id);
+
+  console.log(dataflow, startComponent, endComponent);
 
   // Update controlled states if redux changed from outside the component
   useEffect(() => {
@@ -73,13 +90,19 @@ export function DataFlowTab() {
             title={
               <Box display="flex" flexDirection="row">
                 <Typography variant="h6" sx={{ flexGrow: "1" }}>
-                  Flows
+                  Flows from {startComponent.name} to {endComponent.name}
                 </Typography>
 
                 <Tooltip title="Add flow">
                   <IconButton
                     onClick={() =>
-                      setFlows([...flows, { summary: "New Flow" }])
+                      createFlow({
+                        modelId,
+                        dataFlowId: dataflow.id,
+                        summary: "New Flow",
+                        originComponentId: startComponent.id,
+                        attributes: {},
+                      })
                     }
                     size="small"
                   >
@@ -90,24 +113,57 @@ export function DataFlowTab() {
             }
           />
           <CardContent sx={{ padding: 0 }}>
-            {flows.map((flow, index) => (
-              <Flow
-                flow={flow}
-                setFlow={(newFlow) => {
-                  const newFlows = [...flows];
-                  newFlows[index] = newFlow;
-                  setFlows(newFlows);
-                }}
-                onDelete={() => {
-                  const newFlows = [...flows];
-                  newFlows.splice(index, 1);
-                  setFlows(newFlows);
-                }}
-                defaultExpanded={index === 0}
-              />
-            ))}
+            {isLoading && <Typography>Loading...</Typography>}
+
+            {!isLoading &&
+              flows
+                .filter((flow) => flow.originComponentId === startComponent.id)
+                .map((flow, index) => (
+                  <Flow flow={flow} defaultExpanded={index === 0} />
+                ))}
           </CardContent>
         </Card>
+
+        {dataflow.bidirectional && (
+          <Card elevation={4}>
+            <CardHeader
+              title={
+                <Box display="flex" flexDirection="row">
+                  <Typography variant="h6" sx={{ flexGrow: "1" }}>
+                    Flows from {endComponent.name} to {startComponent.name}
+                  </Typography>
+
+                  <Tooltip title="Add flow">
+                    <IconButton
+                      onClick={() =>
+                        createFlow({
+                          modelId,
+                          dataFlowId: dataflow.id,
+                          summary: "New Flow",
+                          originComponentId: endComponent.id,
+                          attributes: {},
+                        })
+                      }
+                      size="small"
+                    >
+                      <AddCircleOutlineIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              }
+            />
+            <CardContent sx={{ padding: 0 }}>
+              {isLoading && <Typography>Loading...</Typography>}
+
+              {!isLoading &&
+                flows
+                  .filter((flow) => flow.originComponentId === endComponent.id)
+                  .map((flow, index) => (
+                    <Flow flow={flow} defaultExpanded={index === 0} />
+                  ))}
+            </CardContent>
+          </Card>
+        )}
       </Box>
     </Box>
   );

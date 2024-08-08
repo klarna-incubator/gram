@@ -27,6 +27,7 @@ import {
 import { ActionItemHandler } from "../action-items/ActionItemHandler.js";
 import { LinkDataService } from "./links/LinkDataService.js";
 import { SearchHandler } from "../search/SearchHandler.js";
+import { FlowDataService } from "./flow/FlowDataService.js";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
@@ -46,6 +47,7 @@ export class DataAccessLayer {
   reportService: ReportDataService;
   bannerService: BannerDataService;
   linkService: LinkDataService;
+  flowService: FlowDataService;
 
   // Non-Database related handlers
   sysPropHandler: SystemPropertyHandler;
@@ -93,6 +95,7 @@ export class DataAccessLayer {
     this.reportService = new ReportDataService(this);
     this.bannerService = new BannerDataService(this);
     this.linkService = new LinkDataService(this);
+    this.flowService = new FlowDataService(this);
 
     // Initialize Action Item Handler. Needs to happen after Data Services are initialized.
     this.actionItemHandler = new ActionItemHandler(this);
