@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { patchComponent } from "../../../../actions/model/patchComponent";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
@@ -14,6 +14,8 @@ import { MultipleSystemsDropdown } from "../../../elements/MultipleSystemsDropdo
 import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TechStacksDropdown } from "./TechStackDropdown";
+import { DescriptionPreview } from "./DescriptionPreview";
+import { set } from "lodash";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -24,6 +26,15 @@ export function ComponentTab() {
   const { type, classes, systems } = component;
   const [name, setName] = useState(component.name);
   const [description, setDescription] = useState(component.description || "");
+  const [showDescriptionPreview, setShowDescriptionPreview] = useState(
+    component.description !== "" || readOnly
+  );
+  const descriptionTextFieldRef = useRef(null);
+
+  function showDescriptionTextField() {
+    setShowDescriptionPreview(false);
+    setTimeout(() => descriptionTextFieldRef.current.focus(), 1); // Time out needed for the ref to be set
+  }
   // const [type, setType] = useState(component.type);
   // const [techStacks, setTechStacks] = useState(component.classes || []);
 
@@ -38,8 +49,22 @@ export function ComponentTab() {
     setDescription(
       component.description === undefined ? "" : component.description
     );
+
+    setShowDescriptionPreview((_) => {
+      if (readOnly) {
+        return true;
+      }
+      if (!component.description) {
+        return false;
+      }
+      if (component.description.trim() === "") {
+        return false;
+      }
+      return true;
+    });
   }, [component.description]);
 
+  useEffect(() => {}, [component.description]);
   // useEffect(() => {
   //   setType(component.type);
   // }, [component.type]);
@@ -51,6 +76,14 @@ export function ComponentTab() {
   // useEffect(() => {
   //   setSystemId(component.systemId === undefined ? "" : component.systemId);
   // }, [component.systemId]);
+  function handleDescriptionOnBlur(newFields) {
+    if (description.trim() === "") {
+      setShowDescriptionPreview(false);
+    } else {
+      setShowDescriptionPreview(true);
+    }
+    updateFields(newFields);
+  }
 
   function updateFields(newFields) {
     dispatch(
@@ -93,7 +126,6 @@ export function ComponentTab() {
       e.target.blur();
     }
   }
-
   // console.log(systems, classes);
 
   return (
@@ -166,18 +198,28 @@ export function ComponentTab() {
                 }}
                 readOnly={readOnly}
               />
-
-              <TextField
-                fullWidth
-                multiline
-                variant="standard"
-                label="Description"
-                disabled={readOnly}
-                value={description}
-                onBlur={() => updateFields({ description })}
-                onChange={(e) => setDescription(e.target.value)}
-                onKeyDown={(e) => shouldBlur(e)}
-              />
+              {!showDescriptionPreview && !readOnly && (
+                <TextField
+                  fullWidth
+                  multiline
+                  variant="standard"
+                  label="Description"
+                  placeholder="Explain the purpose and function of this component"
+                  disabled={readOnly}
+                  value={description}
+                  inputRef={(e) => (descriptionTextFieldRef.current = e)}
+                  onBlur={() => handleDescriptionOnBlur({ description })}
+                  onChange={(e) => setDescription(e.target.value)}
+                  onKeyDown={(e) => shouldBlur(e)}
+                />
+              )}
+              {(showDescriptionPreview || readOnly) && (
+                <DescriptionPreview
+                  description={description}
+                  showDescriptionTextField={showDescriptionTextField}
+                  readOnly={readOnly}
+                />
+              )}
             </Box>
           </CardContent>
         </Card>

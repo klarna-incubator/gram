@@ -53,6 +53,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "log4js": "^6.9.1"
+    "dompurify": "^3.1.6",
+    "log4js": "^6.9.1",
+    "marked": "^14.0.0"
   }
 }
