@@ -4,6 +4,7 @@ export interface DataFlow {
   id: string;
   endComponent: { id: string };
   startComponent: { id: string };
+  label?: string;
   points: number[];
   bidirectional: boolean;
 }

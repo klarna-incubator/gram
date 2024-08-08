@@ -20,6 +20,10 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useGetFlowAttributesQuery } from "../../../../api/gram/attributes";
+import {
+  useDeleteFlowMutation,
+  usePatchFlowMutation,
+} from "../../../../api/gram/flows";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { EditableTypography } from "../../../elements/EditableTypography";
 
@@ -39,66 +43,61 @@ function DynamicSwitch({ value, onChange, label, ...props }) {
   );
 }
 
-function DynamicDropdown(options, allowMultiple, allowCustomValue) {
-  return ({ value, onChange, label, ...props }) => {
-    return (
-      <FormControl fullWidth>
-        <Autocomplete
-          {...props}
-          autoHighlight
-          fullWidth
-          multiple={allowMultiple}
-          disableClearable
-          filterSelectedOptions
-          freeSolo={allowCustomValue}
-          forcePopupIcon
-          PaperComponent={(props) => (
-            <Paper
-              {...props}
-              sx={{ colorScheme: (theme) => theme.palette.mode }}
-            />
-          )}
-          value={value}
-          options={options}
-          renderInput={(props) => <TextField {...props} label={label} />}
-          onChange={(_, values) => onChange({ target: { value: values } })}
-        />
-      </FormControl>
-    );
-  };
+function DynamicDropdown({ value, onChange, label, attribute, ...props }) {
+  const { options, allowMultiple, allowCustomValue } = attribute;
+  const [val, setVal] = useState(value);
+  return (
+    <FormControl fullWidth>
+      <Autocomplete
+        {...props}
+        autoHighlight
+        fullWidth
+        multiple={allowMultiple}
+        disableClearable
+        filterSelectedOptions
+        freeSolo={allowCustomValue}
+        forcePopupIcon
+        PaperComponent={(props) => (
+          <Paper
+            {...props}
+            sx={{ colorScheme: (theme) => theme.palette.mode }}
+          />
+        )}
+        value={val}
+        options={options}
+        renderInput={(props) => <TextField {...props} label={label} />}
+        onChange={(_, values) => {
+          onChange({ target: { value: values } });
+          setVal(values);
+        }}
+      />
+    </FormControl>
+  );
 }
 
-function DynamicTextField(multiline) {
-  return ({ value, onChange, label, ...props }) => {
-    // const [val, setVal] = useState(value);
-    return (
-      <TextField
-        {...props}
-        multiline={multiline}
-        defaultValue={value}
-        // value={val}
-        // onChange={(e) => setVal(e.target.value)}
-        label={label}
-        onKeyDown={shouldBlur}
-        onBlur={(e) => onChange(e)}
-      />
-    );
-  };
+function DynamicTextField({ value, onChange, label, attribute, ...props }) {
+  const [val, setVal] = useState(value);
+  return (
+    <TextField
+      {...props}
+      multiline={attribute.multiline}
+      value={val}
+      label={label}
+      onChange={(e) => setVal(e.target.value)}
+      onKeyDown={shouldBlur}
+      onBlur={(e) => {
+        onChange(e);
+      }}
+    />
+  );
 }
 
 function DynamicAttribute(attribute) {
-  console.log(attribute);
   switch (attribute.type) {
     case "text":
-      return DynamicTextField(attribute.multiline);
-    // case "boolean":
-    //   return DynamicSwitch;
+      return DynamicTextField;
     case "select":
-      return DynamicDropdown(
-        attribute.options,
-        attribute.allowMultiple,
-        attribute.allowCustomValue
-      );
+      return DynamicDropdown;
     default:
       return TextField;
   }
@@ -111,19 +110,21 @@ function shouldBlur(e) {
   }
 }
 
-export function Flow({ flow, setFlow, onDelete, defaultExpanded }) {
+export function Flow({ flow, defaultExpanded }) {
   const readOnly = useReadOnly();
   const [expanded, setExpanded] = useState(defaultExpanded);
   const { data } = useGetFlowAttributesQuery();
-  console.log(data);
-  console.log(flow);
+  const [patchFlow] = usePatchFlowMutation();
+  const [deleteFlow] = useDeleteFlowMutation();
 
-  const attributesInFlow = new Set(Object.keys(flow));
+  const attributesInFlow = new Set(Object.keys(flow.attributes));
   const attributes =
     data?.map((att) => ({
       ...att,
       component: DynamicAttribute(att),
     })) || [];
+
+  console.log(flow, attributesInFlow);
 
   return (
     <Accordion expanded={expanded} square>
@@ -144,30 +145,34 @@ export function Flow({ flow, setFlow, onDelete, defaultExpanded }) {
           </IconButton>
         }
       >
-        <>
-          <Box sx={{ flexGrow: 1, marginLeft: "10px", marginTop: "2px" }}>
-            {/*  */}
-            <EditableTypography
-              text={flow.summary}
-              placeholder="Summary"
-              variant="body1"
+        <Box sx={{ flexGrow: 1, marginLeft: "10px", marginTop: "2px" }}>
+          <EditableTypography
+            text={flow.summary}
+            placeholder="Summary"
+            variant="body1"
+            size="small"
+            color="text.primary"
+            onSubmit={(summary) => {
+              patchFlow({
+                flowId: flow.id,
+                ...flow,
+                summary,
+              });
+            }}
+            onClick={(e) => e.stopPropagation()}
+            readOnly={readOnly}
+          />
+        </Box>
+        <Box>
+          <Tooltip title="Remove flow">
+            <IconButton
+              onClick={() => deleteFlow({ flowId: flow.id })}
               size="small"
-              color="text.primary"
-              onSubmit={(summary) => {
-                setFlow({ ...flow, summary });
-              }}
-              onClick={(e) => e.stopPropagation()}
-              readOnly={readOnly}
-            />
-          </Box>
-          <Box>
-            <Tooltip title="Remove flow">
-              <IconButton onClick={onDelete} size="small">
-                <ClearRoundedIcon fontSize="inherit" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </>
+            >
+              <ClearRoundedIcon fontSize="inherit" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </AccordionSummary>
       <AccordionDetails>
         <Box gap="10px">
@@ -178,22 +183,33 @@ export function Flow({ flow, setFlow, onDelete, defaultExpanded }) {
               <Box key={att.key} display="flex" sx={{ marginBottom: "20px" }}>
                 <FormControl fullWidth>
                   <att.component
-                    value={flow[att.key]}
+                    attribute={att}
+                    value={flow.attributes[att.key]}
                     onChange={(e) => {
-                      setFlow({ ...flow, [att.key]: e.target.value });
+                      patchFlow({
+                        flowId: flow.id,
+                        ...flow,
+                        attributes: {
+                          ...flow.attributes,
+                          [att.key]: e.target.value,
+                        },
+                      });
                     }}
                     size="small"
                     label={att.label}
-                    // onKeyDown={shouldBlur}
                     disabled={readOnly}
                   />
                 </FormControl>
                 <Tooltip title="Remove attribute">
                   <IconButton
                     onClick={() => {
-                      const newFlow = { ...flow };
-                      delete newFlow[att.key];
-                      setFlow(newFlow);
+                      const newAttributes = { ...flow.attributes };
+                      delete newAttributes[att.key];
+                      patchFlow({
+                        flowId: flow.id,
+                        ...flow,
+                        attributes: newAttributes,
+                      });
                     }}
                     size="small"
                   >
@@ -204,7 +220,6 @@ export function Flow({ flow, setFlow, onDelete, defaultExpanded }) {
             ))}
 
           {/* Adding/selecting new attribute to set */}
-
           {attributes.filter((att) => !attributesInFlow.has(att.key)).length >
             0 &&
             !readOnly && (
@@ -224,7 +239,14 @@ export function Flow({ flow, setFlow, onDelete, defaultExpanded }) {
                       const att = attributes.find(
                         (att) => att.key === e.target.value
                       );
-                      setFlow({ ...flow, [att.key]: att.defaultValue });
+                      patchFlow({
+                        flowId: flow.id,
+                        ...flow,
+                        attributes: {
+                          ...flow.attributes,
+                          [att.key]: att.defaultValue,
+                        },
+                      });
                       e.target.value = "";
                     }}
                   >
