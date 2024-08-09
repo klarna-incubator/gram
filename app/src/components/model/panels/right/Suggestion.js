@@ -15,6 +15,65 @@ import {
 } from "../../../../api/gram/suggestions";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+import { DescriptionPreview } from "../DescriptionPreview";
+
+function SuggestionDescription({ description }) {
+  marked.use({
+    extensions: [
+      {
+        name: "heading",
+        renderer({ text, depth }) {
+          return `<h${depth + 1}>${text}</h${depth + 1}>`;
+        },
+      },
+      {
+        name: "image",
+        renderer(_) {
+          return "Images are not supported";
+        },
+      },
+      {
+        name: "list",
+        renderer(token) {
+          const itemList = token.items.map((i) => {
+            return (
+              "<li style='margin-bottom:0'>" +
+              i.raw.replace(/\n+$/, "") +
+              "</li>"
+            );
+          });
+          if (token.ordered) {
+            return `<ol>${itemList.join("\n")}</ol>`;
+          } else {
+            return `<ul>${itemList.join("\n")}</ul>`;
+          }
+        },
+      },
+    ],
+  });
+
+  const domPurityConfig = {
+    USE_PROFILES: { html: true },
+    FORBID_TAGS: ["img", "table", "tr", "td", "th"],
+  };
+
+  const sanitizedHtml = DOMPurify.sanitize(
+    marked.parse(description),
+    domPurityConfig
+  );
+
+  return (
+    <Box>
+      <Typography variant="caption" color="text.secondary">
+        Description:
+      </Typography>
+      <br />
+      <Typography variant="body2">{description}</Typography>
+    </Box>
+  );
+}
 
 function SuggestionMitigations({ suggestion, threatSuggestions }) {
   const threatsMitigated = suggestion?.mitigates?.filter((m) =>
@@ -81,17 +140,15 @@ export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
               {suggestion.title}
             </Typography>
             {suggestion.description && (
-              <Typography
-                variant="body1"
-                color="text.secondary"
+              <DescriptionPreview
+                description={suggestion.description}
+                readOnly
                 sx={{
                   paddingBottom: "10px",
                   lineHeight: "1.45",
                   fontSize: "0.75rem",
                 }}
-              >
-                {suggestion.description}
-              </Typography>
+              />
             )}
             <SuggestionMitigations
               threatSuggestions={threatSuggestions}

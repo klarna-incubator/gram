@@ -14,8 +14,7 @@ import { MultipleSystemsDropdown } from "../../../elements/MultipleSystemsDropdo
 import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TechStacksDropdown } from "./TechStackDropdown";
-import { DescriptionPreview } from "./DescriptionPreview";
-import { set } from "lodash";
+import { DescriptionPreview } from "../DescriptionPreview";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -214,11 +213,14 @@ export function ComponentTab() {
                 />
               )}
               {(showDescriptionPreview || readOnly) && (
-                <DescriptionPreview
-                  description={description}
-                  showDescriptionTextField={showDescriptionTextField}
-                  readOnly={readOnly}
-                />
+                <>
+                  <Typography variant="body1">Description</Typography>
+                  <DescriptionPreview
+                    description={description}
+                    showDescriptionTextField={showDescriptionTextField}
+                    readOnly={readOnly}
+                  />
+                </>
               )}
             </Box>
           </CardContent>

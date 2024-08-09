@@ -1,5 +1,48 @@
 import { Input, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+import { DescriptionPreview } from "../DescriptionPreview";
+
+marked.use({
+  extensions: [
+    {
+      name: "heading",
+      renderer({ text, depth }) {
+        return `<h${depth + 1}>${text}</h${depth + 1}>`;
+      },
+    },
+    {
+      name: "image",
+      renderer(_) {
+        return "Images are not supported";
+      },
+    },
+    {
+      name: "link",
+      renderer(token) {
+        console.log({ token });
+        return `<a href="${token.href}" target="_blank" rel="noopener noreferrer">${token.text}</a>`;
+      },
+    },
+    {
+      name: "list",
+      renderer(token) {
+        const itemList = token.items.map((i) => {
+          return (
+            "<li style='margin-bottom:0'>" + i.raw.replace(/\n+$/, "") + "</li>"
+          );
+        });
+        if (token.ordered) {
+          return `<ol>${itemList.join("\n")}</ol>`;
+        } else {
+          return `<ul>${itemList.join("\n")}</ul>`;
+        }
+      },
+    },
+  ],
+});
 
 export function EditableTypography({
   text,
@@ -63,14 +106,8 @@ export function EditableTypography({
           }}
         />
       ) : (
-        <Typography
-          variant={variant}
-          color={color}
-          onClick={() => {
-            if (!readOnly) {
-              setIsEditing(!isEditing);
-            }
-          }}
+        <DescriptionPreview
+          description={text}
           sx={{
             ...sx,
             wordBreak: "break-word",
@@ -80,9 +117,9 @@ export function EditableTypography({
               },
             }),
           }}
-        >
-          {value || placeholder}
-        </Typography>
+          readOnly={readOnly}
+          showDescriptionTextField={() => setIsEditing(!isEditing)}
+        />
       )}
     </>
   );
