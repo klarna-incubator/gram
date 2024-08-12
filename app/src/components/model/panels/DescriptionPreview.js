@@ -67,11 +67,10 @@ export const DescriptionPreview = ({
   showDescriptionTextField,
   sx = {},
 }) => {
-  if (!description) {
+  if (!readOnly && !description) {
     showDescriptionTextField(true);
     return null;
   }
-
   const sanitizedHtml = DOMPurify.sanitize(
     marked.parse(description),
     domPurityConfig
@@ -89,7 +88,7 @@ export const DescriptionPreview = ({
       <Box
         dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         sx={{ ...sx }}
-        onDoubleClick={showDescriptionTextField}
+        onClick={showDescriptionTextField}
       ></Box>
     );
   }

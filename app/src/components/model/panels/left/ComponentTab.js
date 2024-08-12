@@ -15,6 +15,7 @@ import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TechStacksDropdown } from "./TechStackDropdown";
 import { DescriptionPreview } from "../DescriptionPreview";
+import { BorderBottom } from "@mui/icons-material";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -25,14 +26,14 @@ export function ComponentTab() {
   const { type, classes, systems } = component;
   const [name, setName] = useState(component.name);
   const [description, setDescription] = useState(component.description || "");
-  const [showDescriptionPreview, setShowDescriptionPreview] = useState(
-    component.description !== "" || readOnly
+  const [isEditing, setIsEditing] = useState(
+    component.description === "" || !readOnly
   );
   const descriptionTextFieldRef = useRef(null);
 
   function showDescriptionTextField() {
-    setShowDescriptionPreview(false);
-    setTimeout(() => descriptionTextFieldRef.current.focus(), 1); // Time out needed for the ref to be set
+    setIsEditing(true);
+    setTimeout(() => descriptionTextFieldRef.current.focus(), 2); // Time out needed for the ref to be set
   }
   // const [type, setType] = useState(component.type);
   // const [techStacks, setTechStacks] = useState(component.classes || []);
@@ -49,21 +50,20 @@ export function ComponentTab() {
       component.description === undefined ? "" : component.description
     );
 
-    setShowDescriptionPreview((_) => {
+    setIsEditing((_) => {
       if (readOnly) {
-        return true;
+        return false;
       }
       if (!component.description) {
-        return false;
+        return true;
       }
       if (component.description.trim() === "") {
-        return false;
+        return true;
       }
-      return true;
+      return false;
     });
   }, [component.description]);
 
-  useEffect(() => {}, [component.description]);
   // useEffect(() => {
   //   setType(component.type);
   // }, [component.type]);
@@ -77,9 +77,9 @@ export function ComponentTab() {
   // }, [component.systemId]);
   function handleDescriptionOnBlur(newFields) {
     if (description.trim() === "") {
-      setShowDescriptionPreview(false);
+      setIsEditing(true);
     } else {
-      setShowDescriptionPreview(true);
+      setIsEditing(false);
     }
     updateFields(newFields);
   }
@@ -197,7 +197,7 @@ export function ComponentTab() {
                 }}
                 readOnly={readOnly}
               />
-              {!showDescriptionPreview && !readOnly && (
+              {isEditing && !readOnly && (
                 <TextField
                   fullWidth
                   multiline
@@ -212,13 +212,14 @@ export function ComponentTab() {
                   onKeyDown={(e) => shouldBlur(e)}
                 />
               )}
-              {(showDescriptionPreview || readOnly) && (
+              {(!isEditing || readOnly) && (
                 <>
                   <Typography variant="body1">Description</Typography>
                   <DescriptionPreview
                     description={description}
                     showDescriptionTextField={showDescriptionTextField}
                     readOnly={readOnly}
+                    sx={{ fontSize: "14px" }}
                   />
                 </>
               )}
