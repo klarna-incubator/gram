@@ -107,7 +107,9 @@ export class FlowDataService extends EventEmitter {
         UPDATE flows SET summary = $1, origin_component_id = $2, attributes = $3 WHERE id = $4 RETURNING *
       `;
     const res = await this.pool.query(query, [summary, originComponentId, attributes, id]);
-    this.emit("updated-for", { modelId: res.rows[0].model_id, dataFlowId: res.rows[0].data_flow_id });
+    if (res.rowCount > 0) {
+      this.emit("updated-for", { modelId: res.rows[0].model_id, dataFlowId: res.rows[0].data_flow_id });
+    }    
   }
 
   async deleteFlow(id: number): Promise<void> {
@@ -115,7 +117,9 @@ export class FlowDataService extends EventEmitter {
         DELETE FROM flows WHERE id = $1 RETURNING *
       `;
     const res = await this.pool.query(query, [id]);    
-    this.emit("updated-for", { modelId: res.rows[0].model_id, dataFlowId: res.rows[0].data_flow_id });
+    if (res.rowCount > 0) {
+      this.emit("updated-for", { modelId: res.rows[0].model_id, dataFlowId: res.rows[0].data_flow_id });
+    }    
   }
 
   async copyFlowsBetweenModels(
