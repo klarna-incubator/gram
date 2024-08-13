@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import { modalActions } from "../../../../redux/modalSlice";
 import { MODALS } from "../../../elements/modal/ModalManager";
 import { useListExportersQuery } from "../../../../api/gram/action-items";
+import { EditableDescription } from "../EditableDescription";
 
 export function Threat({
   threat,
@@ -109,6 +110,14 @@ export function Threat({
         controlId: control.id,
       });
     }
+  }
+
+  function updateDescription(newDescription) {
+    updateThreat({
+      modelId: threat.modelId,
+      id: threat.id,
+      description: newDescription,
+    });
   }
 
   const controlIds = threatsMap[threat.id];
@@ -227,24 +236,11 @@ export function Threat({
                 )}
               </Box>
             </Box>
-            <EditableTypography
-              text={threat.description}
-              placeholder={
-                readOnly
-                  ? "No description provided."
-                  : "Add description (optional)"
-              }
-              variant="body1"
-              color={threat.description ? "text.secondary" : "text.disabled"}
-              onSubmit={(v) =>
-                updateThreat({
-                  modelId: threat.modelId,
-                  id: threat.id,
-                  description: v,
-                })
-              }
+            <EditableDescription
+              description={threat.description}
+              updateDescription={updateDescription}
               readOnly={readOnly}
-              sx={{
+              previewSx={{
                 paddingBottom: "10px",
                 lineHeight: "1.45",
                 fontSize: "0.75rem",

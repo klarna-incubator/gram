@@ -1,6 +1,6 @@
 import { Input } from "@mui/material";
 import { useEffect, useState } from "react";
-import { DescriptionPreview } from "../DescriptionPreview";
+import { Typography } from "@mui/material";
 
 export function EditableTypography({
   text,
@@ -64,8 +64,14 @@ export function EditableTypography({
           }}
         />
       ) : (
-        <DescriptionPreview
-          description={text}
+        <Typography
+          variant={variant}
+          color={color}
+          onClick={() => {
+            if (!readOnly) {
+              setIsEditing(!isEditing);
+            }
+          }}
           sx={{
             ...sx,
             wordBreak: "break-word",
@@ -75,9 +81,9 @@ export function EditableTypography({
               },
             }),
           }}
-          readOnly={readOnly}
-          showDescriptionTextField={() => setIsEditing(!isEditing)}
-        />
+        >
+          {value || placeholder}
+        </Typography>
       )}
     </>
   );

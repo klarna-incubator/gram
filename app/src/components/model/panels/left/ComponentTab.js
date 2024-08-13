@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { patchComponent } from "../../../../actions/model/patchComponent";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
@@ -14,8 +14,7 @@ import { MultipleSystemsDropdown } from "../../../elements/MultipleSystemsDropdo
 import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TechStacksDropdown } from "./TechStackDropdown";
-import { DescriptionPreview } from "../DescriptionPreview";
-import { BorderBottom } from "@mui/icons-material";
+import { EditableDescription } from "../EditableDescription";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -26,15 +25,6 @@ export function ComponentTab() {
   const { type, classes, systems } = component;
   const [name, setName] = useState(component.name);
   const [description, setDescription] = useState(component.description || "");
-  const [isEditing, setIsEditing] = useState(
-    component.description === "" || !readOnly
-  );
-  const descriptionTextFieldRef = useRef(null);
-
-  function showDescriptionTextField() {
-    setIsEditing(true);
-    setTimeout(() => descriptionTextFieldRef.current.focus(), 2); // Time out needed for the ref to be set
-  }
   // const [type, setType] = useState(component.type);
   // const [techStacks, setTechStacks] = useState(component.classes || []);
 
@@ -49,19 +39,6 @@ export function ComponentTab() {
     setDescription(
       component.description === undefined ? "" : component.description
     );
-
-    setIsEditing((_) => {
-      if (readOnly) {
-        return false;
-      }
-      if (!component.description) {
-        return true;
-      }
-      if (component.description.trim() === "") {
-        return true;
-      }
-      return false;
-    });
   }, [component.description]);
 
   // useEffect(() => {
@@ -75,14 +52,6 @@ export function ComponentTab() {
   // useEffect(() => {
   //   setSystemId(component.systemId === undefined ? "" : component.systemId);
   // }, [component.systemId]);
-  function handleDescriptionOnBlur(newFields) {
-    if (description.trim() === "") {
-      setIsEditing(true);
-    } else {
-      setIsEditing(false);
-    }
-    updateFields(newFields);
-  }
 
   function updateFields(newFields) {
     dispatch(
@@ -91,6 +60,10 @@ export function ComponentTab() {
         ...newFields,
       })
     );
+  }
+
+  function updateDescription(description) {
+    updateFields({ description });
   }
 
   // // Update type
@@ -197,32 +170,12 @@ export function ComponentTab() {
                 }}
                 readOnly={readOnly}
               />
-              {isEditing && !readOnly && (
-                <TextField
-                  fullWidth
-                  multiline
-                  variant="standard"
-                  label="Description"
-                  placeholder="Explain the purpose and function of this component"
-                  disabled={readOnly}
-                  value={description}
-                  inputRef={(e) => (descriptionTextFieldRef.current = e)}
-                  onBlur={() => handleDescriptionOnBlur({ description })}
-                  onChange={(e) => setDescription(e.target.value)}
-                  onKeyDown={(e) => shouldBlur(e)}
-                />
-              )}
-              {(!isEditing || readOnly) && (
-                <>
-                  <Typography variant="body1">Description</Typography>
-                  <DescriptionPreview
-                    description={description}
-                    showDescriptionTextField={showDescriptionTextField}
-                    readOnly={readOnly}
-                    sx={{ fontSize: "14px" }}
-                  />
-                </>
-              )}
+              <EditableDescription
+                readOnly={readOnly}
+                description={description}
+                showPreviewTitle
+                updateDescription={updateDescription}
+              />
             </Box>
           </CardContent>
         </Card>

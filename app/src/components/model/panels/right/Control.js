@@ -24,6 +24,7 @@ import { EditableSelect } from "./EditableSelect";
 import { EditableTypography } from "./EditableTypography";
 import { MitigationChip } from "./MitigationChip";
 import { Links } from "../../../elements/Links";
+import { EditableDescription } from "../EditableDescription";
 
 export function Control(props) {
   const { control, scrollToId, selected } = props;
@@ -87,6 +88,14 @@ export function Control(props) {
       modelId: control.modelId,
       threatId: threat.id,
       controlId: control.id,
+    });
+  }
+
+  function updateDescription(description) {
+    updateControl({
+      modelId: control.modelId,
+      id: control.id,
+      description: description,
     });
   }
 
@@ -155,14 +164,11 @@ export function Control(props) {
                 </Tooltip>
               )}
             </Box>
-            <EditableTypography
-              text={description}
-              placeholder="Add description (optional)"
-              variant="body1"
-              color={description ? "text.secondary" : "text.disabled"}
-              onSubmit={setDescription}
+            <EditableDescription
+              description={description}
+              updateDescription={updateDescription}
               readOnly={readOnly}
-              sx={{
+              previewSx={{
                 paddingBottom: "10px",
                 lineHeight: "1.45",
                 fontSize: "0.75rem",

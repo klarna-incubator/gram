@@ -15,7 +15,7 @@ import {
 } from "../../../../api/gram/suggestions";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
-import { DescriptionPreview } from "../DescriptionPreview";
+import { DescriptionPreview } from "../EditableDescription";
 
 function SuggestionMitigations({ suggestion, threatSuggestions }) {
   const threatsMitigated = suggestion?.mitigates?.filter((m) =>
@@ -84,7 +84,6 @@ export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
             {suggestion.description && (
               <DescriptionPreview
                 description={suggestion.description}
-                readOnly
                 sx={{
                   paddingBottom: "10px",
                   lineHeight: "1.45",
