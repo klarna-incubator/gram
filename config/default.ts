@@ -120,6 +120,7 @@ export const defaultConfig: GramConfiguration = {
         ],
         allowCustomValue: true,
         allowMultiple: true,
+        optional: false,
       },
       {
         key: "authentication",
@@ -129,6 +130,7 @@ export const defaultConfig: GramConfiguration = {
         options: ["Basic Auth", "JWT", "OIDC"],
         allowCustomValue: true,
         allowMultiple: true,
+        optional: false,
       },
       {
         key: "data_type",
@@ -138,6 +140,7 @@ export const defaultConfig: GramConfiguration = {
         options: ["Personal Information", "Transaction Data"],
         allowCustomValue: true,
         allowMultiple: true,
+        optional: true,
       },
       {
         key: "description",
@@ -145,6 +148,7 @@ export const defaultConfig: GramConfiguration = {
         defaultValue: "",
         label: "Description",
         multiline: true,
+        optional: true,
       },
     ],
   },

@@ -21,6 +21,7 @@ import { usePatchDataFlow } from "../../hooks/usePatchDataFlow";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { Flow } from "./Flow";
 import { useComponent } from "../../hooks/useComponent";
+import { useGetFlowAttributesQuery } from "../../../../api/gram/attributes";
 
 function shouldBlur(e) {
   if ((!e.shiftKey && e.key === "Enter") || e.key === "Escape") {
@@ -42,7 +43,12 @@ export function DataFlowTab() {
   });
 
   const [label, setLabel] = useState(dataflow.label || "");
-
+  const { data: attributes } = useGetFlowAttributesQuery();
+  const nonOptionalAttributes = attributes?.filter(att => !att.optional) || [];
+  const defaultAttributes = {};
+  nonOptionalAttributes.forEach(att => {
+    defaultAttributes[att.key] = att.defaultValue;
+  });
   const startComponent = useComponent(dataflow.startComponent.id);
   const endComponent = useComponent(dataflow.endComponent.id);
 
@@ -101,7 +107,7 @@ export function DataFlowTab() {
                         dataFlowId: dataflow.id,
                         summary: "New Flow",
                         originComponentId: startComponent.id,
-                        attributes: {},
+                        attributes: defaultAttributes,
                       })
                     }
                     size="small"
@@ -135,14 +141,14 @@ export function DataFlowTab() {
 
                   <Tooltip title="Add flow">
                     <IconButton
-                      onClick={() =>
+                      onClick={() =>               
                         createFlow({
                           modelId,
                           dataFlowId: dataflow.id,
                           summary: "New Flow",
                           originComponentId: endComponent.id,
-                          attributes: {},
-                        })
+                          attributes: defaultAttributes,
+                        })                        
                       }
                       size="small"
                     >

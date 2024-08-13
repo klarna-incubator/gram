@@ -154,7 +154,7 @@ export function Flow({ flow, defaultExpanded }) {
             onClick={(e) => e.stopPropagation()}
             readOnly={readOnly}
           />
-        </Box>
+        </Box>        
         <Box>
           <Tooltip title="Remove flow">
             <IconButton
@@ -192,22 +192,23 @@ export function Flow({ flow, defaultExpanded }) {
                     disabled={readOnly}
                   />
                 </FormControl>
-                <Tooltip title="Remove attribute">
-                  <IconButton
-                    onClick={() => {
-                      const newAttributes = { ...flow.attributes };
-                      delete newAttributes[att.key];
-                      patchFlow({
-                        flowId: flow.id,
-                        ...flow,
-                        attributes: newAttributes,
-                      });
-                    }}
-                    size="small"
-                  >
-                    <ClearRoundedIcon fontSize="inherit" />
-                  </IconButton>
-                </Tooltip>
+                {att.optional &&
+                  <Tooltip title="Remove attribute">
+                    <IconButton
+                      onClick={() => {
+                        const newAttributes = { ...flow.attributes };
+                        delete newAttributes[att.key];
+                        patchFlow({
+                          flowId: flow.id,
+                          ...flow,
+                          attributes: newAttributes,
+                        });
+                      }}
+                      size="small"
+                    >
+                      <ClearRoundedIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>}
               </Box>
             ))}
 

@@ -6,6 +6,10 @@ export type DynamicTextAttribute = {
   label: string;
   defaultValue: string;
   multiline: boolean;
+  /**
+   * If true, won't be automatically added to the object. The user will need to select and add it.
+   */
+  optional: boolean;
 };
 
 export type DynamicSelectAttribute = {
@@ -22,6 +26,10 @@ export type DynamicSelectAttribute = {
    * If true, the user can select multiple values.
    */
   allowMultiple: boolean;
+  /**
+   * If true, won't be automatically added to the object. The user will need to select and add it.
+   */
+  optional: boolean;
 };
 
 export type DynamicAttribute = DynamicTextAttribute | DynamicSelectAttribute;

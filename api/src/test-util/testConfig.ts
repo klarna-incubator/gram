@@ -14,6 +14,10 @@ import { testUserProvider } from "./sampleUser.js";
 import { testSystemProvider } from "./system.js";
 import { StaticValidationProvider } from "@gram/config/dist/providers/static/StaticValidationProvider.js";
 
+/**
+ * I don't know why this exists when there is a core/testConfig.ts. Might be worth trying to move all test-utility stuff there instead.
+ */
+
 export const testConfig: GramConfiguration = {
   appPort: 8080,
   controlPort: 8081,
@@ -100,6 +104,7 @@ export const testConfig: GramConfiguration = {
         ],
         allowCustomValue: true,
         allowMultiple: true,
+        optional: false,
       },
       {
         key: "authentication",
@@ -109,6 +114,7 @@ export const testConfig: GramConfiguration = {
         options: ["Basic Auth", "JWT", "OIDC"],
         allowCustomValue: true,
         allowMultiple: true,
+        optional: false,
       },
       {
         key: "data_type",
@@ -118,6 +124,7 @@ export const testConfig: GramConfiguration = {
         options: ["Personal Information", "Transaction Data"],
         allowCustomValue: true,
         allowMultiple: true,
+        optional: false,
       },
       {
         key: "description",
@@ -125,6 +132,7 @@ export const testConfig: GramConfiguration = {
         defaultValue: "",
         label: "Description",
         multiline: true,
+        optional: false,
       },
     ],
   },
