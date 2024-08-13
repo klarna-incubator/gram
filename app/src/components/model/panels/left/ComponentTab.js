@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { patchComponent } from "../../../../actions/model/patchComponent";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
