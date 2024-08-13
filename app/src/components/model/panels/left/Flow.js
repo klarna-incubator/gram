@@ -8,17 +8,15 @@ import {
   Box,
   Divider,
   FormControl,
-  FormControlLabel,
   IconButton,
   InputLabel,
   MenuItem,
   Paper,
   Select,
-  Switch,
   TextField,
-  Tooltip,
+  Tooltip
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetFlowAttributesQuery } from "../../../../api/gram/attributes";
 import {
   useDeleteFlowMutation,
@@ -27,25 +25,14 @@ import {
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { EditableTypography } from "../../../elements/EditableTypography";
 
-function DynamicSwitch({ value, onChange, label, ...props }) {
-  return (
-    <FormControlLabel
-      labelPlacement="start"
-      control={
-        <Switch
-          checked={value}
-          onChange={(e) => onChange({ target: { value: e.target.checked } })}
-          {...props}
-        />
-      }
-      label={label}
-    />
-  );
-}
-
 function DynamicDropdown({ value, onChange, label, attribute, ...props }) {
   const { options, allowMultiple, allowCustomValue } = attribute;
   const [val, setVal] = useState(value);
+
+  useEffect(() => {
+    setVal(value)
+  }, [value]);
+
   return (
     <FormControl fullWidth>
       <Autocomplete
@@ -77,6 +64,11 @@ function DynamicDropdown({ value, onChange, label, attribute, ...props }) {
 
 function DynamicTextField({ value, onChange, label, attribute, ...props }) {
   const [val, setVal] = useState(value);
+
+  useEffect(() => {
+    setVal(value)
+  }, [value]);
+
   return (
     <TextField
       {...props}

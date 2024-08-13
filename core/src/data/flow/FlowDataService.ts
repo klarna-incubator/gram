@@ -80,8 +80,6 @@ export class FlowDataService extends EventEmitter {
       createdBy,
     ]);
 
-    // this.notifyUpdatedFor(objectType, objectId);
-
     const flow = new Flow(
       res.rows[0].id,
       res.rows[0].model_id,
@@ -94,6 +92,8 @@ export class FlowDataService extends EventEmitter {
       res.rows[0].updated_at
     );
 
+    this.emit("updated-for", { modelId, dataFlowId });
+
     return flow;
   }
 
@@ -104,47 +104,19 @@ export class FlowDataService extends EventEmitter {
     attributes: FlowAttributes
   ): Promise<void> {
     const query = `        
-        UPDATE flows SET summary = $1, origin_component_id = $2, attributes = $3 WHERE id = $4
+        UPDATE flows SET summary = $1, origin_component_id = $2, attributes = $3 WHERE id = $4 RETURNING *
       `;
-
-    await this.pool.query(query, [summary, originComponentId, attributes, id]);
+    const res = await this.pool.query(query, [summary, originComponentId, attributes, id]);
+    this.emit("updated-for", { modelId: res.rows[0].model_id, dataFlowId: res.rows[0].data_flow_id });
   }
 
   async deleteFlow(id: number): Promise<void> {
     const query = `        
         DELETE FROM flows WHERE id = $1 RETURNING *
       `;
-
-    await this.pool.query(query, [id]);
-    // const res = await this.pool.query(query, [id]);
-    // if (res.rows.length > 0) {
-    //   const objectType = res.rows[0].object_type;
-    //   const objectId = res.rows[0].object_id;
-
-    //   // this.notifyUpdatedFor(objectType, objectId);
-    // }
+    const res = await this.pool.query(query, [id]);    
+    this.emit("updated-for", { modelId: res.rows[0].model_id, dataFlowId: res.rows[0].data_flow_id });
   }
-
-  // async notifyUpdatedFor(objectType: LinkObjectType, objectId: LinkObjectId) {
-  //   let modelId: string | undefined;
-  //   if (objectType === LinkObjectType.Threat) {
-  //     const threat = await this.dal.threatService.getById(objectId);
-  //     if (threat) {
-  //       modelId = threat.modelId;
-  //     }
-  //   } else if (objectType === LinkObjectType.Control) {
-  //     const control = await this.dal.controlService.getById(objectId);
-  //     if (control) {
-  //       modelId = control.modelId;
-  //     }
-  //   } else if (objectType === LinkObjectType.Model) {
-  //     modelId = objectId;
-  //   }
-
-  //   if (modelId) {
-  //     this.emit("updated-for", { modelId, objectType, objectId });
-  //   }
-  // }
 
   async copyFlowsBetweenModels(
     srcModelId: string,

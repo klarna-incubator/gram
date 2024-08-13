@@ -7,8 +7,7 @@ export const BASE_URL = `${window.location.origin}`;
 export const api = createApi({
   tagTypes: [
     "ActionItems",
-    "Controls",
-    "Flow",
+    "Controls",    
     "Flows",
     "Mitigations",
     "Model",

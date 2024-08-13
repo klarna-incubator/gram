@@ -194,7 +194,7 @@ export default function Board() {
   useEffect(() => {
     setStage((prevStage) => ({
       ...prevStage,
-      panning: cursorType === CURSOR_PAN ? true : false,
+      panning: cursorType === CURSOR_PAN,
     }));
   }, [cursorType]);
 
