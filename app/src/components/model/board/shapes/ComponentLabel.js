@@ -72,8 +72,7 @@ export function ComponentLabel({
         <Html>
           <input
             className={"editComponentName"}
-            style={{
-              textAlign: align,
+            style={{              
               width: width + "px",
               position: "absolute",
               top: y - 4,
