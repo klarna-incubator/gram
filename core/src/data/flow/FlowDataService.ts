@@ -39,7 +39,7 @@ export class FlowDataService extends EventEmitter {
 
   async listFlows(modelId: string, dataFlowId: string): Promise<Flow[]> {
     const query = `        
-        SELECT * FROM flows WHERE model_id = $1 AND data_flow_id = $2
+        SELECT * FROM flows WHERE model_id = $1 AND data_flow_id = $2 ORDER BY id ASC
       `;
 
     const res = await this.pool.query(query, [modelId, dataFlowId]);
