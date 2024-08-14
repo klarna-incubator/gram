@@ -64,6 +64,30 @@ function pointerCursor() {
   document.body.style.cursor = "pointer";
 }
 
+function componentSort(a, b) {
+  // Order should be based on component size. This determines which component is selected when overlapped components are
+  // clicked in the diagram.
+  //
+  // 1. Non-trust boundary components
+  // 2. Smaller Trust Boundary by Area
+  // 3. Larger Trust Boundary by Area
+  //
+
+  if (
+    a.type === COMPONENT_TYPE.TRUST_BOUNDARY &&
+    b.type === COMPONENT_TYPE.TRUST_BOUNDARY
+  ) {
+    let areaA = a.height * a.width;
+    let areaB = b.height * b.width;
+    return areaB - areaA;
+  }
+
+  return (
+    (a.type === COMPONENT_TYPE.TRUST_BOUNDARY ? -1 : 1) -
+    (b.type === COMPONENT_TYPE.TRUST_BOUNDARY ? -1 : 1)
+  );
+}
+
 export default function Board() {
   const dispatch = useDispatch();
   const diagramContainerRef = useRef();
@@ -682,11 +706,7 @@ export default function Board() {
                     components
                       .slice()
                       .map((c) => ({ ...c, selected: c.id in selected }))
-                      .sort(
-                        (a, b) =>
-                          (a.type === COMPONENT_TYPE.TRUST_BOUNDARY ? -1 : 1) -
-                          (b.type === COMPONENT_TYPE.TRUST_BOUNDARY ? -1 : 1)
-                      )
+                      .sort(componentSort)
                       .map((c) => {
                         const ComponentType = componentTypes[c.type];
                         return (
