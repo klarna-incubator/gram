@@ -1,5 +1,6 @@
-import { Input, Typography } from "@mui/material";
+import { Input } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
 
 export function EditableTypography({
   text,
