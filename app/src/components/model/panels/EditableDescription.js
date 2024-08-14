@@ -114,6 +114,7 @@ export const EditableDescription = ({
   readOnly = false,
   updateDescription,
   placeholder = "",
+  showInputLabel = true,
   showPreviewTitle = false,
   previewSx = {},
   previewTitleSx = {},
@@ -153,7 +154,7 @@ export const EditableDescription = ({
         fullWidth
         multiline
         variant="standard"
-        label="Description"
+        label={showInputLabel ? "Description" : ""}
         placeholder={placeholder}
         disabled={readOnly}
         value={value}

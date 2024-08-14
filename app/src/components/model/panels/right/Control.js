@@ -168,6 +168,7 @@ export function Control(props) {
               description={description}
               updateDescription={updateDescription}
               readOnly={readOnly}
+              showInputLabel={false}
               previewSx={{
                 paddingBottom: "10px",
                 lineHeight: "1.45",

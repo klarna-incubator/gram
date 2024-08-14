@@ -84,7 +84,7 @@ export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
             {suggestion.description && (
               <DescriptionPreview
                 description={suggestion.description}
-                sx={{
+                boxSx={{
                   paddingBottom: "10px",
                   lineHeight: "1.45",
                   fontSize: "0.75rem",
