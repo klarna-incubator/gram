@@ -172,6 +172,7 @@ export function Control(props) {
                 paddingBottom: "10px",
                 lineHeight: "1.45",
                 fontSize: "0.75rem",
+                color: "text.secondary",
               }}
             />
           </Box>

@@ -66,7 +66,8 @@ export const DescriptionPreview = ({
   description,
   handleOnClick = null,
   showTitle = false,
-  sx = {},
+  titleSx = {},
+  boxSx = {},
 }) => {
   if (!description) {
     handleOnClick(true);
@@ -79,28 +80,31 @@ export const DescriptionPreview = ({
 
   if (handleOnClick) {
     return (
-      <>
+      <Box onClick={handleOnClick}>
         {showTitle && (
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body1" sx={{ ...titleSx }}>
             Description
           </Typography>
         )}
         <Box
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-          onClick={handleOnClick}
-          sx={{ ...sx }}
+          sx={{ ...boxSx }}
         ></Box>
-      </>
+      </Box>
     );
   } else {
     return (
-      <>
-        {showTitle && <Typography variant="body1">Description</Typography>}
+      <Box>
+        {showTitle && (
+          <Typography variant="body1" sx={{ ...titleSx }}>
+            Description
+          </Typography>
+        )}
         <Box
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-          sx={{ ...sx }}
+          sx={{ ...boxSx }}
         ></Box>
-      </>
+      </Box>
     );
   }
 };
@@ -112,8 +116,9 @@ export const EditableDescription = ({
   placeholder = "",
   showPreviewTitle = false,
   previewSx = {},
+  previewTitleSx = {},
 }) => {
-  const [isEditing, setIsEditing] = useState(readOnly ? false : !description);
+  const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(description);
 
   const descriptionInput = useCallback((inputElement) => {
@@ -164,7 +169,8 @@ export const EditableDescription = ({
         description={description ? description : "Click to add a description"}
         handleOnClick={() => setIsEditing(true)}
         showTitle={showPreviewTitle}
-        sx={previewSx}
+        titleSx={previewTitleSx}
+        boxSx={previewSx}
       />
     );
   }
