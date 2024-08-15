@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.15.0](https://github.com/klarna-incubator/gram/compare/v4.14.1...v4.15.0) (2024-08-14)
+
+### Bug Fixes
+
+- make it so smaller trust boundaries can be selected while inside another. Fixes [#109](https://github.com/klarna-incubator/gram/issues/109) ([27f900a](https://github.com/klarna-incubator/gram/commit/27f900aadc5812ec3fb98e2e8315805fd7770b81))
+
+### Features
+
+- support markdown for description ([bd28400](https://github.com/klarna-incubator/gram/commit/bd2840031a9ea8481afc96eaf50f53154c3f4d30))
+
 ## [4.14.1](https://github.com/klarna-incubator/gram/compare/v4.14.0...v4.14.1) (2024-07-23)
 
 ### Bug Fixes

@@ -14,6 +14,7 @@ import { MultipleSystemsDropdown } from "../../../elements/MultipleSystemsDropdo
 import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TechStacksDropdown } from "./TechStackDropdown";
+import { EditableDescription } from "../EditableDescription";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -61,6 +62,10 @@ export function ComponentTab() {
     );
   }
 
+  function updateDescription(description) {
+    updateFields({ description });
+  }
+
   // // Update type
   // useEffect(() => {
   //   if (type !== component.type) {
@@ -93,7 +98,6 @@ export function ComponentTab() {
       e.target.blur();
     }
   }
-
   // console.log(systems, classes);
 
   return (
@@ -166,17 +170,36 @@ export function ComponentTab() {
                 }}
                 readOnly={readOnly}
               />
-
-              <TextField
-                fullWidth
-                multiline
-                variant="standard"
-                label="Description"
-                disabled={readOnly}
-                value={description}
-                onBlur={() => updateFields({ description })}
-                onChange={(e) => setDescription(e.target.value)}
-                onKeyDown={(e) => shouldBlur(e)}
+              <EditableDescription
+                readOnly={readOnly}
+                description={description}
+                showPreviewTitle
+                updateDescription={updateDescription}
+                previewTitleSx={
+                  description
+                    ? {
+                        fontSize: "12px",
+                        color: "text.secondary",
+                        marginBottom: "0.5em",
+                      }
+                    : {
+                        color: "text.secondary",
+                        borderBottom: "1px solid",
+                        paddingBottom: "0.5em",
+                      }
+                }
+                previewSx={
+                  description
+                    ? {
+                        borderBottom: "1px solid rgba(255, 255, 255, 0.7)",
+                        //paddingBottom: "0.5em",
+                      }
+                    : {
+                        color: "text.secondary",
+                        fontSize: "12px",
+                        paddingTop: "0.5em",
+                      }
+                }
               />
             </Box>
           </CardContent>

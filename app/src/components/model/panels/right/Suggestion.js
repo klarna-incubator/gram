@@ -15,6 +15,7 @@ import {
 } from "../../../../api/gram/suggestions";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { DescriptionPreview } from "../EditableDescription";
 
 function SuggestionMitigations({ suggestion, threatSuggestions }) {
   const threatsMitigated = suggestion?.mitigates?.filter((m) =>
@@ -81,17 +82,14 @@ export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
               {suggestion.title}
             </Typography>
             {suggestion.description && (
-              <Typography
-                variant="body1"
-                color="text.secondary"
-                sx={{
+              <DescriptionPreview
+                description={suggestion.description}
+                boxSx={{
                   paddingBottom: "10px",
                   lineHeight: "1.45",
                   fontSize: "0.75rem",
                 }}
-              >
-                {suggestion.description}
-              </Typography>
+              />
             )}
             <SuggestionMitigations
               threatSuggestions={threatSuggestions}
