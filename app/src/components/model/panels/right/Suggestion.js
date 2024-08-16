@@ -15,10 +15,7 @@ import {
 } from "../../../../api/gram/suggestions";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
-import {
-  DescriptionPreview,
-  EditableDescription,
-} from "../EditableDescription";
+import { DescriptionPreview } from "../EditableDescription";
 
 function SuggestionMitigations({ suggestion, threatSuggestions }) {
   const threatsMitigated = suggestion?.mitigates?.filter((m) =>
