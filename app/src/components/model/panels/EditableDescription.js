@@ -92,21 +92,21 @@ export const DescriptionPreview = ({
         ></Box>
       </Box>
     );
-  } else {
-    return (
-      <Box>
-        {showTitle && (
-          <Typography variant="body1" sx={{ ...titleSx }}>
-            Description
-          </Typography>
-        )}
-        <Box
-          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-          sx={{ ...boxSx }}
-        ></Box>
-      </Box>
-    );
   }
+
+  return (
+    <Box>
+      {showTitle && (
+        <Typography variant="body1" sx={{ ...titleSx }}>
+          Description
+        </Typography>
+      )}
+      <Box
+        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+        sx={{ ...boxSx }}
+      ></Box>
+    </Box>
+  );
 };
 
 export const EditableDescription = ({
@@ -115,6 +115,7 @@ export const EditableDescription = ({
   updateDescription,
   placeholder = "",
   showInputLabel = true,
+  inputSx = {},
   showPreviewTitle = false,
   previewSx = {},
   previewTitleSx = {},
@@ -145,7 +146,18 @@ export const EditableDescription = ({
   };
 
   if (readOnly) {
-    return <DescriptionPreview description={description} />;
+    return (
+      <DescriptionPreview
+        showTitle={showPreviewTitle}
+        description={description}
+        titleSx={{ ...previewTitleSx, color: "rgba(255, 255, 255, 0.5)" }}
+        boxSx={{
+          ...previewSx,
+          color: "rgba(255, 255, 255, 0.5)",
+          borderColor: "rgba(255, 255, 255, 0.5)",
+        }}
+      />
+    );
   }
 
   if (isEditing) {
@@ -162,6 +174,9 @@ export const EditableDescription = ({
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => handleOnKeyDown(e)}
         inputRef={descriptionInput}
+        inputProps={{
+          style: { ...inputSx },
+        }}
       />
     );
   } else {
