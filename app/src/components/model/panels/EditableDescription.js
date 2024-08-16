@@ -69,7 +69,7 @@ export const DescriptionPreview = ({
   titleSx = {},
   boxSx = {},
 }) => {
-  if (!description) {
+  if (!description && handleOnClick) {
     handleOnClick(true);
     return null;
   }
