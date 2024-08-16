@@ -169,9 +169,14 @@ export function Control(props) {
               updateDescription={updateDescription}
               readOnly={readOnly}
               showInputLabel={false}
+              inputSx={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "0.75rem",
+                lineHeight: "1.5",
+              }}
               previewSx={{
                 paddingBottom: "10px",
-                lineHeight: "1.45",
+                lineHeight: "1.5",
                 fontSize: "0.75rem",
                 color: "text.secondary",
               }}
