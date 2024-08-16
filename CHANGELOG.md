@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.15.1](https://github.com/klarna-incubator/gram/compare/v4.15.0...v4.15.1) (2024-08-16)
+
+### Bug Fixes
+
+- :bug: fix component tab crash ([322bc7e](https://github.com/klarna-incubator/gram/commit/322bc7ebb3ce0f307b0a28e5a6059885e139b0f0))
+
 # [4.15.0](https://github.com/klarna-incubator/gram/compare/v4.14.1...v4.15.0) (2024-08-14)
 
 ### Bug Fixes
