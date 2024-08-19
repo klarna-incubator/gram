@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.15.2](https://github.com/klarna-incubator/gram/compare/v4.15.1...v4.15.2) (2024-08-19)
+
+### Bug Fixes
+
+- :bug: empty description causes crash ([99e8f8d](https://github.com/klarna-incubator/gram/commit/99e8f8d8747e9f2ff7ac442844ceddb961dc81ac))
+
 ## [4.15.1](https://github.com/klarna-incubator/gram/compare/v4.15.0...v4.15.1) (2024-08-16)
 
 ### Bug Fixes
