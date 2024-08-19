@@ -73,10 +73,9 @@ export const DescriptionPreview = ({
     handleOnClick(true);
     return null;
   }
-  const sanitizedHtml = DOMPurify.sanitize(
-    marked.parse(description),
-    domPurityConfig
-  );
+  const sanitizedHtml = description
+    ? DOMPurify.sanitize(marked.parse(description), domPurityConfig)
+    : "";
 
   if (handleOnClick) {
     return (
