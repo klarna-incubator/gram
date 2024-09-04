@@ -163,8 +163,7 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
         return true;
       })
       // Add special case for Lucas Berner as he is in SecDev but should not be assigned reviews.
-      .filter((r) => r.sub !== "lucas.berner@klarna.com")
-      .filter((r) => r.sub !== "alexey.meshcheriakov@klarna.com")
+      .filter((r) => r.sub !== "lucas.berner@klarna.com")      
       .map((r) => this.overrideCalendar({ ...r, mail: r.sub }));
 
     if (newReviewers.length > 0) {
@@ -229,6 +228,9 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
       const members = new Set(await this.getDomainMembers(accountabilityCode));
       // Create recommendation function based on system domain
       recommend = (mail: string) => {
+        if (mail === "alexey.meshcheriakov@klarna.com") {
+          return false;
+        }
         return members.has(mail);
       };
     }
