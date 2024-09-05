@@ -81,8 +81,13 @@ export class SystemRegistrySystemProvider implements SystemProvider {
   async getSystem(
     ctx: RequestContext,
     systemId: string
-  ): Promise<System | null> {
-    const url = isDevelopment() ? `https://systems.klarna.net/api/v1/systems/${systemId}` : `http://systems.klarna.net/api/v1/systems/${systemId}`; // Bouncer should upgrade to HTTPS
+  ): Promise<System | null> {    
+    let url = `http://systems.klarna.net/api/v1/systems/${systemId}`;
+    if (isDevelopment()) {
+      url = `https://systems.klarna.net/api/v1/systems/${systemId}`;
+    } else if (process.env.NODE_ENV === "staging") {
+      url = `http://systems.nonprod.klarna.net/api/v1/systems/${systemId}`;
+    }    
     const headers: any = {
       Accept: "application/json",      
     };
