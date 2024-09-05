@@ -82,18 +82,22 @@ export class SystemRegistrySystemProvider implements SystemProvider {
     ctx: RequestContext,
     systemId: string
   ): Promise<System | null> {
-    const url = isDevelopment() ? `https://systems.klarna.net/api/systems/${systemId}` : `http://systems.klarna.net/api/systems/${systemId}`; // Bouncer should upgrade to HTTPS
+    const url = isDevelopment() ? `https://systems.klarna.net/api/v1/systems/${systemId}` : `http://systems.klarna.net/api/v1/systems/${systemId}`; // Bouncer should upgrade to HTTPS
     const headers: any = {
       Accept: "application/json",      
     };
     if (isDevelopment() && this.systemRegistryUser && this.systemRegistryPassword) {
-      const auth = Buffer.from(`${await this.systemRegistryUser.getValue()}:${await this.systemRegistryPassword.getValue()}`).toString("base64");
+      const user = await this.systemRegistryUser.getValue();
+      const pass = await this.systemRegistryPassword.getValue();
+      const auth = Buffer.from(`${user}:${pass}`).toString("base64");
+      log.debug(`Using basic auth for system registry: ${user}`);
       headers["Authorization"] = `Basic ${auth}`;
     }
+    log.debug(`Fetching system ${systemId} from System Registry`);    
     const resp = await fetch(url, { headers });
 
     if (!resp.ok) {
-      log.error(`Failed to fetch system ${systemId} from System Registry`);
+      log.error(`Failed to fetch system ${systemId} from System Registry: ${resp.status} ${resp.statusText} ${await resp.text()}`);
       return null;
     }
 
