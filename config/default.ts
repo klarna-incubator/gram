@@ -21,7 +21,7 @@ import {
   KlarnaComponentClasses,
   KlarnaCronJob,
   KlarnaReviewerProvider,
-  KlarnaSystemProvider
+  KlarnaSystemProvider,
 } from "@gram/klarna";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
@@ -193,7 +193,10 @@ export const defaultConfig: GramConfiguration = {
       );
 
     const j1TeamProvider = new JupiterOneTeamProvider(j1ClientFactory);
-    const registrySystemProvider = new SystemRegistrySystemProvider(new EnvSecret("SYSTEM_REGISTRY_USER"), new EnvSecret("SYSTEM_REGISTRY_PASSWORD"));
+    const registrySystemProvider = new SystemRegistrySystemProvider(
+      new EnvSecret("SYSTEM_REGISTRY_USER"),
+      new EnvSecret("SYSTEM_REGISTRY_PASSWORD")
+    );
     const j1SystemProvider = new KlarnaSystemProvider(
       registrySystemProvider,
       j1ClientFactory

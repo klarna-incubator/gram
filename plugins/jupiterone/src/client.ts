@@ -60,7 +60,7 @@ export async function createJ1Client(
 
   const options: JupiterOneClientOptions = {
     accessToken,
-    apiBaseUrl, //: "https://api.eu.jupiterone.io", 
+    apiBaseUrl, //: "https://api.eu.jupiterone.io",
     account,
   };
   const client = new OverloadedJupiterOneClient(options);
