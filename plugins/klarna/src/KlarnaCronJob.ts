@@ -1,14 +1,13 @@
-import log4js from "log4js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService.js";
+import { LDAPCache } from "@gram/ldap/dist/index.js";
+import log4js from "log4js";
+import cron from "node-cron";
 import {
   KlarnaReviewerProvider,
   fallbackReviewer,
 } from "./KlarnaReviewerProvider.js";
-import { OctaneSystemProvider } from "./index.js";
-import { LDAPCache } from "@gram/ldap/dist/index.js";
-import cron from "node-cron";
 // import { CronJob } from "cron";
 
 const MEETING_REQUESTED_REMIND_FOR_EVERY_X_DAYS = 60;
@@ -27,8 +26,7 @@ const log = log4js.getLogger("klarnaCronJob");
 export class KlarnaCronJob {
   constructor(
     private dal: DataAccessLayer,
-    private reviewerProvider: KlarnaReviewerProvider,
-    private octaneSystemProvider: OctaneSystemProvider
+    private reviewerProvider: KlarnaReviewerProvider    
   ) {
     this.bootstrap();
   }
@@ -195,13 +193,6 @@ export class KlarnaCronJob {
       "preload-reviewers",
       "*/30 * * * *",
       async () => await this.reviewerProvider.preloadReviewers()
-    );
-
-    // runs every 10 minutes
-    this.scheduleJob(
-      "load-systems",
-      "*/30 * * * *",
-      async () => await this.octaneSystemProvider.loadSystems()
     );
 
     // runs every 30 minutes

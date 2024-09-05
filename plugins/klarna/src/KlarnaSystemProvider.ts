@@ -4,11 +4,11 @@ import {
   JupiterOneSystemProvider,
   JupiterOneClientFactory,
 } from "@gram/jupiterone";
-import { OctaneSystemProvider } from "./system/OctaneSystemProvider.js";
+import { SystemRegistrySystemProvider } from "./system/SystemRegistrySystemProvider.js";
 
 export class KlarnaSystemProvider extends JupiterOneSystemProvider {
   constructor(
-    private octaneSystemProvider: OctaneSystemProvider,
+    private registrySystemProvider: SystemRegistrySystemProvider,
     j1clientFactory: JupiterOneClientFactory
   ) {
     super(j1clientFactory);
@@ -19,15 +19,6 @@ export class KlarnaSystemProvider extends JupiterOneSystemProvider {
     ctx: RequestContext,
     systemId: string
   ): Promise<System | null> {
-    const result = await super.getSystem(ctx, systemId);
-
-    if (!result) {
-      return null;
-    }
-
-    const system = await this.octaneSystemProvider.getOctaneSystem(systemId);
-    result.description = system?.system_description;
-
-    return result;
+    return await this.registrySystemProvider.getSystem(ctx, systemId);
   }
 }
