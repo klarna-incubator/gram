@@ -76,8 +76,7 @@
     "egress": {
       "allowed_destinations": [
         { "destination": ".eu.jupiterone.io", "ports": [443] },
-        { "destination": "o24547.ingest.sentry.io", "ports": [443] },
-        { "destination": "octane.klarna.net", "ports": [443] },
+        { "destination": "o24547.ingest.sentry.io", "ports": [443] },        
         { "destination": "sso.klarna.net", "ports": [443] },
         { "destination": "klarna-sandbox-343.atlassian.net", "ports": [443] },
         { "destination": "klarna.atlassian.net", "ports": [443] },
