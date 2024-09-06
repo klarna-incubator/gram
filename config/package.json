@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "lint": "prettier --check .",
-    "lint-fix": "prettier -l . --write"
+    "lint-fix": "prettier -l . --write",
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
   },
   "repository": {
     "type": "git",

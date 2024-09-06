@@ -3,16 +3,14 @@ import { jest } from "@jest/globals";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
-import { sampleOwnedSystem } from "../../../../test-util/sampleOwnedSystem.js";
-import Model, { Component } from "@gram/core/dist/data/models/Model.js";
+import Model from "@gram/core/dist/data/models/Model.js";
 import { createSampleModel } from "../../../../test-util/model.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import exp from "constants";
 import {
-  ModelValidationRule,
+  ValidationProvider,
   ValidationResult,
-  ValidationRule,
 } from "@gram/core/dist/validation/ValidationHandler.js";
+import { log } from "console";
 
 describe("validateModel", () => {
   let app: any;
@@ -26,6 +24,16 @@ describe("validateModel", () => {
     token = await sampleUserToken();
     modelService = dal.modelService;
     getById = jest.spyOn(modelService, "getById");
+  });
+
+  it("should register StaticValidationHandler", () => {
+    const validationProviderList = dal.validationHandler.validationProviders;
+    expect(validationProviderList.length).toBeGreaterThan(0);
+    expect(
+      validationProviderList.find((element: ValidationProvider) => {
+        return element.name === "StaticValidationProvider";
+      })
+    ).toBeTruthy();
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -106,14 +114,16 @@ describe("validateModel", () => {
     const res = await request(app)
       .get("/api/v1/validate/" + validModelId)
       .set("Authorization", token);
+    console.log("body", res.body.results);
+
     const results = res.body.results;
-    console.log("empty model", { results });
 
     expect(res.status).toBe(200);
     expect(results.length).not.toBe(0);
     expect(res.body.id).toBe(validModelId);
     expect(res.body.total).toBe(results.length);
     expect(Array.isArray(results)).toBeTruthy();
+
     expect(
       results.every((element: ValidationResult) => element.type === "model")
     ).toBeTruthy();

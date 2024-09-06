@@ -12,6 +12,7 @@ import { testReviewerProvider } from "./sampleReviewer.js";
 import { TestTeamProvider } from "./TestTeamProvider.js";
 import { testUserProvider } from "./sampleUser.js";
 import { testSystemProvider } from "./system.js";
+import { StaticValidationProvider } from "@gram/config/dist/providers/static/StaticValidationProvider.js";
 
 export const testConfig: GramConfiguration = {
   appPort: 8080,
@@ -101,6 +102,7 @@ export const testConfig: GramConfiguration = {
       systemProvider: testSystemProvider,
       suggestionSources: [],
       teamProvider: new TestTeamProvider(),
+      validationProviders: [new StaticValidationProvider()],
     };
   },
 };

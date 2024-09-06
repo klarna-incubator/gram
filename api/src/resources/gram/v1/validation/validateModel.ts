@@ -24,12 +24,9 @@ export function validateModel(dal: DataAccessLayer) {
     try {
       // Use validation service to validate the model
       // Return the validation results + model id
-      console.log(
-        "dal.validationHandler.validationProviders",
-        dal.validationHandler.validationProviders
-      );
 
       const validationResults = await dal.validationHandler.validate(model);
+      console.log("Results from static validation", validationResults);
 
       return res.json({
         id: modelId,

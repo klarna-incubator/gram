@@ -6,9 +6,6 @@ import {
   ValidationResult,
   ValidationRule,
 } from "@gram/core/dist/validation/ValidationHandler.js";
-import log4js from "log4js";
-
-const log = log4js.getLogger("staticValidationProvider");
 
 const validationRules: ValidationRule[] = [
   {
@@ -34,10 +31,10 @@ const validationRules: ValidationRule[] = [
     affectedType: ["proc", "ee", "ds", "tf"],
     conditionalRules: [["should have a description", true]],
     test: (component, _) =>
-      component.description ? component.description.length > 100 : false,
+      component.description ? component.description.length > 50 : false,
     messageTrue: "Component has a long enough description",
     messageFalse:
-      "Component's description should be at least 100, to be descriptive enough",
+      "Component's description should be at least 50, to be descriptive enough",
   },
   {
     type: "component",
@@ -85,8 +82,8 @@ function isModelValidation(rule: ValidationRule): rule is ModelValidationRule {
   return rule.type === "model";
 }
 export class StaticValidationProvider implements ValidationProvider {
+  name: string = "StaticValidationProvider";
   async validate(model: Model): Promise<ValidationResult[]> {
-    log.info("StaticValidationProvider is called");
     if (!model) {
       return [
         {

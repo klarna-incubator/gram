@@ -9,6 +9,7 @@ export interface ValidationResult {
 }
 
 export interface ValidationProvider {
+  name: string;
   validate(model: Model): Promise<ValidationResult[]>;
 }
 
@@ -49,9 +50,9 @@ export class ValidationHandler {
     return [
       ...(await Promise.all(
         this.validationProviders.map(
-          async (provider): Promise<ValidationResult[]> => ({
+          async (provider): Promise<ValidationResult[]> => [
             ...(await provider.validate(model)),
-          })
+          ]
         )
       )),
     ].flat();
