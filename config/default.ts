@@ -11,8 +11,8 @@ import type {
 } from "@gram/core/dist/config/GramConfiguration.js";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import {
-  JupiterOneSystemPropertyProvider,
   JupiterOneDomainSystemPropertyProvider,
+  JupiterOneSystemPropertyProvider,
   JupiterOneTeamProvider,
   createJ1Client,
 } from "@gram/jupiterone";
@@ -22,7 +22,6 @@ import {
   KlarnaCronJob,
   KlarnaReviewerProvider,
   KlarnaSystemProvider,
-  OctaneSystemProvider,
 } from "@gram/klarna";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
@@ -35,6 +34,7 @@ import { OIDCIdentityProvider } from "@gram/oidc";
 import { StrideSuggestionProvider } from "@gram/stride";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
+import { SystemRegistrySystemProvider } from "@gram/klarna";
 import defaultNotifications from "./notifications/index.js";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
@@ -189,13 +189,16 @@ export const defaultConfig: GramConfiguration = {
       createJ1Client(
         new EnvSecret("J1_KEY"),
         "45377d01-965c-4c5c-a3c1-e6ac4f80cc48",
-        "https://api.eu.jupiterone.io"
+        "https://api.eu.jupiterone.io" // https://jupiter-one-proxy-eu.production.c2c.klarna.net/
       );
 
     const j1TeamProvider = new JupiterOneTeamProvider(j1ClientFactory);
-    const octaneSystemProvider = new OctaneSystemProvider();
+    const registrySystemProvider = new SystemRegistrySystemProvider(
+      new EnvSecret("SYSTEM_REGISTRY_USER"),
+      new EnvSecret("SYSTEM_REGISTRY_PASSWORD")
+    );
     const j1SystemProvider = new KlarnaSystemProvider(
-      octaneSystemProvider,
+      registrySystemProvider,
       j1ClientFactory
     );
     const j1SysPropProvider = new JupiterOneSystemPropertyProvider(
@@ -255,7 +258,7 @@ export const defaultConfig: GramConfiguration = {
       process.env["THREATSAURUS_URL"] as string
     );
 
-    new KlarnaCronJob(dal, reviewerProvider, octaneSystemProvider);
+    new KlarnaCronJob(dal, reviewerProvider);
 
     return {
       assetFolders: [

@@ -11,8 +11,7 @@
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rimraf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
-    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_CONFIG_DIR=../../config/ NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
+    "compile": "tsc -p tsconfig.build.json"    
   },
   "author": "",
   "license": "ISC",
