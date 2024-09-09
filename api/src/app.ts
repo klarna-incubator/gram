@@ -41,6 +41,7 @@ import { initSentry } from "./util/sentry.js";
 import { userRouter } from "./resources/gram/v1/user/router.js";
 import { searchRouter } from "./resources/gram/v1/search/router.js";
 import { systemsRouter } from "./resources/gram/v1/systems/router.js";
+import { validationRouter } from "./resources/gram/v1/validation/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -221,6 +222,9 @@ export async function createApp(dal: DataAccessLayer) {
     cache,
     errorWrap(searchClasses(dal.ccHandler))
   );
+
+  // Model Validation
+  authenticatedRoutes.use("/validate", validationRouter(dal));
 
   // Report Routes
   authenticatedRoutes.get(

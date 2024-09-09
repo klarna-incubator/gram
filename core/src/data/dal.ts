@@ -28,6 +28,8 @@ import { ActionItemHandler } from "../action-items/ActionItemHandler.js";
 import { LinkDataService } from "./links/LinkDataService.js";
 import { SearchHandler } from "../search/SearchHandler.js";
 
+import { ValidationHandler } from "../validation/ValidationHandler.js";
+
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
  */
@@ -57,6 +59,7 @@ export class DataAccessLayer {
   teamHandler: TeamHandler;
   actionItemHandler: ActionItemHandler;
   searchHandler: SearchHandler;
+  validationHandler: ValidationHandler;
 
   get authzProvider(): AuthzProvider {
     return authzProvider;
@@ -80,6 +83,7 @@ export class DataAccessLayer {
     this.userHandler = new UserHandler();
     this.reviewerHandler = new ReviewerHandler();
     this.searchHandler = new SearchHandler();
+    this.validationHandler = new ValidationHandler();
 
     // Initialize Data Services
     this.modelService = new ModelDataService(this);

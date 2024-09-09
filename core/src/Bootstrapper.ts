@@ -18,6 +18,7 @@ import { getPool, migratePlugin } from "./plugins/data.js";
 import pg from "pg";
 import { TeamProvider } from "./auth/TeamProvider.js";
 import { SearchProvider } from "./search/SearchHandler.js";
+import { ValidationProvider } from "./validation/ValidationHandler.js";
 
 /* Could create a temporary directory instead */
 export const AssetDir = "assets";
@@ -143,6 +144,11 @@ export class Bootstrapper {
   setReviewerProvider(reviewerProvider: ReviewerProvider): void {
     this.log.info(`Set Reviewer Provider: ${reviewerProvider.key}`);
     this.dal.reviewerHandler.setReviewerProvider(reviewerProvider);
+  }
+
+  setValidationProvider(validationProdiver: ValidationProvider): void {
+    this.log.info(`Set Validation Provider: ${validationProdiver}`);
+    this.dal.validationHandler.register(validationProdiver);
   }
 
   compileAssets() {

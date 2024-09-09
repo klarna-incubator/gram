@@ -53,6 +53,8 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   providers.assetFolders?.forEach((af) =>
     bt.registerAssets(af.name, af.folderPath)
   );
+
+  providers.validationProviders?.forEach((vp) => bt.setValidationProvider(vp));
   bt.compileAssets();
 
   return dal;
