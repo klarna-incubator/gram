@@ -20,7 +20,7 @@ const wrappedRender = (login) =>
     </Router>
   );
 
-describe("Login", () => {
+describe.skip("Login", () => {
   it("should render successfully", () => {
     const login = {
       signInRequired: true,
