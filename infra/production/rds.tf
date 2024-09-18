@@ -28,7 +28,7 @@ resource "aws_rds_cluster" "encrypted_db_cluster" {
   database_name                       = "gram"
   backup_retention_period             = 30
   preferred_backup_window             = "05:01-05:31"
-  vpc_security_group_ids              = [aws_security_group.postgres_allow_office.id, aws_security_group.postgres_allow_gram_c2c.id, aws_security_group.postgres_allow_from_sg.id]
+  vpc_security_group_ids              = [aws_security_group.postgres_allow_gram_c2c.id, aws_security_group.postgres_allow_from_sg.id, aws_security_group.allow_from_bastion.id]
   iam_database_authentication_enabled = true
   deletion_protection                 = true
   copy_tags_to_snapshot               = true
@@ -71,9 +71,9 @@ resource "aws_db_instance" "encrypted_db" {
 }
 
 
-output "initial_password" {
-  value = random_password.initial_password.result
-}
+# output "initial_password" {
+#   value = random_password.initial_password.result
+# }
 
 output "db_endpoint" {
   value = aws_db_instance.encrypted_db.endpoint

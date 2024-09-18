@@ -1,5 +1,8 @@
 #! /bin/bash
-# helper script to connect to Amazon RDS PostgreSQL with IAM credentials
+# Helper script to connect to Amazon RDS PostgreSQL with IAM credentials
+#
+# Uses bastion, you will need to be a member of access.bastion.production.api-user
+# and have the aws-login-tool installed
 # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html
 
 eval $(aws-login-tool login -d 14400 -r iam-sync/gram/gram.IdP_admin -a 715798949107 -o)
@@ -25,4 +28,9 @@ PGPASSWORD="$( aws rds generate-db-auth-token  \
   --username $USERNAME \
   --region $REGION)"
 
-docker run -v "$(pwd)/aws-global-bundle.pem:/aws-global-bundle.pem" -it --rm postgres psql "sslmode=verify-full sslrootcert=/aws-global-bundle.pem host=$RDSHOST dbname=$DBNAME user=$USERNAME password=$PGPASSWORD"
+HOST="13859a1b0001d0110ebc1ad6b4c9132318567df3.instance.production.eu1.bastion.klarna.net"
+PORT=5433
+
+# docker run -v "$(pwd)/aws-global-bundle.pem:/aws-global-bundle.pem" --network host -it --rm postgres
+psql "sslmode=verify-ca sslrootcert=./aws-global-bundle.pem host=127.0.0.1 port=$PORT dbname=$DBNAME user=$USERNAME password=$PGPASSWORD"
+# sslmode=verify-full does not work due to localhost being the proxy
