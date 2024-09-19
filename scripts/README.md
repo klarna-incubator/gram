@@ -14,6 +14,6 @@ Use these scripts to access the RDS instance that Gram uses.
 
 First launch the bastion via `go run bastion.go`. If successful, this will create a new bastion instance for you and set up an SSH tunnel.
 
-Next run the `./prod-psql.sh` or `./staging-psql.sh`.
+Next run the `./prod-psql.sh` or `./staging-psql.sh`  in a new shell. This will give you a psql shell to the instance.
 
 

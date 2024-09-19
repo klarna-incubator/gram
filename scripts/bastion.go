@@ -101,6 +101,25 @@ func bastionStatus(auth Auth, requestID string) (BastionStatusResponse, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode == 404 {
+		return BastionStatusResponse{InstanceStatus: "NOT_FOUND"}, nil
+	}
+
+	if resp.StatusCode != 202 && resp.StatusCode != 200 {
+		fmt.Println(resp.StatusCode)
+		b, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return BastionStatusResponse{}, err
+		}
+		fmt.Println(string(b))
+
+		if resp.StatusCode == 403 {
+			fmt.Println("# Hint: Double-check that typed your password correctly and the LDAP user is correct:", auth.Username)
+		}
+
+		return BastionStatusResponse{}, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
 	var result BastionStatusResponse
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
@@ -200,11 +219,9 @@ func main() {
 	fmt.Println("# Setting up your tunnel to", env)
 
 	fmt.Println("# To interact with the Bastion API, we need your LDAP credentials")
-	username := os.Getenv("AD_USERNAME")
+	username := getUsername()
 	if username == "" {
-		fmt.Println("environment variable AD_USERNAME is not set")
-		fmt.Print("Enter your LDAP username (firstname.lastname): ")
-		fmt.Scanln(&username)
+		fmt.Println("environment variable AD_USERNAME or USER is not set")
 		os.Exit(1)
 	}
 
@@ -221,36 +238,36 @@ func main() {
 	fmt.Println()
 
 	// Check if there is a request ID saved
-	requestID := loadRequestID()
-	if requestID != "" {
-		status, err := bastionStatus(auth, requestID)
+	var requestID string
+	prevRequestID := loadRequestID()
+	if prevRequestID != "" {
+		status, err := bastionStatus(auth, prevRequestID)
 		if err != nil {
 			log.Fatalf("Error checking bastion status: %v", err)
 		}
-		j, _ := json.MarshalIndent(status, "", "  ")
+		if status.InstanceStatus != "NOT_FOUND" {
+			j, _ := json.MarshalIndent(status, "", "  ")
 
-		expireTime := parseExpireTime(status.ExpiryTime)
+			expireTime := parseExpireTime(status.ExpiryTime)
 
-		if expireTime.After(time.Now()) {
-			fmt.Println("# Found a previous bastion requestID:", requestID)
-			fmt.Println(string(j))
-			fmt.Println("# Bastion will expire in:", time.Until(expireTime))
-			if err != nil {
-				log.Fatalf("Error checking bastion status: %v", err)
+			if expireTime.After(time.Now()) {
+				fmt.Println("# Found a previous bastion requestID:", prevRequestID)
+				fmt.Println(string(j))
+				fmt.Println("# Bastion will expire in:", time.Until(expireTime))
+				if err != nil {
+					log.Fatalf("Error checking bastion status: %v", err)
+				}
+				fmt.Println(status)
+
+				fmt.Print("> Do you want to reuse it? (y/n): ")
+				var reuse string
+				fmt.Scanln(&reuse)
+				if reuse == "y" {
+					fmt.Println("# Reusing request ID:", prevRequestID)
+					requestID = prevRequestID
+					fmt.Println()
+				}
 			}
-			fmt.Println(status)
-
-			fmt.Print("> Do you want to reuse it? (y/n): ")
-			var reuse string
-			fmt.Scanln(&reuse)
-			if reuse == "y" {
-				fmt.Println("# Reusing request ID:", requestID)
-				fmt.Println()
-			} else {
-				requestID = ""
-			}
-		} else {
-			requestID = ""
 		}
 	}
 
@@ -301,7 +318,7 @@ func main() {
 			fmt.Println()
 			fmt.Printf("# Looks like your SSH tunnel is ready. The tunnel is open for another %s\n", time.Until(parseExpireTime(status.ExpiryTime)))
 			fmt.Println("# You can connect to the RDS instance using the following command:")
-			fmt.Printf("./%s-psql.sh\n", "prod")
+			fmt.Printf("./%s-psql.sh\n", *envPtr)
 			fmt.Println()
 			fmt.Println("# Press Ctrl+C to exit and close the tunnel")
 			fmt.Println("# Press Ctrl+Z; then run `bg` to put this tunnel in the background")
@@ -322,9 +339,20 @@ func main() {
 func parseExpireTime(expireTime string) time.Time {
 	// Format looks like: "20240918163436076110"
 	// So... YYYYMMDDHHMMSS, ignore the rest
+	if len(expireTime) < 14 {
+		log.Fatalf("Invalid expire time: %s", expireTime)
+	}
 	t, err := time.Parse("20060102150405", expireTime[:14])
 	if err != nil {
 		log.Fatal(err)
 	}
 	return t
+}
+
+func getUsername() string {
+	username := os.Getenv("AD_USERNAME")
+	if username == "" {
+		username = os.Getenv("USER")
+	}
+	return username
 }
