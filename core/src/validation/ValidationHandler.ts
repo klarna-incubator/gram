@@ -3,6 +3,7 @@ import Model, { Component, DataFlow } from "../data/models/Model.js";
 export interface ValidationResult {
   type: "component" | "resource" | "model";
   elementId?: string;
+  elementName?: string;
   ruleName: string;
   testResult: boolean;
   message: string;

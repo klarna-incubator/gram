@@ -45,25 +45,22 @@ export function LeftPanel() {
   }
 
   return (
-    <Box id="panel-left">
-      <ToggleLeftPanelButton />
-      <Drawer
+    <>
+      <Box
+        id="panel-left"
         sx={{
-          width: "16.6vw",
-          minWidth: 310,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: "16.6vw",
-            minWidth: 310,
-            boxSizing: "border-box",
-          },
+          gridArea: "left",
+          backgroundColor: "rgb(40,40,40)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
-        variant="permanent"
-        anchor="left"
       >
-        <Toolbar />
-
-        <LeftTabsHeader tab={tab} setTab={setTab} />
+        <div>
+          <ToggleLeftPanelButton />
+          <Toolbar />
+          <LeftTabsHeader tab={tab} setTab={setTab} />
+        </div>
 
         <TabPanel value={tab} index={TAB.SYSTEM}>
           <SystemTab />
@@ -75,7 +72,7 @@ export function LeftPanel() {
           {component && <ComponentTab />}
         </TabPanel>
         <LeftFooter />
-      </Drawer>
-    </Box>
+      </Box>
+    </>
   );
 }

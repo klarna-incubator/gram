@@ -21,10 +21,43 @@ import { PERMISSIONS } from "./constants";
 import { LeftPanel } from "./panels/left/LeftPanel";
 import { RightPanel } from "./panels/right/RightPanel";
 import { useIsFramed } from "../../hooks/useIsFramed";
+import { BottomPanel } from "./panels/bottom/BottomPanel";
+import { useSelector } from "react-redux";
+
+function setGridArea(
+  leftPanelCollapsed,
+  rightPanelCollapsed,
+  bottomPanelCollapsed
+) {
+  // Add first row
+  let firstRow = `'${leftPanelCollapsed ? "board" : "left"} board ${
+    rightPanelCollapsed ? "board" : "right"
+  }'`;
+
+  // Add third row
+
+  let secondRow = bottomPanelCollapsed
+    ? firstRow
+    : `'${leftPanelCollapsed ? "bottom" : "left"} bottom ${
+        rightPanelCollapsed ? "bottom" : "right"
+      }'`;
+
+  return `${firstRow} ${secondRow}`;
+}
 
 export function Model() {
   const dispatch = useDispatch();
   const isFramed = useIsFramed();
+  const { leftPanelCollapsed, rightPanelCollapsed, bottomPanelCollapsed } =
+    useSelector(({ model }) => ({
+      leftPanelCollapsed: model.leftPanelCollapsed,
+      rightPanelCollapsed: model.rightPanelCollapsed,
+      bottomPanelCollapsed: model.bottomPanelCollapsed,
+    }));
+
+  console.log(
+    setGridArea(leftPanelCollapsed, rightPanelCollapsed, bottomPanelCollapsed)
+  );
 
   const { id } = useParams("/model/:id");
   const { data: model, isError, error } = useGetModelQuery(id);
@@ -98,11 +131,27 @@ export function Model() {
   }
 
   return (
-    <Box sx={{ display: "flex", height: "100%", backgroundColor: "#fff" }}>
+    <>
       <ConnectivityCheck modelId={id} />
-      {!isFramed && <LeftPanel />}
-      <Board />
-      {!isFramed && <RightPanel />}
-    </Box>
+      <Box
+        sx={{
+          height: "100%",
+          backgroundColor: "white",
+          display: "grid",
+          gridTemplateColumns: "1.5fr 3fr 1.5fr",
+          gridTemplateRows: "auto 300px",
+          gridTemplateAreas: setGridArea(
+            leftPanelCollapsed,
+            rightPanelCollapsed,
+            bottomPanelCollapsed
+          ),
+        }}
+      >
+        {!isFramed && <LeftPanel />}
+        <Board />
+        {!isFramed && <BottomPanel />}
+        {!isFramed && <RightPanel />}
+      </Box>
+    </>
   );
 }

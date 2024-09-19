@@ -102,7 +102,21 @@ export class StaticValidationProvider implements ValidationProvider {
     );
     const modelRules = validationRules.filter((rule) => rule.type === "model");
     const results: ValidationResult[] = [];
+    // Validate model
 
+    for (const rule of modelRules) {
+      if (!isModelValidation(rule)) {
+        continue;
+      }
+      const testResult = rule.test(model);
+      results.push({
+        type: rule.type,
+        elementName: "Model",
+        ruleName: rule.name,
+        testResult: testResult,
+        message: testResult ? rule.messageTrue : rule.messageFalse,
+      });
+    }
     // Validate components
 
     for (const component of components) {
@@ -114,6 +128,7 @@ export class StaticValidationProvider implements ValidationProvider {
         results.push({
           type: rule.type,
           elementId: component.id,
+          elementName: component.name,
           ruleName: rule.name,
           testResult: testResult,
           message: testResult ? rule.messageTrue : rule.messageFalse,
@@ -121,18 +136,6 @@ export class StaticValidationProvider implements ValidationProvider {
       }
     }
 
-    for (const rule of modelRules) {
-      if (!isModelValidation(rule)) {
-        continue;
-      }
-      const testResult = rule.test(model);
-      results.push({
-        type: rule.type,
-        ruleName: rule.name,
-        testResult: testResult,
-        message: testResult ? rule.messageTrue : rule.messageFalse,
-      });
-    }
     return results;
   }
 }
