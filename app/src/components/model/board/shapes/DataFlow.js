@@ -187,21 +187,6 @@ export const DataFlow = memo(
     let labelX = (dataFlowPoints[0] + dataFlowPoints[2]) / 2;
     let labelY = (dataFlowPoints[1] + dataFlowPoints[3]) / 2;
 
-    // if (dataFlowPoints.length > 4) {
-    //   labelX = quadraticBezierCurve(
-    //     0.25,
-    //     dataFlowPoints[0],
-    //     dataFlowPoints[2],
-    //     dataFlowPoints[4]
-    //   );
-    //   labelY = quadraticBezierCurve(
-    //     0.25,
-    //     dataFlowPoints[1],
-    //     dataFlowPoints[3],
-    //     dataFlowPoints[5]
-    //   );
-    // }
-
     const rotation =
       (Math.atan2(
         dataFlowPoints[1] - dataFlowPoints[3],
@@ -248,7 +233,8 @@ export const DataFlow = memo(
           />
         ))}
 
-        {label?.length > 0 && (
+        {/* Label - we skip displaying it if there are anchors because of complexity and unforuntately not enough time to implement */}
+        {label?.length > 0 && anchors.length == 0 && (
           <>
             {/* Would be nice if the label could be dragged along the curve */}
             <Rect
