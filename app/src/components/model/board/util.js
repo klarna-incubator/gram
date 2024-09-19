@@ -1,16 +1,5 @@
-export const getAngle = ([x1, y1, x2, y2]) => {
-  return (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
-};
-
-export const getNewCoords = (theta, x, y, dist) => {
-  return {
-    x: x + dist * Math.cos((theta * Math.PI) / 180),
-    y: y + dist * Math.sin((theta * Math.PI) / 180),
-  };
-};
-
 // From https://github.com/konvajs/konva/blob/master/src/Util.ts
-export const getControlPoints = (x0, y0, x1, y1, x2, y2, t) => {
+export function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
     d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
     fa = (t * d01) / (d01 + d12),
@@ -21,44 +10,7 @@ export const getControlPoints = (x0, y0, x1, y1, x2, y2, t) => {
     p2y = y1 + fb * (y2 - y0);
 
   return [p1x, p1y, p2x, p2y];
-};
-
-export const expandPoints = (p, tension) => {
-  let len = p.length,
-    allPoints = [],
-    n,
-    cp;
-
-  for (n = 2; n < len - 2; n += 2) {
-    cp = getControlPoints(
-      p[n - 2],
-      p[n - 1],
-      p[n],
-      p[n + 1],
-      p[n + 2],
-      p[n + 3],
-      tension
-    );
-    allPoints.push(cp[0]);
-    allPoints.push(cp[1]);
-    allPoints.push(p[n]);
-    allPoints.push(p[n + 1]);
-    allPoints.push(cp[2]);
-    allPoints.push(cp[3]);
-  }
-
-  return allPoints;
-};
-
-export const reversePoints = (points) => {
-  const reversed = [];
-  for (let i = points.length - 1; i > 0; i -= 2) {
-    reversed.push(points[i - 1]);
-    reversed.push(points[i]);
-  }
-
-  return reversed;
-};
+}
 
 export function getAbsolutePosition(stage, pos) {
   const transform = stage.getAbsoluteTransform().copy();
