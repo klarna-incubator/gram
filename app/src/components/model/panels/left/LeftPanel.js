@@ -69,52 +69,22 @@ export function LeftPanel() {
   const tabHck = !selectedComponent && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
 
   return (
-    <Box id="panel-left">
-      <ToggleLeftPanelButton />
-      <Drawer
+    <>
+      <Box
+        id="panel-left"
         sx={{
-          width: "16.6vw",
-          minWidth: 310,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: "16.6vw",
-            minWidth: 310,
-            boxSizing: "border-box",
-          },
+          gridArea: "left",
+          backgroundColor: "rgb(40,40,40)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
-        variant="permanent"
-        anchor="left"
       >
-        <Toolbar />
-
-        <AppBar position="static">
-          <Grow in={true}>
-            <Tabs
-              value={tabHck}
-              onChange={(_, v) => setTab(v)}
-              textColor="inherit"
-              variant="fullWidth"
-              sx={{
-                "& .MuiTabs-indicator": {
-                  backgroundColor: (theme) => theme.palette.common.gramPink,
-                },
-              }}
-            >
-              <Tab disableRipple label="SYSTEM" value={TAB.SYSTEM} />
-              <Tab
-                disableRipple
-                label="ACTION ITEMS"
-                value={TAB.ACTION_ITEMS}
-              />
-              {isComponent && (
-                <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
-              )}
-              {isDataFlow && (
-                <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
-              )}
-            </Tabs>
-          </Grow>
-        </AppBar>
+        <div>
+          <ToggleLeftPanelButton />
+          <Toolbar />
+          <LeftTabsHeader tab={tab} setTab={setTab} />
+        </div>
 
         <TabPanel value={tab} index={TAB.SYSTEM}>
           <SystemTab />
@@ -129,7 +99,7 @@ export function LeftPanel() {
           {isDataFlow && <DataFlowTab />}
         </TabPanel>
         <LeftFooter />
-      </Drawer>
-    </Box>
+      </Box>
+    </>
   );
 }

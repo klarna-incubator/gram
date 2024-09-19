@@ -47,6 +47,7 @@ import { ExternalEntity } from "./shapes/ExternalEntity";
 import { Process } from "./shapes/Process";
 import { TrustBoundary } from "./shapes/TrustBoundary";
 import { getAbsolutePosition } from "./util";
+import { BottomPanel } from "../panels/bottom/BottomPanel";
 
 // Local variables
 const componentTypes = {
@@ -110,6 +111,7 @@ export default function Board() {
     selected,
     rightPanelCollapsed,
     leftPanelCollapsed,
+    bottomPanelCollapsed,
     cursorType,
   } = useSelector(({ model }) => ({
     components: model.components,
@@ -117,6 +119,7 @@ export default function Board() {
     selected: model.selected,
     rightPanelCollapsed: model.rightPanelCollapsed,
     leftPanelCollapsed: model.leftPanelCollapsed,
+    bottomPanelCollapsed: model.bottomPanelCollapsed,
     cursorType: model.cursorType,
   }));
 
@@ -189,7 +192,7 @@ export default function Board() {
   };
   useEffect(() => {
     resize();
-  }, [rightPanelCollapsed, leftPanelCollapsed]);
+  }, [rightPanelCollapsed, leftPanelCollapsed, bottomPanelCollapsed]);
 
   useEffect(() => {
     setStage((prevStage) => ({
@@ -637,8 +640,8 @@ export default function Board() {
       tabIndex={1}
       style={{
         cursor: stage.panning ? "grab" : "",
-        flexGrow: 1,
         position: "relative",
+        gridArea: "board",
       }}
       onKeyDown={(e) => onKeyDown(e)}
       onKeyUp={(e) => onKeyUp(e)}
@@ -788,7 +791,6 @@ export default function Board() {
       ) : (
         <Loading />
       )}
-
       {!isFramed && <ActiveUsers />}
     </div>
   );

@@ -74,56 +74,41 @@ export function RightPanel() {
   }
 
   return (
-    <Box>
+    <Box sx={{ gridArea: "right", backgroundColor: "rgb(40,40,40)" }}>
       <ToggleRightPanelButton />
-      <Drawer
-        id="panel-right"
-        sx={{
-          width,
-          minWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width,
-            minWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="right"
-      >
-        <Toolbar />
-        {[
-          COMPONENT_TYPE.DATA_STORE,
-          COMPONENT_TYPE.PROCESS,
-          COMPONENT_TYPE.TRUST_BOUNDARY,
-          COMPONENT_TYPE.DATA_FLOW,
-        ].includes(selectedComponent?.type) ? (
-          <>
-            <RightTabsHeader tab={tab} setTab={setTab} />
-            <TabPanel value={tab} index={TAB.SUGGESTIONS}>
-              <SuggestionTab />
-            </TabPanel>
-            <TabPanel value={tab} index={TAB.THREATS}>
-              <ThreatTab scrollToId={scrollToId} selectedId={selectedId} />
-            </TabPanel>
-            <TabPanel value={tab} index={TAB.CONTROLS}>
-              <ControlTab
-                threats={threats}
-                controls={controls}
-                controlsMap={controlsMap}
-                modelId={modelId}
-                componentId={selectedComponent?.id}
-                scrollToId={scrollToId}
-                selectedId={selectedId}
-              />
-            </TabPanel>
-          </>
-        ) : (
-          <Typography align="center" color={"#777"} marginTop={"50%"}>
-            No component selected
-          </Typography>
-        )}
-      </Drawer>
+
+      <Toolbar />
+      {[
+        COMPONENT_TYPE.DATA_STORE,
+        COMPONENT_TYPE.PROCESS,
+        COMPONENT_TYPE.TRUST_BOUNDARY,
+        COMPONENT_TYPE.DATA_FLOW,
+      ].includes(selectedComponent?.type) ? (
+        <>
+          <RightTabsHeader tab={tab} setTab={setTab} />
+          <TabPanel value={tab} index={TAB.SUGGESTIONS}>
+            <SuggestionTab />
+          </TabPanel>
+          <TabPanel value={tab} index={TAB.THREATS}>
+            <ThreatTab scrollToId={scrollToId} selectedId={selectedId} />
+          </TabPanel>
+          <TabPanel value={tab} index={TAB.CONTROLS}>
+            <ControlTab
+              threats={threats}
+              controls={controls}
+              controlsMap={controlsMap}
+              modelId={modelId}
+              componentId={selectedComponent?.id}
+              scrollToId={scrollToId}
+              selectedId={selectedId}
+            />
+          </TabPanel>
+        </>
+      ) : (
+        <Typography align="center" color={"#777"} marginTop={"50%"}>
+          No component selected
+        </Typography>
+      )}
     </Box>
   );
 }
