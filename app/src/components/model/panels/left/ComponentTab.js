@@ -128,7 +128,7 @@ export function ComponentTab() {
                 readOnly={readOnly}
                 description={description}
                 showPreviewTitle
-                updateDescription={updateDescription}
+                updateDescription={description => updateFields({ description })}
                 previewTitleSx={
                   description
                     ? {
