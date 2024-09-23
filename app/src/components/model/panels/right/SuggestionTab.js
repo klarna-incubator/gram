@@ -55,6 +55,7 @@ export function SuggestionTab() {
         display: "flex",
         flexDirection: "column",
         gap: "8px",
+        maxHeight: "calc(100% - 64px)",
         overflow: "hidden",
       }}
     >

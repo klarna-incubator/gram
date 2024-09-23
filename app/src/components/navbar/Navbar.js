@@ -79,7 +79,7 @@ export function Navbar() {
 
   return (
     <AppBar
-      position="fixed"
+      position="sticky"
       color="primary"
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,

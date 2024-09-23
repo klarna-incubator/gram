@@ -69,37 +69,32 @@ export function LeftPanel() {
   const tabHck = !selectedComponent && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
 
   return (
-    <>
-      <Box
-        id="panel-left"
-        sx={{
-          gridArea: "left",
-          backgroundColor: "rgb(40,40,40)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <ToggleLeftPanelButton />
-          <Toolbar />
-          <LeftTabsHeader tab={tab} setTab={setTab} />
-        </div>
+    <Box
+      id="panel-left"
+      sx={{
+        gridArea: "left",
+        backgroundColor: "rgb(40,40,40)",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "auto",
+      }}
+    >
+      <ToggleLeftPanelButton />
+      <LeftTabsHeader tab={tab} setTab={setTab} />
 
-        <TabPanel value={tab} index={TAB.SYSTEM}>
-          <SystemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
-          <ActionItemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.COMPONENT}>
-          {isComponent && <ComponentTab />}
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.DATA_FLOW}>
-          {isDataFlow && <DataFlowTab />}
-        </TabPanel>
-        <LeftFooter />
-      </Box>
-    </>
+      <TabPanel value={tab} index={TAB.SYSTEM}>
+        <SystemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
+        <ActionItemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.COMPONENT}>
+        {isComponent && <ComponentTab />}
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.DATA_FLOW}>
+        {isDataFlow && <DataFlowTab />}
+      </TabPanel>
+      <LeftFooter />
+    </Box>
   );
 }
