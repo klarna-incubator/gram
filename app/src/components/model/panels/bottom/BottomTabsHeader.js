@@ -1,4 +1,4 @@
-import { AppBar, Grow, Tab, Tabs } from "@mui/material";
+import { AppBar, Grow, Tab, Tabs, Badge } from "@mui/material";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export const TAB = {
@@ -7,7 +7,32 @@ export const TAB = {
   SELECTED_COMPONENT: 2,
 };
 
-export function BottomTabsHeader({ tab, setTab }) {
+const tabBadgeStyle = {
+  alignItems: "center",
+  gap: "5px",
+  "& span": {
+    position: "relative",
+    transform: "scale(1)",
+  },
+  fontSize: "0.6rem",
+};
+
+function getBadgeColor(length) {
+  if (length === 0) {
+    return "success";
+  } else if (length <= 2) {
+    return "warning";
+  }
+  return "error";
+}
+
+export function BottomTabsHeader({
+  tab,
+  setTab,
+  allLength,
+  modelLength,
+  selectedLength,
+}) {
   const selected = useSelectedComponent();
 
   // This fixes an annoying MUI console error when you deselect a component
@@ -27,12 +52,53 @@ export function BottomTabsHeader({ tab, setTab }) {
             },
           }}
         >
-          <Tab disableRipple label="ALL" value={TAB.ALL} />
-          <Tab disableRipple label="MODEL" value={TAB.MODEL} />
+          <Tab
+            disableRipple
+            label={
+              <div>
+                <Badge
+                  showZero
+                  badgeContent={allLength}
+                  color={getBadgeColor(allLength)}
+                  sx={tabBadgeStyle}
+                >
+                  ALL
+                </Badge>
+              </div>
+            }
+            value={TAB.ALL}
+          />
+          <Tab
+            disableRipple
+            label={
+              <div>
+                <Badge
+                  showZero
+                  badgeContent={modelLength}
+                  color={getBadgeColor(modelLength)}
+                  sx={tabBadgeStyle}
+                >
+                  MODEL
+                </Badge>
+              </div>
+            }
+            value={TAB.MODEL}
+          />
           {selected && (
             <Tab
               disableRipple
-              label="SELECTED COMPONENT"
+              label={
+                <div>
+                  <Badge
+                    showZero
+                    badgeContent={selectedLength}
+                    color={getBadgeColor(selectedLength)}
+                    sx={tabBadgeStyle}
+                  >
+                    SELECTED COMPONENT
+                  </Badge>
+                </div>
+              }
               value={TAB.SELECTED_COMPONENT}
             />
           )}

@@ -76,17 +76,23 @@ export function RightPanel() {
   }
 
   return (
-    <Box sx={{ gridArea: "right", backgroundColor: "rgb(40,40,40)" }}>
-      <ToggleRightPanelButton />
-
-      <Toolbar />
+    <Box
+      id="panel-right"
+      sx={{
+        gridArea: "right",
+        backgroundColor: "rgb(40,40,40)",
+        overflow: "auto",
+      }}
+    >
       {[
         COMPONENT_TYPE.DATA_STORE,
         COMPONENT_TYPE.PROCESS,
         COMPONENT_TYPE.TRUST_BOUNDARY,
       ].includes(selectedComponent?.type) ? (
         <>
+          <ToggleRightPanelButton />
           <RightTabsHeader tab={tab} setTab={setTab} />
+
           <TabPanel value={tab} index={TAB.SUGGESTIONS}>
             <SuggestionTab />
           </TabPanel>
@@ -106,9 +112,12 @@ export function RightPanel() {
           </TabPanel>
         </>
       ) : (
-        <Typography align="center" color={"#777"} marginTop={"50%"}>
-          No component selected
-        </Typography>
+        <>
+          <ToggleRightPanelButton />
+          <Typography align="center" color={"#777"} marginTop={"50%"}>
+            No component selected
+          </Typography>
+        </>
       )}
     </Box>
   );

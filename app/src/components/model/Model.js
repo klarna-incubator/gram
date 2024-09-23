@@ -55,10 +55,6 @@ export function Model() {
       bottomPanelCollapsed: model.bottomPanelCollapsed,
     }));
 
-  console.log(
-    setGridArea(leftPanelCollapsed, rightPanelCollapsed, bottomPanelCollapsed)
-  );
-
   const { id } = useParams("/model/:id");
   const { data: model, isError, error } = useGetModelQuery(id);
 
@@ -138,8 +134,8 @@ export function Model() {
           height: "100%",
           backgroundColor: "white",
           display: "grid",
-          gridTemplateColumns: "1.5fr 3fr 1.5fr",
-          gridTemplateRows: "auto 300px",
+          gridTemplateColumns: "minmax(200px, 20vw) 3fr minmax(200px, 20vw)",
+          gridTemplateRows: "auto 200px",
           gridTemplateAreas: setGridArea(
             leftPanelCollapsed,
             rightPanelCollapsed,
@@ -147,10 +143,10 @@ export function Model() {
           ),
         }}
       >
-        {!isFramed && <LeftPanel />}
         <Board />
-        {!isFramed && <BottomPanel />}
+        {!isFramed && <LeftPanel />}
         {!isFramed && <RightPanel />}
+        {!isFramed && <BottomPanel />}
       </Box>
     </>
   );

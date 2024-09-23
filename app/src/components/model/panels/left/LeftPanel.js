@@ -45,34 +45,29 @@ export function LeftPanel() {
   }
 
   return (
-    <>
-      <Box
-        id="panel-left"
-        sx={{
-          gridArea: "left",
-          backgroundColor: "rgb(40,40,40)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <ToggleLeftPanelButton />
-          <Toolbar />
-          <LeftTabsHeader tab={tab} setTab={setTab} />
-        </div>
+    <Box
+      id="panel-left"
+      sx={{
+        gridArea: "left",
+        backgroundColor: "rgb(40,40,40)",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "auto",
+      }}
+    >
+      <ToggleLeftPanelButton />
+      <LeftTabsHeader tab={tab} setTab={setTab} />
 
-        <TabPanel value={tab} index={TAB.SYSTEM}>
-          <SystemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
-          <ActionItemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.COMPONENT}>
-          {component && <ComponentTab />}
-        </TabPanel>
-        <LeftFooter />
-      </Box>
-    </>
+      <TabPanel value={tab} index={TAB.SYSTEM}>
+        <SystemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
+        <ActionItemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.COMPONENT}>
+        {component && <ComponentTab />}
+      </TabPanel>
+      <LeftFooter />
+    </Box>
   );
 }

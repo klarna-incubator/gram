@@ -1,6 +1,6 @@
 import React from "react";
 import { useIsFramed } from "../../hooks/useIsFramed";
-import { Grid } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 export function CenteredPage({ children }) {
   const isFramed = useIsFramed();
