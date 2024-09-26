@@ -2,7 +2,14 @@ import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
 import PanToolIcon from "@mui/icons-material/PanTool";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
-import { Paper, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import {
+  Paper,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+  IconButton,
+} from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,6 +18,10 @@ import {
   CURSOR_POINTER,
 } from "../../../../actions/model/controlsToolbarActions";
 
+import {
+  togglePanel,
+  TOGGLE_BOTTOM_PANEL,
+} from "../../../../actions/model/togglePanel";
 import { AddComponentButton } from "./AddComponentButton";
 import { DownloadImageButton } from "./DownloadImageButton";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
@@ -22,8 +33,9 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
   const readOnly = useReadOnly();
   const isFramed = useIsFramed();
 
-  let { cursorMode } = useSelector(({ model }) => ({
+  let { cursorMode, bottomPanelCollapsed } = useSelector(({ model }) => ({
     cursorMode: model.cursorType,
+    bottomPanelCollapsed: model.bottomPanelCollapsed,
   }));
 
   return (
@@ -70,6 +82,17 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
           <ZoomOutIcon />
         </ToggleButton>
         <DownloadImageButton />
+        <ToggleButton
+          value="validate-model"
+          onClick={() => {
+            dispatch(togglePanel(TOGGLE_BOTTOM_PANEL, !bottomPanelCollapsed));
+          }}
+        >
+          <Tooltip title={"Check the quality of your model"}>
+            <FactCheckIcon />
+          </Tooltip>
+        </ToggleButton>
+
         {!readOnly && <AddComponentButton onAddComponent={onAddComponent} />}
       </ToggleButtonGroup>
     </Paper>
