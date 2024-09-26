@@ -80,42 +80,57 @@ export function ValidationTab({ tab, setTab, filteredResults }) {
   const selectedComponent = useSelectedComponent();
 
   return (
-    <Box
-      sx={{
-        height: 150,
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <>
       {tab == 2 && !selectedComponent && (
-        <Typography
-          variant="h6"
+        <Box
           sx={{
-            textAlign: "center",
+            height: 150,
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Select a component to view validation
-        </Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            Select a component to view validation
+          </Typography>
+        </Box>
+      )}
+      {filteredResults && filteredResults.length === 0 && (
+        <Box
+          sx={{
+            height: 150,
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            Good job!
+          </Typography>
+        </Box>
       )}
       {filteredResults && filteredResults.length > 0 && (
-        <Paper>
+        <Box
+          sx={{
+            height: 150,
+            width: "100%",
+          }}
+        >
           <List dense sx={{ maxHeight: 150, overflow: "auto" }}>
             {renderResults(filteredResults, setSelected, deselectAll, setTab)}
           </List>
-        </Paper>
+        </Box>
       )}
-      {filteredResults && filteredResults.length === 0 && (
-        <Typography
-          variant="h6"
-          sx={{
-            textAlign: "center",
-          }}
-        >
-          Good job!
-        </Typography>
-      )}
-    </Box>
+    </>
   );
 }
