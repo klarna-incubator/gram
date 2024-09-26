@@ -14,10 +14,6 @@ import { modalActions } from "../../../../redux/modalSlice";
 import { MODALS } from "../../../elements/modal/ModalManager";
 import { PERMISSIONS } from "../../constants";
 import { useModelID } from "../../hooks/useModelID";
-import {
-  togglePanel,
-  TOGGLE_BOTTOM_PANEL,
-} from "../../../../actions/model/togglePanel";
 
 export function LeftFooter() {
   const dispatch = useDispatch();
@@ -25,9 +21,7 @@ export function LeftFooter() {
   const emptyDiagram = useSelector(
     ({ model }) => model.components.length === 0
   );
-  const bottomPanelCollapsed = useSelector(({ model }) => {
-    return model.bottomPanelCollapsed;
-  });
+
   const modelId = useModelID();
 
   const readOnly = useReadOnly();
@@ -59,15 +53,6 @@ export function LeftFooter() {
             }
           >
             <DeleteRoundedIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Check the quality of the model">
-          <IconButton
-            onClick={() => {
-              dispatch(togglePanel(TOGGLE_BOTTOM_PANEL, !bottomPanelCollapsed));
-            }}
-          >
-            <FactCheckIcon />
           </IconButton>
         </Tooltip>
         {/* <Tooltip title="Export">

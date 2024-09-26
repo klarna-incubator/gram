@@ -34,11 +34,11 @@ function renderResults(results, setSelected, deselectAll, setTab) {
       result;
 
     let itemText = (
-      <Typography>
+      <Typography key={index}>
         <Typography
           component="span"
           display="inline"
-          sx={{ fontStyle: "italic" }}
+          sx={{ fontStyle: "italic", fontWeight: "bold" }}
         >
           {elementName ? elementName : "Empty name"}
         </Typography>

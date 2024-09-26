@@ -13,9 +13,11 @@ import { CancelReview } from "../../reviews/modals/CancelReview";
 import { DeclineReview } from "../../reviews/modals/DeclineReview";
 import { ExportActionItem } from "../../model/modals/ExportActionItem";
 import { RevisitActionItems } from "../../model/modals/RevisitActionItems";
+import { ValidateBeforeReview } from "../../model/modals/ValidateBeforeReview";
 
 export const MODALS = {
   ChangeReviewer,
+  ValidateBeforeReview,
   RequestReview,
   EditNote,
   RequestMeeting,
