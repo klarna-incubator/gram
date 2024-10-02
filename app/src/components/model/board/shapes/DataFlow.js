@@ -187,6 +187,12 @@ export const DataFlow = memo(
     let labelX = (dataFlowPoints[0] + dataFlowPoints[2]) / 2;
     let labelY = (dataFlowPoints[1] + dataFlowPoints[3]) / 2;
 
+    // This is to let ContextMenu know which component was clicked (see Board.onContextMenu)
+    const clickProperties = {
+      id,
+      name: COMPONENT_TYPE.DATA_FLOW
+    }
+
     const rotation =
       (Math.atan2(
         dataFlowPoints[1] - dataFlowPoints[3],
@@ -200,10 +206,10 @@ export const DataFlow = memo(
         onMouseEnter={() => (document.body.style.cursor = "pointer")}
         onMouseLeave={() => (document.body.style.cursor = "default")}
         onClick={onClick}
+        {...clickProperties}
       >
         <Arrow
-          id={id}
-          name={COMPONENT_TYPE.DATA_FLOW}
+          {...clickProperties}
           points={dataFlowPoints}
           pointerAtBeginning={bidirectional}
           onDblClick={() => createAnchor()}
@@ -224,8 +230,7 @@ export const DataFlow = memo(
         {anchors.map((props) => (
           <Anchor
             {...props}
-            id={id}
-            name={COMPONENT_TYPE.DATA_FLOW}
+            {...clickProperties}
             onDragMove={(e) => dragAnchorMove(e, props.index)}
             onDragEnd={() => dragAnchorEnd()}
             onDblClick={() => deleteAnchor(props.index)}
@@ -238,6 +243,7 @@ export const DataFlow = memo(
           <>
             {/* Would be nice if the label could be dragged along the curve */}
             <Rect
+              {...clickProperties}
               x={labelX}
               y={labelY}
               rotation={rotation}
@@ -247,11 +253,12 @@ export const DataFlow = memo(
               height={labelHeight}
               fill={"#FFFFFF"}
               cornerRadius={2}
-              stroke={selected ? "#FFB3C7" : "#333"}
-              strokeWidth={1}
+              stroke={"#FFFFFF"}
+              strokeWidth={1}              
             />
 
             <Text
+              {...clickProperties}
               text={label}
               ellipsis={true}
               x={labelX - 1}
@@ -261,7 +268,7 @@ export const DataFlow = memo(
               rotation={Math.abs(rotation) > 90 ? rotation + 180 : rotation}
               fill={selected ? "#FFB3C7" : "#333"}
               width={labelWidth}
-              align="center"
+              align="center"              
             />
           </>
         )}
