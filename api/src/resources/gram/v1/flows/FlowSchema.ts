@@ -6,6 +6,8 @@ function attributes() {
   config.attributes.flow.forEach((attr) => {
     if (attr.type === "text") {
       obj[attr.key] = z.string().optional();
+    } else if (attr.type === "description") {
+      obj[attr.key] = z.string().optional();
     } else if (attr.type === "select") {
       obj[attr.key] = z
         .array(

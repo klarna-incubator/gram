@@ -14,7 +14,7 @@ import {
   Paper,
   Select,
   TextField,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useGetFlowAttributesQuery } from "../../../../api/gram/attributes";
@@ -24,13 +24,14 @@ import {
 } from "../../../../api/gram/flows";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { EditableTypography } from "../../../elements/EditableTypography";
+import { EditableDescription } from "../EditableDescription";
 
 function DynamicDropdown({ value, onChange, label, attribute, ...props }) {
   const { options, allowMultiple, allowCustomValue } = attribute;
   const [val, setVal] = useState(value);
 
   useEffect(() => {
-    setVal(value)
+    setVal(value);
   }, [value]);
 
   return (
@@ -66,7 +67,7 @@ function DynamicTextField({ value, onChange, label, attribute, ...props }) {
   const [val, setVal] = useState(value);
 
   useEffect(() => {
-    setVal(value)
+    setVal(value);
   }, [value]);
 
   return (
@@ -84,12 +85,38 @@ function DynamicTextField({ value, onChange, label, attribute, ...props }) {
   );
 }
 
+function DynamicDescription({ value, onChange, label, attribute, ...props }) {
+  const [val, setVal] = useState(value);
+
+  useEffect(() => {
+    setVal(value);
+  }, [value]);
+
+  return (
+    <EditableDescription
+      {...props}
+      multiline={attribute.multiline}
+      variant="outlined"
+      description={val}
+      label={label}
+      updateDescription={(e) => setVal(e)}
+      onKeyDown={shouldBlur}
+      onBlur={(e) => {
+        onChange(e);
+      }}
+      showPreviewTitle
+    />
+  );
+}
+
 function DynamicAttribute(attribute) {
   switch (attribute.type) {
     case "text":
       return DynamicTextField;
     case "select":
       return DynamicDropdown;
+    case "description":
+      return DynamicDescription;
     default:
       return TextField;
   }
@@ -116,10 +143,12 @@ export function Flow({ flow, defaultExpanded }) {
       component: DynamicAttribute(att),
     })) || [];
 
-  console.log(flow, attributesInFlow);
-
   return (
-    <Accordion expanded={expanded} square>
+    <Accordion
+      expanded={expanded}      
+      square
+      disableGutters
+    >
       <AccordionSummary
         sx={{
           flexDirection: "row-reverse",
@@ -154,7 +183,7 @@ export function Flow({ flow, defaultExpanded }) {
             onClick={(e) => e.stopPropagation()}
             readOnly={readOnly}
           />
-        </Box>        
+        </Box>
         <Box>
           <Tooltip title="Remove flow">
             <IconButton
@@ -166,8 +195,8 @@ export function Flow({ flow, defaultExpanded }) {
           </Tooltip>
         </Box>
       </AccordionSummary>
-      <AccordionDetails>
-        <Box gap="10px">
+      <AccordionDetails sx={{ margin: 0 }}>
+        <Box>
           {/* Additional attributes added on one by one <Select key> next to <Input value> */}
           {attributes
             .filter((att) => attributesInFlow.has(att.key))
@@ -192,7 +221,7 @@ export function Flow({ flow, defaultExpanded }) {
                     disabled={readOnly}
                   />
                 </FormControl>
-                {att.optional &&
+                {att.optional && (
                   <Tooltip title="Remove attribute">
                     <IconButton
                       onClick={() => {
@@ -208,7 +237,8 @@ export function Flow({ flow, defaultExpanded }) {
                     >
                       <ClearRoundedIcon fontSize="inherit" />
                     </IconButton>
-                  </Tooltip>}
+                  </Tooltip>
+                )}
               </Box>
             ))}
 
@@ -220,7 +250,7 @@ export function Flow({ flow, defaultExpanded }) {
                 <Divider sx={{ marginBottom: "20px" }} />
                 <FormControl fullWidth>
                   <InputLabel size="small" sx={{ margin: 0 }}>
-                    Add Attribute
+                    Add more attributes
                   </InputLabel>
                   <Select
                     fullWidth

@@ -558,7 +558,6 @@ export default function Board() {
       y: currPos.y - componentsPos[draggedComponentId].y,
     };
     const selectedIds = Object.keys(selected);
-    // console.log("onSelectionDragMove", selectedIds, componentsPos);
 
     const newComponentsPos = selectedIds
       .filter((id) => id in componentsPos)
@@ -573,13 +572,6 @@ export default function Board() {
         {}
       );
 
-    // console.log(
-    //   "onSelectionDragMove",
-    //   selectedIds,
-    //   componentsPos,
-    //   newComponentsPos
-    // );
-
     setComponentsPos((prevComponentsPos) => ({
       ...prevComponentsPos,
       ...newComponentsPos,
@@ -587,8 +579,7 @@ export default function Board() {
   }
 
   function onSelectionDragEnd() {
-    const selectedIds = Object.keys(selected);
-    // console.log("onSelectionDragEnd", selectedIds, componentsPos);
+    const selectedIds = Object.keys(selected);    
 
     dispatch(
       moveComponents(
@@ -666,7 +657,9 @@ export default function Board() {
           addComponent({ name, type, x: pos.x, y: pos.y });
         }}
       />
+
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
+      
       {leftPanelCollapsed === true && <ToggleLeftPanelButton />}
 
       <ContextMenu

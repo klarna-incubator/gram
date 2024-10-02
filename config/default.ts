@@ -144,11 +144,10 @@ export const defaultConfig: GramConfiguration = {
       },
       {
         key: "description",
-        type: "text",
+        type: "description",        
         defaultValue: "",
-        label: "Description",
-        multiline: true,
         optional: true,
+        label: "Description",
       },
     ],
   },

@@ -12,6 +12,17 @@ export type DynamicTextAttribute = {
   optional: boolean;
 };
 
+export type DynamicDescriptionAttribute = {
+  key: string;
+  type: "description";      
+  label: string;
+  defaultValue: string;
+  /**
+   * If true, won't be automatically added to the object. The user will need to select and add it.
+   */
+  optional: boolean;
+};
+
 export type DynamicSelectAttribute = {
   key: string;
   type: "select";
@@ -32,7 +43,7 @@ export type DynamicSelectAttribute = {
   optional: boolean;
 };
 
-export type DynamicAttribute = DynamicTextAttribute | DynamicSelectAttribute;
+export type DynamicAttribute = DynamicTextAttribute | DynamicSelectAttribute | DynamicDescriptionAttribute;
 
 export function getAttributesForFlow(): DynamicAttribute[] {
   return config.attributes.flow;

@@ -62,32 +62,64 @@ const domPurityConfig = {
   ADD_ATTR: ["target"],
 };
 
-export const DescriptionPreview = ({
+export function DescriptionPreview({
   description,
-  handleOnClick = null,
+  onClick = null,
   showTitle = false,
-  titleSx = {},
   boxSx = {},
-}) => {
-  if (!description && handleOnClick) {
-    handleOnClick(true);
+}) {
+  if (!description && onClick) {
+    onClick(true);
     return null;
   }
-  const sanitizedHtml = description
-    ? DOMPurify.sanitize(marked.parse(description), domPurityConfig)
-    : "";
 
-  if (handleOnClick) {
+  const sanitizedHtml = DOMPurify.sanitize(
+    marked.parse(description || ""),
+    domPurityConfig
+  );
+
+  const titleSx = description
+    ? {
+        fontSize: "12px",
+        color: "text.secondary",
+        marginBottom: "0.5em",
+      }
+    : {
+        color: "text.secondary",
+        borderBottom: "1px solid",
+        paddingBottom: "0.5em",
+      };
+  
+  const bSx =
+    boxSx ||
+    (description
+      ? {
+          borderBottom: "1px solid rgba(255, 255, 255, 0.7)",
+        }
+      : {
+          color: "text.secondary",
+          fontSize: "12px",
+          paddingTop: "0.5em",
+        });
+
+  if (onClick) {
     return (
-      <Box onClick={handleOnClick}>
+      <Box onClick={onClick}>
         {showTitle && (
-          <Typography variant="body1" sx={{ ...titleSx }}>
+          <Typography
+            variant="body1"
+            sx={{ ...titleSx, color: "rgba(255, 255, 255, 0.5)" }}
+          >
             Description
           </Typography>
         )}
         <Box
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-          sx={{ ...boxSx }}
+          sx={{
+            color: "rgba(255, 255, 255, 0.5)",
+            borderColor: "rgba(255, 255, 255, 0.5)",
+            ...bSx,
+          }}
         ></Box>
       </Box>
     );
@@ -106,9 +138,9 @@ export const DescriptionPreview = ({
       ></Box>
     </Box>
   );
-};
+}
 
-export const EditableDescription = ({
+export function EditableDescription({
   description,
   readOnly = false,
   updateDescription,
@@ -117,8 +149,8 @@ export const EditableDescription = ({
   inputSx = {},
   showPreviewTitle = false,
   previewSx = {},
-  previewTitleSx = {},
-}) => {
+  variant = "standard",
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(description);
 
@@ -149,12 +181,8 @@ export const EditableDescription = ({
       <DescriptionPreview
         showTitle={showPreviewTitle}
         description={description}
-        titleSx={{ ...previewTitleSx, color: "rgba(255, 255, 255, 0.5)" }}
-        boxSx={{
-          ...previewSx,
-          color: "rgba(255, 255, 255, 0.5)",
-          borderColor: "rgba(255, 255, 255, 0.5)",
-        }}
+        variant={variant}
+        boxSx={previewSx}
       />
     );
   }
@@ -164,7 +192,7 @@ export const EditableDescription = ({
       <TextField
         fullWidth
         multiline
-        variant="standard"
+        variant={variant}
         label={showInputLabel ? "Description" : ""}
         placeholder={placeholder}
         disabled={readOnly}
@@ -178,15 +206,15 @@ export const EditableDescription = ({
         }}
       />
     );
-  } else {
-    return (
-      <DescriptionPreview
-        description={description ? description : "Click to add a description"}
-        handleOnClick={() => setIsEditing(true)}
-        showTitle={showPreviewTitle}
-        titleSx={previewTitleSx}
-        boxSx={previewSx}
-      />
-    );
   }
+
+  return (
+    <DescriptionPreview
+      description={description ? description : "Click to add a description"}
+      onClick={() => setIsEditing(true)}
+      variant={variant}
+      showTitle={showPreviewTitle}
+      boxSx={previewSx}
+    />
+  );
 };

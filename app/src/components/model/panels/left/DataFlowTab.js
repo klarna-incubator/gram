@@ -44,9 +44,10 @@ export function DataFlowTab() {
 
   const [label, setLabel] = useState(dataflow.label || "");
   const { data: attributes } = useGetFlowAttributesQuery();
-  const nonOptionalAttributes = attributes?.filter(att => !att.optional) || [];
+  const nonOptionalAttributes =
+    attributes?.filter((att) => !att.optional) || [];
   const defaultAttributes = {};
-  nonOptionalAttributes.forEach(att => {
+  nonOptionalAttributes.forEach((att) => {
     defaultAttributes[att.key] = att.defaultValue;
   });
   const startComponent = useComponent(dataflow.startComponent.id);
@@ -64,39 +65,76 @@ export function DataFlowTab() {
       sx={{
         padding: "8px",
         overflow: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "8px",
-        }}
-      >
-        <Card elevation={2}>
-          <CardContent>
-            <Box display="flex" gap="20px" flexDirection="column">
-              <Typography variant="h6">Properties</Typography>
+      <Card elevation={2}>
+        <CardContent>
+          <Box display="flex" gap="20px" flexDirection="column">
+            <Typography>Properties</Typography>
 
-              <TextField
-                fullWidth
-                variant="standard"
-                label="Label"
-                value={label}
-                disabled={readOnly}
-                onBlur={() => patchDataFlow({ label })}
-                onChange={(e) => setLabel(e.target.value)}
-                onKeyDown={shouldBlur}
-              />
+            <TextField
+              fullWidth
+              variant="standard"
+              label="Label"
+              value={label}
+              disabled={readOnly}
+              onBlur={() => patchDataFlow({ label })}
+              onChange={(e) => setLabel(e.target.value)}
+              onKeyDown={shouldBlur}
+            />
+          </Box>
+        </CardContent>
+      </Card>
+
+      <Card elevation={4}>
+        <CardHeader
+          title={
+            <Box display="flex" flexDirection="row">
+              <Typography sx={{ flexGrow: "1" }}>
+                Flows from {startComponent.name} to {endComponent.name}
+              </Typography>
+
+              <Tooltip title="Add flow">
+                <IconButton
+                  onClick={() =>
+                    createFlow({
+                      modelId,
+                      dataFlowId: dataflow.id,
+                      summary: "New Flow",
+                      originComponentId: startComponent.id,
+                      attributes: defaultAttributes,
+                    })
+                  }
+                  size="small"
+                >
+                  <AddCircleOutlineIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
             </Box>
-          </CardContent>
-        </Card>
+          }
+        />
+        <CardContent sx={{ padding: 0 }}>
+          {isLoading && <Typography>Loading...</Typography>}
+
+          {!isLoading &&
+            flows
+              .filter((flow) => flow.originComponentId === startComponent.id)
+              .map((flow, index) => (
+                <Flow flow={flow} defaultExpanded={index === 0} />
+              ))}
+        </CardContent>
+      </Card>
+
+      {dataflow.bidirectional && (
         <Card elevation={4}>
           <CardHeader
             title={
               <Box display="flex" flexDirection="row">
-                <Typography variant="h6" sx={{ flexGrow: "1" }}>
-                  Flows from {startComponent.name} to {endComponent.name}
+                <Typography sx={{ flexGrow: "1" }}>
+                  Flows from {endComponent.name} to {startComponent.name}
                 </Typography>
 
                 <Tooltip title="Add flow">
@@ -106,7 +144,7 @@ export function DataFlowTab() {
                         modelId,
                         dataFlowId: dataflow.id,
                         summary: "New Flow",
-                        originComponentId: startComponent.id,
+                        originComponentId: endComponent.id,
                         attributes: defaultAttributes,
                       })
                     }
@@ -123,54 +161,13 @@ export function DataFlowTab() {
 
             {!isLoading &&
               flows
-                .filter((flow) => flow.originComponentId === startComponent.id)
+                .filter((flow) => flow.originComponentId === endComponent.id)
                 .map((flow, index) => (
                   <Flow flow={flow} defaultExpanded={index === 0} />
                 ))}
           </CardContent>
         </Card>
-
-        {dataflow.bidirectional && (
-          <Card elevation={4}>
-            <CardHeader
-              title={
-                <Box display="flex" flexDirection="row">
-                  <Typography variant="h6" sx={{ flexGrow: "1" }}>
-                    Flows from {endComponent.name} to {startComponent.name}
-                  </Typography>
-
-                  <Tooltip title="Add flow">
-                    <IconButton
-                      onClick={() =>               
-                        createFlow({
-                          modelId,
-                          dataFlowId: dataflow.id,
-                          summary: "New Flow",
-                          originComponentId: endComponent.id,
-                          attributes: defaultAttributes,
-                        })                        
-                      }
-                      size="small"
-                    >
-                      <AddCircleOutlineIcon fontSize="inherit" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              }
-            />
-            <CardContent sx={{ padding: 0 }}>
-              {isLoading && <Typography>Loading...</Typography>}
-
-              {!isLoading &&
-                flows
-                  .filter((flow) => flow.originComponentId === endComponent.id)
-                  .map((flow, index) => (
-                    <Flow flow={flow} defaultExpanded={index === 0} />
-                  ))}
-            </CardContent>
-          </Card>
-        )}
-      </Box>
+      )}
     </Box>
   );
 }

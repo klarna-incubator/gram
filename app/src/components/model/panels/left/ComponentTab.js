@@ -51,8 +51,7 @@ export function ComponentTab() {
       e.preventDefault();
       e.target.blur();
     }
-  }
-  // console.log(systems, classes);
+  }  
 
   return (
     <Box
@@ -129,31 +128,6 @@ export function ComponentTab() {
                 description={description}
                 showPreviewTitle
                 updateDescription={description => updateFields({ description })}
-                previewTitleSx={
-                  description
-                    ? {
-                        fontSize: "12px",
-                        color: "text.secondary",
-                        marginBottom: "0.5em",
-                      }
-                    : {
-                        color: "text.secondary",
-                        borderBottom: "1px solid",
-                        paddingBottom: "0.5em",
-                      }
-                }
-                previewSx={
-                  description
-                    ? {
-                        borderBottom: "1px solid rgba(255, 255, 255, 0.7)",
-                        //paddingBottom: "0.5em",
-                      }
-                    : {
-                        color: "text.secondary",
-                        fontSize: "12px",
-                        paddingTop: "0.5em",
-                      }
-                }
               />
             </Box>
           </CardContent>
