@@ -127,7 +127,7 @@ export const defaultConfig: GramConfiguration = {
         type: "select",
         defaultValue: [],
         label: "Authentication",
-        options: ["Basic Auth", "JWT", "OIDC"],
+        options: ["Basic Auth", "JWT", "OIDC", "None"],
         allowCustomValue: true,
         allowMultiple: true,
         optional: false,
