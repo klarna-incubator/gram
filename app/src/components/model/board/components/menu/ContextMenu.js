@@ -77,41 +77,44 @@ export function ContextMenu({
               <MenuItem key={"switch_direction"} onClick={onSwitchDirection}>
                 <ListItemText>Switch direction</ListItemText>
               </MenuItem>
-            ) : null,
-            <Divider key={"toggle_bidirectional_divider"} />,
+            ) : null,            
           ]}
-          <MenuItem
-            key={"add_ee"}
-            onClick={() => {
-              onAddComponent("External entity", COMPONENT_TYPE.EXTERNAL_ENTITY);
-            }}
-          >
-            <ListItemText>Add External entity</ListItemText>
-          </MenuItem>
-          <MenuItem
-            key={"add_proc"}
-            onClick={() => {
-              onAddComponent("Process", COMPONENT_TYPE.PROCESS);
-            }}
-          >
-            <ListItemText>Add Process</ListItemText>
-          </MenuItem>
-          <MenuItem
-            key={"add_ds"}
-            onClick={() => {
-              onAddComponent("Data Store", COMPONENT_TYPE.DATA_STORE);
-            }}
-          >
-            <ListItemText>Add Data Store</ListItemText>
-          </MenuItem>
-          <MenuItem
-            key={"add_tb"}
-            onClick={() => {
-              onAddComponent("Trust Boundary", COMPONENT_TYPE.TRUST_BOUNDARY);
-            }}
-          >
-            <ListItemText>Add Trust Boundary</ListItemText>
-          </MenuItem>
+
+          {stageDialog.variant ===
+            CONTEXT_MENU_VARIANT.ADD_COMPONENT && [
+            <MenuItem
+              key={"add_ee"}
+              onClick={() => {
+                onAddComponent("External entity", COMPONENT_TYPE.EXTERNAL_ENTITY);
+              }}
+            >
+              <ListItemText>Add External entity</ListItemText>
+            </MenuItem>,
+            <MenuItem
+              key={"add_proc"}
+              onClick={() => {
+                onAddComponent("Process", COMPONENT_TYPE.PROCESS);
+              }}
+            >
+              <ListItemText>Add Process</ListItemText>
+            </MenuItem>,
+            <MenuItem
+              key={"add_ds"}
+              onClick={() => {
+                onAddComponent("Data Store", COMPONENT_TYPE.DATA_STORE);
+              }}
+            >
+              <ListItemText>Add Data Store</ListItemText>
+            </MenuItem>,
+            <MenuItem
+              key={"add_tb"}
+              onClick={() => {
+                onAddComponent("Trust Boundary", COMPONENT_TYPE.TRUST_BOUNDARY);
+              }}
+            >
+              <ListItemText>Add Trust Boundary</ListItemText>
+            </MenuItem>
+            ]}
         </MenuList>
       </Paper>
     </ContextMenuWrapper>
