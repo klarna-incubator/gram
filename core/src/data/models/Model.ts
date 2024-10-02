@@ -110,6 +110,7 @@ export interface Component {
   name: string;
   classes?: ComponentClass[];
   description?: string;
+  systems?: string[];
 }
 
 export interface ModelData {
