@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import React from "react";
 import { useListModelsQuery } from "../../api/gram/model";
 import { useGetUserQuery } from "../../api/gram/user";
@@ -21,10 +21,9 @@ export default function Home() {
 
   return (
     <CenteredPage>
-      <Grid container spacing={2} alignItems="stretch">
+      <Grid container spacing={2} columns={12}>
         <Grid
-          item
-          xs={6}
+          size={6}
           maxHeight="88vh"
           sx={{ display: "flex", flexFlow: "column" }}
         >
@@ -40,8 +39,8 @@ export default function Home() {
         </Grid>
         {user?.teams?.length > 0 && (
           <Grid
-            item
-            xs={6}
+            size={6}
+            columns={1}
             maxHeight="88vh"
             sx={{ display: "flex", flexFlow: "column" }}
           >
@@ -59,13 +58,14 @@ export default function Home() {
             >
               <Grid
                 container
-                direction="column"
                 spacing={2}
+                columns={1}
+                size={6}
                 style={{ flex: "2" }}
               >
                 {user?.teams &&
                   user.teams.map((team, i) => (
-                    <Grid item xs={6}>
+                    <Grid size={1}>
                       <TeamSystemsPageList
                         key={team.id}
                         teamId={team.id}

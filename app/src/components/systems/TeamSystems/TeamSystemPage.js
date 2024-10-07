@@ -1,4 +1,5 @@
-import { Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetUserQuery } from "../../../api/gram/auth";
@@ -33,18 +34,13 @@ export function TeamSystemsPage() {
         <TeamHeader teamId={teamId} />
       )}
 
-      <Grid
-        container
-        spacing={2}
-        alignItems="stretch"
-        sx={{ marginTop: "9px" }}
-      >
+      <Grid container spacing={2} columns={12} sx={{ marginTop: "9px" }}>
         {/* Some employees have more than one team */}
         {teams.map((tid) => (
           <Grid
             key={`team-grid-${tid}`}
             item
-            xs={6}
+            size={6}
             sx={{ display: "flex", flexDirection: "column" }}
           >
             <TeamSystemsPageList key={tid} teamId={tid} />
