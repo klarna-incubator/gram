@@ -1,11 +1,11 @@
 import {
   Typography,
   Box,
-  Paper,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
@@ -74,10 +74,25 @@ function renderResults(results, setSelected, deselectAll, setTab) {
   });
 }
 
-export function ValidationTab({ tab, setTab, filteredResults }) {
+export function ValidationTab({ tab, setTab, filteredResults, isLoading }) {
   const setSelected = useSetSelected();
   const deselectAll = useDeselectAll();
   const selectedComponent = useSelectedComponent();
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          height: 150,
+          width: "100%",
+          alignContent: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress size="3rem" />
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -86,8 +101,8 @@ export function ValidationTab({ tab, setTab, filteredResults }) {
           sx={{
             height: 150,
             width: "100%",
-            alignItems: "center",
             justifyContent: "center",
+            alignContent: "center",
           }}
         >
           <Typography
@@ -105,7 +120,7 @@ export function ValidationTab({ tab, setTab, filteredResults }) {
           sx={{
             height: 150,
             width: "100%",
-            alignItems: "center",
+            alignContent: "center",
             justifyContent: "center",
           }}
         >
