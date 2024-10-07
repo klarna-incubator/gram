@@ -28,6 +28,7 @@ import { useSetMultipleSelected } from "../hooks/useSetMultipleSelected";
 import { useSetSelected } from "../hooks/useSetSelected";
 import { ActiveUsers } from "../panels/ActiveUsers";
 import { ControlsToolBar } from "./components/ControlsToolBar";
+/* Grid is not upgraded to Grid2 because it causes an error */
 import { Grid } from "./components/Grid";
 import { SelectionRectangle } from "./components/SelectionRectangle";
 import { ToggleLeftPanelButton } from "./components/ToggleLeftPanelButton";
@@ -47,7 +48,6 @@ import { ExternalEntity } from "./shapes/ExternalEntity";
 import { Process } from "./shapes/Process";
 import { TrustBoundary } from "./shapes/TrustBoundary";
 import { getAbsolutePosition } from "./util";
-import { BottomPanel } from "../panels/bottom/BottomPanel";
 
 // Local variables
 const componentTypes = {
