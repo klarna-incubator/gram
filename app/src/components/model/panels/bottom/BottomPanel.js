@@ -84,6 +84,7 @@ export function BottomPanel() {
             tab={tab}
             setTab={setTab}
             filteredResults={filteredResults}
+            isLoading={isLoading}
           />
         </>
       )}
