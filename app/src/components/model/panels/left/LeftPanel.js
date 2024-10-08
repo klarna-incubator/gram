@@ -1,4 +1,3 @@
-import { Drawer, Toolbar } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -45,37 +44,29 @@ export function LeftPanel() {
   }
 
   return (
-    <Box id="panel-left">
+    <Box
+      id="panel-left"
+      sx={{
+        gridArea: "left",
+        backgroundColor: "rgb(40,40,40)",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "auto",
+      }}
+    >
       <ToggleLeftPanelButton />
-      <Drawer
-        sx={{
-          width: "16.6vw",
-          minWidth: 310,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: "16.6vw",
-            minWidth: 310,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Toolbar />
+      <LeftTabsHeader tab={tab} setTab={setTab} />
 
-        <LeftTabsHeader tab={tab} setTab={setTab} />
-
-        <TabPanel value={tab} index={TAB.SYSTEM}>
-          <SystemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
-          <ActionItemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.COMPONENT}>
-          {component && <ComponentTab />}
-        </TabPanel>
-        <LeftFooter />
-      </Drawer>
+      <TabPanel value={tab} index={TAB.SYSTEM}>
+        <SystemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
+        <ActionItemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.COMPONENT}>
+        {component && <ComponentTab />}
+      </TabPanel>
+      <LeftFooter />
     </Box>
   );
 }

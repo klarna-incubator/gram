@@ -18,6 +18,7 @@ import {
 import {
   TOGGLE_LEFT_PANEL,
   TOGGLE_RIGHT_PANEL,
+  TOGGLE_BOTTOM_PANEL,
 } from "../actions/model/togglePanel";
 
 export const initialFormState = {
@@ -40,6 +41,7 @@ const initialState = {
   componentForm: initialFormState,
   rightPanelCollapsed: false,
   leftPanelCollapsed: false,
+  bottomPanelCollapsed: true,
   cursorType: CURSOR_POINTER,
 };
 
@@ -173,6 +175,8 @@ const localReducer = (state = initialState, action) => {
       return { ...state, rightPanelCollapsed: action.value };
     case TOGGLE_LEFT_PANEL:
       return { ...state, leftPanelCollapsed: action.value };
+    case TOGGLE_BOTTOM_PANEL:
+      return { ...state, bottomPanelCollapsed: action.value };
     case CHANGE_CURSOR_TYPE:
       return { ...state, cursorType: action.value };
     default:
