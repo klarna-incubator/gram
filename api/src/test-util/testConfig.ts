@@ -14,6 +14,10 @@ import { testUserProvider } from "./sampleUser.js";
 import { testSystemProvider } from "./system.js";
 import { StaticValidationProvider } from "@gram/config/dist/providers/static/StaticValidationProvider.js";
 
+/**
+ * I don't know why this exists when there is a core/testConfig.ts. Might be worth trying to move all test-utility stuff there instead.
+ */
+
 export const testConfig: GramConfiguration = {
   appPort: 8080,
   controlPort: 8081,
@@ -75,6 +79,63 @@ export const testConfig: GramConfiguration = {
       path: "https://github.com/klarna-incubator/gram",
     },
   ],
+
+  attributes: {
+    flow: [
+      {
+        key: "protocols",
+        type: "select",
+        defaultValue: [],
+        label: "Protocol(s)",
+        options: [
+          "HTTP",
+          "HTTPS",
+          "FTP",
+          "SSH",
+          "SMTP",
+          "POP3",
+          "IMAP",
+          "DNS",
+          "LDAP",
+          "SMB",
+          "gRPC",
+          "MQTT",
+          "AMQP",
+        ],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "authentication",
+        type: "select",
+        defaultValue: [],
+        label: "Authentication",
+        options: ["Basic Auth", "JWT", "OIDC"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "data_type",
+        type: "select",
+        defaultValue: [],
+        label: "Type of Data",
+        options: ["Personal Information", "Transaction Data"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "description",
+        type: "text",
+        defaultValue: "",
+        label: "Description",
+        multiline: true,
+        optional: false,
+      },
+    ],
+  },
 
   bootstrapProviders: async function (
     dal: DataAccessLayer

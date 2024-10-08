@@ -19,6 +19,7 @@ import {
   TOGGLE_LEFT_PANEL,
   TOGGLE_RIGHT_PANEL,
 } from "../actions/model/togglePanel";
+import { closestMagnets, getMagnets } from "../components/model/board/util";
 
 export const initialFormState = {
   show: false,
@@ -104,6 +105,44 @@ const mutatorReducer = (state = initialState, action) => {
     case PATCH_DATA_FLOW:
       i = state.dataFlows.findIndex((d) => d.id === action.id);
       const editedDataflow = { ...state.dataFlows[i], ...action.fields };
+
+      // If label was just set, set it to the first anchor
+      if (
+        editedDataflow.label !== "" &&
+        (editedDataflow.labelAnchor === -1 ||
+          editedDataflow.labelAnchor === undefined)
+      ) {
+        // If there are no anchors and the label was just set, add a new one for the label.
+        if (editedDataflow.points.length === 4) {
+          const startComponent = state.components.find(
+            (c) => c.id === editedDataflow.startComponent.id
+          );
+          const endComponent = state.components.find(
+            (c) => c.id === editedDataflow.endComponent.id
+          );
+          const startMagnets = getMagnets([startComponent.x, startComponent.y]); //editedDataflow.points.slice(0, 2));
+          const endMagnets = getMagnets([endComponent.x, endComponent.y]);
+          const magnets = closestMagnets(startMagnets, endMagnets, []);
+
+          editedDataflow.points = [
+            ...editedDataflow.points.slice(0, 2), // Might be better to set these as: startComponent.x, startComponent.y
+            (magnets[0] + magnets[2]) / 2,
+            (magnets[1] + magnets[3]) / 2,
+            ...editedDataflow.points.slice(2),
+          ];
+        }
+        // ... set it to the first anchor
+        editedDataflow.labelAnchor = 2;
+      }
+      // If there is an anchor and the label was just removed, remove the anchor.
+      else if (editedDataflow.label == "" && editedDataflow.labelAnchor != -1) {
+        // Delete anchor by removing points.
+        editedDataflow.points = [
+          ...editedDataflow.points.slice(0, editedDataflow.labelAnchor),
+          ...editedDataflow.points.slice(editedDataflow.labelAnchor + 2),
+        ];
+        editedDataflow.labelAnchor = -1;
+      }
       return {
         ...state,
         dataFlows: [

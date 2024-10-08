@@ -21,10 +21,11 @@ import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThreats";
 import { EditableSelect } from "./EditableSelect";
-import { EditableTypography } from "./EditableTypography";
+
 import { MitigationChip } from "./MitigationChip";
 import { Links } from "../../../elements/Links";
 import { EditableDescription } from "../EditableDescription";
+import { EditableTypography } from "../../../elements/EditableTypography";
 
 export function Control(props) {
   const { control, scrollToId, selected } = props;

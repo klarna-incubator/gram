@@ -11,13 +11,11 @@ export function ComponentLabel({
   width,
   componentId,
   type,
-  stage,
   align = "center",
   onChange,
   onClick,
 }) {
   const readOnly = useReadOnly();
-  const nameRef = useRef();
   const editNameRef = useRef();
   const patchComponent = usePatchComponent(componentId);
   const [newName, setNewName] = useState(name);
@@ -54,7 +52,6 @@ export function ComponentLabel({
       <Text
         visible={readOnly || !editing}
         transformsEnabled={"position"}
-        ref={nameRef}
         type={
           type
         } /* Used to communicate upwards (onContextMenu) what type of component was clicked. */
@@ -69,36 +66,30 @@ export function ComponentLabel({
         wrap={"none"}
         ellipsis={true}
         onClick={onLocalClick}
-        onMouseEnter={() => {
-          if (!readOnly) {
-            document.body.style.cursor = "text";
-          }
-        }}
-        onMouseLeave={() => {
-          if (!readOnly) {
-            document.body.style.cursor = "default";
-          }
-        }}
       />
 
       {editing && (
-        <Html
-          transform={true}
-          transformFunc={(attrs) => ({
-            ...attrs,
-            x: nameRef.current.getAbsolutePosition().x,
-            y: nameRef.current.getAbsolutePosition().y,
-            scaleX: stage.scale,
-            scaleY: stage.scale,
-          })}
-          divProps={{ veryUglyHackToForceUpdate: stage }}
-        >
+        <Html>
           <input
             className={"editComponentName"}
             style={{
-              textAlign: align,
-              //   display: editing ? "block" : "none",
               width: width + "px",
+              position: "absolute",
+              top: y - 4,
+              left: x,
+              border: "none",
+              fontSize: "12px",
+              padding: "0px",
+              margin: "0px",
+              overflow: "hidden",
+              background: "none",
+              outline: "none",
+              resize: "none",
+              lineHeight: 1,
+              fontFamily: "Open Sans",
+              transformOrigin: "left top",
+              textAlign: "center",
+              color: "black",
             }}
             spellCheck={false}
             ref={editNameRef}

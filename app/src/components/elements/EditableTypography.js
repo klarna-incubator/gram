@@ -10,6 +10,7 @@ export function EditableTypography({
   placeholder,
   sx,
   readOnly,
+  onClick,
 }) {
   const colorType = color.substring(5);
 
@@ -31,6 +32,7 @@ export function EditableTypography({
           spellCheck={false}
           defaultValue={value}
           placeholder={placeholder}
+          onClick={onClick}
           onBlur={(e) => {
             setValue(e.target.value);
             onSubmit(e.target.value);
