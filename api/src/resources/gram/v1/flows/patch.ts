@@ -18,8 +18,6 @@ export function patchFlow(dal: DataAccessLayer) {
       return;
     }
 
-    console.log(flowId, attributes, originComponentId, summary);
-
     // Check if user has access to this object
     await req.authz.hasPermissionsForModelId(flow.modelId, Permission.Write);
 
