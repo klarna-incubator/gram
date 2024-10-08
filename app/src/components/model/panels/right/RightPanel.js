@@ -1,4 +1,4 @@
-import { Box, Drawer, Toolbar, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useListMitigationsQuery } from "../../../../api/gram/mitigations";
@@ -36,9 +36,6 @@ function TabPanel(props) {
 }
 
 var selectedTimer = null;
-
-const width = "16.6vw";
-const minWidth = 310;
 
 export function RightPanel() {
   const [tab, setTab] = useState(TAB.THREATS);

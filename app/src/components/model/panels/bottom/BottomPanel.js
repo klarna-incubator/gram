@@ -6,8 +6,6 @@ import { useState, useEffect } from "react";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { useValidateQuery } from "../../../../api/gram/validation";
-import { useSetSelected } from "../../hooks/useSetSelected";
-import { useDeselectAll } from "../../hooks/useSetMultipleSelected";
 
 export function BottomPanel() {
   const modelId = useModelID();
@@ -41,13 +39,13 @@ export function BottomPanel() {
       : [];
   }
 
-  if (tab == 0) {
+  if (tab === 0) {
     // TAB.ALL
     filteredResults = allNegativeResults;
-  } else if (tab == 1) {
+  } else if (tab === 1) {
     // TAB.MODEL
     filteredResults = modelResults;
-  } else if (tab == 2) {
+  } else if (tab === 2) {
     // TAB.SELECTED_COMPONENT
     if (selectedComponent) {
       filteredResults = selectedResults;
