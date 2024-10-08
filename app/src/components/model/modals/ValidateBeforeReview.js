@@ -24,7 +24,7 @@ import { MODALS } from "../../elements/modal/ModalManager";
 export function ValidateBeforeReview() {
   const dispatch = useDispatch();
   const modelId = useModelID();
-  const { data: validation, isLoading } = useValidateQuery(modelId);
+  const { data: validation } = useValidateQuery(modelId);
 
   const validationResults = validation?.results || [];
   const passedResults = validationResults.filter((result) => result.testResult);
@@ -114,7 +114,7 @@ function renderResults(results) {
   });
 
   return sortedResults.map((result, index) => {
-    const { testResult, message, elementName, ruleName } = result;
+    const { elementName, ruleName } = result;
 
     let itemText = (
       <Typography key={index} sx={{ fontSize: "10px" }}>

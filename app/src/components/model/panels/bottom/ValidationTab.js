@@ -96,7 +96,7 @@ export function ValidationTab({ tab, setTab, filteredResults, isLoading }) {
 
   return (
     <>
-      {tab == 2 && !selectedComponent && (
+      {tab === 2 && !selectedComponent && (
         <Box
           sx={{
             height: 150,

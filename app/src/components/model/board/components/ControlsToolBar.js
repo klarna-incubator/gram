@@ -3,13 +3,7 @@ import PanToolIcon from "@mui/icons-material/PanTool";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
-import {
-  Paper,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-  IconButton,
-} from "@mui/material";
+import { Paper, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
