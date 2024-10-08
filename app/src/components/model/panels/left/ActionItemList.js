@@ -7,11 +7,15 @@ import { useListActionItemQuery } from "../../../../api/gram/action-items";
 import { useModelID } from "../../hooks/useModelID";
 import { useDataFlow } from "../../hooks/useDataFlow";
 
-function DataFlowActionItemLabel({dataflow}) {
+function DataFlowActionItemLabel({ dataflow }) {
   const startComponent = useComponent(dataflow.startComponent.id);
   const endComponent = useComponent(dataflow.endComponent.id);
 
-  return <>{startComponent.name} to {endComponent.name}</>
+  return (
+    <>
+      {startComponent.name} to {endComponent.name}
+    </>
+  );
 }
 
 function ComponentActionItem({
@@ -30,7 +34,9 @@ function ComponentActionItem({
   return (
     <Box sx={{ paddingBottom: "10px" }}>
       <CollapsePaper
-        title={component?.name || <DataFlowActionItemLabel dataflow={dataflow} />}
+        title={
+          component?.name || <DataFlowActionItemLabel dataflow={dataflow} />
+        }
         count={actionItems.length}
         defaultExpanded={defaultExpanded}
       >

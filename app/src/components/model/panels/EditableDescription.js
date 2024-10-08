@@ -89,7 +89,7 @@ export function DescriptionPreview({
         borderBottom: "1px solid",
         paddingBottom: "0.5em",
       };
-  
+
   const bSx =
     boxSx ||
     (description
@@ -217,4 +217,4 @@ export function EditableDescription({
       boxSx={previewSx}
     />
   );
-};
+}

@@ -14,7 +14,7 @@ export type DynamicTextAttribute = {
 
 export type DynamicDescriptionAttribute = {
   key: string;
-  type: "description";      
+  type: "description";
   label: string;
   defaultValue: string;
   /**
@@ -43,7 +43,10 @@ export type DynamicSelectAttribute = {
   optional: boolean;
 };
 
-export type DynamicAttribute = DynamicTextAttribute | DynamicSelectAttribute | DynamicDescriptionAttribute;
+export type DynamicAttribute =
+  | DynamicTextAttribute
+  | DynamicSelectAttribute
+  | DynamicDescriptionAttribute;
 
 export function getAttributesForFlow(): DynamicAttribute[] {
   return config.attributes.flow;

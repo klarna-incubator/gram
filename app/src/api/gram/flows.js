@@ -10,7 +10,7 @@ const flowsApi = api.injectEndpoints({
         return response.flows;
       },
       providesTags: (result, error, arg) => [
-        { type: "Flows", id: `${arg.modelId}-${arg.dataFlowId}` },        
+        { type: "Flows", id: `${arg.modelId}-${arg.dataFlowId}` },
       ],
     }),
     createFlow: build.mutation({
@@ -38,9 +38,7 @@ const flowsApi = api.injectEndpoints({
       }),
       transformResponse: (response, meta, arg) => response,
       // providesTags: (result, error, arg) => [{ type: "Flow", id: arg.flowId }],
-      invalidatesTags: (result, error, arg) => [        
-        { type: "Flows" },
-      ],
+      invalidatesTags: (result, error, arg) => [{ type: "Flows" }],
     }),
     deleteFlow: build.mutation({
       query: ({ flowId }) => ({

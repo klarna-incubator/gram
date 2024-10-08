@@ -53,8 +53,6 @@ export function DataFlowTab() {
   const startComponent = useComponent(dataflow.startComponent.id);
   const endComponent = useComponent(dataflow.endComponent.id);
 
-  console.log(dataflow, startComponent, endComponent);
-
   // Update controlled states if redux changed from outside the component
   useEffect(() => {
     setLabel(dataflow.label);
@@ -81,7 +79,9 @@ export function DataFlowTab() {
               label="Label"
               value={label}
               disabled={readOnly}
-              onBlur={() => patchDataFlow({ label })}
+              onBlur={() =>
+                patchDataFlow({ label })
+              }
               onChange={(e) => setLabel(e.target.value)}
               onKeyDown={shouldBlur}
             />

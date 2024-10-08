@@ -51,7 +51,7 @@ export function ComponentTab() {
       e.preventDefault();
       e.target.blur();
     }
-  }  
+  }
 
   return (
     <Box
@@ -127,7 +127,9 @@ export function ComponentTab() {
                 readOnly={readOnly}
                 description={description}
                 showPreviewTitle
-                updateDescription={description => updateFields({ description })}
+                updateDescription={(description) =>
+                  updateFields({ description })
+                }
               />
             </Box>
           </CardContent>

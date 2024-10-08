@@ -144,11 +144,7 @@ export function Flow({ flow, defaultExpanded }) {
     })) || [];
 
   return (
-    <Accordion
-      expanded={expanded}      
-      square
-      disableGutters
-    >
+    <Accordion expanded={expanded} square disableGutters>
       <AccordionSummary
         sx={{
           flexDirection: "row-reverse",

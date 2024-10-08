@@ -1,22 +1,17 @@
-import {
-  Divider,
-  ListItemText,
-  MenuItem,
-  MenuList,
-  Paper,
-} from "@mui/material";
+import { ListItemText, MenuItem, MenuList, Paper } from "@mui/material";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setMultipleSelected } from "../../../../../actions/model/setSelected";
+import { useAddAnchor } from "../../../hooks/useAddAnchor";
 import { useAddComponent } from "../../../hooks/useAddComponent";
 import { usePatchDataFlow } from "../../../hooks/usePatchDataFlow";
 import {
-  COMPONENT_TYPE,
   COMPONENT_SIZE,
+  COMPONENT_TYPE,
   CONTEXT_MENU_VARIANT,
 } from "../../constants";
-import { ContextMenuWrapper } from "./ContextMenuWrapper";
-import { useDispatch, useSelector } from "react-redux";
 import { getAbsolutePosition } from "../../util";
+import { ContextMenuWrapper } from "./ContextMenuWrapper";
 
 export function ContextMenu({
   open,
@@ -29,6 +24,8 @@ export function ContextMenu({
 }) {
   const patchDataFlow = usePatchDataFlow(stageDialog.id);
   const addComponent = useAddComponent();
+  const addAnchor = useAddAnchor(stageDialog.id);
+
   const dispatch = useDispatch();
   const { dataFlow } = useSelector(({ model }) => ({
     dataFlow: model.dataFlows.find((d) => d.id === stageDialog.id),
@@ -46,6 +43,12 @@ export function ContextMenu({
       startComponent: dataFlow.endComponent,
       endComponent: dataFlow.startComponent,
     });
+    onClose();
+  }
+
+  function onAddAnchor() {
+    const pos = getAbsolutePosition(stageRef.current, { x, y });
+    addAnchor({ x: pos.x, y: pos.y });
     onClose();
   }
 
@@ -77,15 +80,20 @@ export function ContextMenu({
               <MenuItem key={"switch_direction"} onClick={onSwitchDirection}>
                 <ListItemText>Switch direction</ListItemText>
               </MenuItem>
-            ) : null,            
+            ) : null,
+            <MenuItem key="add_anchor" onClick={onAddAnchor}>
+              <ListItemText>Add Anchor</ListItemText>
+            </MenuItem>,
           ]}
 
-          {stageDialog.variant ===
-            CONTEXT_MENU_VARIANT.ADD_COMPONENT && [
+          {stageDialog.variant === CONTEXT_MENU_VARIANT.ADD_COMPONENT && [
             <MenuItem
               key={"add_ee"}
               onClick={() => {
-                onAddComponent("External entity", COMPONENT_TYPE.EXTERNAL_ENTITY);
+                onAddComponent(
+                  "External entity",
+                  COMPONENT_TYPE.EXTERNAL_ENTITY
+                );
               }}
             >
               <ListItemText>Add External entity</ListItemText>
@@ -113,8 +121,8 @@ export function ContextMenu({
               }}
             >
               <ListItemText>Add Trust Boundary</ListItemText>
-            </MenuItem>
-            ]}
+            </MenuItem>,
+          ]}
         </MenuList>
       </Paper>
     </ContextMenuWrapper>

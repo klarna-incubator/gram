@@ -93,7 +93,7 @@ export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
                 }}
               />
             )}
-            
+
             <SuggestionMitigations
               threatSuggestions={threatSuggestions}
               suggestion={suggestion}

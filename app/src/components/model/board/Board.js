@@ -579,7 +579,7 @@ export default function Board() {
   }
 
   function onSelectionDragEnd() {
-    const selectedIds = Object.keys(selected);    
+    const selectedIds = Object.keys(selected);
 
     dispatch(
       moveComponents(
@@ -659,7 +659,7 @@ export default function Board() {
       />
 
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
-      
+
       {leftPanelCollapsed === true && <ToggleLeftPanelButton />}
 
       <ContextMenu
@@ -756,6 +756,7 @@ export default function Board() {
                           df.points.slice(-2)[1],
                       ]}
                       label={df.label}
+                      labelAnchor={df.labelAnchor}
                       selected={df.id in selected}
                       onClick={onDataFlowClick(df.id)}
                       getStagePointerPosition={getStagePointerPosition}

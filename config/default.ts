@@ -144,7 +144,7 @@ export const defaultConfig: GramConfiguration = {
       },
       {
         key: "description",
-        type: "description",        
+        type: "description",
         defaultValue: "",
         optional: true,
         label: "Description",

@@ -1,3 +1,5 @@
+import { COMPONENT_SIZE } from "./constants";
+
 // From https://github.com/konvajs/konva/blob/master/src/Util.ts
 export function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
@@ -146,4 +148,79 @@ export function getNormalizedScale(scale, i = 0) {
     adjusted = 0;
   }
   return scales[adjusted];
+}
+
+/**
+ * Gets the positions of the four "magnets" of a component. These are the connection points circles added to components
+ * in the diagram that data flows connect to.
+ * @param {*} param0
+ * @returns
+ */
+export function getMagnets([x, y]) {
+  return [
+    [x + COMPONENT_SIZE.WIDTH / 2, y],
+    [x, y + COMPONENT_SIZE.HEIGHT / 2],
+    [x + COMPONENT_SIZE.WIDTH / 2, y + COMPONENT_SIZE.HEIGHT],
+    [x + COMPONENT_SIZE.WIDTH, y + COMPONENT_SIZE.HEIGHT / 2],
+  ];
+}
+
+/**
+ * Given a dataFlow, return the two closest magnets of the start and end component.
+ *
+ * If the dataFlow has anchors, the closest magnets are the ones that are closest to the anchors.
+ *
+ * @param {*} startMagnets
+ * @param {*} endMagnets
+ * @param {*} anchorsPos
+ * @returns
+ */
+export function closestMagnets(startMagnets, endMagnets, anchorsPos) {
+  if (anchorsPos.length > 0) {
+    const startMagnet = startMagnets.reduce(
+      (accStart, magnetStart) => {
+        const len = distance2(magnetStart, anchorsPos.slice(0, 2));
+        return len < accStart[1] ? [magnetStart, len] : accStart;
+      },
+      [null, Number.MAX_VALUE]
+    )[0];
+
+    const endMagnet = endMagnets.reduce(
+      (accEnd, magnetEnd) => {
+        const len = distance2(magnetEnd, anchorsPos.slice(-2));
+        return len < accEnd[1] ? [magnetEnd, len] : accEnd;
+      },
+      [null, Number.MAX_VALUE]
+    )[0];
+    return [...startMagnet, ...endMagnet];
+  }
+
+  return startMagnets.reduce(
+    (accStart, magnetStart) => {
+      const partialMin = endMagnets.reduce(
+        (accEnd, magnetEnd) => {
+          const len = distance2(magnetStart, magnetEnd);
+          return len < accEnd[1] ? [magnetEnd, len] : accEnd;
+        },
+        [null, Number.MAX_VALUE]
+      );
+      return partialMin[1] < accStart[1]
+        ? [[...magnetStart, ...partialMin[0]], partialMin[1]]
+        : accStart;
+    },
+    [null, Number.MAX_VALUE]
+  )[0];
+}
+
+/**
+ * Calculate 2D distance between two points (i.e. length of the line between the two points).
+ *
+ * @param {*} param0
+ * @param {*} param1
+ * @returns
+ */
+export function distance2([x1, y1], [x2, y2]) {
+  const dX = x2 - x1;
+  const dY = y2 - y1;
+  return dX * dX + dY * dY;
 }
