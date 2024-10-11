@@ -68,7 +68,7 @@ export function BottomPanel() {
     return <></>;
   }
   return (
-    <Box sx={{ gridArea: "bottom", backgroundColor: "rgb(40,40,40)" }}>
+    <Box sx={{ gridArea: "bottom", backgroundColor: "rgb(20,20,20)" }}>
       {!isLoading && (
         <>
           <BottomTabsHeader

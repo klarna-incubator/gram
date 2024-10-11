@@ -638,22 +638,21 @@ export default function Board() {
       onKeyDown={(e) => onKeyDown(e)}
       onKeyUp={(e) => onKeyUp(e)}
     >
-      {!isFramed && (
-        <ControlsToolBar
-          stage={stage}
-          zoomInCenter={zoomInCenter}
-          onAddComponent={(name, type) => {
-            let pos = {
-              x: stage.width / 2,
-              y: stage.height / 2,
-            };
-            if (stageRef.current) {
-              pos = getAbsolutePosition(stageRef.current, pos);
-            }
-            addComponent({ name, type, x: pos.x, y: pos.y });
-          }}
-        />
-      )}
+      <ControlsToolBar
+        stage={stage}
+        zoomInCenter={zoomInCenter}
+        onAddComponent={(name, type) => {
+          let pos = {
+            x: stage.width / 2,
+            y: stage.height / 2,
+          };
+          if (stageRef.current) {
+            pos = getAbsolutePosition(stageRef.current, pos);
+          }
+          addComponent({ name, type, x: pos.x, y: pos.y });
+        }}
+      />
+
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
       {leftPanelCollapsed === true && <ToggleLeftPanelButton />}
 
