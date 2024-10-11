@@ -4,8 +4,7 @@ const validationApi = api.injectEndpoints({
   endpoints: (build) => ({
     validate: build.query({
       query: (modelId) => `/validate/${modelId}`,
-      transformResponse: (response, meta, arg) => {
-        console.log(response);
+      transformResponse: (response) => {
         return response;
       },
       providesTags: ["Validation"],

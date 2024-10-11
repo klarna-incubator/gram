@@ -1,4 +1,4 @@
-import { AppBar, Grow, Tab, Tabs, Badge } from "@mui/material";
+import { Paper, Grow, Tab, Tabs, Badge, Typography, Box } from "@mui/material";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export const TAB = {
@@ -39,71 +39,85 @@ export function BottomTabsHeader({
   const tabHck = !selected && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
 
   return (
-    <AppBar position="static">
-      <Grow in={true}>
-        <Tabs
-          value={tabHck}
-          onChange={(_, v) => setTab(v)}
-          textColor="inherit"
-          variant="fullWidth"
-          sx={{
-            "& .MuiTabs-indicator": {
-              backgroundColor: (theme) => theme.palette.common.gramPink,
-            },
-          }}
-        >
-          <Tab
-            disableRipple
-            label={
-              <div>
-                <Badge
-                  showZero
-                  badgeContent={allLength}
-                  color={getBadgeColor(allLength)}
-                  sx={tabBadgeStyle}
-                >
-                  ALL
-                </Badge>
-              </div>
-            }
-            value={TAB.ALL}
-          />
-          <Tab
-            disableRipple
-            label={
-              <div>
-                <Badge
-                  showZero
-                  badgeContent={modelLength}
-                  color={getBadgeColor(modelLength)}
-                  sx={tabBadgeStyle}
-                >
-                  MODEL
-                </Badge>
-              </div>
-            }
-            value={TAB.MODEL}
-          />
-          {selected && (
+    <Paper elevation={3} sx={{ display: "flex" }}>
+      <Box
+        sx={{
+          mx: 3,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h6" sx={{ fontSize: "0.8rem" }}>
+          QUALITY CHECK
+        </Typography>
+      </Box>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grow in={true}>
+          <Tabs
+            value={tabHck}
+            onChange={(_, v) => setTab(v)}
+            textColor="inherit"
+            variant="fullWidth"
+            sx={{
+              "& .MuiTabs-indicator": {
+                backgroundColor: (theme) => theme.palette.common.gramPink,
+              },
+            }}
+          >
             <Tab
               disableRipple
               label={
                 <div>
                   <Badge
                     showZero
-                    badgeContent={selectedLength}
-                    color={getBadgeColor(selectedLength)}
+                    badgeContent={allLength}
+                    color={getBadgeColor(allLength)}
                     sx={tabBadgeStyle}
                   >
-                    SELECTED COMPONENT
+                    ALL
                   </Badge>
                 </div>
               }
-              value={TAB.SELECTED_COMPONENT}
+              value={TAB.ALL}
             />
-          )}
-        </Tabs>
-      </Grow>
-    </AppBar>
+            <Tab
+              disableRipple
+              label={
+                <div>
+                  <Badge
+                    showZero
+                    badgeContent={modelLength}
+                    color={getBadgeColor(modelLength)}
+                    sx={tabBadgeStyle}
+                  >
+                    MODEL
+                  </Badge>
+                </div>
+              }
+              value={TAB.MODEL}
+            />
+            {selected && (
+              <Tab
+                disableRipple
+                label={
+                  <div>
+                    <Badge
+                      showZero
+                      badgeContent={selectedLength}
+                      color={getBadgeColor(selectedLength)}
+                      sx={tabBadgeStyle}
+                    >
+                      SELECTED COMPONENT
+                    </Badge>
+                  </div>
+                }
+                value={TAB.SELECTED_COMPONENT}
+              />
+            )}
+          </Tabs>
+        </Grow>
+      </Box>
+    </Paper>
   );
 }

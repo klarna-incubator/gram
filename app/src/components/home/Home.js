@@ -49,6 +49,7 @@ export default function Home() {
               Systems owned by the accountable teams you're in
             </Typography>
             <Box
+              size={6}
               sx={{
                 overflow: "auto",
                 marginTop: "25px",
@@ -56,13 +57,7 @@ export default function Home() {
                 flexDirection: "column",
               }}
             >
-              <Grid
-                container
-                spacing={2}
-                columns={1}
-                size={6}
-                style={{ flex: "2" }}
-              >
+              <Grid container spacing={2} columns={1} style={{ flex: "2" }}>
                 {user?.teams &&
                   user.teams.map((team, i) => (
                     <Grid size={1}>

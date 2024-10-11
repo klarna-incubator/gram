@@ -77,7 +77,9 @@ function renderResults(results, setSelected, deselectAll, setTab) {
 export function ValidationTab({ tab, setTab, filteredResults, isLoading }) {
   const setSelected = useSetSelected();
   const deselectAll = useDeselectAll();
+
   const selectedComponent = useSelectedComponent();
+  console.log({ selectedComponent });
 
   if (isLoading) {
     return (

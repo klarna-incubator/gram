@@ -21,7 +21,19 @@ import { useValidateQuery } from "../../../api/gram/validation";
 import { modalActions } from "../../../redux/modalSlice";
 import { MODALS } from "../../elements/modal/ModalManager";
 
-export function ValidateBeforeReview() {
+function createQualityMessage(successRatio) {
+  if (successRatio === 1.0) {
+    return "Good job, your threat model is ready to be reviewed.";
+  } else if (successRatio >= 0.75) {
+    return "Your threat model is good and can be sent for review. You can make it even better by fixing the following failed checks:";
+  } else if (successRatio >= 0.5) {
+    return "Your threat model might not be understood by a reviewer external to your team/domain. You can make it better by fixing the following failed checks:";
+  } else {
+    return "Your threat model is lacking information necessary for the reviewer to understand and approve it. Please go back to the model and fix the following failed checks:";
+  }
+}
+
+export function QualityCheck() {
   const dispatch = useDispatch();
   const modelId = useModelID();
   const { data: validation } = useValidateQuery(modelId);
@@ -31,20 +43,9 @@ export function ValidateBeforeReview() {
   const failedResults = validationResults.filter(
     (result) => !result.testResult
   );
-  const successRatio = (
-    passedResults.length / validationResults.length
-  ).toFixed(2);
-  function createQualityMessage(successRatio) {
-    if (successRatio === 1) {
-      return "Good job, your threat model is ready to be reviewed. Please click on REQUEST REVIEW";
-    } else if (successRatio >= 0.75) {
-      return "Your threat model is very good, and can be improved by fixing the following failed checks:";
-    } else if (successRatio >= 0.5) {
-      return "Your threat model is good, and can be better understood by the review by fixing the following failed checks:";
-    } else {
-      return "Your threat model is lacking information necessary for the reviewer to understand and approve it. Please go back to the model and fix the following failed checks:";
-    }
-  }
+  const successRatio = Number(
+    (passedResults.length / validationResults.length).toFixed(2)
+  );
 
   return (
     <Dialog open={true} scroll="paper" fullWidth maxWidth="sm">
@@ -58,7 +59,7 @@ export function ValidateBeforeReview() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          rowGap: 2,
+          rowGap: 4,
         }}
       >
         <Box sx={{ display: "flex" }}>
@@ -67,12 +68,12 @@ export function ValidateBeforeReview() {
           </Typography>
           <CircularProgressWithLabel value={successRatio * 100} />
         </Box>
-        {failedResults.length && (
+        {failedResults.length > 0 && (
           <>
             <List
               dense
               sx={{
-                maxHeight: 100,
+                maxHeight: 200,
                 overflow: "auto",
                 border: "",
               }}
@@ -152,13 +153,14 @@ function CircularProgressWithLabel({ value }) {
       sx={{
         position: "relative",
         display: "inline-flex",
+        flexDirection: "column",
         width: "50%",
       }}
     >
       <CircularProgress
         variant="determinate"
         value={value}
-        size="5rem"
+        size="8rem"
         sx={{ margin: "auto" }}
       />
       <Box
@@ -168,17 +170,25 @@ function CircularProgressWithLabel({ value }) {
           bottom: 0,
           right: 0,
           position: "absolute",
-          display: "flex",
+          display: "inline-flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
         <Typography
           variant="caption"
-          component="div"
-          sx={{ color: "text.secondary" }}
+          component="p"
+          sx={{ color: "text.secondary", fontSize: "1.5rem" }}
         >
           {`${Math.round(value)}%`}
+        </Typography>
+        <Typography
+          variant="caption"
+          component="p"
+          sx={{ color: "text.secondary" }}
+        >
+          passed
         </Typography>
       </Box>
     </Box>

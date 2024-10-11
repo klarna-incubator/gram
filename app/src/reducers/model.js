@@ -42,7 +42,7 @@ const initialState = {
   componentForm: initialFormState,
   rightPanelCollapsed: false,
   leftPanelCollapsed: false,
-  bottomPanelCollapsed: true,
+  bottomPanelCollapsed: false,
   cursorType: CURSOR_POINTER,
 };
 

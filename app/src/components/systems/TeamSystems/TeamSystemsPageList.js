@@ -34,8 +34,8 @@ export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
   const systems = teamSystems ? [...teamSystems?.systems] : [];
 
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ width: "100%" }}>
+      <CardContent sx={{ width: "100%" }}>
         <Typography
           variant="h5"
           sx={{

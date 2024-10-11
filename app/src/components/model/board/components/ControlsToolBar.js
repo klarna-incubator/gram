@@ -45,6 +45,7 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
     >
       {!isFramed && (
         <ToggleButtonGroup
+          color="primary"
           value={cursorMode}
           exclusive
           onChange={(_, mode) => dispatch(changeCursorMode(mode))}
@@ -68,7 +69,10 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
           </ToggleButton>
         </ToggleButtonGroup>
       )}
-      <ToggleButtonGroup>
+      <ToggleButtonGroup
+        color="primary"
+        value={bottomPanelCollapsed ? [] : ["validate-model"]}
+      >
         <ToggleButton value="zoom-in" onClick={() => zoomInCenter(-1)}>
           <ZoomInIcon />
         </ToggleButton>
