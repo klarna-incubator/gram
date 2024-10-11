@@ -2,12 +2,6 @@ import { ComponentClass } from "@gram/core/dist/data/component-classes/index.js"
 
 const classes: ComponentClass[] = [
   {
-    id: "6c9343cc-e57f-4ee2-8b1a-06026c7ebf1b",
-    name: "Brain.js",
-    componentType: "any",
-    icon: "/assets/svgporn/brainjs.svg",
-  },
-  {
     id: "bbf72d64-87cc-4f99-b47a-04557a13ab02",
     name: ".NET",
     icon: "/assets/svgporn/dotnet.svg",
@@ -30,6 +24,12 @@ const classes: ComponentClass[] = [
     name: "ActiveCampaign",
     componentType: "any",
     icon: "/assets/svgporn/active-campaign-icon.svg",
+  },
+  {
+    id: "507b4951-424e-447b-b6d3-7241c2330c66",
+    name: "Adobe",
+    componentType: "any",
+    icon: "/assets/svgporn/adobe-icon.svg",
   },
   {
     id: "474b9f18-66f0-4da1-b660-374bc8cbfd51",
@@ -242,6 +242,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/amplitude-icon.svg",
   },
   {
+    id: "45c49fac-3350-4adc-b6b8-8e4c1a4661b3",
+    name: "Analog",
+    componentType: "any",
+    icon: "/assets/svgporn/analog.svg",
+  },
+  {
     id: "18349627-f54a-424b-b8a5-19322ccfbf4a",
     name: "Android",
     icon: "/assets/svgporn/android-icon.svg",
@@ -272,6 +278,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "ce28bd34-50b8-489d-a85b-cf49336257a5",
+    name: "Anthropic",
+    componentType: "any",
+    icon: "/assets/svgporn/anthropic-icon.svg",
+  },
+  {
     id: "be91c3a9-c4ff-4235-8860-aa47843de670",
     name: "Apache",
     icon: "/assets/svgporn/apache.svg",
@@ -300,6 +312,12 @@ const classes: ComponentClass[] = [
     name: "Apiary",
     icon: "/assets/svgporn/apiary.svg",
     componentType: "any",
+  },
+  {
+    id: "5227d944-c8f9-457e-9a78-2650285f20b6",
+    name: "Apidog",
+    componentType: "any",
+    icon: "/assets/svgporn/apidog-icon.svg",
   },
   {
     id: "d68710fa-5b50-4b84-bc38-670426a6e899",
@@ -368,6 +386,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "50c3a3d1-86dd-4bb3-89ef-80bdc2c1d4d4",
+    name: "Applitools",
+    componentType: "any",
+    icon: "/assets/svgporn/applitools-icon.svg",
+  },
+  {
     id: "0326a05f-a3da-4f3c-ac2d-a00bbbc01201",
     name: "AppSignal",
     icon: "/assets/svgporn/appsignal-icon.svg",
@@ -396,6 +420,12 @@ const classes: ComponentClass[] = [
     name: "ArangoDB",
     icon: "/assets/svgporn/arangodb.svg",
     componentType: "any",
+  },
+  {
+    id: "72e78233-5f14-4a85-805b-7301d9b54088",
+    name: "Arc",
+    componentType: "any",
+    icon: "/assets/svgporn/arc.svg",
   },
   {
     id: "1b2142b3-a13f-48d9-93dc-2a602bcc0e5b",
@@ -462,6 +492,12 @@ const classes: ComponentClass[] = [
     name: "Astronomer",
     icon: "/assets/svgporn/astronomer.svg",
     componentType: "any",
+  },
+  {
+    id: "8b72e40c-c928-42bb-b145-614e3ed2a138",
+    name: "AsyncAPI",
+    componentType: "any",
+    icon: "/assets/svgporn/async-api-icon.svg",
   },
   {
     id: "f7d5ec7d-d7ff-43ed-b278-c5f59dbf5a00",
@@ -596,6 +632,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "b0c1d567-3560-4d4b-ad30-1deb7157c4b9",
+    name: "Baseline",
+    componentType: "any",
+    icon: "/assets/svgporn/baseline.svg",
+  },
+  {
     id: "f1be054e-74d6-4bb8-9d5f-e48f02315605",
     name: "Bash",
     icon: "/assets/svgporn/bash.svg",
@@ -630,6 +672,12 @@ const classes: ComponentClass[] = [
     name: "Bing",
     icon: "/assets/svgporn/bing.svg",
     componentType: "any",
+  },
+  {
+    id: "e6a25a7b-a6e6-41ac-bfd2-9a7913c3d51c",
+    name: "Biome",
+    componentType: "any",
+    icon: "/assets/svgporn/biomejs-icon.svg",
   },
   {
     id: "4aa5e6ae-7033-4cda-95e5-5381b363ed6a",
@@ -698,6 +746,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "fc442360-1acf-4c67-9860-8761e02dc53a",
+    name: "Bluesky",
+    componentType: "any",
+    icon: "/assets/svgporn/bluesky.svg",
+  },
+  {
     id: "d0855c1d-b5e9-4c5e-be44-dfcc63afa7ec",
     name: "Bluetooth",
     icon: "/assets/svgporn/bluetooth.svg",
@@ -750,6 +804,12 @@ const classes: ComponentClass[] = [
     name: "Brackets",
     icon: "/assets/svgporn/brackets.svg",
     componentType: "any",
+  },
+  {
+    id: "6c9343cc-e57f-4ee2-8b1a-06026c7ebf1b",
+    name: "Brain.js",
+    componentType: "any",
+    icon: "/assets/svgporn/brainjs.svg",
   },
   {
     id: "3240b1a8-2482-4dcf-9a8e-ad45ec353672",
@@ -1022,6 +1082,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "46511beb-70ec-4495-bed7-a1e55904651a",
+    name: "Chart.js",
+    componentType: "any",
+    icon: "/assets/svgporn/chartjs.svg",
+  },
+  {
     id: "48f6b5e3-3a9d-4f56-a391-c5dda3618148",
     name: "Chef",
     icon: "/assets/svgporn/chef.svg",
@@ -1032,6 +1098,12 @@ const classes: ComponentClass[] = [
     name: "chevereto",
     icon: "/assets/svgporn/chevereto.svg",
     componentType: "any",
+  },
+  {
+    id: "9d79c505-db8f-4030-9fee-8551d8c7ca67",
+    name: "Chroma",
+    componentType: "any",
+    icon: "/assets/svgporn/chroma.svg",
   },
   {
     id: "630f3400-c558-4171-a38c-60b771d31268",
@@ -1074,6 +1146,18 @@ const classes: ComponentClass[] = [
     name: "Cirrus",
     icon: "/assets/svgporn/cirrus.svg",
     componentType: "any",
+  },
+  {
+    id: "33087737-badd-4ab2-bfaf-12f5234d2b90",
+    name: "Claude",
+    componentType: "any",
+    icon: "/assets/svgporn/claude-icon.svg",
+  },
+  {
+    id: "e5708cfc-0adc-4f9f-b13d-25ecad311736",
+    name: "Clio",
+    componentType: "any",
+    icon: "/assets/svgporn/clio-lang.svg",
   },
   {
     id: "956c8eec-7031-4d28-800d-a61378c0804b",
@@ -1256,6 +1340,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "74b31716-b321-401b-b556-828ef9e2c28d",
+    name: "Codium",
+    componentType: "any",
+    icon: "/assets/svgporn/codium-icon.svg",
+  },
+  {
     id: "ca4ca435-0485-49f7-844b-d38fad7963c3",
     name: "CoffeeScript",
     icon: "/assets/svgporn/coffeescript.svg",
@@ -1424,6 +1514,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "61f6d51f-a502-4380-962c-d5eeb14b343a",
+    name: "Crossplane",
+    componentType: "any",
+    icon: "/assets/svgporn/crossplane-icon.svg",
+  },
+  {
     id: "4a8b89fb-8eef-401e-b25d-87ecfdf69cd5",
     name: "Crucible",
     icon: "/assets/svgporn/crucible.svg",
@@ -1446,6 +1542,12 @@ const classes: ComponentClass[] = [
     name: "cssnext",
     icon: "/assets/svgporn/cssnext.svg",
     componentType: "any",
+  },
+  {
+    id: "374b1f5c-028e-4849-a2a8-91ed9a333a27",
+    name: "Cube",
+    componentType: "any",
+    icon: "/assets/svgporn/cube-icon.svg",
   },
   {
     id: "41c59aba-d6f3-4678-889f-9a1466f51f14",
@@ -1484,6 +1586,24 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "b129413d-3bc2-4ada-b90d-594123d4e531",
+    name: "daily.dev",
+    componentType: "any",
+    icon: "/assets/svgporn/dailydev-icon.svg",
+  },
+  {
+    id: "c431a3f9-916b-4f1c-bf9e-5b886eef7fec",
+    name: "daisyUI",
+    componentType: "any",
+    icon: "/assets/svgporn/daisyUI-icon.svg",
+  },
+  {
+    id: "fdbc5136-8f26-47cc-bf3f-3f18facc6393",
+    name: "Danfo.js",
+    componentType: "any",
+    icon: "/assets/svgporn/danfo.svg",
+  },
+  {
     id: "a8628a80-126a-47d8-820b-9b9098f9458c",
     name: "Dart",
     icon: "/assets/svgporn/dart.svg",
@@ -1494,6 +1614,12 @@ const classes: ComponentClass[] = [
     name: "Dashlane",
     icon: "/assets/svgporn/dashlane.svg",
     componentType: "any",
+  },
+  {
+    id: "6477ee89-9494-451d-95dd-9c5261ffae0f",
+    name: "Data Station",
+    componentType: "any",
+    icon: "/assets/svgporn/data-station.svg",
   },
   {
     id: "6a0f8525-e537-499c-9e20-b845db7dbaa1",
@@ -1512,6 +1638,12 @@ const classes: ComponentClass[] = [
     name: "DataGrip",
     componentType: "any",
     icon: "/assets/svgporn/datagrip.svg",
+  },
+  {
+    id: "214b2c2c-3b11-4fd2-8d55-d14478542299",
+    name: "Datasette",
+    componentType: "any",
+    icon: "/assets/svgporn/datasette-icon.svg",
   },
   {
     id: "038caaa4-d842-4f5a-b052-f42fdcefc3f7",
@@ -1688,6 +1820,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "3497c5af-0db5-4084-9940-8361612ede84",
+    name: "dolt",
+    componentType: "any",
+    icon: "/assets/svgporn/dolt.svg",
+  },
+  {
     id: "7577591c-cf0c-4bf7-9db4-547d9296d814",
     name: "Dovetail",
     componentType: "any",
@@ -1796,10 +1934,34 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/ecma.svg",
   },
   {
+    id: "216eea19-8424-4567-bbe9-ef03a2531f56",
+    name: "EdgeDB",
+    componentType: "any",
+    icon: "/assets/svgporn/edgedb.svg",
+  },
+  {
+    id: "1b239bde-8a21-4e2c-a69a-1cf298c6b21d",
+    name: "Edgio",
+    componentType: "any",
+    icon: "/assets/svgporn/edgio-icon.svg",
+  },
+  {
     id: "d30af748-d06e-4e5d-8cb7-8bd4882cea34",
     name: "EditorConfig",
     componentType: "any",
     icon: "/assets/svgporn/editorconfig.svg",
+  },
+  {
+    id: "37b5e2f0-e1c0-48be-ae38-23278c443dea",
+    name: "Effect",
+    componentType: "any",
+    icon: "/assets/svgporn/effect-icon.svg",
+  },
+  {
+    id: "926ee434-82a9-4d9e-9034-8e86116f9c27",
+    name: "Effector",
+    componentType: "any",
+    icon: "/assets/svgporn/effector.svg",
   },
   {
     id: "9142aba9-9b50-4bbb-aba3-7a32e44762d9",
@@ -1928,6 +2090,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/epsagon-icon.svg",
   },
   {
+    id: "7b0340b6-8369-4db6-967b-70c5c0f52234",
+    name: "Eraser",
+    componentType: "any",
+    icon: "/assets/svgporn/eraser-icon.svg",
+  },
+  {
     id: "7cc129b5-3011-4307-8b56-4b7d20bbd71d",
     name: "Erlang",
     icon: "/assets/svgporn/erlang.svg",
@@ -2030,10 +2198,22 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "b973fc7d-c85b-4082-bdbf-eea69c4a62a6",
+    name: "Faker",
+    componentType: "any",
+    icon: "/assets/svgporn/faker.svg",
+  },
+  {
     id: "429b0e62-b986-45ad-9819-1ba7cd19a12d",
     name: "Falcor",
     icon: "/assets/svgporn/falcor.svg",
     componentType: "any",
+  },
+  {
+    id: "b0819232-bf5c-4447-a1c6-1c1bd1947f3c",
+    name: "FastAPI",
+    componentType: "any",
+    icon: "/assets/svgporn/fastapi-icon.svg",
   },
   {
     id: "861aca9b-c8ac-4218-b3ed-755be2cc10fc",
@@ -2150,6 +2330,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "e882f77c-0e27-4c9d-8250-901172949a10",
+    name: "Flink",
+    componentType: "any",
+    icon: "/assets/svgporn/apache-flink-icon.svg",
+  },
+  {
     id: "0f883ce3-7c9e-4875-8393-2b486f1ce243",
     name: "Flood IO",
     icon: "/assets/svgporn/floodio.svg",
@@ -2244,6 +2430,12 @@ const classes: ComponentClass[] = [
     name: "Foundation",
     icon: "/assets/svgporn/foundation.svg",
     componentType: "any",
+  },
+  {
+    id: "0ce9063c-e569-4068-b354-92c1683facc1",
+    name: "FoundationDB",
+    componentType: "any",
+    icon: "/assets/svgporn/foundationdb-icon.svg",
   },
   {
     id: "b21643a6-4d16-4c59-af1d-90abc3adfc8c",
@@ -2528,6 +2720,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "f6bd9b6e-508d-445c-9025-1fc6bff576b9",
+    name: "Google Bard",
+    componentType: "any",
+    icon: "/assets/svgporn/google-bard-icon.svg",
+  },
+  {
     id: "241b2374-e470-44d8-8bd4-30405537b153",
     name: "Google Calendar",
     icon: "/assets/svgporn/google-calendar.svg",
@@ -2564,6 +2762,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "f1dd5865-7b64-45ad-9c30-c7eac3f3b922",
+    name: "Google Domains",
+    componentType: "any",
+    icon: "/assets/svgporn/google-domains-icon.svg",
+  },
+  {
     id: "b9a59d2f-0960-4195-8593-0684cf825544",
     name: "Google Drive",
     icon: "/assets/svgporn/google-drive.svg",
@@ -2574,6 +2778,12 @@ const classes: ComponentClass[] = [
     name: "Google Fit",
     componentType: "any",
     icon: "/assets/svgporn/google-fit.svg",
+  },
+  {
+    id: "26a6184f-0ebb-4671-826a-6b65ea3bfbf2",
+    name: "Google Gemini",
+    componentType: "any",
+    icon: "/assets/svgporn/google-gemini.svg",
   },
   {
     id: "bd289a47-601a-4d60-91fd-bedfc35df3e2",
@@ -2624,6 +2834,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "9a443939-c6c8-4cea-bad4-fb67a2af4e23",
+    name: "Google PaLM",
+    componentType: "any",
+    icon: "/assets/svgporn/google-palm.svg",
+  },
+  {
     id: "4fb492e1-6a2f-49f3-a546-bbb84e22901c",
     name: "Google Pay",
     icon: "/assets/svgporn/google-pay.svg",
@@ -2642,6 +2858,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "8e2ce93c-cee6-49db-8470-38d98756d25a",
+    name: "Google Play Console",
+    componentType: "any",
+    icon: "/assets/svgporn/google-play-console-icon.svg",
+  },
+  {
     id: "69bade5c-cb66-43f4-9807-cef4e9158c94",
     name: "Google Search Console",
     componentType: "any",
@@ -2652,6 +2874,18 @@ const classes: ComponentClass[] = [
     name: "Google Tag Manager",
     icon: "/assets/svgporn/google-tag-manager.svg",
     componentType: "any",
+  },
+  {
+    id: "d3d98298-1600-4f36-9ed6-d0e688d4d8f6",
+    name: "Google Workspace",
+    componentType: "any",
+    icon: "/assets/svgporn/google-workspace.svg",
+  },
+  {
+    id: "7fdd11b5-0dc8-4cef-b8af-621cb0424f46",
+    name: "Gradio",
+    componentType: "any",
+    icon: "/assets/svgporn/gradio-icon.svg",
   },
   {
     id: "48f7e6ba-c950-4a11-be2b-e5ee212ddae6",
@@ -2846,6 +3080,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/harness-icon.svg",
   },
   {
+    id: "08426b88-786c-4c7a-8dec-126b8bc45016",
+    name: "HashiCorp",
+    componentType: "any",
+    icon: "/assets/svgporn/hashicorp-icon.svg",
+  },
+  {
     id: "d57d7a4c-5140-4b53-97a7-f3444626e80f",
     name: "Hashnode",
     icon: "/assets/svgporn/hashnode.svg",
@@ -2966,6 +3206,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/homebrew.svg",
   },
   {
+    id: "78ec5800-c5be-47d0-b07c-1b22aed4f34d",
+    name: "Hono",
+    componentType: "any",
+    icon: "/assets/svgporn/hono.svg",
+  },
+  {
     id: "0071da19-1939-49eb-ab22-d480bdff35ca",
     name: "Hookstate",
     componentType: "any",
@@ -3014,6 +3260,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "fde178cb-8f16-40ff-bab4-258259b94bbd",
+    name: "htmx",
+    componentType: "any",
+    icon: "/assets/svgporn/htmx-icon.svg",
+  },
+  {
     id: "56fdd851-88dc-4aae-b02b-812cc777cbdb",
     name: "HTTPie",
     componentType: "any",
@@ -3024,6 +3276,12 @@ const classes: ComponentClass[] = [
     name: "Hubspot",
     icon: "/assets/svgporn/hubspot.svg",
     componentType: "any",
+  },
+  {
+    id: "b02c61b5-59c3-428e-832f-1565c0009c36",
+    name: "Hugging Face",
+    componentType: "any",
+    icon: "/assets/svgporn/hugging-face-icon.svg",
   },
   {
     id: "b995a68a-c565-4175-8720-8de687d20793",
@@ -3116,6 +3374,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "40747a32-a632-4814-9e2e-684b8b6198d0",
+    name: "Incident",
+    componentType: "any",
+    icon: "/assets/svgporn/incident-icon.svg",
+  },
+  {
     id: "3ece9ebf-73a6-4758-8215-83c216b03933",
     name: "Infer",
     icon: "/assets/svgporn/infer.svg",
@@ -3168,6 +3432,12 @@ const classes: ComponentClass[] = [
     name: "Intercom",
     icon: "/assets/svgporn/intercom.svg",
     componentType: "any",
+  },
+  {
+    id: "2af895bf-7a23-4995-99ae-d0422c72e56d",
+    name: "Internet Computer",
+    componentType: "any",
+    icon: "/assets/svgporn/internet-computer-icon.svg",
   },
   {
     id: "2271a5cc-6a17-49f1-b979-607ccff0583d",
@@ -3350,6 +3620,18 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "49bf514b-13d3-4a6b-bf5b-4d6f08628492",
+    name: "JSON Schema",
+    componentType: "any",
+    icon: "/assets/svgporn/json-schema-icon.svg",
+  },
+  {
+    id: "4f2cc630-da05-451b-9ab6-d38335efaf15",
+    name: "JSON-LD",
+    componentType: "any",
+    icon: "/assets/svgporn/json-ld.svg",
+  },
+  {
     id: "2d640d89-815e-4c41-b3ab-f8436254b254",
     name: "JSPM",
     icon: "/assets/svgporn/jspm.svg",
@@ -3410,6 +3692,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "63d0000e-4dd2-42bf-9e83-9b75106a91e2",
+    name: "Katalon",
+    componentType: "any",
+    icon: "/assets/svgporn/katalon-icon.svg",
+  },
+  {
     id: "79828d46-2444-4db0-81c2-a79788d9a675",
     name: "KDE",
     componentType: "any",
@@ -3432,6 +3720,12 @@ const classes: ComponentClass[] = [
     name: "KeyCDN",
     icon: "/assets/svgporn/keycdn.svg",
     componentType: "any",
+  },
+  {
+    id: "f6f86745-9156-49e3-895a-71a0c4ee27b8",
+    name: "KeyDB",
+    componentType: "any",
+    icon: "/assets/svgporn/keydb-icon.svg",
   },
   {
     id: "e758ec14-1c3e-4a5e-ad16-64cffb9cf4c1",
@@ -3620,6 +3914,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "9a848245-9213-4c00-9f72-8c2b478b6cfe",
+    name: "Lexical",
+    componentType: "any",
+    icon: "/assets/svgporn/lexical-icon.svg",
+  },
+  {
     id: "d12c269d-8175-44e5-a8fb-ce322ccbb956",
     name: "Lift",
     icon: "/assets/svgporn/liftweb.svg",
@@ -3642,6 +3942,12 @@ const classes: ComponentClass[] = [
     name: "lighttpd",
     icon: "/assets/svgporn/lighttpd.svg",
     componentType: "any",
+  },
+  {
+    id: "eb113e6c-d9bc-4c4a-8c5c-35e2d84a59e9",
+    name: "Linear",
+    componentType: "any",
+    icon: "/assets/svgporn/linear-icon.svg",
   },
   {
     id: "84f94c47-a116-4e29-a806-1d9aea5c57c8",
@@ -3914,10 +4220,22 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/matplotlib-icon.svg",
   },
   {
+    id: "fc99e5c4-61c4-4dc2-b64b-96eac4e43f36",
+    name: "Matter",
+    componentType: "any",
+    icon: "/assets/svgporn/matter-icon.svg",
+  },
+  {
     id: "43205ed3-18e9-4ef9-aa0a-ab5c2b328b9e",
     name: "Mattermost",
     icon: "/assets/svgporn/mattermost.svg",
     componentType: "any",
+  },
+  {
+    id: "e36584e7-a522-44c4-a833-0c41acfe386f",
+    name: "Mautic",
+    componentType: "any",
+    icon: "/assets/svgporn/mautic-icon.svg",
   },
   {
     id: "b184efd5-538c-441f-9f99-cb3107a61bd6",
@@ -3950,10 +4268,22 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/medusa-icon.svg",
   },
   {
+    id: "658cc59d-3cac-44d1-b62a-528761b2a90f",
+    name: "Meilisearch",
+    componentType: "any",
+    icon: "/assets/svgporn/meilisearch.svg",
+  },
+  {
     id: "29da2fd8-9251-4658-9cd7-9566c93d8896",
     name: "Memcached",
     icon: "/assets/svgporn/memcached.svg",
     componentType: "any",
+  },
+  {
+    id: "07024e14-6115-4991-8108-f592c22167bf",
+    name: "Memgraph",
+    componentType: "any",
+    icon: "/assets/svgporn/memgraph.svg",
   },
   {
     id: "6507afda-bcbf-4949-a210-475a99b748f3",
@@ -3978,6 +4308,12 @@ const classes: ComponentClass[] = [
     name: "Messenger",
     componentType: "any",
     icon: "/assets/svgporn/messenger.svg",
+  },
+  {
+    id: "40e7dce5-fdc7-46f0-a9a3-ca7bbd8d6502",
+    name: "Meta",
+    componentType: "any",
+    icon: "/assets/svgporn/meta-icon.svg",
   },
   {
     id: "c1f84768-95f6-4bb0-81ef-2c0efc1c96d4",
@@ -4076,10 +4412,34 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "b6128f86-921e-411e-a2c3-5eb91d4446ae",
+    name: "Midjourney",
+    componentType: "any",
+    icon: "/assets/svgporn/midjourney.svg",
+  },
+  {
     id: "b0574386-ff7d-45c4-a03a-14ae4d168e84",
     name: "Milligram",
     icon: "/assets/svgporn/milligram.svg",
     componentType: "any",
+  },
+  {
+    id: "69a2c980-4d8d-43b0-8698-993b507b0ef9",
+    name: "Million",
+    componentType: "any",
+    icon: "/assets/svgporn/million-icon.svg",
+  },
+  {
+    id: "4e3f6c42-e4f9-4d82-b800-5b5f8af01d4f",
+    name: "Milvus",
+    componentType: "any",
+    icon: "/assets/svgporn/milvus-icon.svg",
+  },
+  {
+    id: "50d0c27c-5692-47f0-9c15-8b41dd825954",
+    name: "MindsDB",
+    componentType: "any",
+    icon: "/assets/svgporn/mindsdb-icon.svg",
   },
   {
     id: "4c3508c5-696b-448c-8042-9deef75cb0ca",
@@ -4094,10 +4454,22 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "7e9b2e63-c997-4f4a-9feb-0384e28ea332",
+    name: "Miro",
+    componentType: "any",
+    icon: "/assets/svgporn/miro-icon.svg",
+  },
+  {
     id: "17774dc4-5f4a-4374-b2a4-aa5b725ee120",
     name: "Mist.io",
     icon: "/assets/svgporn/mist.svg",
     componentType: "any",
+  },
+  {
+    id: "c092b3fe-f0e5-4a6d-a43b-6773ab093aec",
+    name: "Mistral AI",
+    componentType: "any",
+    icon: "/assets/svgporn/mistral-ai-icon.svg",
   },
   {
     id: "f371116e-c3e8-45f3-bc68-8b125d3bce64",
@@ -4280,6 +4652,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "9e7bd130-12f8-4a39-ae52-5cca57dd1a9c",
+    name: "Neon",
+    componentType: "any",
+    icon: "/assets/svgporn/neon-icon.svg",
+  },
+  {
     id: "a7fd4f40-3f54-48f8-a59e-452da8306e8c",
     name: "Neovim",
     icon: "/assets/svgporn/neovim.svg",
@@ -4338,6 +4716,12 @@ const classes: ComponentClass[] = [
     name: "NGINX",
     icon: "/assets/svgporn/nginx.svg",
     componentType: "any",
+  },
+  {
+    id: "05e43f66-4e75-48b5-a294-22e9c119487d",
+    name: "ngrok",
+    componentType: "any",
+    icon: "/assets/svgporn/ngrok.svg",
   },
   {
     id: "f28bce3f-2fd4-4694-a88f-6fcbf5ed5585",
@@ -4406,6 +4790,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "15f2cdd5-ce75-47cf-b7a0-1f897338eb40",
+    name: "Notion",
+    componentType: "any",
+    icon: "/assets/svgporn/notion-icon.svg",
+  },
+  {
     id: "438e647c-184d-4cf7-b7b5-c5551c21dded",
     name: "Noysi",
     icon: "/assets/svgporn/noysi.svg",
@@ -4442,6 +4832,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/nvidia.svg",
   },
   {
+    id: "4042f503-fdc4-40c6-8d9c-a90dd1934bf5",
+    name: "nvm",
+    componentType: "any",
+    icon: "/assets/svgporn/nvm.svg",
+  },
+  {
     id: "bf3c0e37-f79e-453d-976b-2fbc7ed946ad",
     name: "NW.js a.k.a. Nodewebkit",
     icon: "/assets/svgporn/nodewebkit.svg",
@@ -4472,6 +4868,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/observablehq.svg",
   },
   {
+    id: "2d72feb7-6fcc-4c66-9a4e-cafef39faa0b",
+    name: "Obsidian",
+    componentType: "any",
+    icon: "/assets/svgporn/obsidian-icon.svg",
+  },
+  {
     id: "d77fbd11-85d9-418c-a6fc-7b4da8577e28",
     name: "OCaml",
     icon: "/assets/svgporn/ocaml.svg",
@@ -4488,6 +4890,12 @@ const classes: ComponentClass[] = [
     name: "Octopus Deploy",
     icon: "/assets/svgporn/octopus-deploy.svg",
     componentType: "any",
+  },
+  {
+    id: "3743370f-1118-426e-8263-7cb405fd74c1",
+    name: "Okta",
+    componentType: "any",
+    icon: "/assets/svgporn/okta-icon.svg",
   },
   {
     id: "e4615e5c-643f-4f35-bdba-450e07e9df50",
@@ -4538,6 +4946,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "ddfd9dfe-b586-4173-bf84-e956706e7443",
+    name: "OpenAPI",
+    componentType: "any",
+    icon: "/assets/svgporn/openapi-icon.svg",
+  },
+  {
     id: "ea19f28b-1403-477d-85a4-3226e0e507bc",
     name: "OpenCart",
     icon: "/assets/svgporn/opencart.svg",
@@ -4566,6 +4980,12 @@ const classes: ComponentClass[] = [
     name: "OpenLayers",
     icon: "/assets/svgporn/openlayers.svg",
     componentType: "any",
+  },
+  {
+    id: "53243d40-4c66-4fc8-94cb-571b5f305e54",
+    name: "OpenSearch",
+    componentType: "any",
+    icon: "/assets/svgporn/opensearch-icon.svg",
   },
   {
     id: "4969124d-4645-4b1e-ac54-3c93a0e8b3ec",
@@ -4676,6 +5096,18 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "293767e0-9d9e-43f7-ba87-08f33cca7b5d",
+    name: "Panda",
+    icon: "/assets/svgporn/panda.svg",
+    componentType: "any",
+  },
+  {
+    id: "4391837c-1b5e-4716-8394-d42c50af4503",
+    name: "Pandas",
+    componentType: "any",
+    icon: "/assets/svgporn/pandas-icon.svg",
+  },
+  {
     id: "f6bb63d3-85e3-480d-9677-45ac7e1c93d5",
     name: "Parcel",
     componentType: "any",
@@ -4766,6 +5198,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "4b9e98cb-2b2c-4af1-90c6-4d6b10b09851",
+    name: "perplexity",
+    componentType: "any",
+    icon: "/assets/svgporn/perplexity-icon.svg",
+  },
+  {
     id: "af227c15-103e-4323-895a-64fdcddc7c1a",
     name: "Phalcon",
     icon: "/assets/svgporn/phalcon.svg",
@@ -4790,10 +5228,28 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "0be3a6c0-3990-4518-be09-9dae641a57f2",
+    name: "Pinecone",
+    componentType: "any",
+    icon: "/assets/svgporn/pinecone-icon.svg",
+  },
+  {
+    id: "e6bda7db-adac-469b-85bf-c0de283c17d8",
+    name: "Pinia",
+    componentType: "any",
+    icon: "/assets/svgporn/pinia.svg",
+  },
+  {
     id: "2fd92fe9-46bc-4b4b-bb9a-7be6525f7a8e",
     name: "Pinterest",
     icon: "/assets/svgporn/pinterest.svg",
     componentType: "any",
+  },
+  {
+    id: "777ef41c-f18d-44e2-8df3-21ca82950d99",
+    name: "Pipedream",
+    componentType: "any",
+    icon: "/assets/svgporn/pipedream.svg",
   },
   {
     id: "5a502dc5-6760-4254-b213-d69d61b0e995",
@@ -4886,6 +5342,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/pnpm.svg",
   },
   {
+    id: "ef9feae4-9e8a-4d19-937a-9d93215016aa",
+    name: "PocketBase",
+    componentType: "any",
+    icon: "/assets/svgporn/pocket-base.svg",
+  },
+  {
     id: "cd38da1b-9610-48ef-a30c-e45da8c4057e",
     name: "POEditor",
     icon: "/assets/svgporn/poeditor.svg",
@@ -4914,6 +5376,12 @@ const classes: ComponentClass[] = [
     name: "PostgreSQL",
     icon: "/assets/svgporn/postgresql.svg",
     componentType: "any",
+  },
+  {
+    id: "7b9d2ff9-0e51-47c5-967a-a8ef10f651e2",
+    name: "PostHog",
+    componentType: "any",
+    icon: "/assets/svgporn/posthog-icon.svg",
   },
   {
     id: "630e6096-abd7-4b6a-861c-bd453084d551",
@@ -5024,12 +5492,6 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
-    id: "95c63498-d739-488b-b706-0ac74f2652d8",
-    name: "Protactor",
-    icon: "/assets/svgporn/protactor.svg",
-    componentType: "any",
-  },
-  {
     id: "fb796bab-8ba4-435a-818d-d130790a7710",
     name: "Proto.io",
     icon: "/assets/svgporn/protoio.svg",
@@ -5042,6 +5504,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "1b59fbdf-6561-4bbf-8e7e-b38f203f1f18",
+    name: "Protractor",
+    componentType: "any",
+    icon: "/assets/svgporn/protractor.svg",
+  },
+  {
     id: "3cfc8126-d371-4b1a-bded-ff1f1bf0ca07",
     name: "Prott",
     icon: "/assets/svgporn/prott.svg",
@@ -5052,6 +5520,12 @@ const classes: ComponentClass[] = [
     name: "Pug",
     icon: "/assets/svgporn/pug.svg",
     componentType: "any",
+  },
+  {
+    id: "7ebec0cf-1111-4ce3-bd8b-3bc411f9999a",
+    name: "Pulumi",
+    componentType: "any",
+    icon: "/assets/svgporn/pulumi-icon.svg",
   },
   {
     id: "d23d839c-e706-4fbf-8148-f3a5d9dcf0a9",
@@ -5136,6 +5610,12 @@ const classes: ComponentClass[] = [
     name: "Q",
     icon: "/assets/svgporn/q.svg",
     componentType: "any",
+  },
+  {
+    id: "29c6ee75-5c82-4c00-8984-f8989970005c",
+    name: "Qdrant",
+    componentType: "any",
+    icon: "/assets/svgporn/qdrant-icon.svg",
   },
   {
     id: "ce6f85e6-c269-4f63-b3ea-4f01d06efd19",
@@ -5390,6 +5870,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/renovatebot.svg",
   },
   {
+    id: "e62fd7c2-03de-4509-a585-b99314bd184e",
+    name: "Replay",
+    componentType: "any",
+    icon: "/assets/svgporn/replay-icon.svg",
+  },
+  {
     id: "f229dc37-71dc-4eda-9200-d1f3f32302ed",
     name: "Replit",
     componentType: "any",
@@ -5444,6 +5930,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "03c1bfc7-5f37-448c-a9e1-4136cc4fe238",
+    name: "RisingWave",
+    componentType: "any",
+    icon: "/assets/svgporn/risingwave-icon.svg",
+  },
+  {
     id: "917598c5-9c7d-48e3-97df-c094b803882f",
     name: "RocketChat",
     icon: "/assets/svgporn/rocket-chat.svg",
@@ -5472,12 +5964,6 @@ const classes: ComponentClass[] = [
     name: "rollup.js",
     icon: "/assets/svgporn/rollupjs.svg",
     componentType: "any",
-  },
-  {
-    id: "5c1e813b-1842-489f-96b3-d730b40ca36c",
-    name: "Rome",
-    componentType: "any",
-    icon: "/assets/svgporn/rome-icon.svg",
   },
   {
     id: "65916cd0-642a-4c1a-a36c-c5cbe54e3e6f",
@@ -5534,6 +6020,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "6454efd3-6be0-4270-9973-d1b6c21a2164",
+    name: "Rush",
+    componentType: "any",
+    icon: "/assets/svgporn/rush-icon.svg",
+  },
+  {
     id: "2e4429d6-e3ad-4426-a25d-9dc37258ecda",
     name: "Rust",
     icon: "/assets/svgporn/rust.svg",
@@ -5586,6 +6078,12 @@ const classes: ComponentClass[] = [
     name: "Sanity",
     icon: "/assets/svgporn/sanity.svg",
     componentType: "any",
+  },
+  {
+    id: "d0006d1e-48e0-4406-a893-afa16addcc54",
+    name: "SAP",
+    componentType: "any",
+    icon: "/assets/svgporn/sap.svg",
   },
   {
     id: "bdbf9d56-bc6a-441e-bcf3-294031d9ef32",
@@ -5744,6 +6242,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "5980c971-5b09-482e-b738-f2f702dce5d2",
+    name: "Shortcut",
+    componentType: "any",
+    icon: "/assets/svgporn/shortcut-icon.svg",
+  },
+  {
     id: "398f70bb-fdd5-4d0e-8dc9-1e732daaddb6",
     name: "Sidekiq",
     icon: "/assets/svgporn/sidekiq.svg",
@@ -5754,6 +6258,12 @@ const classes: ComponentClass[] = [
     name: "Signal",
     icon: "/assets/svgporn/signal.svg",
     componentType: "any",
+  },
+  {
+    id: "1b65f5c2-2e2f-4ef0-98e7-132c64d5903e",
+    name: "sigstore",
+    componentType: "any",
+    icon: "/assets/svgporn/sigstore-icon.svg",
   },
   {
     id: "b5feecfa-d0c9-4e02-b56f-a0f41be2d86a",
@@ -5816,6 +6326,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "8e763066-47b7-45b9-97ef-4d20353aa156",
+    name: "Slidev",
+    componentType: "any",
+    icon: "/assets/svgporn/slidev.svg",
+  },
+  {
     id: "dcdd5e08-0d77-4472-b152-637b5a1152cd",
     name: "Slim",
     icon: "/assets/svgporn/slim.svg",
@@ -5838,6 +6354,12 @@ const classes: ComponentClass[] = [
     name: "Snap.svg",
     icon: "/assets/svgporn/snap-svg.svg",
     componentType: "any",
+  },
+  {
+    id: "ffdb8079-7eaf-41bf-a71b-8e2c4bd4dbd0",
+    name: "Snaplet",
+    componentType: "any",
+    icon: "/assets/svgporn/snaplet-icon.svg",
   },
   {
     id: "9ff2dc14-f380-491d-8d2c-578ccbefe04b",
@@ -5894,6 +6416,18 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "21ed4b7d-33a8-4801-bd63-b2ea72fd8bf0",
+    name: "SonarCloud",
+    componentType: "any",
+    icon: "/assets/svgporn/sonarcloud-icon.svg",
+  },
+  {
+    id: "57a32870-bd67-4388-ae27-6c2c4034e4ee",
+    name: "SonarLint",
+    componentType: "any",
+    icon: "/assets/svgporn/sonarlint-icon.svg",
+  },
+  {
     id: "0e3cc264-063a-4427-80ad-05a054d24665",
     name: "SonarQube",
     icon: "/assets/svgporn/sonarqube.svg",
@@ -5915,6 +6449,12 @@ const classes: ComponentClass[] = [
     id: "b631a394-9144-46c0-929a-d02cbb2357d6",
     name: "SourceTree",
     icon: "/assets/svgporn/sourcetree.svg",
+    componentType: "any",
+  },
+  {
+    id: "91fe8ca8-efcd-4068-9e84-efdeae8b6013",
+    name: "Spark",
+    icon: "/assets/svgporn/spark.svg",
     componentType: "any",
   },
   {
@@ -5996,6 +6536,18 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "62b05c86-c084-468f-b4cc-26ad6255b496",
+    name: "SST",
+    componentType: "any",
+    icon: "/assets/svgporn/sst-icon.svg",
+  },
+  {
+    id: "5f5f5943-8e23-4e8d-a860-dcc2732cda26",
+    name: "Stability AI",
+    componentType: "any",
+    icon: "/assets/svgporn/stability-ai-icon.svg",
+  },
+  {
     id: "b50ddded-e012-4a55-9933-f59b71af8c14",
     name: "Stack Overflow",
     icon: "/assets/svgporn/stackoverflow-icon.svg",
@@ -6048,6 +6600,12 @@ const classes: ComponentClass[] = [
     name: "Stencil",
     componentType: "any",
     icon: "/assets/svgporn/stenciljs-icon.svg",
+  },
+  {
+    id: "6016bd7e-9abf-4fee-ab42-6fe539731b0c",
+    name: "Stepsize",
+    componentType: "any",
+    icon: "/assets/svgporn/stepsize-icon.svg",
   },
   {
     id: "d2be4559-79fa-4e1d-9961-6b6c01d5ebb5",
@@ -6164,6 +6722,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "199371df-7cc9-490e-973d-026d3cc62832",
+    name: "Stytch",
+    componentType: "any",
+    icon: "/assets/svgporn/stytch.svg",
+  },
+  {
     id: "aa361dd0-4b79-4625-b9dd-1f0eac7b4f82",
     name: "Sublime Text",
     componentType: "any",
@@ -6186,6 +6750,18 @@ const classes: ComponentClass[] = [
     name: "Supabase",
     componentType: "any",
     icon: "/assets/svgporn/supabase-icon.svg",
+  },
+  {
+    id: "f7e7609f-925f-4b2e-9b7a-717cd1132b45",
+    name: "Superset",
+    componentType: "any",
+    icon: "/assets/svgporn/apache-superset-icon.svg",
+  },
+  {
+    id: "653459c3-fa3d-4d16-935d-96b47e5988e6",
+    name: "SuperTokens",
+    componentType: "any",
+    icon: "/assets/svgporn/supertokens-icon.svg",
   },
   {
     id: "5862d6e2-0378-4230-9e4d-6aed844c191a",
@@ -6264,6 +6840,12 @@ const classes: ComponentClass[] = [
     name: "Swiftype",
     icon: "/assets/svgporn/swiftype.svg",
     componentType: "any",
+  },
+  {
+    id: "fa9c2fde-b6f3-457c-9be6-fccbc06233f5",
+    name: "Swimm",
+    componentType: "any",
+    icon: "/assets/svgporn/swimm.svg",
   },
   {
     id: "77e4b760-2fc2-47a7-94ba-3eb893b74b1f",
@@ -6458,6 +7040,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/tor.svg",
   },
   {
+    id: "48b0aa5a-2da8-4d6e-9fe2-725ece06eacb",
+    name: "Tor",
+    componentType: "any",
+    icon: "/assets/svgporn/tor.svg",
+  },
+  {
     id: "ca5e5037-1ddc-4177-85ab-39b492e3e273",
     name: "Traackr",
     icon: "/assets/svgporn/traackr.svg",
@@ -6596,6 +7184,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "e94a7938-2896-41e7-a344-812bbee0f7e3",
+    name: "typesense",
+    componentType: "any",
+    icon: "/assets/svgporn/typesense-icon.svg",
+  },
+  {
     id: "54960eb9-8bd1-40c8-b71c-ff012bd22fac",
     name: "TYPO3",
     componentType: "any",
@@ -6666,6 +7260,12 @@ const classes: ComponentClass[] = [
     name: "Unity",
     icon: "/assets/svgporn/unity.svg",
     componentType: "any",
+  },
+  {
+    id: "57ce55d8-1efe-4c8d-85c0-4d03f4f2c73b",
+    name: "UnJS",
+    componentType: "any",
+    icon: "/assets/svgporn/unjs.svg",
   },
   {
     id: "9630ccdd-1cba-444c-83b8-3ab58603a5ec",
@@ -6818,6 +7418,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/vitejs.svg",
   },
   {
+    id: "939322bc-80a7-4b8f-92ae-bb85f02f292c",
+    name: "Vitess",
+    componentType: "any",
+    icon: "/assets/svgporn/vitess.svg",
+  },
+  {
     id: "04c629ad-275e-4e55-a396-216071628522",
     name: "Vitest",
     componentType: "any",
@@ -6830,10 +7436,22 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "9eeef70d-39ec-4a07-b32a-3a7789e900db",
+    name: "VMware",
+    componentType: "any",
+    icon: "/assets/svgporn/vmware.svg",
+  },
+  {
     id: "a9dd1cf3-ffdd-47e5-8159-a5458f3a9c89",
     name: "Void",
     icon: "/assets/svgporn/void.svg",
     componentType: "any",
+  },
+  {
+    id: "b81ca29a-7ecf-47b1-9f45-6c9e9f26f00b",
+    name: "Volar",
+    componentType: "any",
+    icon: "/assets/svgporn/volar.svg",
   },
   {
     id: "d5b6ba34-0a63-43c4-ac2a-c6454006f5de",
@@ -6896,10 +7514,22 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "de9e8b08-59ee-466b-b6f9-dd79e1556341",
+    name: "WalkMe",
+    componentType: "any",
+    icon: "/assets/svgporn/walkme.svg",
+  },
+  {
     id: "8c950eec-4e3f-4777-a0ee-7de3a52ad538",
     name: "Watchman",
     icon: "/assets/svgporn/watchman.svg",
     componentType: "any",
+  },
+  {
+    id: "be57f6e5-68b4-4e02-b181-3bdeec8d0f90",
+    name: "Waypoint",
+    componentType: "any",
+    icon: "/assets/svgporn/waypoint-icon.svg",
   },
   {
     id: "af51cfaa-4b0f-4743-b357-4dd124f9b247",
@@ -6954,6 +7584,12 @@ const classes: ComponentClass[] = [
     name: "Webflow",
     icon: "/assets/svgporn/webflow.svg",
     componentType: "any",
+  },
+  {
+    id: "2e7d0a3e-24dc-4147-9fa9-e59f9b762dcb",
+    name: "WebGPU",
+    componentType: "any",
+    icon: "/assets/svgporn/webgpu.svg",
   },
   {
     id: "803952f1-6a03-44c7-ae85-686d3d051d20",
@@ -7070,6 +7706,12 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/windi-css.svg",
   },
   {
+    id: "880b0851-06c0-4ddf-ae95-de1b9b74b4a1",
+    name: "Wing",
+    componentType: "any",
+    icon: "/assets/svgporn/winglang-icon.svg",
+  },
+  {
     id: "5198cdb9-f9cf-49b9-a09e-e885f62bd353",
     name: "Wire",
     icon: "/assets/svgporn/wire.svg",
@@ -7112,6 +7754,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "4a891fd0-8431-4cbc-ac27-8fa916dfa362",
+    name: "WorkOS",
+    componentType: "any",
+    icon: "/assets/svgporn/workos-icon.svg",
+  },
+  {
     id: "5393aeba-f215-4b64-af96-b234b5edc0b0",
     name: "Workplace",
     componentType: "any",
@@ -7130,6 +7778,12 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "dae1c42c-9bf3-48a7-9b8d-2f7fc5be2211",
+    name: "X",
+    componentType: "any",
+    icon: "/assets/svgporn/x.svg",
+  },
+  {
     id: "6f5658a3-0466-459d-97ec-9bce98a276a9",
     name: "X-Cart",
     icon: "/assets/svgporn/xcart.svg",
@@ -7146,6 +7800,18 @@ const classes: ComponentClass[] = [
     name: "XAMPP",
     icon: "/assets/svgporn/xampp.svg",
     componentType: "any",
+  },
+  {
+    id: "4a5ca081-b348-4599-8c7a-7ee6a7d26a93",
+    name: "Xata",
+    componentType: "any",
+    icon: "/assets/svgporn/xata-icon.svg",
+  },
+  {
+    id: "954a85cb-fec3-4349-98be-2dbed7675b10",
+    name: "Xcode",
+    componentType: "any",
+    icon: "/assets/svgporn/xcode.svg",
   },
   {
     id: "1f262f67-64a0-48ad-a794-d5b713c880aa",
@@ -7238,10 +7904,22 @@ const classes: ComponentClass[] = [
     componentType: "any",
   },
   {
+    id: "221dc200-e3ff-4872-a8ea-7cfc3afe5c50",
+    name: "YugabyteDB",
+    componentType: "any",
+    icon: "/assets/svgporn/yugabyte-icon.svg",
+  },
+  {
     id: "1645c117-3bd6-43b4-8554-ae9a936003d4",
     name: "Z-Wave",
     icon: "/assets/svgporn/zwave.svg",
     componentType: "any",
+  },
+  {
+    id: "37c6f469-5356-4688-b0d6-12a96444cd60",
+    name: "Zabbix",
+    componentType: "any",
+    icon: "/assets/svgporn/zabbix.svg",
   },
   {
     id: "f1d4df61-2b04-41dd-9ba3-02a4039f3718",
@@ -7286,16 +7964,34 @@ const classes: ComponentClass[] = [
     icon: "/assets/svgporn/zig.svg",
   },
   {
+    id: "73de30ff-4027-4ae4-9934-48871fd6af43",
+    name: "Zod",
+    componentType: "any",
+    icon: "/assets/svgporn/zod.svg",
+  },
+  {
     id: "eba6ba89-86dd-4ca5-9d4d-b6e1d238c4b6",
     name: "Zoho",
     icon: "/assets/svgporn/zoho.svg",
     componentType: "any",
   },
   {
+    id: "e44fe3f8-b9a9-44da-bc4d-3999f0867305",
+    name: "Zoom",
+    componentType: "any",
+    icon: "/assets/svgporn/zoom-icon.svg",
+  },
+  {
     id: "31a0626b-c9b8-4c59-a733-5368d0edaaf8",
     name: "Zorin OS",
     componentType: "any",
     icon: "/assets/svgporn/zorin-os.svg",
+  },
+  {
+    id: "57a5b37d-5607-40d2-8650-7e7978871230",
+    name: "zsh",
+    componentType: "any",
+    icon: "/assets/svgporn/zsh.svg",
   },
   {
     id: "3bf3b6b2-f0cf-4ca3-8357-defbe96dd0ce",
