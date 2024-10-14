@@ -2,15 +2,15 @@
  * Script to automatically generate SVGPORN Component Classes from the repo contents (logos.json + logos folder)
  */
 
-const { randomUUID } = require("crypto");
-const fs = require("fs");
+import { randomUUID } from "crypto";
+import { readFileSync, writeFileSync } from "fs";
 
-const currentClasses = JSON.parse(fs.readFileSync("classes.json"));
+const currentClasses = JSON.parse(readFileSync("classes.json"));
 
 const exists = new Map();
 currentClasses.forEach((c) => exists.set(c.name.trim(), c));
 
-const logos = JSON.parse(fs.readFileSync("logos.json"));
+const logos = JSON.parse(readFileSync("logos.json"));
 let n = 0;
 let o = 0;
 const newClasses = logos
@@ -38,4 +38,4 @@ const newClasses = logos
 console.log("==================================");
 console.log(`${n} new classes / ${o} old classes`);
 
-fs.writeFileSync("new-classes.json", JSON.stringify(newClasses, null, 2));
+writeFileSync("new-classes.json", JSON.stringify(newClasses, null, 2));
