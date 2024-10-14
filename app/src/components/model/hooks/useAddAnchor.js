@@ -27,10 +27,17 @@ export function useAddAnchor(dataFlowId) {
       y,
       ...points.slice(index + 2),
     ];
-    const newLabelAnchor =
+
+    let newLabelAnchor = dataflow.labelAnchor;
+    // TODO: Clean up anchor being both -1 and undefined when not set
+    if (
+      newLabelAnchor !== -1 &&
+      newLabelAnchor !== undefined &&
       index < dataflow.labelAnchor
-        ? dataflow.labelAnchor + 2
-        : dataflow.labelAnchor;
+    ) {
+      newLabelAnchor = dataflow.labelAnchor + 2;
+    }
+    // console.log("index", index, "labelAnchor", dataflow.labelAnchor, "newLabelAnchor", newLabelAnchor);
     patchDataFlow({ points: newPoints, labelAnchor: newLabelAnchor });
     return newPoints;
   }

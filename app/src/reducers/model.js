@@ -108,6 +108,7 @@ const mutatorReducer = (state = initialState, action) => {
 
       // If label was just set, set it to the first anchor
       if (
+        editedDataflow.label !== undefined &&
         editedDataflow.label !== "" &&
         (editedDataflow.labelAnchor === -1 ||
           editedDataflow.labelAnchor === undefined)
