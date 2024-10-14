@@ -12,7 +12,7 @@ export function deleteFlow(dal: DataAccessLayer) {
     }
 
     const id = parseInt(flowId);
-    const flow = await dal.flowService.getById(id);    
+    const flow = await dal.flowService.getById(id);
 
     if (!flow) {
       res.status(404).json({ message: "Flow not found" });

@@ -79,9 +79,7 @@ export function DataFlowTab() {
               label="Label"
               value={label}
               disabled={readOnly}
-              onBlur={() =>
-                patchDataFlow({ label })
-              }
+              onBlur={() => patchDataFlow({ label })}
               onChange={(e) => setLabel(e.target.value)}
               onKeyDown={shouldBlur}
             />
