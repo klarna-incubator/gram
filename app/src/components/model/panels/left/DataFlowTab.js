@@ -161,7 +161,11 @@ export function DataFlowTab() {
               flows
                 .filter((flow) => flow.originComponentId === endComponent.id)
                 .map((flow, index) => (
-                  <Flow flow={flow} defaultExpanded={index === 0} />
+                  <Flow
+                    key={`flow-${flow.id}`}
+                    flow={flow}
+                    defaultExpanded={index === 0}
+                  />
                 ))}
           </CardContent>
         </Card>
