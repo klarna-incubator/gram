@@ -135,7 +135,7 @@ const mutatorReducer = (state = initialState, action) => {
         editedDataflow.labelAnchor = 2;
       }
       // If there is an anchor and the label was just removed, remove the anchor.
-      else if (editedDataflow.label == "" && editedDataflow.labelAnchor != -1) {
+      else if (editedDataflow.label === "" && editedDataflow.labelAnchor !== -1) {
         // Delete anchor by removing points.
         editedDataflow.points = [
           ...editedDataflow.points.slice(0, editedDataflow.labelAnchor),
