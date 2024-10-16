@@ -21,6 +21,7 @@ export const api = createApi({
     "Threats",
     "User",
     "Links",
+    "Validation",
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: `${BASE_URL}/api/v1/`,

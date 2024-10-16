@@ -102,7 +102,7 @@ export const testConfig: GramConfiguration = {
       systemProvider: testSystemProvider,
       suggestionSources: [],
       teamProvider: new TestTeamProvider(),
-      validationProviders: [new StaticValidationProvider()],
+      validationProviders: [new StaticValidationProvider(dal)],
     };
   },
 };
