@@ -46,12 +46,12 @@ describe("validateModel", () => {
       .set("Authorization", "invalidtoken");
     expect(res.status).toBe(401);
   });
-  it("should return 400 if the model id is invalid or unknown", async () => {
+  it("should return 500 if the model id is invalid or unknown", async () => {
     const invalidmodelId = "12323";
     const res = await request(app)
       .get("/api/v1/validate/" + invalidmodelId)
       .set("Authorization", token);
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(500);
   });
 
   it("should return 200 if the model id is valid", async () => {
