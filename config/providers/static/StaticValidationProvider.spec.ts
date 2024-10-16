@@ -1,11 +1,15 @@
 import Model from "@gram/core/dist/data/models/Model.js";
 import { StaticValidationProvider } from "./StaticValidationProvider.js";
 import { ValidationProvider } from "@gram/core/dist/validation/ValidationHandler.js";
+import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 describe("StaticValidationProvider", () => {
   let staticValidationProvider: ValidationProvider;
 
   beforeAll(async () => {
-    staticValidationProvider = new StaticValidationProvider();
+    const pool = await createPostgresPool();
+    const dal = new DataAccessLayer(pool);
+    staticValidationProvider = new StaticValidationProvider(dal);
   });
 
   it("should return an array", async () => {
