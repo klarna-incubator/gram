@@ -79,7 +79,6 @@ export function ValidationTab({ tab, setTab, filteredResults, isLoading }) {
   const deselectAll = useDeselectAll();
 
   const selectedComponent = useSelectedComponent();
-  console.log({ selectedComponent });
 
   if (isLoading) {
     return (
