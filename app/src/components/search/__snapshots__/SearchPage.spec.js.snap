@@ -12,14 +12,13 @@ exports[`Search renders Search 1`] = `
           class="MuiGrid-root MuiGrid-item css-oo6ucr-MuiGrid-root"
         >
           <div
-            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1l4o99g-MuiPaper-root-MuiCard-root"
-            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1k3rt34-MuiPaper-root-MuiCard-root"
           >
             <div
               class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
             >
               <h5
-                class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
                 Search results for "
                 
@@ -52,14 +51,13 @@ exports[`Search renders Search 1`] = `
         class="MuiGrid-root MuiGrid-item css-oo6ucr-MuiGrid-root"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1l4o99g-MuiPaper-root-MuiCard-root"
-          style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1k3rt34-MuiPaper-root-MuiCard-root"
         >
           <div
             class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
           >
             <h5
-              class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
               Search results for "
               

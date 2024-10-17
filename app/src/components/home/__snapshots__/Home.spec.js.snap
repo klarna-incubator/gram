@@ -18,30 +18,29 @@ exports[`Home renders Home 1`] = `
               class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-14uoix4-MuiGrid-root"
             >
               <h5
-                class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
                 Recent Threat Models
               </h5>
               <p
-                class="MuiTypography-root MuiTypography-body1 dimmed css-1edfpdg-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
               >
                 Threat models you recently interacted with
               </p>
               <div
-                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1pyfb4v-MuiPaper-root-MuiCard-root"
-                style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-d5ceyd-MuiPaper-root-MuiCard-root"
               >
                 <div
                   class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
                 >
                   <ul
-                    class="MuiList-root MuiList-padding css-1u169s7-MuiList-root"
+                    class="MuiList-root MuiList-padding css-h4y409-MuiList-root"
                   >
                     <div
-                      class="MuiListItemText-root css-1y2w5y4-MuiListItemText-root"
+                      class="MuiListItemText-root css-tlelie-MuiListItemText-root"
                     >
                       <span
-                        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1edfpdg-MuiTypography-root"
+                        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
                       >
                         No models exist
                       </span>
@@ -69,30 +68,29 @@ exports[`Home renders Home 1`] = `
             class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-14uoix4-MuiGrid-root"
           >
             <h5
-              class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
               Recent Threat Models
             </h5>
             <p
-              class="MuiTypography-root MuiTypography-body1 dimmed css-1edfpdg-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 dimmed css-ahj2mt-MuiTypography-root"
             >
               Threat models you recently interacted with
             </p>
             <div
-              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1pyfb4v-MuiPaper-root-MuiCard-root"
-              style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-d5ceyd-MuiPaper-root-MuiCard-root"
             >
               <div
                 class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
               >
                 <ul
-                  class="MuiList-root MuiList-padding css-1u169s7-MuiList-root"
+                  class="MuiList-root MuiList-padding css-h4y409-MuiList-root"
                 >
                   <div
-                    class="MuiListItemText-root css-1y2w5y4-MuiListItemText-root"
+                    class="MuiListItemText-root css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1edfpdg-MuiTypography-root"
+                      class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-10hburv-MuiTypography-root"
                     >
                       No models exist
                     </span>

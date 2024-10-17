@@ -6,14 +6,13 @@ exports[`Navbar renders Navbar 1`] = `
   "baseElement": <body>
     <div>
       <header
-        class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-g4ejln-MuiPaper-root-MuiAppBar-root"
-        style="--Paper-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);"
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-93buy9-MuiPaper-root-MuiAppBar-root"
       >
         <div
-          class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-g2lhah-MuiToolbar-root"
+          class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-1gai66g-MuiToolbar-root"
         >
           <a
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-7xd7a7-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-11g8rj7-MuiButtonBase-root-MuiButton-root"
             href="/"
             tabindex="0"
           >
@@ -24,12 +23,12 @@ exports[`Navbar renders Navbar 1`] = `
               style="padding-right: 5px; margin-right: 5px;"
             />
             <span
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-xampid-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-19js6tk-MuiTypography-root"
             >
               g
             </span>
             <span
-              class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-nwtk18-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-1961ak2-MuiTypography-root"
             >
               ram
             </span>
@@ -57,7 +56,7 @@ exports[`Navbar renders Navbar 1`] = `
             >
               <input
                 aria-label="search"
-                class="MuiInputBase-input css-1jrstcx-MuiInputBase-input"
+                class="MuiInputBase-input css-yz9k0d-MuiInputBase-input"
                 placeholder="Search …"
                 type="text"
                 value=""
@@ -71,7 +70,7 @@ exports[`Navbar renders Navbar 1`] = `
               class="MuiBadge-root css-1c32n2y-MuiBadge-root"
             >
               <a
-                class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-ep8q7d-MuiButtonBase-root-MuiButton-root"
+                class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-8mcpn7-MuiButtonBase-root-MuiButton-root"
                 href="/models"
                 tabindex="0"
               >
@@ -86,7 +85,7 @@ exports[`Navbar renders Navbar 1`] = `
             class="MuiBox-root css-2uchni"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1wdfv0v-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1lzjc8n-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -95,7 +94,7 @@ exports[`Navbar renders Navbar 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-90uhd3-MuiSvgIcon-root-MuiAvatar-fallback"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-10mi8st-MuiSvgIcon-root-MuiAvatar-fallback"
                   data-testid="PersonIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -112,13 +111,13 @@ exports[`Navbar renders Navbar 1`] = `
     </div>
     <div
       aria-hidden="true"
-      class="MuiPopover-root MuiMenu-root MuiModal-root MuiModal-hidden css-1vtelty-MuiModal-root-MuiPopover-root-MuiMenu-root"
+      class="MuiPopover-root MuiMenu-root MuiModal-root MuiModal-hidden css-14ogsoa-MuiModal-root-MuiPopover-root-MuiMenu-root"
       id="menu-appbar"
       role="presentation"
     >
       <div
         aria-hidden="true"
-        class="MuiBackdrop-root MuiBackdrop-invisible MuiModal-backdrop css-1hqw972-MuiBackdrop-root-MuiModal-backdrop"
+        class="MuiBackdrop-root MuiBackdrop-invisible MuiModal-backdrop css-g3hgs1-MuiBackdrop-root-MuiModal-backdrop"
         style="opacity: 0; visibility: hidden;"
       />
       <div
@@ -126,25 +125,28 @@ exports[`Navbar renders Navbar 1`] = `
         tabindex="-1"
       />
       <div
-        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper MuiMenu-paper MuiMenu-paper css-1xomo8h-MuiPaper-root-MuiPopover-paper-MuiMenu-paper"
-        style="--Paper-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12); opacity: 0; transform: scale(0.75, 0.5625); visibility: hidden;"
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation8 MuiPopover-paper MuiMenu-paper MuiMenu-paper css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper"
+        style="opacity: 0; transform: scale(0.75, 0.5625); visibility: hidden;"
         tabindex="-1"
       >
         <ul
-          class="MuiList-root MuiList-padding MuiMenu-list css-99wn1p-MuiList-root-MuiMenu-list"
+          class="MuiList-root MuiList-padding MuiMenu-list css-6hp17o-MuiList-root-MuiMenu-list"
           role="menu"
           tabindex="-1"
         >
           <li
-            class="MuiButtonBase-root MuiMenuItem-root MuiMenuItem-gutters MuiMenuItem-root MuiMenuItem-gutters css-1h4bzp1-MuiButtonBase-root-MuiMenuItem-root"
+            class="MuiButtonBase-root MuiMenuItem-root MuiMenuItem-gutters MuiMenuItem-root MuiMenuItem-gutters css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root"
             role="menuitem"
             tabindex="0"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-1699v82-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 css-1uwgr7b-MuiTypography-root"
             >
               Logout
             </p>
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
           </li>
         </ul>
       </div>
@@ -156,14 +158,13 @@ exports[`Navbar renders Navbar 1`] = `
   </body>,
   "container": <div>
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-g4ejln-MuiPaper-root-MuiAppBar-root"
-      style="--Paper-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionFixed mui-fixed css-93buy9-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-g2lhah-MuiToolbar-root"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-1gai66g-MuiToolbar-root"
       >
         <a
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-7xd7a7-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-11g8rj7-MuiButtonBase-root-MuiButton-root"
           href="/"
           tabindex="0"
         >
@@ -174,12 +175,12 @@ exports[`Navbar renders Navbar 1`] = `
             style="padding-right: 5px; margin-right: 5px;"
           />
           <span
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-xampid-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-19js6tk-MuiTypography-root"
           >
             g
           </span>
           <span
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-nwtk18-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-noWrap css-1961ak2-MuiTypography-root"
           >
             ram
           </span>
@@ -207,7 +208,7 @@ exports[`Navbar renders Navbar 1`] = `
           >
             <input
               aria-label="search"
-              class="MuiInputBase-input css-1jrstcx-MuiInputBase-input"
+              class="MuiInputBase-input css-yz9k0d-MuiInputBase-input"
               placeholder="Search …"
               type="text"
               value=""
@@ -221,7 +222,7 @@ exports[`Navbar renders Navbar 1`] = `
             class="MuiBadge-root css-1c32n2y-MuiBadge-root"
           >
             <a
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-ep8q7d-MuiButtonBase-root-MuiButton-root"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary css-8mcpn7-MuiButtonBase-root-MuiButton-root"
               href="/models"
               tabindex="0"
             >
@@ -236,7 +237,7 @@ exports[`Navbar renders Navbar 1`] = `
           class="MuiBox-root css-2uchni"
         >
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1wdfv0v-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1lzjc8n-MuiButtonBase-root-MuiIconButton-root"
             tabindex="0"
             type="button"
           >
@@ -245,7 +246,7 @@ exports[`Navbar renders Navbar 1`] = `
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-90uhd3-MuiSvgIcon-root-MuiAvatar-fallback"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiAvatar-fallback css-10mi8st-MuiSvgIcon-root-MuiAvatar-fallback"
                 data-testid="PersonIcon"
                 focusable="false"
                 viewBox="0 0 24 24"
