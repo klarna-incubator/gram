@@ -9,7 +9,7 @@ import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 
 const token = await sampleUserToken();
 
-function sampleAttributes() { 
+export function sampleAttributes() { 
   const attributes: any = {};
   config.attributes.flow.forEach((attr) => {
     if (attr.type === "text") {
@@ -70,7 +70,6 @@ describe("Flow.post", () => {
     expect(res.status).toBe(200);
   });
 
-  // For now this is okay
   it("should return 404 with invalid model id", async () => {
     const modelId = randomUUID();
     const dataFlowId = randomUUID();

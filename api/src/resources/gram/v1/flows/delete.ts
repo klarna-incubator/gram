@@ -24,6 +24,6 @@ export function deleteFlow(dal: DataAccessLayer) {
 
     await dal.flowService.deleteFlow(id);
 
-    res.status(204).json();
+    res.status(200).json();
   };
 }
