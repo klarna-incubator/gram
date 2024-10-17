@@ -46,10 +46,15 @@ export class StrideSuggestionProvider implements SuggestionSource {
   slug: string = "stride";
   name: string = "stride";
   async suggest(model: Model): Promise<SuggestionResult> {
+    const componentThreats = model.data.components
+      .map((c) => STRIDE.map((s) => ({ ...s, componentId: c.id })))
+      .reduce((p, c) => [...p, ...c], []);
+    const dataFlowThreats = model.data.dataFlows
+      .map((c) => STRIDE.map((s) => ({ ...s, componentId: c.id })))
+      .reduce((p, c) => [...p, ...c], []);
+
     const result: SuggestionResult = {
-      threats: model.data.components
-        .map((c) => STRIDE.map((s) => ({ ...s, componentId: c.id })))
-        .reduce((p, c) => [...p, ...c], []),
+      threats: componentThreats.concat(dataFlowThreats),
       controls: [],
     };
 

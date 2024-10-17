@@ -3,7 +3,6 @@ import {
   ClearRounded as ClearRoundedIcon,
   IosShare as IosShareIcon,
 } from "@mui/icons-material";
-
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import { Box, Card, CardContent, IconButton, Tooltip } from "@mui/material";
 import { useCreateControlMutation } from "../../../../api/gram/controls";
@@ -25,7 +24,7 @@ import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { EditableSelect } from "./EditableSelect";
-import { EditableTypography } from "./EditableTypography";
+import { EditableTypography } from "../../../elements/EditableTypography";
 import { MitigationChip } from "./MitigationChip";
 import { ThreatAssessment } from "./ThreatAssessment";
 import { Links } from "../../../elements/Links";

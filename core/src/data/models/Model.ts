@@ -4,6 +4,8 @@ export interface DataFlow {
   id: string;
   endComponent: { id: string };
   startComponent: { id: string };
+  label?: string;
+  labelAnchor?: number;
   points: number[];
   bidirectional: boolean;
 }
@@ -109,6 +111,7 @@ export interface Component {
   name: string;
   classes?: ComponentClass[];
   description?: string;
+  systems?: string[];
 }
 
 export interface ModelData {

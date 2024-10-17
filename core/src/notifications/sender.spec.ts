@@ -38,6 +38,10 @@ describe("notification sender", () => {
     notificationService = new NotificationDataService(dal);
   });
 
+  beforeEach(async () => {
+    await notificationService._truncate();
+  });
+
   afterAll(async () => {
     await dal.pool.end();
   });
@@ -101,6 +105,7 @@ describe("notification sender", () => {
       const mockFn = (mockedSend as Mock).mockImplementation(async () => true);
 
       await notificationService.queue(sampleNotification);
+
       for (let i = 0; i < 3; i++) {
         await notificationSender(
           notificationService,

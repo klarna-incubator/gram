@@ -194,7 +194,7 @@ export default function Board() {
   useEffect(() => {
     setStage((prevStage) => ({
       ...prevStage,
-      panning: cursorType === CURSOR_PAN ? true : false,
+      panning: cursorType === CURSOR_PAN,
     }));
   }, [cursorType]);
 
@@ -425,6 +425,23 @@ export default function Board() {
     }
   }
 
+  function onDataFlowClick(id) {
+    return function (e) {
+      // If not left click
+      if (e.evt.button !== 0) {
+        return;
+      }
+
+      if (e.evt.shiftKey) {
+        setSelected(id, true);
+      } else if (e.evt.ctrlKey || e.evt.metaKey) {
+        setSelected(id, false);
+      } else {
+        setMultipleSelected([id]);
+      }
+    };
+  }
+
   function onComponentClick(id) {
     return function (e) {
       // If not left click
@@ -541,7 +558,6 @@ export default function Board() {
       y: currPos.y - componentsPos[draggedComponentId].y,
     };
     const selectedIds = Object.keys(selected);
-    // console.log("onSelectionDragMove", selectedIds, componentsPos);
 
     const newComponentsPos = selectedIds
       .filter((id) => id in componentsPos)
@@ -556,13 +572,6 @@ export default function Board() {
         {}
       );
 
-    // console.log(
-    //   "onSelectionDragMove",
-    //   selectedIds,
-    //   componentsPos,
-    //   newComponentsPos
-    // );
-
     setComponentsPos((prevComponentsPos) => ({
       ...prevComponentsPos,
       ...newComponentsPos,
@@ -571,7 +580,6 @@ export default function Board() {
 
   function onSelectionDragEnd() {
     const selectedIds = Object.keys(selected);
-    // console.log("onSelectionDragEnd", selectedIds, componentsPos);
 
     dispatch(
       moveComponents(
@@ -649,7 +657,9 @@ export default function Board() {
           addComponent({ name, type, x: pos.x, y: pos.y });
         }}
       />
+
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
+
       {leftPanelCollapsed === true && <ToggleLeftPanelButton />}
 
       <ContextMenu
@@ -745,8 +755,10 @@ export default function Board() {
                         componentsPos[df.endComponent.id]?.y ||
                           df.points.slice(-2)[1],
                       ]}
+                      label={df.label}
+                      labelAnchor={df.labelAnchor}
                       selected={df.id in selected}
-                      onClick={onComponentClick(df.id)}
+                      onClick={onDataFlowClick(df.id)}
                       getStagePointerPosition={getStagePointerPosition}
                     />
                   ))}
@@ -763,7 +775,7 @@ export default function Board() {
                         componentsPos[editDataFlow.startComponent.id].y,
                         ...editDataFlow.points.slice(2),
                       ]}
-                      isEditing={true}
+                      isEditing
                     />
                   )}
                 </Layer>
