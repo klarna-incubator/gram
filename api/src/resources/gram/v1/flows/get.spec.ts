@@ -32,7 +32,8 @@ describe("Flow.get", () => {
 
   it("should return 401 on un-authenticated request", async () => {
     const res = await request(app)
-      .get(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`).send();
+      .get(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
+      .send();
     expect(res.status).toBe(401);
   });
 
@@ -41,7 +42,7 @@ describe("Flow.get", () => {
       .get(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
       .send();
-      
+
     // console.log("res.body", JSON.stringify(res.body));
 
     expect(res.status).toBe(200);
@@ -50,7 +51,7 @@ describe("Flow.get", () => {
     const postres = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: sampleAttributes(),
@@ -65,13 +66,14 @@ describe("Flow.get", () => {
     expect(getRes.body.flows.length).toBe(1);
     expect(getRes.body.flows[0].summary).toBe("Some summary");
   });
-  
+
   it("should return 404 with invalid model id", async () => {
     const modelId = randomUUID();
     const dataFlowId = randomUUID();
     const res = await request(app)
       .get(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
-      .set("Authorization", token).send();
+      .set("Authorization", token)
+      .send();
 
     expect(res.status).toBe(404);
   });

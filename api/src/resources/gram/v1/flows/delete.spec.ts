@@ -34,7 +34,7 @@ describe("Flow.delete", () => {
     const postres = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: sampleAttributes(),
@@ -42,9 +42,8 @@ describe("Flow.delete", () => {
 
     expect(postres.status).toBe(200);
     const flowId = postres.body.flow.id;
-    
-    const res = await request(app)
-      .delete(`/api/v1/flows/${flowId}`).send();
+
+    const res = await request(app).delete(`/api/v1/flows/${flowId}`).send();
 
     expect(res.status).toBe(401);
   });
@@ -53,7 +52,7 @@ describe("Flow.delete", () => {
     const postres = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: sampleAttributes(),
@@ -63,16 +62,18 @@ describe("Flow.delete", () => {
 
     const res = await request(app)
       .delete(`/api/v1/flows/${flowId}`)
-      .set("Authorization", token).send();      
+      .set("Authorization", token)
+      .send();
 
     expect(res.status).toBe(200);
   });
-  
+
   it("should return 404 with invalid flow id", async () => {
     const flowId = randomUUID();
     const res = await request(app)
       .delete(`/api/v1/flows/${flowId}`)
-      .set("Authorization", token).send();      
+      .set("Authorization", token)
+      .send();
 
     expect(res.status).toBe(404);
   });

@@ -9,7 +9,7 @@ import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
 
 const token = await sampleUserToken();
 
-export function sampleAttributes() { 
+export function sampleAttributes() {
   const attributes: any = {};
   config.attributes.flow.forEach((attr) => {
     if (attr.type === "text") {
@@ -59,12 +59,12 @@ describe("Flow.post", () => {
     const res = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: sampleAttributes(),
       });
-      
+
     // console.log("res.body", JSON.stringify(res.body));
 
     expect(res.status).toBe(200);
@@ -76,7 +76,7 @@ describe("Flow.post", () => {
     const res = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: sampleAttributes(),
@@ -89,7 +89,7 @@ describe("Flow.post", () => {
     const res = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: { "invalid-key": "some value" },

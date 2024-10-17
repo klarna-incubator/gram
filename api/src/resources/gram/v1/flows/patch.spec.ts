@@ -34,7 +34,7 @@ describe("Flow.patch", () => {
     const postres = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: sampleAttributes(),
@@ -42,14 +42,12 @@ describe("Flow.patch", () => {
 
     expect(postres.status).toBe(200);
     const flowId = postres.body.flow.id;
-    
-    const res = await request(app)
-      .patch(`/api/v1/flows/${flowId}`)
-      .send({                        
-        originComponentId: randomUUID(),               
-        summary: "new summary",       
-        attributes: sampleAttributes(),        
-      });
+
+    const res = await request(app).patch(`/api/v1/flows/${flowId}`).send({
+      originComponentId: randomUUID(),
+      summary: "new summary",
+      attributes: sampleAttributes(),
+    });
 
     expect(res.status).toBe(401);
   });
@@ -58,7 +56,7 @@ describe("Flow.patch", () => {
     const postres = await request(app)
       .post(`/api/v1/flows/model/${modelId}/dataflow/${dataFlowId}`)
       .set("Authorization", token)
-      .send({                
+      .send({
         originComponentId: randomUUID(),
         summary: "Some summary",
         attributes: sampleAttributes(),
@@ -69,26 +67,26 @@ describe("Flow.patch", () => {
     const res = await request(app)
       .patch(`/api/v1/flows/${flowId}`)
       .set("Authorization", token)
-      .send({         
-        originComponentId: randomUUID(),               
-        summary: "new summary",       
-        attributes: sampleAttributes(), 
-      });   
+      .send({
+        originComponentId: randomUUID(),
+        summary: "new summary",
+        attributes: sampleAttributes(),
+      });
 
     // console.log("res.body", JSON.stringify(res.body));
 
     expect(res.status).toBe(200);
   });
-  
+
   it("should return 404 with invalid flow id", async () => {
     const flowId = Math.floor(Math.random() * 100000000);
     const res = await request(app)
       .patch(`/api/v1/flows/${flowId}`)
       .set("Authorization", token)
-      .send({                        
-        originComponentId: randomUUID(),               
-        summary: "new summary",       
-        attributes: sampleAttributes(),        
+      .send({
+        originComponentId: randomUUID(),
+        summary: "new summary",
+        attributes: sampleAttributes(),
       });
 
     console.log("res.body", JSON.stringify(res.body));
