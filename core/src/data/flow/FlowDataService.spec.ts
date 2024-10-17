@@ -8,6 +8,7 @@ import { createSampleModel } from "../../test-util/model.js";
 describe("FlowDataService implementation", () => {
   let ds: FlowDataService;
   let dal: DataAccessLayer;
+  let modelId: string;
 
   beforeAll(async () => {
     const pool = await createPostgresPool();
@@ -17,6 +18,7 @@ describe("FlowDataService implementation", () => {
 
   beforeEach(async () => {
     await _deleteAllTheThings(dal);
+    modelId = await createSampleModel(dal);
   });
 
   afterAll(async () => {
@@ -25,7 +27,6 @@ describe("FlowDataService implementation", () => {
 
   describe("insert flow", () => {
     it("should insert flow", async () => {
-      const modelId = randomUUID();
       const dataFlowId = randomUUID();
       const originComponentId = randomUUID();
       const summary = "GET /hello-world";
@@ -52,7 +53,6 @@ describe("FlowDataService implementation", () => {
 
   describe("list flows", () => {
     it("should return flows when multiple", async () => {
-      const modelId = randomUUID();
       const dataFlowId = randomUUID();
       const originComponentId = randomUUID();
       const summary = "GET /hello-world";
@@ -88,7 +88,6 @@ describe("FlowDataService implementation", () => {
     });
 
     it("should return empty list when no flows", async () => {
-      const modelId = randomUUID();
       const dataFlowId = randomUUID();
       const originComponentId = randomUUID();
       const summary = "GET /hello-world";
@@ -114,7 +113,6 @@ describe("FlowDataService implementation", () => {
 
   describe("delete link", () => {
     it("should delete flows", async () => {
-      const modelId = randomUUID();
       const dataFlowId = randomUUID();
       const originComponentId = randomUUID();
       const summary = "GET /hello-world";
@@ -137,7 +135,6 @@ describe("FlowDataService implementation", () => {
     });
 
     it("should not delete link when id does not exist", async () => {
-      const modelId = randomUUID();
       const dataFlowId = randomUUID();
       const originComponentId = randomUUID();
       const summary = "GET /hello-world";
@@ -162,7 +159,6 @@ describe("FlowDataService implementation", () => {
 
   describe("copy flows from one model to another", () => {
     it("should copy flows", async () => {
-      const modelId = await createSampleModel(dal);
       const dataFlowId = randomUUID();
       const originComponentId = randomUUID();
       const summary = "GET /hello-world";
@@ -180,7 +176,7 @@ describe("FlowDataService implementation", () => {
       expect(res.length).toEqual(1);
 
       const newDataFlowId = randomUUID();
-      const newModelId = randomUUID();
+      const newModelId = await createSampleModel(dal);
       const uuid = new Map<string, string>();
       uuid.set(dataFlowId, newDataFlowId);
       await ds.copyFlowsBetweenModels(modelId, newModelId, uuid);
@@ -189,7 +185,6 @@ describe("FlowDataService implementation", () => {
     });
 
     it("should not copy flows when no flows", async () => {
-      const modelId = await createSampleModel(dal);
       const dataFlowId = randomUUID();
       let res = await ds.listFlows(modelId, dataFlowId);
       expect(res.length).toEqual(0);
