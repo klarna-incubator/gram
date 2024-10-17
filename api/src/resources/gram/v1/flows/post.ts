@@ -12,7 +12,7 @@ export function insertFlow(dal: DataAccessLayer) {
         dataFlowId: req.params.dataFlowId,
       });
 
-    // Check if user has access to this object
+    // Check if user has access to this object (and if it exists)
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
 
     const newFlow = await dal.flowService.insertFlow(

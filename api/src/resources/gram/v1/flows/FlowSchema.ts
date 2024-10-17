@@ -28,7 +28,7 @@ export const NewFlowSchema = () => {
   return z.object({
     attributes: z.object({
       ...attributes(),
-    }),
+    }).strict(),
     modelId: z.string().uuid(),
     dataFlowId: z.string().uuid(),
     originComponentId: z.string().uuid(),
