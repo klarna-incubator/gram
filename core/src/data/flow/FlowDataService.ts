@@ -138,12 +138,11 @@ export class FlowDataService extends EventEmitter {
     targetModelId: string,
     uuid: Map<string, string>
   ): Promise<void> {
-    // Get data flows from source model
+    // Get flows from source model
     const query = `
-      SELECT DISTINCT data_flow_id FROM flows WHERE model_id = $1
+      SELECT id, data_flow_id, origin_component_id FROM flows WHERE model_id = $1
     `;
     const res = await this.pool.query(query, [srcModelId]);
-    const dataFlowIds = res.rows.map((row) => row.data_flow_id);
 
     const queryImport = `
     INSERT INTO flows ( 
@@ -154,25 +153,35 @@ export class FlowDataService extends EventEmitter {
           $1 as model_id, 
           $2 as data_flow_id,
           summary,
-          origin_component_id,
+          $3 as origin_component_id,
           attributes,             
           created_by, 
           created_at, 
           updated_at              
     FROM flows 
-    WHERE model_id = $3 and data_flow_id = $4
+    WHERE id = $4 AND model_id = $5 AND data_flow_id = $6
   `;
 
-    for (const dfId of dataFlowIds) {
-      const newId = uuid.get(dfId);
-      if (!newId) {
-        throw new Error(`Data flow ${dfId} not found in map`);
+    for (const row of res.rows) {
+      const newDfId = uuid.get(row.data_flow_id);
+      if (!newDfId) {
+        this.log.warn(`Data flow ${row.data_flow_id} not found in map`);
+        continue;
+      }
+      const newOriginComponentId = uuid.get(row.origin_component_id);
+      if (!newOriginComponentId) {
+        this.log.warn(
+          `Component ID ${row.origin_component_id} not found in map`
+        );
+        continue;
       }
       await this.pool.query(queryImport, [
         targetModelId,
-        newId,
+        newDfId,
+        newOriginComponentId,
+        row.id,
         srcModelId,
-        dfId,
+        row.data_flow_id,
       ]);
     }
   }

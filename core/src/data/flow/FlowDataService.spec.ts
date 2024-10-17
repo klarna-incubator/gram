@@ -179,6 +179,7 @@ describe("FlowDataService implementation", () => {
       const newModelId = await createSampleModel(dal);
       const uuid = new Map<string, string>();
       uuid.set(dataFlowId, newDataFlowId);
+      uuid.set(originComponentId, randomUUID());
       await ds.copyFlowsBetweenModels(modelId, newModelId, uuid);
       res = await ds.listFlows(newModelId, newDataFlowId);
       expect(res.length).toEqual(1);
