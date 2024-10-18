@@ -109,7 +109,9 @@ function isModelValidation(rule: ValidationRule): rule is ModelValidationRule {
 }
 export class StaticValidationProvider implements ValidationProvider {
   constructor(public dal: DataAccessLayer) {}
+
   name: string = "StaticValidationProvider";
+
   async validate(model: Model): Promise<ValidationResult[]> {
     if (!model) {
       return [
@@ -143,7 +145,6 @@ export class StaticValidationProvider implements ValidationProvider {
     const results: ValidationResult[] = [];
 
     // Validate model
-
     for (const rule of modelRules) {
       if (!isModelValidation(rule)) {
         continue;
@@ -157,8 +158,8 @@ export class StaticValidationProvider implements ValidationProvider {
         message: testResult ? rule.messageTrue : rule.messageFalse,
       });
     }
-    // Validate components
 
+    // Validate components
     for (const component of components) {
       for (const rule of componentRules) {
         if (!isComponentValidation(rule)) {

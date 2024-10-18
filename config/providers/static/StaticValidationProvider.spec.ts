@@ -3,13 +3,22 @@ import { StaticValidationProvider } from "./StaticValidationProvider.js";
 import { ValidationProvider } from "@gram/core/dist/validation/ValidationHandler.js";
 import { createPostgresPool } from "@gram/core/dist/data/postgres.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { createSampleModel } from "@gram/core/dist/test-util/model.js";
+import Threat from "@gram/core/dist/data/threats/Threat.js";
+import Control from "@gram/core/dist/data/controls/Control.js";
+
 describe("StaticValidationProvider", () => {
   let staticValidationProvider: ValidationProvider;
+  let dal: DataAccessLayer;
 
   beforeAll(async () => {
     const pool = await createPostgresPool();
-    const dal = new DataAccessLayer(pool);
+    dal = new DataAccessLayer(pool);
     staticValidationProvider = new StaticValidationProvider(dal);
+  });
+
+  afterAll(async () => {
+    await dal.pool.end();
   });
 
   it("should return an array", async () => {
@@ -101,7 +110,13 @@ describe("StaticValidationProvider", () => {
 
   describe("StaticValidationProvider: validation rules", () => {
     it("should have all testResult true for a valid component", async () => {
-      const model = new Model("some-system-id", "some-version", "some-owner");
+      const modelId = await createSampleModel(dal);
+
+      const model = await dal.modelService.getById(modelId);
+
+      expect(model).toBeDefined();
+      if (!model) return;
+
       model.data = {
         dataFlows: [
           {
@@ -144,14 +159,47 @@ describe("StaticValidationProvider", () => {
         ],
       };
 
+      await dal.threatService.create(
+        new Threat(
+          "some threat",
+          "description",
+          model.id as string,
+          "e8edd886-84fa-4c2b-aef9-b2724eab08c8",
+          "root"
+        )
+      );
+      await dal.controlService.create(
+        new Control(
+          "some control",
+          "description",
+          false,
+          model.id as string,
+          "e8edd886-84fa-4c2b-aef9-b2724eab08c8",
+          "root"
+        )
+      );
+
       const resultList = await staticValidationProvider.validate(model);
       const validComponentResults = resultList.filter(
         (result) => result.elementId === "e8edd886-84fa-4c2b-aef9-b2724eab08c8"
       );
 
+      // console.log(validComponentResults);
+
+      // First component should pass every rule
       expect(
         validComponentResults.every((result) => result.testResult === true)
       ).toBe(true);
+
+      // Second component should not pass threat and control rules
+      const secondComponentResult = resultList.filter(
+        (result) => result.elementId === "b66e03fd-36dc-4813-9d6b-2af4eb35a66e"
+      );
+      expect(
+        secondComponentResult.find(
+          (result) => result.ruleName === "should have a description"
+        )?.testResult
+      ).toBe(false);
     });
 
     it("should have all testResult false for invalid component", async () => {
