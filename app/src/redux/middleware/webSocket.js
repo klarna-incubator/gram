@@ -100,6 +100,7 @@ function bind(dispatch, modelId) {
         "Mitigations",
         "Suggestions",
         "ActionItems",
+        "Flows",
       ])
     );
   };
@@ -158,15 +159,22 @@ function refetch(dispatch, event, modelId) {
       break;
 
     case "links":
-      // dispatch(api.util.invalidateTags(["Links"]));
-      // For some reason the below didn't work.
-      // console.log(event);
-
       dispatch(
         api.util.invalidateTags([
           {
             type: "Links",
             id: `${event.args.objectType}-${event.args.objectId}`,
+          },
+        ])
+      );
+      break;
+
+    case "flows":
+      dispatch(
+        api.util.invalidateTags([
+          {
+            type: "Flows",
+            id: `${event.args.modelId}-${event.args.dataFlowId}`,
           },
         ])
       );

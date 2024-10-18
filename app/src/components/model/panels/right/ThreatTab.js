@@ -1,18 +1,17 @@
 import { Box } from "@mui/material";
-import { useCreateThreatMutation } from "../../../../api/gram/threats";
-import { useReadOnly } from "../../../../hooks/useReadOnly";
-import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThreats";
-import { EditableSelect } from "./EditableSelect";
-import { Threat } from "./Threat";
 import {
   useAcceptSuggestionMutation,
   useListSuggestionsQuery,
 } from "../../../../api/gram/suggestions";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { useCreateThreatMutation } from "../../../../api/gram/threats";
+import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { useModelID } from "../../hooks/useModelID";
+import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThreats";
+import { EditableSelect } from "./EditableSelect";
+import { Threat } from "./Threat";
 
-export function ThreatTab(props) {
-  const { scrollToId, selectedId } = props;
+export function ThreatTab({ scrollToId, selectedId }) {
   const modelId = useModelID();
   const selectedComponent = useSelectedComponent();
   const [acceptSuggestion] = useAcceptSuggestionMutation();
@@ -20,26 +19,12 @@ export function ThreatTab(props) {
   const { data: suggestions } = useListSuggestionsQuery(modelId);
 
   const threatSuggestions = (
-    suggestions?.threatsMap[selectedComponent.id] || []
+    suggestions?.threatsMap[selectedComponent?.id] || []
   ).filter((s) => s.status === "new");
 
   const [createThreat] = useCreateThreatMutation();
   const threats = useSelectedComponentThreats();
   const readOnly = useReadOnly();
-
-  function createNewThreat(threatTitle) {
-    createThreat({
-      modelId,
-      threat: { title: threatTitle, componentId: selectedComponent.id },
-    });
-  }
-
-  function createSuggestionThreat(suggestion) {
-    acceptSuggestion({
-      modelId,
-      suggestionId: suggestion.id,
-    });
-  }
 
   return (
     <Box
@@ -56,8 +41,21 @@ export function ThreatTab(props) {
         <EditableSelect
           placeholder="Add Threat"
           options={threatSuggestions}
-          selectExisting={createSuggestionThreat}
-          createNew={createNewThreat}
+          selectExisting={(suggestion) =>
+            acceptSuggestion({
+              modelId,
+              suggestionId: suggestion.id,
+            })
+          }
+          createNew={(threatTitle) =>
+            createThreat({
+              modelId,
+              threat: {
+                title: threatTitle,
+                componentId: selectedComponent?.id,
+              },
+            })
+          }
         />
       )}
 

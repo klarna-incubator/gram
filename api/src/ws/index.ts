@@ -138,6 +138,13 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     server.tellClientsToRefetch("links", { objectType, objectId });
   });
 
+  dal.flowService.on("updated-for", ({ modelId, dataFlowId }) => {
+    const server = wssRegistry.get(modelId);
+    log.debug(`flows was updated for ${modelId} ${dataFlowId}`);
+    if (!server) return;
+    server.tellClientsToRefetch("flows", { modelId, dataFlowId });
+  });
+
   // Clean up leftover websocket servers
   const cleanupInterval = setInterval(() => {
     log.debug(`Number active channels: ${wssRegistry.size}`);

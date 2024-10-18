@@ -324,6 +324,12 @@ export class ModelDataService extends EventEmitter implements SearchProvider {
       uuid
     );
 
+    await this.dal.flowService.copyFlowsBetweenModels(
+      srcModelId,
+      targetModelId,
+      uuid
+    );
+
     this.emit("updated-for", { modelId: uuid.get(srcModelId) });
 
     return uuid.get(srcModelId) as string;

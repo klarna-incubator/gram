@@ -5,7 +5,6 @@ import { ComponentLabel } from "./ComponentLabel";
 import { Indicator } from "./Indicator";
 import { Magnets } from "./Magnets";
 import { TechStackIcons } from "./TechStackIcons";
-import "./withComponentContainer.css";
 
 export default function withComponentContainer(Entity, type, includeIndicator) {
   // Has to be a function (not arrow) for react to play nice with hooks
