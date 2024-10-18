@@ -64,9 +64,6 @@ export function LeftPanel() {
     return null;
   }
 
-  // This fixes an annoying MUI console error when you deselect a component
-  const tabHck = !selectedComponent && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
-
   return (
     <Box
       id="panel-left"
@@ -79,7 +76,6 @@ export function LeftPanel() {
       }}
     >
       <ToggleLeftPanelButton />
-      <LeftTabsHeader tab={tab} setTab={setTab} />
 
       <TabPanel value={tab} index={TAB.SYSTEM}>
         <SystemTab />
