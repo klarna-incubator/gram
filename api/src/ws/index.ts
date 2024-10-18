@@ -85,6 +85,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     log.debug(`controls was updated via api ${modelId} ${componentId}`);
     if (!server) return;
     server.tellClientsToRefetch("controls", { modelId, componentId });
+    server.tellClientsToRefetch("validation", { modelId, componentId });
   });
 
   dal.controlService.on("deleted-for", ({ modelId, componentId }) => {
@@ -93,6 +94,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     if (!server) return;
     server.tellClientsToRefetch("controls", { modelId, componentId });
     server.tellClientsToRefetch("mitigations", { modelId, componentId });
+    server.tellClientsToRefetch("validation", { modelId, componentId });
   });
 
   dal.threatService.on("updated-for", ({ modelId, componentId }) => {
@@ -100,6 +102,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     log.debug(`threats was updated via api ${modelId} ${componentId}`);
     if (!server) return;
     server.tellClientsToRefetch("threats", { modelId, componentId });
+    server.tellClientsToRefetch("validation", { modelId, componentId });
   });
 
   dal.threatService.on("deleted-for", ({ modelId, componentId }) => {
@@ -108,6 +111,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     if (!server) return;
     server.tellClientsToRefetch("threats", { modelId, componentId });
     server.tellClientsToRefetch("mitigations", { modelId, componentId });
+    server.tellClientsToRefetch("validation", { modelId, componentId });
   });
 
   dal.mitigationService.on("updated-for", ({ modelId, componentId }) => {
@@ -115,6 +119,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     log.debug(`mitigations was updated via api ${modelId} ${componentId}`);
     if (!server) return;
     server.tellClientsToRefetch("mitigations", { modelId, componentId });
+    server.tellClientsToRefetch("validation", { modelId, componentId });
   });
 
   dal.reviewService.on("updated-for", ({ modelId }) => {
@@ -129,6 +134,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     log.debug(`suggestions was updated for ${modelId}`);
     if (!server) return;
     server.tellClientsToRefetch("suggestions", { modelId });
+    server.tellClientsToRefetch("validation", { modelId });
   });
 
   dal.linkService.on("updated-for", ({ modelId, objectType, objectId }) => {

@@ -1,4 +1,3 @@
-import { AppBar, Drawer, Grow, Tab, Tabs, Toolbar } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -65,71 +64,32 @@ export function LeftPanel() {
     return null;
   }
 
-  // This fixes an annoying MUI console error when you deselect a component
-  const tabHck = !selectedComponent && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
-
   return (
-    <Box id="panel-left">
+    <Box
+      id="panel-left"
+      sx={{
+        gridArea: "left",
+        backgroundColor: "rgb(40,40,40)",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "auto",
+      }}
+    >
       <ToggleLeftPanelButton />
-      <Drawer
-        sx={{
-          width: "16.6vw",
-          minWidth: 310,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: "16.6vw",
-            minWidth: 310,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Toolbar />
 
-        <AppBar position="static">
-          <Grow in={true}>
-            <Tabs
-              value={tabHck}
-              onChange={(_, v) => setTab(v)}
-              textColor="inherit"
-              variant="fullWidth"
-              sx={{
-                "& .MuiTabs-indicator": {
-                  backgroundColor: (theme) => theme.palette.common.gramPink,
-                },
-              }}
-            >
-              <Tab disableRipple label="SYSTEM" value={TAB.SYSTEM} />
-              <Tab
-                disableRipple
-                label="ACTION ITEMS"
-                value={TAB.ACTION_ITEMS}
-              />
-              {isComponent && (
-                <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
-              )}
-              {isDataFlow && (
-                <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
-              )}
-            </Tabs>
-          </Grow>
-        </AppBar>
-
-        <TabPanel value={tab} index={TAB.SYSTEM}>
-          <SystemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
-          <ActionItemTab />
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.COMPONENT}>
-          {isComponent && <ComponentTab />}
-        </TabPanel>
-        <TabPanel value={tab} index={TAB.DATA_FLOW}>
-          {isDataFlow && <DataFlowTab />}
-        </TabPanel>
-        <LeftFooter />
-      </Drawer>
+      <TabPanel value={tab} index={TAB.SYSTEM}>
+        <SystemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.ACTION_ITEMS}>
+        <ActionItemTab />
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.COMPONENT}>
+        {isComponent && <ComponentTab />}
+      </TabPanel>
+      <TabPanel value={tab} index={TAB.DATA_FLOW}>
+        {isDataFlow && <DataFlowTab />}
+      </TabPanel>
+      <LeftFooter />
     </Box>
   );
 }

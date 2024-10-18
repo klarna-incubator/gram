@@ -237,7 +237,7 @@ export const defaultConfig: GramConfiguration = {
 
     const systemProvider = new StaticSystemProvider(sampleSystems);
     const teamProvider = new StaticTeamProvider(sampleTeams, teamMap);
-    const staticValidationProvider = new StaticValidationProvider();
+    const staticValidationProvider = new StaticValidationProvider(dal);
 
     return {
       assetFolders: [

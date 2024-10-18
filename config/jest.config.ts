@@ -19,5 +19,7 @@ const config: Config.InitialOptions = {
   },
   coverageProvider: "v8",
   transformIgnorePatterns: ["<rootDir>/node_modules/"],
+  globalSetup: "./jest.globalSetup.js",
+  setupFilesAfterEnv: ["./jest.setup.ts"],
 };
 export default config;

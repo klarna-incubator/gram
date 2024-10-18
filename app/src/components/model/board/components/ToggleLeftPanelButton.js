@@ -16,9 +16,8 @@ export const ToggleLeftPanelButton = () => {
   let style = {
     borderRadius: "0px",
     color: "white",
-    position: "relative",
-    right: "-40px",
-    top: "64px",
+    position: "absolute",
+    left: "20vw",
     width: "40px",
     height: "48px",
     backgroundColor: "#272727",
