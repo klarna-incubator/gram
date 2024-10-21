@@ -12,11 +12,6 @@ export interface ValidationResult {
   message: string;
 }
 
-export interface ValidationProvider {
-  name: string;
-  validate(model: Model): Promise<ValidationResult[]>;
-}
-
 export interface ModelTestRuleArgs {
   model: Model;
 }
@@ -49,27 +44,3 @@ export interface ModelValidationRule {
 }
 
 export type ValidationRule = ComponentValidationRule | ModelValidationRule;
-
-export class ValidationHandler {
-  validationProviders: ValidationProvider[];
-
-  constructor() {
-    this.validationProviders = [];
-  }
-
-  register(provider: ValidationProvider): void {
-    this.validationProviders.push(provider);
-  }
-
-  async validate(model: Model): Promise<ValidationResult[]> {
-    return [
-      ...(await Promise.all(
-        this.validationProviders.map(
-          async (provider): Promise<ValidationResult[]> => [
-            ...(await provider.validate(model)),
-          ]
-        )
-      )),
-    ].flat();
-  }
-}

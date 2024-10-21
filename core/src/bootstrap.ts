@@ -42,6 +42,7 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   providers.suggestionSources?.forEach((ssp) =>
     bt.registerSuggestionSource(ssp)
   );
+  providers.validationSources?.forEach((vs) => bt.registerValidationSource(vs));
   providers.systemPropertyProviders?.forEach((spp) =>
     bt.registerSystemPropertyProvider(spp)
   );
@@ -53,8 +54,6 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   providers.assetFolders?.forEach((af) =>
     bt.registerAssets(af.name, af.folderPath)
   );
-
-  providers.validationProviders?.forEach((vp) => bt.setValidationProvider(vp));
   bt.compileAssets();
 
   return dal;

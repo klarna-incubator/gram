@@ -6,11 +6,7 @@ import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.j
 import Model from "@gram/core/dist/data/models/Model.js";
 import { createSampleModel } from "../../../../test-util/model.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import {
-  ValidationProvider,
-  ValidationResult,
-} from "@gram/core/dist/validation/ValidationHandler.js";
-import { log } from "console";
+import { ValidationResult } from "@gram/core/dist/validation/models.js";
 
 describe("validateModel", () => {
   let app: any;
@@ -24,16 +20,6 @@ describe("validateModel", () => {
     token = await sampleUserToken();
     modelService = dal.modelService;
     getById = jest.spyOn(modelService, "getById");
-  });
-
-  it("should register StaticValidationHandler", () => {
-    const validationProviderList = dal.validationHandler.validationProviders;
-    expect(validationProviderList.length).toBeGreaterThan(0);
-    expect(
-      validationProviderList.find((element: ValidationProvider) => {
-        return element.name === "StaticValidationProvider";
-      })
-    ).toBeTruthy();
   });
 
   it("should return 401 on un-authenticated request", async () => {
@@ -114,7 +100,6 @@ describe("validateModel", () => {
     const res = await request(app)
       .get("/api/v1/validate/" + validModelId)
       .set("Authorization", token);
-    console.log("body", res.body.results);
 
     const results = res.body.results;
 
