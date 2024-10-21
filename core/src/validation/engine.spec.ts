@@ -12,7 +12,7 @@ describe("ValidationEngine", () => {
   beforeAll(async () => {
     const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
-    validationEngine = new ValidationEngine(dal);
+    validationEngine = new ValidationEngine(dal, true);
     // console.log("validationEngine", validationEngine.rules);
   });
 
