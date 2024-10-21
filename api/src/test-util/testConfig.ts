@@ -12,7 +12,6 @@ import { testReviewerProvider } from "./sampleReviewer.js";
 import { TestTeamProvider } from "./TestTeamProvider.js";
 import { testUserProvider } from "./sampleUser.js";
 import { testSystemProvider } from "./system.js";
-import { StaticValidationProvider } from "@gram/config/dist/providers/static/StaticValidationProvider.js";
 import { testValidationRules } from "./testValidationRules.js";
 
 function toComponentClass(o: any): ComponentClass {

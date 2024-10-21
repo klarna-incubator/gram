@@ -5,7 +5,7 @@ import { ValidationEngine } from "./engine.js";
 import { testValidationRules } from "../test-util/testValidationRules.js";
 import { createSampleModel } from "../test-util/model.js";
 
-describe("StaticValidationProvider", () => {
+describe("ValidationEngine", () => {
   let dal: DataAccessLayer;
   let validationEngine: ValidationEngine;
 
