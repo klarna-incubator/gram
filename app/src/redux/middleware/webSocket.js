@@ -101,6 +101,7 @@ function bind(dispatch, modelId) {
         "Suggestions",
         "ActionItems",
         "Flows",
+        "Validation",
       ])
     );
   };

@@ -15,7 +15,7 @@ export function validateModel(dal: DataAccessLayer) {
 
     const modelId = req.params.id;
 
-    const validationResults = await dal.validationEngine.validate(modelId);
+    const validationResults = await dal.validationEngine.getResults(modelId);
 
     if (validationResults.length === 0) {
       return res

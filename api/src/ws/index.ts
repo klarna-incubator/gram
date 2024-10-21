@@ -80,12 +80,18 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
 
   log.info("websocket handler attached");
 
+  dal.validationEngine.on("updated-for", ({modelId}) => {
+    const server = wssRegistry.get(modelId);
+    log.debug(`validation for ${modelId} was updated`);
+    if (!server) return;
+    server.tellClientsToRefetch("validation", { modelId });
+  })
+
   dal.controlService.on("updated-for", ({ modelId, componentId }) => {
     const server = wssRegistry.get(modelId);
     log.debug(`controls was updated via api ${modelId} ${componentId}`);
     if (!server) return;
-    server.tellClientsToRefetch("controls", { modelId, componentId });
-    server.tellClientsToRefetch("validation", { modelId, componentId });
+    server.tellClientsToRefetch("controls", { modelId, componentId });    
   });
 
   dal.controlService.on("deleted-for", ({ modelId, componentId }) => {
@@ -93,16 +99,14 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     log.debug(`control was deleted via api ${modelId} ${componentId}`);
     if (!server) return;
     server.tellClientsToRefetch("controls", { modelId, componentId });
-    server.tellClientsToRefetch("mitigations", { modelId, componentId });
-    server.tellClientsToRefetch("validation", { modelId, componentId });
+    server.tellClientsToRefetch("mitigations", { modelId, componentId });    
   });
 
   dal.threatService.on("updated-for", ({ modelId, componentId }) => {
     const server = wssRegistry.get(modelId);
     log.debug(`threats was updated via api ${modelId} ${componentId}`);
     if (!server) return;
-    server.tellClientsToRefetch("threats", { modelId, componentId });
-    server.tellClientsToRefetch("validation", { modelId, componentId });
+    server.tellClientsToRefetch("threats", { modelId, componentId });    
   });
 
   dal.threatService.on("deleted-for", ({ modelId, componentId }) => {
@@ -110,16 +114,14 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     log.debug(`threat was deleted via api ${modelId} ${componentId}`);
     if (!server) return;
     server.tellClientsToRefetch("threats", { modelId, componentId });
-    server.tellClientsToRefetch("mitigations", { modelId, componentId });
-    server.tellClientsToRefetch("validation", { modelId, componentId });
+    server.tellClientsToRefetch("mitigations", { modelId, componentId });    
   });
 
   dal.mitigationService.on("updated-for", ({ modelId, componentId }) => {
     const server = wssRegistry.get(modelId);
     log.debug(`mitigations was updated via api ${modelId} ${componentId}`);
     if (!server) return;
-    server.tellClientsToRefetch("mitigations", { modelId, componentId });
-    server.tellClientsToRefetch("validation", { modelId, componentId });
+    server.tellClientsToRefetch("mitigations", { modelId, componentId });    
   });
 
   dal.reviewService.on("updated-for", ({ modelId }) => {
@@ -133,8 +135,7 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     const server = wssRegistry.get(modelId);
     log.debug(`suggestions was updated for ${modelId}`);
     if (!server) return;
-    server.tellClientsToRefetch("suggestions", { modelId });
-    server.tellClientsToRefetch("validation", { modelId });
+    server.tellClientsToRefetch("suggestions", { modelId });    
   });
 
   dal.linkService.on("updated-for", ({ modelId, objectType, objectId }) => {

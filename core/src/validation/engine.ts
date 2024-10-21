@@ -7,9 +7,11 @@ import {
   ValidationResult,
   ValidationRule,
 } from "./models.js";
+import Cache from "../util/cache.js";
+import EventEmitter from "events";
 
 const VALIDATION_DELAY =
-  process.env.NODE_ENV && process.env.NODE_ENV === "test" ? 0 : 3000;
+  process.env.NODE_ENV && process.env.NODE_ENV === "test" ? 0 : 1500;
 
 function isComponentValidation(
   rule: ValidationRule
@@ -21,7 +23,9 @@ function isModelValidation(rule: ValidationRule): rule is ModelValidationRule {
   return rule.type === "model";
 }
 
-export class ValidationEngine {
+const CACHE_EXPIRY_INTERVAL_MS = 1000 * 60 * 60 * 24; // 24 hours
+
+export class ValidationEngine extends EventEmitter {
   public rules: ValidationRule[] = [];
 
   log = log4js.getLogger("ValidationEngine");
@@ -29,33 +33,61 @@ export class ValidationEngine {
   // One timeout per ModelID: should be threadsafe because node runs singlethreaded ;))
   delayer = new Map<string, NodeJS.Timeout>();
 
+  cache = new Cache<string, ValidationResult[]>(
+    "ValidationEngine",
+    CACHE_EXPIRY_INTERVAL_MS
+  );
+
   constructor(private dal: DataAccessLayer, public noListen: boolean = false) {
+    super();
+
     dal.modelService.on("updated-for", ({ modelId }) => {
-      if (!this.noListen) {
-        this.log.debug(`model ${modelId} was updated via api`);
-        // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
-        const timeout = this.delayer.get(modelId);
-        if (timeout) clearTimeout(timeout);
-        this.delayer.set(
-          modelId,
-          setTimeout(() => this.validate(modelId), VALIDATION_DELAY)
-        );
-      }
+      this.queueValidation(modelId);
     });
+
+    dal.threatService.on("updated-for", ({ modelId }) => {
+      this.queueValidation(modelId);
+    });
+
+    dal.controlService.on("updated-for", ({ modelId }) => {
+      this.queueValidation(modelId);
+    });
+
+    // dal.suggestionService.on("updated-for", ({ modelId }) => {
+    //   this.queueValidation(modelId);
+    // });
+
+    // dal.mitigationService.on("updated-for", ({ modelId }) => {
+    //   this.queueValidation(modelId);
+    // });
+  }
+
+  private queueValidation(modelId: any) {
+    if (!this.noListen) {
+      this.log.debug(`model ${modelId} was updated via api`);
+      // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
+      const timeout = this.delayer.get(modelId);
+      if (timeout) clearTimeout(timeout);
+      this.delayer.set(
+        modelId,
+        setTimeout(() => this.validate(modelId), VALIDATION_DELAY)
+      );
+    }
   }
 
   register(rules: ValidationRule[]) {
     this.rules.push(...rules);
   }
 
-  async validate(modelId: string): Promise<ValidationResult[]> {
+  async validate(modelId: string) {
+    this.log.debug(`Validating model ${modelId}`);
     const model = await this.dal.modelService.getById(modelId);
 
     if (!model) {
       this.log.warn(
         `Validation was requested for ${modelId}, which does not exist`
       );
-      return [];
+      return;
     }
 
     // Model's data
@@ -83,14 +115,19 @@ export class ValidationEngine {
       if (!isModelValidation(rule)) {
         continue;
       }
-      const testResult = await rule.test({ model });
-      results.push({
-        type: rule.type,
-        elementName: "Model",
-        ruleName: rule.name,
-        testResult: testResult,
-        message: testResult ? rule.messageTrue : rule.messageFalse,
-      });
+
+      try {
+        const testResult = await rule.test({ model });
+        results.push({
+          type: rule.type,
+          elementName: "Model",
+          ruleName: rule.name,
+          testResult: testResult,
+          message: testResult ? rule.messageTrue : rule.messageFalse,
+        });
+      } catch (err) {
+        this.log.error(`Error validating model ${modelId}`, err);
+      }
     }
 
     // Validate components
@@ -102,24 +139,40 @@ export class ValidationEngine {
         if (!rule.affectedType.includes(component.type)) {
           continue;
         }
-        const testResult = await rule.test({
-          component,
-          dataflows: dataFlows,
-          threats,
-          controls,
-          mitigations,
-        });
-        results.push({
-          type: rule.type,
-          elementId: component.id,
-          elementName: component.name,
-          ruleName: rule.name,
-          testResult: testResult,
-          message: testResult ? rule.messageTrue : rule.messageFalse,
-        });
+
+        try {
+          const testResult = await rule.test({
+            component,
+            dataflows: dataFlows,
+            threats,
+            controls,
+            mitigations,
+          });
+          results.push({
+            type: rule.type,
+            elementId: component.id,
+            elementName: component.name,
+            ruleName: rule.name,
+            testResult: testResult,
+            message: testResult ? rule.messageTrue : rule.messageFalse,
+          });
+        } catch (err) {
+          this.log.error(`Error validating model ${modelId}`, err);
+        }
       }
     }
 
-    return results;
+    this.cache.set(modelId, results);
+    this.log.debug(`Validation results for ${modelId} are ${results}`);
+
+    this.emit("updated-for", { modelId });
+  }
+
+  async getResults(modelId: string): Promise<ValidationResult[]> {
+    if (!this.cache.has(modelId)) {
+      await this.validate(modelId);
+      return this.cache.get(modelId)!;
+    }
+    return this.cache.get(modelId)!;
   }
 }
