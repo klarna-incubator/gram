@@ -94,12 +94,20 @@ export class DataAccessLayer {
     this.notificationService = new NotificationDataService(this);
     this.reviewService = new ReviewDataService(this);
     this.suggestionService = new SuggestionDataService(this);
-    this.suggestionEngine = new SuggestionEngine(this);
     this.reportService = new ReportDataService(this);
     this.bannerService = new BannerDataService(this);
     this.linkService = new LinkDataService(this);
     this.flowService = new FlowDataService(this);
-    this.validationEngine = new ValidationEngine(this);
+
+    // Initialize Engines
+    this.validationEngine = new ValidationEngine(
+      this,
+      process.env.NODE_ENV === "test"
+    );
+    this.suggestionEngine = new SuggestionEngine(
+      this,
+      process.env.NODE_ENV === "test"
+    );
 
     // Initialize Action Item Handler. Needs to happen after Data Services are initialized.
     this.actionItemHandler = new ActionItemHandler(this);

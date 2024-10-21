@@ -41,17 +41,19 @@ export class ValidationEngine extends EventEmitter {
   constructor(private dal: DataAccessLayer, public noListen: boolean = false) {
     super();
 
-    dal.modelService.on("updated-for", ({ modelId }) => {
-      this.queueValidation(modelId);
-    });
+    if (!noListen) {
+      dal.modelService.on("updated-for", ({ modelId }) => {
+        this.queueValidation(modelId);
+      });
 
-    dal.threatService.on("updated-for", ({ modelId }) => {
-      this.queueValidation(modelId);
-    });
+      dal.threatService.on("updated-for", ({ modelId }) => {
+        this.queueValidation(modelId);
+      });
 
-    dal.controlService.on("updated-for", ({ modelId }) => {
-      this.queueValidation(modelId);
-    });
+      dal.controlService.on("updated-for", ({ modelId }) => {
+        this.queueValidation(modelId);
+      });
+    }
 
     // dal.suggestionService.on("updated-for", ({ modelId }) => {
     //   this.queueValidation(modelId);
@@ -63,16 +65,14 @@ export class ValidationEngine extends EventEmitter {
   }
 
   private queueValidation(modelId: any) {
-    if (!this.noListen) {
-      this.log.debug(`model ${modelId} was updated via api`);
-      // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
-      const timeout = this.delayer.get(modelId);
-      if (timeout) clearTimeout(timeout);
-      this.delayer.set(
-        modelId,
-        setTimeout(() => this.validate(modelId), VALIDATION_DELAY)
-      );
-    }
+    this.log.debug(`model ${modelId} was updated via api`);
+    // Trigger a fetch of suggestions after a delay. New activity resets the timer to avoid trigger multiple times.
+    const timeout = this.delayer.get(modelId);
+    if (timeout) clearTimeout(timeout);
+    this.delayer.set(
+      modelId,
+      setTimeout(() => this.validate(modelId), VALIDATION_DELAY)
+    );
   }
 
   register(rules: ValidationRule[]) {
