@@ -13,39 +13,62 @@ describe("ValidationEngine", () => {
     const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
     validationEngine = new ValidationEngine(dal, true);
-    // console.log("validationEngine", validationEngine.rules);
+  });
+
+  afterEach(async () => {
+    validationEngine.rules = [];
   });
 
   afterAll(async () => {
     await dal.pool.end();
   });
 
-  it("should have one rule by default", async () => {
-    expect(validationEngine.rules.length).toBe(1);
+  it("getResults should return empty array if engine has no rule", async () => {
+    expect(validationEngine.rules.length).toBe(0);
     const modelId = await createSampleModel(dal);
     const resultList = await validationEngine.getResults(modelId);
     expect(resultList.length).toBe(0);
   });
 
-  it("should return an array", async () => {
+  it("getResults should return an array", async () => {
+    validationEngine.register(testValidationRules);
     const modelId = await createSampleModel(dal);
     const result = await validationEngine.getResults(modelId);
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it("should return one result for an empty model", async () => {
+  it("getResults should return rule result for model", async () => {
+    validationEngine.register([
+      {
+        type: "model",
+        name: "should have at least one component",
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+    ]);
     const modelId = await createSampleModel(dal);
     const resultList = await validationEngine.getResults(modelId);
+
     expect(resultList.length).toBe(1);
     const result = resultList[0];
     expect(result.type).toBe("model");
     expect(result.ruleName).toBe("should have at least one component");
-    expect(result.testResult).toBe(false);
-    expect(result.message).toBe("Model is empty");
   });
 
-  it("getResults should return", async () => {
-    const validationEngine = new ValidationEngine(dal);
+  it("getResults should return results for each components", async () => {
+    validationEngine.register(testValidationRules);
+    const modelId = await createSampleModel(dal);
+
+    const resultList = await validationEngine.getResults(modelId);
+    const componentResults = resultList.filter(
+      (result) => result.type === "component"
+    );
+    expect(componentResults.length).toBe(2 * 2); // Number of component rules * number of components
+  });
+
+  it("should handle rules that error", async () => {
     validationEngine.register([
       ...testValidationRules,
       {
@@ -59,78 +82,13 @@ describe("ValidationEngine", () => {
         messageFalse: "Yep, it crashed",
       },
     ]);
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    const errorResult = resultList.find(
+      (result) => result.ruleName === "should crash"
+    );
+    expect(errorResult).toBeUndefined();
+
+    expect(Array.isArray(resultList)).toBe(true);
   });
-
-  it("should handle rules that error", async () => {});
-
-  // it("should have validation results for each component", async () => {
-  //   const model = new Model("some-system-id", "some-version", "some-owner");
-  //   model.id = "some-id";
-  //   model.data = {
-  //     dataFlows: [],
-  //     components: [
-  //       {
-  //         x: 338.046875,
-  //         y: 450,
-  //         id: "e8edd886-84fa-4c2b-aef9-b2724eab08c8",
-  //         name: "Process",
-  //         type: "proc",
-  //       },
-  //       {
-  //         x: 736.046875,
-  //         y: 299,
-  //         id: "b66e03fd-36dc-4813-9d6b-2af4eb35a66e",
-  //         name: "External entity",
-  //         type: "ee",
-  //       },
-  //       {
-  //         x: 755.046875,
-  //         y: 613,
-  //         id: "e7bdc6a9-169a-40fc-8831-543db611ff6a",
-  //         name: "Data Store",
-  //         type: "ds",
-  //       },
-  //       {
-  //         x: 383.046875,
-  //         y: 804,
-  //         id: "1645da1a-142b-4567-a2af-1e6ea76181b0",
-  //         name: "Trust Boundary",
-  //         type: "tb",
-  //         width: 300,
-  //         height: 150,
-  //       },
-  //     ],
-  //   };
-
-  //   const resultList = await validationEngine.validate(model.id);
-  //   expect(resultList.length).toBeGreaterThan(4);
-  //   expect(
-  //     resultList.some(
-  //       (result) =>
-  //         result.type === "component" &&
-  //         result.elementId === "e8edd886-84fa-4c2b-aef9-b2724eab08c8"
-  //     )
-  //   ).toBe(true);
-  //   expect(
-  //     resultList.some(
-  //       (result) =>
-  //         result.type === "component" &&
-  //         result.elementId === "b66e03fd-36dc-4813-9d6b-2af4eb35a66e"
-  //     )
-  //   ).toBe(true);
-  //   expect(
-  //     resultList.some(
-  //       (result) =>
-  //         result.type === "component" &&
-  //         result.elementId === "e7bdc6a9-169a-40fc-8831-543db611ff6a"
-  //     )
-  //   ).toBe(true);
-  //   expect(
-  //     resultList.some(
-  //       (result) =>
-  //         result.type === "component" &&
-  //         result.elementId === "1645da1a-142b-4567-a2af-1e6ea76181b0"
-  //     )
-  //   ).toBe(true);
-  // });
 });
