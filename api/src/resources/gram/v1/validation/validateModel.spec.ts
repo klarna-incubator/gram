@@ -35,15 +35,17 @@ describe("validateModel", () => {
     expect(res.status).toBe(401);
   });
 
-  it("should return 404 if no validation rules are available", async () => {
+  it("should return 200 if no validation rules are available", async () => {
     dal.validationEngine.rules = [];
+    const validModelId = await createSampleModel(dal);
     const res = await request(app)
-      .get("/api/v1/validate/")
+      .get("/api/v1/validate/" + validModelId)
       .set("Authorization", token);
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(200);
+    expect(res.body.results.length).toBe(0);
   });
 
-  it("should return 404 if no rule applies to the model", async () => {
+  it("should return 200 if no rule applies to the model", async () => {
     const validModelId = await createSampleModel(dal);
 
     dal.validationEngine.rules = [
@@ -60,7 +62,8 @@ describe("validateModel", () => {
     const res = await request(app)
       .get("/api/v1/validate/" + validModelId)
       .set("Authorization", token);
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(200);
+    expect(res.body.results.length).toBe(0);
   });
 
   it("should return 500 if the model id is invalid or unknown", async () => {

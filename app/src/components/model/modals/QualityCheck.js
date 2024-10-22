@@ -39,13 +39,22 @@ export function QualityCheck() {
   const { data: validation } = useValidateQuery(modelId);
 
   const validationResults = validation?.results || [];
+  if (validationResults.length === 0) {
+    dispatch(
+      modalActions.open({
+        type: MODALS.RequestReview.name,
+        props: { modelId },
+      })
+    );
+  }
   const passedResults = validationResults.filter((result) => result.testResult);
   const failedResults = validationResults.filter(
     (result) => !result.testResult
   );
-  const successRatio = Number(
-    (passedResults.length / validationResults.length).toFixed(2)
-  );
+  const successRatio =
+    validationResults.length === 0
+      ? 0
+      : Number((passedResults.length / validationResults.length).toFixed(2));
 
   return (
     <Dialog open={true} scroll="paper" fullWidth maxWidth="sm">

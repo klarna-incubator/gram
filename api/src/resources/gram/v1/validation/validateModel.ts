@@ -7,20 +7,25 @@ import { Request, Response } from "express";
 
 export function validateModel(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    if (dal.validationEngine.rules.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No validation rules registered" });
-    }
-
     const modelId = req.params.id;
+    if (dal.validationEngine.rules.length === 0) {
+      return res.json({
+        id: modelId,
+        total: 0,
+        results: [],
+        message: "No validation rules registered",
+      });
+    }
 
     const validationResults = await dal.validationEngine.getResults(modelId);
 
     if (validationResults.length === 0) {
-      return res
-        .status(404)
-        .json({ message: `No rule applies to model ${modelId}` });
+      return res.json({
+        id: modelId,
+        total: 0,
+        results: [],
+        message: `No rule applies to model ${modelId}`,
+      });
     }
 
     return res.json({
