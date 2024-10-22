@@ -26,7 +26,7 @@ import { StaticUserProvider } from "./providers/static/StaticUserProvider.js";
 import { Team } from "@gram/core/dist/auth/models/Team.js";
 import { StaticTeamProvider } from "./providers/static/StaticTeamProvider.js";
 import { StrideSuggestionProvider } from "@gram/stride";
-import { StaticValidationProvider } from "./providers/static/StaticValidationProvider.js";
+import { basicValidationRules } from "./providers/static/BasicValidationRules.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -237,7 +237,6 @@ export const defaultConfig: GramConfiguration = {
 
     const systemProvider = new StaticSystemProvider(sampleSystems);
     const teamProvider = new StaticTeamProvider(sampleTeams, teamMap);
-    const staticValidationProvider = new StaticValidationProvider();
 
     return {
       assetFolders: [
@@ -278,7 +277,7 @@ export const defaultConfig: GramConfiguration = {
         teamProvider, // completely optional
         dal.modelService,
       ],
-      validationProviders: [staticValidationProvider],
+      validationSources: [basicValidationRules],
     };
   },
 };

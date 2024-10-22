@@ -3,38 +3,35 @@
  * @exports {function} handler
  */
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import Model from "@gram/core/dist/data/models/Model.js";
 import { Request, Response } from "express";
 
 export function validateModel(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const modelId = req.params.id;
-    let model: Model | null = null;
-    // Get the model from the DAL
-    try {
-      model = await dal.modelService.getById(modelId);
-
-      if (!model) {
-        return res.sendStatus(400);
-      }
-    } catch (error) {
-      return res.sendStatus(400);
-    }
-    // Validate the model
-    try {
-      // Use validation service to validate the model
-      // Return the validation results + model id
-
-      const validationResults = await dal.validationHandler.validate(model);
-      console.log("Results from static validation", validationResults);
-
+    if (dal.validationEngine.rules.length === 0) {
       return res.json({
         id: modelId,
-        total: validationResults.length,
-        results: validationResults,
+        total: 0,
+        results: [],
+        message: "No validation rules registered",
       });
-    } catch (error) {
-      return res.sendStatus(400);
     }
+
+    const validationResults = await dal.validationEngine.getResults(modelId);
+
+    if (validationResults.length === 0) {
+      return res.json({
+        id: modelId,
+        total: 0,
+        results: [],
+        message: `No rule applies to model ${modelId}`,
+      });
+    }
+
+    return res.json({
+      id: modelId,
+      total: validationResults.length,
+      results: validationResults,
+    });
   };
 }

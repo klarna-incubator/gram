@@ -80,6 +80,13 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
 
   log.info("websocket handler attached");
 
+  dal.validationEngine.on("updated-for", ({ modelId }) => {
+    const server = wssRegistry.get(modelId);
+    log.debug(`validation for ${modelId} was updated`);
+    if (!server) return;
+    server.tellClientsToRefetch("validation", { modelId });
+  });
+
   dal.controlService.on("updated-for", ({ modelId, componentId }) => {
     const server = wssRegistry.get(modelId);
     log.debug(`controls was updated via api ${modelId} ${componentId}`);

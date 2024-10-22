@@ -180,7 +180,7 @@ function RequestReviewButton({ permissions, modelId }) {
       onClick={() => {
         dispatch(
           modalActions.open({
-            type: MODALS.RequestReview.name,
+            type: MODALS.QualityCheck.name,
             props: { modelId },
           })
         );

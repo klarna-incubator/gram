@@ -8,3 +8,11 @@ export function useSetMultipleSelected() {
     dispatch(setMultipleSelected(ids));
   };
 }
+
+export function useDeselectAll() {
+  const dispatch = useDispatch();
+
+  return () => {
+    dispatch(setMultipleSelected([]));
+  };
+}

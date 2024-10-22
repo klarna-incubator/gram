@@ -12,7 +12,16 @@ import { testReviewerProvider } from "./sampleReviewer.js";
 import { TestTeamProvider } from "./TestTeamProvider.js";
 import { testUserProvider } from "./sampleUser.js";
 import { testSystemProvider } from "./system.js";
-import { StaticValidationProvider } from "@gram/config/dist/providers/static/StaticValidationProvider.js";
+import { testValidationRules } from "./testValidationRules.js";
+
+function toComponentClass(o: any): ComponentClass {
+  return {
+    id: o.id,
+    name: o.name,
+    icon: o.icon,
+    componentType: o.componentType,
+  };
+}
 
 /**
  * I don't know why this exists when there is a core/testConfig.ts. Might be worth trying to move all test-utility stuff there instead.
@@ -140,15 +149,6 @@ export const testConfig: GramConfiguration = {
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {
-    const toComponentClass = (o: any): ComponentClass => {
-      return {
-        id: o.id,
-        name: o.name,
-        icon: o.icon,
-        componentType: o.componentType,
-      };
-    };
-
     // Disable suggestionEngine from listening on modelService events to stop Max EventEmitter complaints.
     // This will probably confuse the hell out of me in the future. Oh well.
     dal.suggestionEngine.noListen = true;
@@ -163,7 +163,7 @@ export const testConfig: GramConfiguration = {
       systemProvider: testSystemProvider,
       suggestionSources: [],
       teamProvider: new TestTeamProvider(),
-      validationProviders: [new StaticValidationProvider()],
+      validationSources: [testValidationRules],
     };
   },
 };

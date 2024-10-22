@@ -13,7 +13,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.15.20",
-    "@mui/material": "^5.15.20",
+    "@mui/material": "^6.1.0",
     "@reduxjs/toolkit": "^1.7.2",
     "@sentry/react": "^7.6.0",
     "@sentry/tracing": "^7.6.0",

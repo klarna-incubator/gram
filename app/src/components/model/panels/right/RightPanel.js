@@ -1,4 +1,4 @@
-import { Box, Drawer, Toolbar, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useListMitigationsQuery } from "../../../../api/gram/mitigations";
@@ -37,9 +37,6 @@ function TabPanel(props) {
 
 var selectedTimer = null;
 
-const width = "16.6vw";
-const minWidth = 310;
-
 export function RightPanel() {
   const [tab, setTab] = useState(TAB.THREATS);
   const [selectedId, setSelectedId] = useState(null);
@@ -74,56 +71,50 @@ export function RightPanel() {
   }
 
   return (
-    <Box>
-      <ToggleRightPanelButton />
-      <Drawer
-        id="panel-right"
-        sx={{
-          width,
-          minWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width,
-            minWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="right"
-      >
-        <Toolbar />
-        {[
-          COMPONENT_TYPE.DATA_STORE,
-          COMPONENT_TYPE.PROCESS,
-          COMPONENT_TYPE.TRUST_BOUNDARY,
-          COMPONENT_TYPE.DATA_FLOW,
-        ].includes(selectedComponent?.type) ? (
-          <>
-            <RightTabsHeader tab={tab} setTab={setTab} />
-            <TabPanel value={tab} index={TAB.SUGGESTIONS}>
-              <SuggestionTab />
-            </TabPanel>
-            <TabPanel value={tab} index={TAB.THREATS}>
-              <ThreatTab scrollToId={scrollToId} selectedId={selectedId} />
-            </TabPanel>
-            <TabPanel value={tab} index={TAB.CONTROLS}>
-              <ControlTab
-                threats={threats}
-                controls={controls}
-                controlsMap={controlsMap}
-                modelId={modelId}
-                componentId={selectedComponent?.id}
-                scrollToId={scrollToId}
-                selectedId={selectedId}
-              />
-            </TabPanel>
-          </>
-        ) : (
+    <Box
+      id="panel-right"
+      sx={{
+        gridArea: "right",
+        backgroundColor: "rgb(40,40,40)",
+        overflow: "auto",
+      }}
+    >
+      {[
+        COMPONENT_TYPE.DATA_STORE,
+        COMPONENT_TYPE.PROCESS,
+        COMPONENT_TYPE.TRUST_BOUNDARY,
+        COMPONENT_TYPE.DATA_FLOW,
+      ].includes(selectedComponent?.type) ? (
+        <>
+          <ToggleRightPanelButton />
+          <RightTabsHeader tab={tab} setTab={setTab} />
+
+          <TabPanel value={tab} index={TAB.SUGGESTIONS}>
+            <SuggestionTab />
+          </TabPanel>
+          <TabPanel value={tab} index={TAB.THREATS}>
+            <ThreatTab scrollToId={scrollToId} selectedId={selectedId} />
+          </TabPanel>
+          <TabPanel value={tab} index={TAB.CONTROLS}>
+            <ControlTab
+              threats={threats}
+              controls={controls}
+              controlsMap={controlsMap}
+              modelId={modelId}
+              componentId={selectedComponent?.id}
+              scrollToId={scrollToId}
+              selectedId={selectedId}
+            />
+          </TabPanel>
+        </>
+      ) : (
+        <>
+          <ToggleRightPanelButton />
           <Typography align="center" color={"#777"} marginTop={"50%"}>
             No component selected
           </Typography>
-        )}
-      </Drawer>
+        </>
+      )}
     </Box>
   );
 }

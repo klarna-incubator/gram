@@ -101,6 +101,7 @@ function bind(dispatch, modelId) {
         "Suggestions",
         "ActionItems",
         "Flows",
+        "Validation",
       ])
     );
   };
@@ -156,6 +157,10 @@ function refetch(dispatch, event, modelId) {
 
     case "suggestions":
       dispatch(api.util.invalidateTags(["Suggestions"]));
+      break;
+
+    case "validation":
+      dispatch(api.util.invalidateTags(["Validation"]));
       break;
 
     case "links":

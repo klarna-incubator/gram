@@ -18,9 +18,8 @@ export const ToggleRightPanelButton = () => {
   let style = {
     borderRadius: "0px",
     color: "white",
-    position: "relative",
-    left: "-40px",
-    top: "64px",
+    position: "absolute",
+    right: "20vw",
     width: "40px",
     height: "48px",
     backgroundColor: selectedComponent ? "#272727" : "#121212",
