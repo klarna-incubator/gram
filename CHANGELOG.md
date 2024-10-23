@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.2](https://github.com/klarna-incubator/gram/compare/v4.17.1...v4.17.2) (2024-10-23)
+
+### Bug Fixes
+
+- bump vulnerable version of oidc-client ([371499b](https://github.com/klarna-incubator/gram/commit/371499b1533faa6df98ce52f71ba73f9ff0ce2f1))
+- fix npm registry ([8938d34](https://github.com/klarna-incubator/gram/commit/8938d34e314fc00e35060da4523b8be5bac9ad1e))
+
 ## [4.17.1](https://github.com/klarna-incubator/gram/compare/v4.17.0...v4.17.1) (2024-10-23)
 
 ### Bug Fixes
