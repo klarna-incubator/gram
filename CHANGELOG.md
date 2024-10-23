@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.3](https://github.com/klarna-incubator/gram/compare/v4.17.2...v4.17.3) (2024-10-23)
+
+### Bug Fixes
+
+- bump the rest of mui packages to v6 ([70ab5c5](https://github.com/klarna-incubator/gram/commit/70ab5c5040852a32dcba7fe12dee6c479beac1c9))
+
 ## [4.17.2](https://github.com/klarna-incubator/gram/compare/v4.17.1...v4.17.2) (2024-10-23)
 
 ### Bug Fixes
