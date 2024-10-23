@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.17.0](https://github.com/klarna-incubator/gram/compare/v4.16.0...v4.17.0) (2024-10-23)
+
+### Features
+
+- :art: add bottom panel for validation result ([a19ab9c](https://github.com/klarna-incubator/gram/commit/a19ab9cd10cee6929ddb2a86a11b2ead74fea6f6))
+- Dataflows now have a label, threats/controls and flows with attributes ([0fe31be](https://github.com/klarna-incubator/gram/commit/0fe31be4f51f4ea7d61ca87535faad954f4349db))
+- update svgporn from upstream - 200+ new logos ([e720d17](https://github.com/klarna-incubator/gram/commit/e720d170e3b61e06d57ff00f001df1eb808aa65e))
+
 # [4.16.0](https://github.com/klarna-incubator/gram/compare/v4.15.2...v4.16.0) (2024-09-09)
 
 ### Features
