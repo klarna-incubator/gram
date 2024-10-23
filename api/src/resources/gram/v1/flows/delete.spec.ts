@@ -69,7 +69,7 @@ describe("Flow.delete", () => {
   });
 
   it("should return 404 with invalid flow id", async () => {
-    const flowId = randomUUID();
+    const flowId = Math.floor(Math.random() * 100000000);
     const res = await request(app)
       .delete(`/api/v1/flows/${flowId}`)
       .set("Authorization", token)
