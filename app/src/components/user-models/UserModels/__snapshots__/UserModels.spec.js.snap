@@ -6,24 +6,24 @@ exports[`UserModels renders 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row css-12n339t-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row css-1fn4916-MuiGrid2-root"
       >
         <div
           class="MuiGrid2-root MuiGrid2-direction-xs-row css-1lqpupi-MuiGrid2-root"
         >
           <div
-            class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-14wibks-MuiGrid2-root"
+            class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-ubb9a5-MuiGrid2-root"
           >
             <div
-              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-10muxq3-MuiGrid2-root"
+              class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-ticvdu-MuiGrid2-root"
             >
               <h5
-                class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
               >
                 Your Models
               </h5>
               <p
-                class="MuiTypography-root MuiTypography-body1 dimmed css-1edfpdg-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 dimmed css-rizt0-MuiTypography-root"
               >
                 These models are bound to your account and not bound to a specific system.
               </p>
@@ -35,7 +35,7 @@ exports[`UserModels renders 1`] = `
                   href="/model/new"
                 >
                   <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-b4yaxo-MuiButtonBase-root-MuiButton-root"
+                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-1btmbba-MuiButtonBase-root-MuiButton-root"
                     tabindex="0"
                     type="button"
                   >
@@ -45,14 +45,14 @@ exports[`UserModels renders 1`] = `
               </div>
               <br />
               <hr
-                class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+                class="MuiDivider-root MuiDivider-fullWidth css-1jpc804-MuiDivider-root"
               />
               <div
-                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1pyfb4v-MuiPaper-root-MuiCard-root"
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1eg0ry7-MuiPaper-root-MuiCard-root"
                 style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
               >
                 <div
-                  class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+                  class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
                 >
                   <div
                     class="loading"
@@ -63,13 +63,13 @@ exports[`UserModels renders 1`] = `
                     <div />
                   </div>
                   <ul
-                    class="MuiList-root MuiList-padding css-1u169s7-MuiList-root"
+                    class="MuiList-root MuiList-padding css-b7dj7n-MuiList-root"
                   >
                     <div
-                      class="MuiListItemText-root css-1y2w5y4-MuiListItemText-root"
+                      class="MuiListItemText-root css-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1edfpdg-MuiTypography-root"
+                        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-rizt0-MuiTypography-root"
                       >
                         No models exist
                       </span>
@@ -85,24 +85,24 @@ exports[`UserModels renders 1`] = `
   </body>,
   "container": <div>
     <div
-      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row css-12n339t-MuiGrid2-root"
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row css-1fn4916-MuiGrid2-root"
     >
       <div
         class="MuiGrid2-root MuiGrid2-direction-xs-row css-1lqpupi-MuiGrid2-root"
       >
         <div
-          class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-14wibks-MuiGrid2-root"
+          class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-ubb9a5-MuiGrid2-root"
         >
           <div
-            class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-10muxq3-MuiGrid2-root"
+            class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-ticvdu-MuiGrid2-root"
           >
             <h5
-              class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
             >
               Your Models
             </h5>
             <p
-              class="MuiTypography-root MuiTypography-body1 dimmed css-1edfpdg-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 dimmed css-rizt0-MuiTypography-root"
             >
               These models are bound to your account and not bound to a specific system.
             </p>
@@ -114,7 +114,7 @@ exports[`UserModels renders 1`] = `
                 href="/model/new"
               >
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-b4yaxo-MuiButtonBase-root-MuiButton-root"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-1btmbba-MuiButtonBase-root-MuiButton-root"
                   tabindex="0"
                   type="button"
                 >
@@ -124,14 +124,14 @@ exports[`UserModels renders 1`] = `
             </div>
             <br />
             <hr
-              class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+              class="MuiDivider-root MuiDivider-fullWidth css-1jpc804-MuiDivider-root"
             />
             <div
-              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1pyfb4v-MuiPaper-root-MuiCard-root"
+              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1eg0ry7-MuiPaper-root-MuiCard-root"
               style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
             >
               <div
-                class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+                class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
               >
                 <div
                   class="loading"
@@ -142,13 +142,13 @@ exports[`UserModels renders 1`] = `
                   <div />
                 </div>
                 <ul
-                  class="MuiList-root MuiList-padding css-1u169s7-MuiList-root"
+                  class="MuiList-root MuiList-padding css-b7dj7n-MuiList-root"
                 >
                   <div
-                    class="MuiListItemText-root css-1y2w5y4-MuiListItemText-root"
+                    class="MuiListItemText-root css-cfq8qh-MuiListItemText-root"
                   >
                     <span
-                      class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1edfpdg-MuiTypography-root"
+                      class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-rizt0-MuiTypography-root"
                     >
                       No models exist
                     </span>

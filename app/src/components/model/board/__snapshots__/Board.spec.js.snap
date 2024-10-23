@@ -11,18 +11,18 @@ exports[`Board renders Board 1`] = `
         tabindex="1"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-e6gb6b-MuiPaper-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-d0t5i1-MuiPaper-root"
           style="--Paper-shadow: none;"
         >
           <div
             aria-label="cursor mode"
-            class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1st5cz8-MuiToggleButtonGroup-root"
+            class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1qb8o-MuiToggleButtonGroup-root"
             role="group"
           >
             <button
               aria-label="pointer mode"
               aria-pressed="false"
-              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
               value="CURSOR_POINTER"
@@ -30,7 +30,7 @@ exports[`Board renders Board 1`] = `
               <svg
                 aria-hidden="true"
                 aria-label="Toggle pointer mode - allows you to select components"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
                 data-mui-internal-clone-element="true"
                 data-testid="HighlightAltIcon"
                 focusable="false"
@@ -44,7 +44,7 @@ exports[`Board renders Board 1`] = `
             <button
               aria-label="pan mode"
               aria-pressed="false"
-              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
               value="CURSOR_PAN"
@@ -52,7 +52,7 @@ exports[`Board renders Board 1`] = `
               <svg
                 aria-hidden="true"
                 aria-label="Toggle pan mode - allows you move the diagram. Hint: you can also hold space"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
                 data-mui-internal-clone-element="true"
                 data-testid="PanToolIcon"
                 focusable="false"
@@ -65,19 +65,19 @@ exports[`Board renders Board 1`] = `
             </button>
           </div>
           <div
-            class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1st5cz8-MuiToggleButtonGroup-root"
+            class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1qb8o-MuiToggleButtonGroup-root"
             role="group"
           >
             <button
               aria-pressed="false"
-              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
               value="zoom-in"
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
                 data-testid="ZoomInIcon"
                 focusable="false"
                 viewBox="0 0 24 24"
@@ -92,14 +92,14 @@ exports[`Board renders Board 1`] = `
             </button>
             <button
               aria-pressed="false"
-              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
               value="zoom-out"
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
                 data-testid="ZoomOutIcon"
                 focusable="false"
                 viewBox="0 0 24 24"
@@ -111,7 +111,7 @@ exports[`Board renders Board 1`] = `
             </button>
             <button
               aria-pressed="false"
-              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
               value="download-image"
@@ -119,7 +119,7 @@ exports[`Board renders Board 1`] = `
               <svg
                 aria-hidden="true"
                 aria-label="Download as image"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
                 data-mui-internal-clone-element="true"
                 data-testid="ScreenshotMonitorIcon"
                 focusable="false"
@@ -136,7 +136,7 @@ exports[`Board renders Board 1`] = `
             </button>
             <button
               aria-pressed="true"
-              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root Mui-selected MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+              class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root Mui-selected MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
               tabindex="0"
               type="button"
               value="validate-model"
@@ -144,7 +144,7 @@ exports[`Board renders Board 1`] = `
               <svg
                 aria-hidden="true"
                 aria-label="Check the quality of your model"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
                 data-mui-internal-clone-element="true"
                 data-testid="FactCheckIcon"
                 focusable="false"
@@ -191,18 +191,18 @@ exports[`Board renders Board 1`] = `
       tabindex="1"
     >
       <div
-        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-e6gb6b-MuiPaper-root"
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 css-d0t5i1-MuiPaper-root"
         style="--Paper-shadow: none;"
       >
         <div
           aria-label="cursor mode"
-          class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1st5cz8-MuiToggleButtonGroup-root"
+          class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1qb8o-MuiToggleButtonGroup-root"
           role="group"
         >
           <button
             aria-label="pointer mode"
             aria-pressed="false"
-            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
             value="CURSOR_POINTER"
@@ -210,7 +210,7 @@ exports[`Board renders Board 1`] = `
             <svg
               aria-hidden="true"
               aria-label="Toggle pointer mode - allows you to select components"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
               data-mui-internal-clone-element="true"
               data-testid="HighlightAltIcon"
               focusable="false"
@@ -224,7 +224,7 @@ exports[`Board renders Board 1`] = `
           <button
             aria-label="pan mode"
             aria-pressed="false"
-            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
             value="CURSOR_PAN"
@@ -232,7 +232,7 @@ exports[`Board renders Board 1`] = `
             <svg
               aria-hidden="true"
               aria-label="Toggle pan mode - allows you move the diagram. Hint: you can also hold space"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
               data-mui-internal-clone-element="true"
               data-testid="PanToolIcon"
               focusable="false"
@@ -245,19 +245,19 @@ exports[`Board renders Board 1`] = `
           </button>
         </div>
         <div
-          class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1st5cz8-MuiToggleButtonGroup-root"
+          class="MuiToggleButtonGroup-root MuiToggleButtonGroup-horizontal css-1qb8o-MuiToggleButtonGroup-root"
           role="group"
         >
           <button
             aria-pressed="false"
-            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-firstButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
             value="zoom-in"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
               data-testid="ZoomInIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -272,14 +272,14 @@ exports[`Board renders Board 1`] = `
           </button>
           <button
             aria-pressed="false"
-            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
             value="zoom-out"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
               data-testid="ZoomOutIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -291,7 +291,7 @@ exports[`Board renders Board 1`] = `
           </button>
           <button
             aria-pressed="false"
-            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-middleButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
             value="download-image"
@@ -299,7 +299,7 @@ exports[`Board renders Board 1`] = `
             <svg
               aria-hidden="true"
               aria-label="Download as image"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
               data-mui-internal-clone-element="true"
               data-testid="ScreenshotMonitorIcon"
               focusable="false"
@@ -316,7 +316,7 @@ exports[`Board renders Board 1`] = `
           </button>
           <button
             aria-pressed="true"
-            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root Mui-selected MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-v490uh-MuiButtonBase-root-MuiToggleButton-root"
+            class="MuiButtonBase-root MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButton-root Mui-selected MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal MuiToggleButtonGroup-lastButton css-w4gp61-MuiButtonBase-root-MuiToggleButton-root"
             tabindex="0"
             type="button"
             value="validate-model"
@@ -324,7 +324,7 @@ exports[`Board renders Board 1`] = `
             <svg
               aria-hidden="true"
               aria-label="Check the quality of your model"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
               data-mui-internal-clone-element="true"
               data-testid="FactCheckIcon"
               focusable="false"
