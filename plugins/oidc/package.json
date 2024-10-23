@@ -18,7 +18,7 @@
   "dependencies": {
     "@gram/core": "^4.17.1",
     "hpagent": "^1.2.0",
-    "openid-client": "^5.4.3"
+    "openid-client": "^5.6.5"
   },
   "private": true
 }
