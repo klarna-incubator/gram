@@ -1,4 +1,5 @@
-import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useListModelsQuery } from "../../../api/gram/model";
@@ -17,8 +18,8 @@ export default function UserModels() {
 
   return (
     <CenteredPage>
-      <Grid container>
-        <Grid item xs={6}>
+      <Grid container spacing={2} columns={12}>
+        <Grid size={6}>
           <Typography variant={"h5"}>Your Models</Typography>
           <Typography className={"dimmed"}>
             These models are bound to your account and not bound to a specific

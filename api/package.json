@@ -2,7 +2,7 @@
   "name": "@gram/api",
   "private": true,
   "type": "module",
-  "version": "4.15.2",
+  "version": "4.17.0",
   "description": "API for threat modelling",
   "scripts": {
     "start": "NODE_ENV=development node dist/index.js",
@@ -12,7 +12,7 @@
     "lint-fix": "prettier -l src/ --write",
     "debug": "NODE_ENV=development node --loader ts-node/esm --inspect=127.0.0.1 src/index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
-    "jest": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache"
+    "test-validate": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache ./src/resources/gram/v1/validation/validateModel.spec.ts"
   },
   "main": "dist/index.js",
   "repository": {
@@ -32,8 +32,8 @@
     "node": "20"
   },
   "dependencies": {
-    "@gram/config": "^4.15.2",
-    "@gram/core": "^4.15.2",
+    "@gram/config": "^4.17.0",
+    "@gram/core": "^4.17.0",
     "@sentry/integrations": "^7.6.0",
     "@sentry/node": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
@@ -56,7 +56,6 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/lodash": "^4.14.177",
-    "@types/node": "^14.17.9",
     "@types/node-cron": "^3.0.2",
     "@types/supertest": "^2.0.11",
     "@types/ws": "^8.5.10",

@@ -5,6 +5,18 @@ import { useComponent } from "../../hooks/useComponent";
 import { Threat } from "../right/Threat";
 import { useListActionItemQuery } from "../../../../api/gram/action-items";
 import { useModelID } from "../../hooks/useModelID";
+import { useDataFlow } from "../../hooks/useDataFlow";
+
+function DataFlowActionItemLabel({ dataflow }) {
+  const startComponent = useComponent(dataflow.startComponent.id);
+  const endComponent = useComponent(dataflow.endComponent.id);
+
+  return (
+    <>
+      {startComponent.name} to {endComponent.name}
+    </>
+  );
+}
 
 function ComponentActionItem({
   componentId,
@@ -12,16 +24,19 @@ function ComponentActionItem({
   defaultExpanded = false,
 }) {
   const component = useComponent(componentId);
+  const dataflow = useDataFlow(componentId);
 
   /**
    * Fix for the case where a component was just deleted.
    */
-  if (!component) return null;
+  if (!component && !dataflow) return null;
 
   return (
     <Box sx={{ paddingBottom: "10px" }}>
       <CollapsePaper
-        title={component.name}
+        title={
+          component?.name || <DataFlowActionItemLabel dataflow={dataflow} />
+        }
         count={actionItems.length}
         defaultExpanded={defaultExpanded}
       >

@@ -2,6 +2,7 @@ import {
   DeleteRounded as DeleteRoundedIcon,
   HelpRounded as HelpRoundedIcon,
 } from "@mui/icons-material";
+
 // import IosShareIcon from "@mui/icons-material/IosShare";
 import { Box, IconButton, Paper, Tooltip, tooltipClasses } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ export function LeftFooter() {
   const emptyDiagram = useSelector(
     ({ model }) => model.components.length === 0
   );
+
   const modelId = useModelID();
 
   const readOnly = useReadOnly();

@@ -4,8 +4,8 @@ import { createPostgresPool, GramConnectionPool } from "./postgres.js";
 
 describe("postgres pool", () => {
   let pool: GramConnectionPool | pg.Pool | null = null;
-  afterEach(() => {
-    pool && pool.end();
+  afterEach(async () => {
+    pool && (await pool.end());
     pool = null;
   });
 
@@ -80,8 +80,6 @@ describe("postgres pool", () => {
       // Exception should be propagated up.
       expect(err).toBeTruthy();
     }
-
-    console.log("after transaction");
 
     const result = await pool.query("SELECT 1 as result");
     expect(result.rowCount).toBe(1);

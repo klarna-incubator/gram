@@ -1,16 +1,7 @@
-export const getAngle = ([x1, y1, x2, y2]) => {
-  return (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
-};
-
-export const getNewCoords = (theta, x, y, dist) => {
-  return {
-    x: x + dist * Math.cos((theta * Math.PI) / 180),
-    y: y + dist * Math.sin((theta * Math.PI) / 180),
-  };
-};
+import { COMPONENT_SIZE } from "./constants";
 
 // From https://github.com/konvajs/konva/blob/master/src/Util.ts
-export const getControlPoints = (x0, y0, x1, y1, x2, y2, t) => {
+export function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
     d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
     fa = (t * d01) / (d01 + d12),
@@ -21,44 +12,7 @@ export const getControlPoints = (x0, y0, x1, y1, x2, y2, t) => {
     p2y = y1 + fb * (y2 - y0);
 
   return [p1x, p1y, p2x, p2y];
-};
-
-export const expandPoints = (p, tension) => {
-  let len = p.length,
-    allPoints = [],
-    n,
-    cp;
-
-  for (n = 2; n < len - 2; n += 2) {
-    cp = getControlPoints(
-      p[n - 2],
-      p[n - 1],
-      p[n],
-      p[n + 1],
-      p[n + 2],
-      p[n + 3],
-      tension
-    );
-    allPoints.push(cp[0]);
-    allPoints.push(cp[1]);
-    allPoints.push(p[n]);
-    allPoints.push(p[n + 1]);
-    allPoints.push(cp[2]);
-    allPoints.push(cp[3]);
-  }
-
-  return allPoints;
-};
-
-export const reversePoints = (points) => {
-  const reversed = [];
-  for (let i = points.length - 1; i > 0; i -= 2) {
-    reversed.push(points[i - 1]);
-    reversed.push(points[i]);
-  }
-
-  return reversed;
-};
+}
 
 export function getAbsolutePosition(stage, pos) {
   const transform = stage.getAbsoluteTransform().copy();
@@ -194,4 +148,79 @@ export function getNormalizedScale(scale, i = 0) {
     adjusted = 0;
   }
   return scales[adjusted];
+}
+
+/**
+ * Gets the positions of the four "magnets" of a component. These are the connection points circles added to components
+ * in the diagram that data flows connect to.
+ * @param {*} param0
+ * @returns
+ */
+export function getMagnets([x, y]) {
+  return [
+    [x + COMPONENT_SIZE.WIDTH / 2, y],
+    [x, y + COMPONENT_SIZE.HEIGHT / 2],
+    [x + COMPONENT_SIZE.WIDTH / 2, y + COMPONENT_SIZE.HEIGHT],
+    [x + COMPONENT_SIZE.WIDTH, y + COMPONENT_SIZE.HEIGHT / 2],
+  ];
+}
+
+/**
+ * Given a dataFlow, return the two closest magnets of the start and end component.
+ *
+ * If the dataFlow has anchors, the closest magnets are the ones that are closest to the anchors.
+ *
+ * @param {*} startMagnets
+ * @param {*} endMagnets
+ * @param {*} anchorsPos
+ * @returns
+ */
+export function closestMagnets(startMagnets, endMagnets, anchorsPos) {
+  if (anchorsPos.length > 0) {
+    const startMagnet = startMagnets.reduce(
+      (accStart, magnetStart) => {
+        const len = distance2(magnetStart, anchorsPos.slice(0, 2));
+        return len < accStart[1] ? [magnetStart, len] : accStart;
+      },
+      [null, Number.MAX_VALUE]
+    )[0];
+
+    const endMagnet = endMagnets.reduce(
+      (accEnd, magnetEnd) => {
+        const len = distance2(magnetEnd, anchorsPos.slice(-2));
+        return len < accEnd[1] ? [magnetEnd, len] : accEnd;
+      },
+      [null, Number.MAX_VALUE]
+    )[0];
+    return [...startMagnet, ...endMagnet];
+  }
+
+  return startMagnets.reduce(
+    (accStart, magnetStart) => {
+      const partialMin = endMagnets.reduce(
+        (accEnd, magnetEnd) => {
+          const len = distance2(magnetStart, magnetEnd);
+          return len < accEnd[1] ? [magnetEnd, len] : accEnd;
+        },
+        [null, Number.MAX_VALUE]
+      );
+      return partialMin[1] < accStart[1]
+        ? [[...magnetStart, ...partialMin[0]], partialMin[1]]
+        : accStart;
+    },
+    [null, Number.MAX_VALUE]
+  )[0];
+}
+
+/**
+ * Calculate 2D distance between two points (i.e. length of the line between the two points).
+ *
+ * @param {*} param0
+ * @param {*} param1
+ * @returns
+ */
+export function distance2([x1, y1], [x2, y2]) {
+  const dX = x2 - x1;
+  const dY = y2 - y1;
+  return dX * dX + dY * dY;
 }

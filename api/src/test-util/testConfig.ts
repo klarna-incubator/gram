@@ -12,6 +12,20 @@ import { testReviewerProvider } from "./sampleReviewer.js";
 import { TestTeamProvider } from "./TestTeamProvider.js";
 import { testUserProvider } from "./sampleUser.js";
 import { testSystemProvider } from "./system.js";
+import { testValidationRules } from "./testValidationRules.js";
+
+function toComponentClass(o: any): ComponentClass {
+  return {
+    id: o.id,
+    name: o.name,
+    icon: o.icon,
+    componentType: o.componentType,
+  };
+}
+
+/**
+ * I don't know why this exists when there is a core/testConfig.ts. Might be worth trying to move all test-utility stuff there instead.
+ */
 
 export const testConfig: GramConfiguration = {
   appPort: 8080,
@@ -75,18 +89,66 @@ export const testConfig: GramConfiguration = {
     },
   ],
 
+  attributes: {
+    flow: [
+      {
+        key: "protocols",
+        type: "select",
+        defaultValue: [],
+        label: "Protocol(s)",
+        options: [
+          "HTTP",
+          "HTTPS",
+          "FTP",
+          "SSH",
+          "SMTP",
+          "POP3",
+          "IMAP",
+          "DNS",
+          "LDAP",
+          "SMB",
+          "gRPC",
+          "MQTT",
+          "AMQP",
+        ],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "authentication",
+        type: "select",
+        defaultValue: [],
+        label: "Authentication",
+        options: ["Basic Auth", "JWT", "OIDC"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "data_type",
+        type: "select",
+        defaultValue: [],
+        label: "Type of Data",
+        options: ["Personal Information", "Transaction Data"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "description",
+        type: "text",
+        defaultValue: "",
+        label: "Description",
+        multiline: true,
+        optional: false,
+      },
+    ],
+  },
+
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {
-    const toComponentClass = (o: any): ComponentClass => {
-      return {
-        id: o.id,
-        name: o.name,
-        icon: o.icon,
-        componentType: o.componentType,
-      };
-    };
-
     // Disable suggestionEngine from listening on modelService events to stop Max EventEmitter complaints.
     // This will probably confuse the hell out of me in the future. Oh well.
     dal.suggestionEngine.noListen = true;
@@ -101,6 +163,7 @@ export const testConfig: GramConfiguration = {
       systemProvider: testSystemProvider,
       suggestionSources: [],
       teamProvider: new TestTeamProvider(),
+      validationSources: [testValidationRules],
     };
   },
 };

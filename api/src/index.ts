@@ -52,6 +52,7 @@ const listen = async () => {
     () => notificationSender(dal.notificationService, dal.templateHandler),
     NOTIFICATION_INTERVAL
   );
+  setInterval(() => dal.validationEngine.cache.expire(), 10 * 60 * 1000); // Clean up the Validation cache every 10 minutes
 };
 
 listen();
