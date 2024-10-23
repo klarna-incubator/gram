@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.1](https://github.com/klarna-incubator/gram/compare/v4.17.0...v4.17.1) (2024-10-23)
+
+### Bug Fixes
+
+- bump vulnerable packages ([061a346](https://github.com/klarna-incubator/gram/commit/061a34660021db509c9eb1618a19d654b11e702b))
+- remove accidental core package ([4626cb8](https://github.com/klarna-incubator/gram/commit/4626cb896b02d44c7361d92e4bfbea67b59cff20))
+- remove core from package-lock as well ([bb0be3f](https://github.com/klarna-incubator/gram/commit/bb0be3fc379ae5e2dff31cb618de32a0be9a4879))
+- remove some unused sentry packages ([d4fb5bc](https://github.com/klarna-incubator/gram/commit/d4fb5bc2d0a2cb6945e539cc9b96162c2666bebc))
+
 # [4.17.0](https://github.com/klarna-incubator/gram/compare/v4.16.0...v4.17.0) (2024-10-23)
 
 ### Features

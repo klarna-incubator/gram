@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.1](https://github.com/klarna-incubator/gram/compare/v4.17.0...v4.17.1) (2024-10-23)
+
+**Note:** Version bump only for package @gram/threatlib
+
 # [4.17.0](https://github.com/klarna-incubator/gram/compare/v4.16.0...v4.17.0) (2024-10-23)
 
 **Note:** Version bump only for package @gram/threatlib

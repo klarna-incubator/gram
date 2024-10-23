@@ -273,7 +273,7 @@ export async function createApp(dal: DataAccessLayer) {
   }
 
   // Sentry Error Handler
-  app.use(Sentry.Handlers.errorHandler());
+  Sentry.setupExpressErrorHandler(app);
   // Global Error Handler. Should catch anything that propagates up from the REST routes.
   app.use(errorHandler);
 
