@@ -134,7 +134,7 @@ describe("FlowDataService implementation", () => {
       expect(res.length).toEqual(0);
     });
 
-    it("should not delete link when id does not exist", async () => {
+    it("should not delete flow when id does not exist", async () => {
       const dataFlowId = randomUUID();
       const originComponentId = randomUUID();
       const summary = "GET /hello-world";

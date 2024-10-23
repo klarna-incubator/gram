@@ -381,7 +381,7 @@ export class ModelDataService extends EventEmitter implements SearchProvider {
       return res;
     });
 
-    if (res.rowCount > 0) {
+    if (res.rowCount !== null && res.rowCount > 0) {
       this.emit("updated-for", { modelId: id });
       success = true;
     }
@@ -434,7 +434,7 @@ export class ModelDataService extends EventEmitter implements SearchProvider {
 
     this.emit("updated-for", { modelId: id });
 
-    return res.rowCount > 0;
+    return res.rowCount !== null && res.rowCount > 0;
   }
 
   async setSystemId(modelId: string, systemId: string | null) {
