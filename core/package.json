@@ -33,11 +33,9 @@
   "engines": {
     "node": "20"
   },
-  "dependencies": {
-    "@sentry/integrations": "^7.6.0",
+  "dependencies": {    
     "@sentry/node": "^8.35.0",
-    "@sentry/profiling-node": "^8.35.0",
-    "@sentry/tracing": "^7.6.0",
+    "@sentry/profiling-node": "^8.35.0",    
     "emailjs": "^4.0.3",
     "express": "^4.21.1",
     "global-agent": "^3.0.0",
