@@ -129,7 +129,7 @@ export const defaultConfig: GramConfiguration = {
     slackUrl: "https://klarna.enterprise.slack.com/archives/C01FZM386J1",
   },
 
-  additionalMigrations: [MagicLinkMigrations],
+  additionalMigrations: [],
 
   attributes: {
     flow: [
