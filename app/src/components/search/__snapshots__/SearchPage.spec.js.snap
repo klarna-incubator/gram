@@ -6,60 +6,17 @@ exports[`Search renders Search 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row css-1fn4916-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-1qi6pw9-MuiGrid2-root"
       >
         <div
-          class="MuiGrid2-root MuiGrid2-direction-xs-row css-1lqpupi-MuiGrid2-root"
-        >
-          <div
-            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-ckzihm-MuiPaper-root-MuiCard-root"
-            style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
-          >
-            <div
-              class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
-            >
-              <h5
-                class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
-              >
-                Search results for "
-                
-                "
-              </h5>
-            </div>
-          </div>
-          <br />
-          <hr
-            class="MuiDivider-root MuiDivider-fullWidth css-1jpc804-MuiDivider-root"
-          />
-          <br />
-          <div
-            class="loading"
-          >
-            <div />
-            <div />
-            <div />
-            <div />
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row css-1fn4916-MuiGrid2-root"
-    >
-      <div
-        class="MuiGrid2-root MuiGrid2-direction-xs-row css-1lqpupi-MuiGrid2-root"
-      >
-        <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-ckzihm-MuiPaper-root-MuiCard-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1l4o99g-MuiPaper-root-MuiCard-root"
           style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
         >
           <div
-            class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
+            class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
           >
             <h5
-              class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
             >
               Search results for "
               
@@ -69,7 +26,7 @@ exports[`Search renders Search 1`] = `
         </div>
         <br />
         <hr
-          class="MuiDivider-root MuiDivider-fullWidth css-1jpc804-MuiDivider-root"
+          class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
         />
         <br />
         <div
@@ -80,6 +37,41 @@ exports[`Search renders Search 1`] = `
           <div />
           <div />
         </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-1qi6pw9-MuiGrid2-root"
+    >
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1l4o99g-MuiPaper-root-MuiCard-root"
+        style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
+      >
+        <div
+          class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+        >
+          <h5
+            class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
+          >
+            Search results for "
+            
+            "
+          </h5>
+        </div>
+      </div>
+      <br />
+      <hr
+        class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+      />
+      <br />
+      <div
+        class="loading"
+      >
+        <div />
+        <div />
+        <div />
+        <div />
       </div>
     </div>
   </div>,
