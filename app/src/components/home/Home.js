@@ -21,58 +21,52 @@ export default function Home() {
 
   return (
     <CenteredPage>
-      <Grid container spacing={2} columns={12}>
+      <Grid
+        size={6}
+        maxHeight="88vh"
+        sx={{ display: "flex", flexFlow: "column" }}
+      >
+        <Typography variant="h5">Recent Threat Models</Typography>
+        <Typography className="dimmed">
+          Threat models you recently interacted with
+        </Typography>
+        <ModelList models={recentModels} error={isError} pending={isLoading} />
+      </Grid>
+      {user?.teams?.length > 0 && (
         <Grid
           size={6}
+          columns={1}
           maxHeight="88vh"
           sx={{ display: "flex", flexFlow: "column" }}
         >
-          <Typography variant="h5">Recent Threat Models</Typography>
+          <Typography variant="h5">Team Systems</Typography>
           <Typography className="dimmed">
-            Threat models you recently interacted with
+            Systems owned by the accountable teams you're in
           </Typography>
-          <ModelList
-            models={recentModels}
-            error={isError}
-            pending={isLoading}
-          />
-        </Grid>
-        {user?.teams?.length > 0 && (
-          <Grid
+          <Box
             size={6}
-            columns={1}
-            maxHeight="88vh"
-            sx={{ display: "flex", flexFlow: "column" }}
+            sx={{
+              overflow: "auto",
+              marginTop: "25px",
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
-            <Typography variant="h5">Team Systems</Typography>
-            <Typography className="dimmed">
-              Systems owned by the accountable teams you're in
-            </Typography>
-            <Box
-              size={6}
-              sx={{
-                overflow: "auto",
-                marginTop: "25px",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Grid container spacing={2} columns={1} style={{ flex: "2" }}>
-                {user?.teams &&
-                  user.teams.map((team, i) => (
-                    <Grid size={1}>
-                      <TeamSystemsPageList
-                        key={team.id}
-                        teamId={team.id}
-                        pagesize={user?.teams.length > 1 ? 5 : 10}
-                      />
-                    </Grid>
-                  ))}
-              </Grid>
-            </Box>
-          </Grid>
-        )}
-      </Grid>
+            <Grid container spacing={2} columns={1} style={{ flex: "2" }}>
+              {user?.teams &&
+                user.teams.map((team, i) => (
+                  <Grid size={1}>
+                    <TeamSystemsPageList
+                      key={team.id}
+                      teamId={team.id}
+                      pagesize={user?.teams.length > 1 ? 5 : 10}
+                    />
+                  </Grid>
+                ))}
+            </Grid>
+          </Box>
+        </Grid>
+      )}
     </CenteredPage>
   );
 }

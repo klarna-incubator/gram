@@ -55,41 +55,39 @@ export function System() {
 
   return (
     <CenteredPage>
-      <Grid container spacing={0} columns={12}>
-        <Grid size={6}>
-          <Typography variant={"h5"}>
-            {system.displayName}{" "}
-            <span className="dimmed">&mdash; {system.shortName}</span>
-          </Typography>
+      <Grid size={6}>
+        <Typography variant={"h5"}>
+          {system.displayName}{" "}
+          <span className="dimmed">&mdash; {system.shortName}</span>
+        </Typography>
 
-          <Typography className="dimmed">
-            {system.owners?.map((owner) => (
-              <Link className="dimmed" to={`/team/${owner.id}`}>
-                {owner.name}
-              </Link>
-            ))}{" "}
-            &mdash;{" "}
-            <span className="description">
-              {system.description || "(system has no description)"}
-            </span>
-          </Typography>
+        <Typography className="dimmed">
+          {system.owners?.map((owner) => (
+            <Link className="dimmed" to={`/team/${owner.id}`}>
+              {owner.name}
+            </Link>
+          ))}{" "}
+          &mdash;{" "}
+          <span className="description">
+            {system.description || "(system has no description)"}
+          </span>
+        </Typography>
 
-          {permissions.includes(PERMISSIONS.WRITE) && (
-            <Box sx={{ marginTop: "25px", marginBottom: "25px" }}>
-              <Link to={`/model/new?system_id=${system.id}`}>
-                <Button variant="outlined">Create New Threat Model</Button>
-              </Link>
-            </Box>
-          )}
+        {permissions.includes(PERMISSIONS.WRITE) && (
+          <Box sx={{ marginTop: "25px", marginBottom: "25px" }}>
+            <Link to={`/model/new?system_id=${system.id}`}>
+              <Button variant="outlined">Create New Threat Model</Button>
+            </Link>
+          </Box>
+        )}
 
-          <Typography variant="h6">Threat Models</Typography>
+        <Typography variant="h6">Threat Models</Typography>
 
-          <ModelList
-            models={models}
-            isLoading={isLoadingModels}
-            listHeight="100%"
-          />
-        </Grid>
+        <ModelList
+          models={models}
+          isLoading={isLoadingModels}
+          listHeight="100%"
+        />
       </Grid>
     </CenteredPage>
   );

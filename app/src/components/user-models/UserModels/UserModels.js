@@ -18,33 +18,31 @@ export default function UserModels() {
 
   return (
     <CenteredPage>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={6}>
-          <Typography variant={"h5"}>Your Models</Typography>
-          <Typography className={"dimmed"}>
-            These models are bound to your account and not bound to a specific
-            system.
-          </Typography>
+      <Grid size={6}>
+        <Typography variant={"h5"}>Your Models</Typography>
+        <Typography className={"dimmed"}>
+          These models are bound to your account and not bound to a specific
+          system.
+        </Typography>
 
-          <br />
+        <br />
 
-          <Box>
-            <Link to={`/model/new`}>
-              <Button variant="outlined">Create New Model</Button>
-            </Link>
-          </Box>
+        <Box>
+          <Link to={`/model/new`}>
+            <Button variant="outlined">Create New Model</Button>
+          </Link>
+        </Box>
 
-          <br />
+        <br />
 
-          <Divider />
+        <Divider />
 
-          <ModelList
-            models={models}
-            error={error}
-            isLoading={isLoading}
-            listHeight={900}
-          />
-        </Grid>
+        <ModelList
+          models={models}
+          error={error}
+          isLoading={isLoading}
+          listHeight={900}
+        />
       </Grid>
     </CenteredPage>
   );
