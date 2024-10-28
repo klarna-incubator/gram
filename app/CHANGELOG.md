@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.4](https://github.com/klarna-incubator/gram/compare/v4.17.3...v4.17.4) (2024-10-28)
+
+### Bug Fixes
+
+- fix New Model page layout ([b0f67fd](https://github.com/klarna-incubator/gram/commit/b0f67fd930b75331ea712bfa06a2760c34aa12b7))
+
 ## [4.17.3](https://github.com/klarna-incubator/gram/compare/v4.17.2...v4.17.3) (2024-10-23)
 
 ### Bug Fixes

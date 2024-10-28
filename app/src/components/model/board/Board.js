@@ -783,7 +783,7 @@ export default function Board() {
                   )}
                 </Layer>
 
-                <SelectionRectangle {...selectionRectangle} />
+                {!isFramed && <SelectionRectangle {...selectionRectangle} />}
               </Provider>
             </Stage>
           )}

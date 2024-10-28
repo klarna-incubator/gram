@@ -80,16 +80,18 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
           <ZoomOutIcon />
         </ToggleButton>
         <DownloadImageButton />
-        <ToggleButton
-          value="validate-model"
-          onClick={() => {
-            dispatch(togglePanel(TOGGLE_BOTTOM_PANEL, !bottomPanelCollapsed));
-          }}
-        >
-          <Tooltip title={"Check the quality of your model"}>
-            <FactCheckIcon />
-          </Tooltip>
-        </ToggleButton>
+        {!isFramed && (
+          <ToggleButton
+            value="validate-model"
+            onClick={() => {
+              dispatch(togglePanel(TOGGLE_BOTTOM_PANEL, !bottomPanelCollapsed));
+            }}
+          >
+            <Tooltip title={"Check the quality of your model"}>
+              <FactCheckIcon />
+            </Tooltip>
+          </ToggleButton>
+        )}
 
         {!readOnly && <AddComponentButton onAddComponent={onAddComponent} />}
       </ToggleButtonGroup>
