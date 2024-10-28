@@ -1,7 +1,7 @@
 {
   "name": "@gram/github",
   "type": "module",
-  "version": "4.17.5",
+  "version": "4.17.6",
   "description": "To run this GitHub integration, you'll need to set up your own Github App.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.17.5",
+    "@gram/core": "^4.17.6",
     "octokit": "^3.1.2",
     "postgres-migrations": "^5.3.0"
   },
