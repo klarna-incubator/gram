@@ -34,8 +34,8 @@ resource "aws_rds_cluster" "encrypted_db_cluster" {
   copy_tags_to_snapshot               = true
   skip_final_snapshot                 = false
 
-  # db_cluster_parameter_group_name = "default.aurora-postgresql16"  
-  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.rds_parameter_group.name
+  db_cluster_parameter_group_name = "default.aurora-postgresql16"  
+  # db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.rds_parameter_group.name
 
   tags = {
     SystemID          = "gram"
