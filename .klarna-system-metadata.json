@@ -3,12 +3,14 @@
   "regions": ["EU"],
   "system_dependencies": [
     {
-      "system_id": "oh-what",
-      "sla_impact": "IMMEDIATE"
+      "system_id": "jupiter-one",
+      "sla_impact": "IMMEDIATE",
+      "description": "Used for looking up Klarna Systems and information thereabouts"
     },
     {
       "system_id": "ldap",
-      "sla_impact": "IMMEDIATE"
+      "sla_impact": "IMMEDIATE",
+      "description": "Used for authorization lookup"
     },
     {
       "system_id": "cgw",
@@ -23,7 +25,7 @@
     {
       "system_id": "jira",
       "sla_impact": "NO_IMPACT",
-      "description": "Used for creating Enterprise Risk tickets"
+      "description": "Used for creating Threat Tickets"
     }
   ]
 }
