@@ -49,6 +49,7 @@ export const ldapSettings: LDAPClientSettings = {
     bindCredentials: new EnvSecret("LDAP_BIND_CREDENTIALS"),
   },
 };
+import { basicValidationRules } from "./providers/static/BasicValidationRules.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -126,6 +127,64 @@ export const defaultConfig: GramConfiguration = {
     name: "Secure Development Team",
     email: "secure-development@klarna.com",
     slackUrl: "https://klarna.enterprise.slack.com/archives/C01FZM386J1",
+  },
+
+  additionalMigrations: [],
+
+  attributes: {
+    flow: [
+      {
+        key: "protocols",
+        type: "select",
+        defaultValue: [],
+        label: "Protocol(s)",
+        options: [
+          "HTTP",
+          "HTTPS",
+          "FTP",
+          "SSH",
+          "SMTP",
+          "POP3",
+          "IMAP",
+          "DNS",
+          "LDAP",
+          "SMB",
+          "gRPC",
+          "MQTT",
+          "AMQP",
+        ],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "authentication",
+        type: "select",
+        defaultValue: [],
+        label: "Authentication",
+        options: ["Basic Auth", "JWT", "OIDC", "None"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "data_type",
+        type: "select",
+        defaultValue: [],
+        label: "Type of Data",
+        options: ["Personal Information", "Transaction Data"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: true,
+      },
+      {
+        key: "description",
+        type: "description",
+        defaultValue: "",
+        optional: true,
+        label: "Description",
+      },
+    ],
   },
 
   bootstrapProviders: async function (
@@ -291,6 +350,7 @@ export const defaultConfig: GramConfiguration = {
         j1TeamProvider, // completely optional
         dal.modelService,
       ],
+      validationSources: [basicValidationRules],
     };
   },
 };

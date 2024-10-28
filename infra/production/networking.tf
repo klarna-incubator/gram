@@ -119,3 +119,27 @@ resource "aws_security_group" "postgres_allow_from_sg" {
     OhPoliceNamespace = "gram"
   }
 }
+
+data "aws_ec2_managed_prefix_list" "bastion_prefix_list" {
+  name = "bastion-eu-production"
+}
+
+resource "aws_security_group" "allow_from_bastion" {
+  name        = "allow_from_bastion"
+  description = "Allow connections from bastion"
+  vpc_id      = data.aws_vpc.klarna_vpc.id
+
+  ingress {
+    description = "Allow postgres access"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    prefix_list_ids   = [data.aws_ec2_managed_prefix_list.bastion_prefix_list.id]    
+  }
+
+  tags = {
+    SystemID          = "gram"
+    Team              = "Secure Development"
+    OhPoliceNamespace = "gram"
+  }
+}

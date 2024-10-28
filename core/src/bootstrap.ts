@@ -42,6 +42,7 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   providers.suggestionSources?.forEach((ssp) =>
     bt.registerSuggestionSource(ssp)
   );
+  providers.validationSources?.forEach((vs) => bt.registerValidationSource(vs));
   providers.systemPropertyProviders?.forEach((spp) =>
     bt.registerSystemPropertyProvider(spp)
   );

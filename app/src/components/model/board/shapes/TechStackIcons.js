@@ -14,7 +14,16 @@ async function setIcons(classes, setClassesWithIcon) {
   for (let i = 0; i < cls.length; i++) {
     let img = new Image();
     img.src = cls[i].icon;
-    await img.decode();
+
+    try {
+      await img.decode();
+    } catch (e) {
+      console.warn("Failed to load image", cls[i].icon);
+      // Fall back to placeholder icon
+      img = new Image();
+      img.src = "/assets/placeholder.svg";
+      await img.decode();
+    }
 
     const ratio = img.height / img.width;
     const classIconWidth = classIconHeight / ratio;

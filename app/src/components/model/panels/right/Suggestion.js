@@ -81,6 +81,7 @@ export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
             >
               {suggestion.title}
             </Typography>
+
             {suggestion.description && (
               <DescriptionPreview
                 description={suggestion.description}
@@ -92,6 +93,7 @@ export function Suggestion({ suggestion, rejected, readOnly, isControl }) {
                 }}
               />
             )}
+
             <SuggestionMitigations
               threatSuggestions={threatSuggestions}
               suggestion={suggestion}

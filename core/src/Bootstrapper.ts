@@ -18,6 +18,7 @@ import { getPool, migratePlugin } from "./plugins/data.js";
 import pg from "pg";
 import { TeamProvider } from "./auth/TeamProvider.js";
 import { SearchProvider } from "./search/SearchHandler.js";
+import { ValidationRule } from "./validation/models.js";
 
 /* Could create a temporary directory instead */
 export const AssetDir = "assets";
@@ -106,6 +107,11 @@ export class Bootstrapper {
   registerSuggestionSource(source: SuggestionSource): void {
     this.log.info(`Registered Suggestion Source: ${source.name}`);
     this.dal.suggestionEngine.register(source);
+  }
+
+  registerValidationSource(validationSource: ValidationRule[]): void {
+    this.log.info(`Set Validation Provider: ${validationSource}`);
+    this.dal.validationEngine.register(validationSource);
   }
 
   registerIdentityProvider(authProvider: IdentityProvider) {

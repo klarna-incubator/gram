@@ -28,11 +28,14 @@ resource "aws_rds_cluster" "encrypted_db_cluster" {
   database_name                       = "gram"
   backup_retention_period             = 30
   preferred_backup_window             = "05:01-05:31"
-  vpc_security_group_ids              = [aws_security_group.postgres_allow_office.id, aws_security_group.postgres_allow_gram_c2c.id, aws_security_group.postgres_allow_from_sg.id]
+  vpc_security_group_ids              = [aws_security_group.postgres_allow_gram_c2c.id, aws_security_group.postgres_allow_from_sg.id, aws_security_group.allow_from_bastion.id]
   iam_database_authentication_enabled = true
   deletion_protection                 = true
   copy_tags_to_snapshot               = true
   skip_final_snapshot                 = false
+
+  # db_cluster_parameter_group_name = "default.aurora-postgresql16"  
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.rds_parameter_group.name
 
   tags = {
     SystemID          = "gram"
@@ -70,10 +73,20 @@ resource "aws_db_instance" "encrypted_db" {
   }
 }
 
+resource "aws_rds_cluster_parameter_group" "rds_parameter_group" {  
+  name     = "gram-db-param-pg16-group"
+  family   = "aurora-postgresql16"
 
-output "initial_password" {
-  value = random_password.initial_password.result
+  parameter {
+    name  = "rds.force_ssl"
+    value = "1"
+  }
 }
+
+
+# output "initial_password" {
+#   value = random_password.initial_password.result
+# }
 
 output "db_endpoint" {
   value = aws_db_instance.encrypted_db.endpoint

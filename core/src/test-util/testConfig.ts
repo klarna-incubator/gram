@@ -10,6 +10,7 @@ import { DummySystemProvider } from "../data/systems/DummySystemProvider.js";
 import { DummyIdentityProvider } from "../auth/DummyIdentityProvider.js";
 import { DummyAuthzProvider } from "../auth/DummyAuthzProvider.js";
 import { DummyActionItemExporter } from "../action-items/DummyActionItemExporter.js";
+import { testValidationRules } from "./testValidationRules.js";
 
 export const testConfig: GramConfiguration = {
   appPort: 8080,
@@ -73,6 +74,63 @@ export const testConfig: GramConfiguration = {
     },
   ],
 
+  attributes: {
+    flow: [
+      {
+        key: "protocols",
+        type: "select",
+        defaultValue: [],
+        label: "Protocol(s)",
+        options: [
+          "HTTP",
+          "HTTPS",
+          "FTP",
+          "SSH",
+          "SMTP",
+          "POP3",
+          "IMAP",
+          "DNS",
+          "LDAP",
+          "SMB",
+          "gRPC",
+          "MQTT",
+          "AMQP",
+        ],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "authentication",
+        type: "select",
+        defaultValue: [],
+        label: "Authentication",
+        options: ["Basic Auth", "JWT", "OIDC"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "data_type",
+        type: "select",
+        defaultValue: [],
+        label: "Type of Data",
+        options: ["Personal Information", "Transaction Data"],
+        allowCustomValue: true,
+        allowMultiple: true,
+        optional: false,
+      },
+      {
+        key: "description",
+        type: "text",
+        defaultValue: "",
+        label: "Description",
+        multiline: true,
+        optional: false,
+      },
+    ],
+  },
+
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {
@@ -86,6 +144,7 @@ export const testConfig: GramConfiguration = {
       systemProvider: new DummySystemProvider(),
       suggestionSources: [],
       actionItemExporters: [new DummyActionItemExporter()],
+      validationSources: [],
     };
   },
 };

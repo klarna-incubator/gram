@@ -1,4 +1,5 @@
-import { Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetUserQuery } from "../../../api/gram/auth";
@@ -21,30 +22,26 @@ export function TeamSystemsPage() {
   useTitle("Team");
 
   return (
-    <CenteredPage>
-      {!teamId ? (
-        <>
-          <Typography variant={"h5"}>Your Team Systems</Typography>
-          <Typography className="dimmed">
-            Systems belonging to your team{teams.length > 1 ? "s" : ""}
-          </Typography>
-        </>
-      ) : (
-        <TeamHeader teamId={teamId} />
-      )}
+    <CenteredPage justifyContent="baseline">
+      <Grid container size={12}>
+        {!teamId ? (
+          <Grid size={12}>
+            <Typography variant={"h5"}>Your Team Systems</Typography>
+            <Typography className="dimmed">
+              Systems belonging to your team{teams.length > 1 ? "s" : ""}
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid size={12}>
+            <TeamHeader teamId={teamId} />
+          </Grid>
+        )}
 
-      <Grid
-        container
-        spacing={2}
-        alignItems="stretch"
-        sx={{ marginTop: "9px" }}
-      >
         {/* Some employees have more than one team */}
         {teams.map((tid) => (
           <Grid
             key={`team-grid-${tid}`}
-            item
-            xs={6}
+            size={6}
             sx={{ display: "flex", flexDirection: "column" }}
           >
             <TeamSystemsPageList key={tid} teamId={tid} />

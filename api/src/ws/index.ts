@@ -80,6 +80,13 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
 
   log.info("websocket handler attached");
 
+  dal.validationEngine.on("updated-for", ({ modelId }) => {
+    const server = wssRegistry.get(modelId);
+    log.debug(`validation for ${modelId} was updated`);
+    if (!server) return;
+    server.tellClientsToRefetch("validation", { modelId });
+  });
+
   dal.controlService.on("updated-for", ({ modelId, componentId }) => {
     const server = wssRegistry.get(modelId);
     log.debug(`controls was updated via api ${modelId} ${componentId}`);
@@ -136,6 +143,13 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     log.debug(`links was updated for ${objectType} ${objectId}`);
     if (!server) return;
     server.tellClientsToRefetch("links", { objectType, objectId });
+  });
+
+  dal.flowService.on("updated-for", ({ modelId, dataFlowId }) => {
+    const server = wssRegistry.get(modelId);
+    log.debug(`flows was updated for ${modelId} ${dataFlowId}`);
+    if (!server) return;
+    server.tellClientsToRefetch("flows", { modelId, dataFlowId });
   });
 
   // Clean up leftover websocket servers

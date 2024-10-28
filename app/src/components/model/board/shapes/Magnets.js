@@ -1,7 +1,7 @@
 import { COMPONENT_SIZE } from "../constants";
 import { FlowMagnet } from "./FlowMagnet";
 
-const magnetSize = COMPONENT_SIZE.WIDTH * 0.05;
+const magnetSize = COMPONENT_SIZE.WIDTH * 0.075;
 
 export function Magnets({ px, py, id, width, height, display, onMagnetClick }) {
   // Fuckin' magnets, how do they work?

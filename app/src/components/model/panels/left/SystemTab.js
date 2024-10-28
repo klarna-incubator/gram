@@ -20,7 +20,7 @@ import { useGetSystemQuery } from "../../../../api/gram/system";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { useTitle } from "../../../../hooks/useTitle";
 import { useModelID } from "../../hooks/useModelID";
-import { EditableTypography } from "../right/EditableTypography";
+import { EditableTypography } from "../../../elements/EditableTypography";
 import { Review } from "./Review";
 import { SystemProperties } from "./SystemProperties";
 

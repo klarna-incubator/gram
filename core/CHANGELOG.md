@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.4](https://github.com/klarna/gram/compare/v4.17.3...v4.17.4) (2024-10-28)
+
+**Note:** Version bump only for package @gram/core
+
+## [4.17.3](https://github.com/klarna/gram/compare/v4.17.2...v4.17.3) (2024-10-23)
+
+**Note:** Version bump only for package @gram/core
+
+## [4.17.2](https://github.com/klarna/gram/compare/v4.17.1...v4.17.2) (2024-10-23)
+
+**Note:** Version bump only for package @gram/core
+
+## [4.17.1](https://github.com/klarna/gram/compare/v4.17.0...v4.17.1) (2024-10-23)
+
+### Bug Fixes
+
+- bump vulnerable packages ([061a346](https://github.com/klarna/gram/commit/061a34660021db509c9eb1618a19d654b11e702b))
+- remove some unused sentry packages ([d4fb5bc](https://github.com/klarna/gram/commit/d4fb5bc2d0a2cb6945e539cc9b96162c2666bebc))
+
+# [4.17.0](https://github.com/klarna/gram/compare/v4.16.0...v4.17.0) (2024-10-23)
+
+### Features
+
+- :art: add bottom panel for validation result ([a19ab9c](https://github.com/klarna/gram/commit/a19ab9cd10cee6929ddb2a86a11b2ead74fea6f6))
+- Dataflows now have a label, threats/controls and flows with attributes ([0fe31be](https://github.com/klarna/gram/commit/0fe31be4f51f4ea7d61ca87535faad954f4349db))
+
+# [4.16.0](https://github.com/klarna/gram/compare/v4.15.2...v4.16.0) (2024-09-09)
+
+### Features
+
+- :tada: add basic validator ([47522a1](https://github.com/klarna/gram/commit/47522a1dcbc0827c10b48d56a94468a699d32cf2))
+
 ## [4.15.2](https://github.com/klarna/gram/compare/v4.15.1...v4.15.2) (2024-08-19)
 
 **Note:** Version bump only for package @gram/core

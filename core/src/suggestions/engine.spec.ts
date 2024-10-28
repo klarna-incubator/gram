@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto";
-import pg from "pg";
 import { DataAccessLayer } from "../data/dal.js";
 import { createPostgresPool } from "../data/postgres.js";
 import { createSampleModel } from "../test-util/model.js";

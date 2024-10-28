@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto";
-import pg from "pg";
 import Control from "../controls/Control.js";
 import { DataAccessLayer } from "../dal.js";
 import Mitigation from "../mitigations/Mitigation.js";

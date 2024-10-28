@@ -1,20 +1,18 @@
 import React from "react";
-import { useIsFramed } from "../../hooks/useIsFramed";
-import { Grid } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
-export function CenteredPage({ children }) {
-  const isFramed = useIsFramed();
+export function CenteredPage({ children, marginTop = true }) {
   return (
     <Grid
       container
-      spacing={0}
-      direction={"row"}
-      alignItems={"center"}
-      justifyContent={"center"}
+      columns={12}
+      spacing={2}
+      direction="row"
+      marginTop={marginTop ? "20px" : ""}
+      marginX={"auto"}
+      maxWidth={"80%"}
     >
-      <Grid item width={"80%"} marginTop={isFramed ? "" : "84px"}>
-        {children}
-      </Grid>
+      {children}
     </Grid>
   );
 }

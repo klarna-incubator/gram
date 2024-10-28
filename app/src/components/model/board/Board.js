@@ -28,6 +28,7 @@ import { useSetMultipleSelected } from "../hooks/useSetMultipleSelected";
 import { useSetSelected } from "../hooks/useSetSelected";
 import { ActiveUsers } from "../panels/ActiveUsers";
 import { ControlsToolBar } from "./components/ControlsToolBar";
+/* Grid is not upgraded to Grid2 because it causes an error */
 import { Grid } from "./components/Grid";
 import { SelectionRectangle } from "./components/SelectionRectangle";
 import { ToggleLeftPanelButton } from "./components/ToggleLeftPanelButton";
@@ -110,6 +111,7 @@ export default function Board() {
     selected,
     rightPanelCollapsed,
     leftPanelCollapsed,
+    bottomPanelCollapsed,
     cursorType,
   } = useSelector(({ model }) => ({
     components: model.components,
@@ -117,6 +119,7 @@ export default function Board() {
     selected: model.selected,
     rightPanelCollapsed: model.rightPanelCollapsed,
     leftPanelCollapsed: model.leftPanelCollapsed,
+    bottomPanelCollapsed: model.bottomPanelCollapsed,
     cursorType: model.cursorType,
   }));
 
@@ -189,12 +192,12 @@ export default function Board() {
   };
   useEffect(() => {
     resize();
-  }, [rightPanelCollapsed, leftPanelCollapsed]);
+  }, [rightPanelCollapsed, leftPanelCollapsed, bottomPanelCollapsed]);
 
   useEffect(() => {
     setStage((prevStage) => ({
       ...prevStage,
-      panning: cursorType === CURSOR_PAN ? true : false,
+      panning: cursorType === CURSOR_PAN,
     }));
   }, [cursorType]);
 
@@ -425,6 +428,23 @@ export default function Board() {
     }
   }
 
+  function onDataFlowClick(id) {
+    return function (e) {
+      // If not left click
+      if (e.evt.button !== 0) {
+        return;
+      }
+
+      if (e.evt.shiftKey) {
+        setSelected(id, true);
+      } else if (e.evt.ctrlKey || e.evt.metaKey) {
+        setSelected(id, false);
+      } else {
+        setMultipleSelected([id]);
+      }
+    };
+  }
+
   function onComponentClick(id) {
     return function (e) {
       // If not left click
@@ -541,7 +561,6 @@ export default function Board() {
       y: currPos.y - componentsPos[draggedComponentId].y,
     };
     const selectedIds = Object.keys(selected);
-    // console.log("onSelectionDragMove", selectedIds, componentsPos);
 
     const newComponentsPos = selectedIds
       .filter((id) => id in componentsPos)
@@ -556,13 +575,6 @@ export default function Board() {
         {}
       );
 
-    // console.log(
-    //   "onSelectionDragMove",
-    //   selectedIds,
-    //   componentsPos,
-    //   newComponentsPos
-    // );
-
     setComponentsPos((prevComponentsPos) => ({
       ...prevComponentsPos,
       ...newComponentsPos,
@@ -571,7 +583,6 @@ export default function Board() {
 
   function onSelectionDragEnd() {
     const selectedIds = Object.keys(selected);
-    // console.log("onSelectionDragEnd", selectedIds, componentsPos);
 
     dispatch(
       moveComponents(
@@ -629,8 +640,8 @@ export default function Board() {
       tabIndex={1}
       style={{
         cursor: stage.panning ? "grab" : "",
-        flexGrow: 1,
         position: "relative",
+        gridArea: "board",
       }}
       onKeyDown={(e) => onKeyDown(e)}
       onKeyUp={(e) => onKeyUp(e)}
@@ -649,7 +660,9 @@ export default function Board() {
           addComponent({ name, type, x: pos.x, y: pos.y });
         }}
       />
+
       {rightPanelCollapsed === true && <ToggleRightPanelButton />}
+
       {leftPanelCollapsed === true && <ToggleLeftPanelButton />}
 
       <ContextMenu
@@ -745,8 +758,10 @@ export default function Board() {
                         componentsPos[df.endComponent.id]?.y ||
                           df.points.slice(-2)[1],
                       ]}
+                      label={df.label}
+                      labelAnchor={df.labelAnchor}
                       selected={df.id in selected}
-                      onClick={onComponentClick(df.id)}
+                      onClick={onDataFlowClick(df.id)}
                       getStagePointerPosition={getStagePointerPosition}
                     />
                   ))}
@@ -763,12 +778,12 @@ export default function Board() {
                         componentsPos[editDataFlow.startComponent.id].y,
                         ...editDataFlow.points.slice(2),
                       ]}
-                      isEditing={true}
+                      isEditing
                     />
                   )}
                 </Layer>
 
-                <SelectionRectangle {...selectionRectangle} />
+                {!isFramed && <SelectionRectangle {...selectionRectangle} />}
               </Provider>
             </Stage>
           )}
@@ -776,7 +791,6 @@ export default function Board() {
       ) : (
         <Loading />
       )}
-
       {!isFramed && <ActiveUsers />}
     </div>
   );

@@ -26,7 +26,7 @@ export function createControlApp(dal: DataAccessLayer) {
   // Metrics Middleware
   app.use(metricsMiddleware.metricsMiddleware);
   // Sentry Error Handler
-  app.use(Sentry.Handlers.errorHandler());
+  Sentry.setupExpressErrorHandler(app);
   // Global Error Handler. Should catch anything that propagates up from the REST routes.
   app.use(errorHandler);
 
