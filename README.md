@@ -5,7 +5,7 @@
 [![Discord][discord-image]][discord-url]
 [![Developed at Klarna][klarna-image]][klarna-url]
 
-Gram is Klarna's own [threat model][owasp-tm] diagramming tool developed internally by Klarna's Secure Development team. It is a webapp for engineers to collaboratively create threat models for their systems, providing a easy-to-understand way to document a system as a dataflow diagram with threats/controls attached.
+Gram is Klarna's own [threat model][owasp-tm] diagramming tool developed internally by Klarna's Secure Development team. It is a web app for engineers to collaboratively create threat models for their systems, providing a easy-to-understand way to document a system as a dataflow diagram with threats/controls attached.
 
 ![Screenshot](screenshot.png)
 
