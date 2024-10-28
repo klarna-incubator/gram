@@ -34,6 +34,9 @@ resource "aws_rds_cluster" "encrypted_db_cluster" {
   copy_tags_to_snapshot               = true
   skip_final_snapshot                 = false
 
+  # db_cluster_parameter_group_name = "default.aurora-postgresql16"  
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.rds_parameter_group.name
+
   tags = {
     SystemID          = "gram"
     Team              = "Secure Development"
@@ -67,6 +70,16 @@ resource "aws_db_instance" "encrypted_db" {
     SystemID          = "gram"
     Team              = "Secure Development"
     OhPoliceNamespace = "gram"    
+  }
+}
+
+resource "aws_rds_cluster_parameter_group" "rds_parameter_group" {  
+  name     = "gram-db-param-pg16-group"
+  family   = "aurora-postgresql16"
+
+  parameter {
+    name  = "rds.force_ssl"
+    value = "1"
   }
 }
 
