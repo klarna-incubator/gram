@@ -95,8 +95,8 @@ export default function App() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              height: "calc(100% - 64px)", // 64px is the height of Navbar
-              maxHeight: "calc(100% - 64px)",
+              height: isFramed ? "100%" : "calc(100% - 64px)", // 64px is the height of Navbar
+              maxHeight: isFramed ? "100%" : "calc(100% - 64px)", // 64px is the height of Navbar
               width: "100%",
             }}
           >

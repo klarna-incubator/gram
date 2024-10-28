@@ -27,8 +27,12 @@ import { useSelector } from "react-redux";
 function setGridArea(
   leftPanelCollapsed,
   rightPanelCollapsed,
-  bottomPanelCollapsed
+  bottomPanelCollapsed,
+  isFramed
 ) {
+  if (isFramed) {
+    return `'board board board' 'board board board'`;
+  }
   // Add first row
   let firstRow = `'${leftPanelCollapsed ? "board" : "left"} board ${
     rightPanelCollapsed ? "board" : "right"
@@ -139,7 +143,8 @@ export function Model() {
           gridTemplateAreas: setGridArea(
             leftPanelCollapsed,
             rightPanelCollapsed,
-            bottomPanelCollapsed
+            bottomPanelCollapsed,
+            isFramed
           ),
         }}
       >
