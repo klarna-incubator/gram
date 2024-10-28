@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.6](https://github.com/klarna-incubator/gram/compare/v4.17.5...v4.17.6) (2024-10-28)
+
+### Bug Fixes
+
+- unused imports in Left Panel ([2ab6d45](https://github.com/klarna-incubator/gram/commit/2ab6d45f359e5501726a748366a8caa023547ccc))
+
 ## [4.17.5](https://github.com/klarna-incubator/gram/compare/v4.17.4...v4.17.5) (2024-10-28)
 
 ### Bug Fixes
