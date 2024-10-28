@@ -1,3 +1,4 @@
+import { AppBar, Grow, Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -9,7 +10,6 @@ import { ComponentTab } from "./ComponentTab";
 import { DataFlowTab } from "./DataFlowTab";
 import { LeftFooter } from "./Footer";
 import { SystemTab } from "./SystemTab";
-import { AppBar, Drawer, Grow, Tab, Tabs, Toolbar } from "@mui/material";
 
 const TAB = {
   SYSTEM: 0,
