@@ -3,7 +3,7 @@
   "packageRules": [
     {
       "matchManagers": ["npm"],
-      "enabled": true
+      "enabled": false
     },
     {
       "matchManagers": ["dockerfile"],
