@@ -112,7 +112,7 @@ export class FlowDataService extends EventEmitter {
       attributes,
       id,
     ]);
-    if (res.rowCount > 0) {
+    if (res.rowCount != null && res.rowCount > 0) {
       this.emit("updated-for", {
         modelId: res.rows[0].model_id,
         dataFlowId: res.rows[0].data_flow_id,
@@ -125,7 +125,7 @@ export class FlowDataService extends EventEmitter {
         DELETE FROM flows WHERE id = $1 RETURNING *
       `;
     const res = await this.pool.query(query, [id]);
-    if (res.rowCount > 0) {
+    if (res.rowCount != null && res.rowCount > 0) {
       this.emit("updated-for", {
         modelId: res.rows[0].model_id,
         dataFlowId: res.rows[0].data_flow_id,

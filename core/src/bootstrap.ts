@@ -13,7 +13,7 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   const dal = new DataAccessLayer(pool);
   const bt = new Bootstrapper(dal);
 
-  await migrate();
+  await migrate(dal);
 
   // Set https proxy for outgoing requests
   if (config.httpsProxy) {

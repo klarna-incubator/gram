@@ -69,7 +69,12 @@ export const defaultConfig: GramConfiguration = {
     password: new EnvSecret("POSTGRES_PASSWORD"),
     database: new EnvSecret("POSTGRES_DATABASE"),
     port: new EnvSecret("POSTGRES_PORT"),
-    ssl: process.env.POSTGRES_DISABLE_SSL === undefined ? true : false,
+    ssl:
+      process.env.POSTGRES_DISABLE_SSL === undefined
+        ? {
+            rejectUnauthorized: true, //ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii")
+          }
+        : false,
   },
 
   notifications: {
@@ -162,7 +167,18 @@ export const defaultConfig: GramConfiguration = {
         type: "select",
         defaultValue: [],
         label: "Authentication",
-        options: ["Basic Auth", "JWT", "OIDC", "None"],
+        options: [
+          "Basic Auth",
+          "Password",
+          "JWT",
+          "OIDC",
+          "OAuth",
+          "Client Certificate",
+          "Cookie",
+          "Session",
+          "AWS Signature Version 4",
+          "None",
+        ],
         allowCustomValue: true,
         allowMultiple: true,
         optional: false,

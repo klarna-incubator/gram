@@ -16,6 +16,7 @@ import type { ActionItemExporter } from "../action-items/ActionItemExporter.js";
 import type { SearchProvider } from "../search/SearchHandler.js";
 import { ValidationRule } from "../validation/models.js";
 import type { DynamicAttribute } from "../attributes/attributes.js";
+import { ConnectionOptions } from "tls";
 
 export interface Providers {
   /**
@@ -55,7 +56,7 @@ export interface GramConfiguration {
     password: Secret;
     database: Secret;
     port: Secret;
-    ssl: boolean;
+    ssl: boolean | ConnectionOptions;
   };
 
   /**
