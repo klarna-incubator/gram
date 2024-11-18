@@ -7,6 +7,7 @@ The `staging` and `production` folders contain resources related to their respec
 ## First time setup
 Before you can start to make changes on an environment, you need to initialize terraform.
 
+1. Install terraform v1.9.8 (I recommend tfenv)
 1. `cd staging` or `cd production`
 1. Login to the target AWS account using `aws-login-tool`.
     * Staging: `aws-login-tool login -d 14400 -r iam-sync/gram/gram.IdP_admin -a 422554941857 -o`
