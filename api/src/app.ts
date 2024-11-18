@@ -50,7 +50,7 @@ export async function createApp(dal: DataAccessLayer) {
   const app = express();
 
   // Sentry has to be set up before everything else.
-  initSentry(app);
+  initSentry();
 
   // Metrics middleware
   app.use(metricsMiddleware);
@@ -273,7 +273,10 @@ export async function createApp(dal: DataAccessLayer) {
   }
 
   // Sentry Error Handler
-  Sentry.setupExpressErrorHandler(app);
+  if (config.sentryDSN) {
+    Sentry.setupExpressErrorHandler(app);
+  }
+
   // Global Error Handler. Should catch anything that propagates up from the REST routes.
   app.use(errorHandler);
 
