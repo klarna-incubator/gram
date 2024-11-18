@@ -91,4 +91,56 @@ describe("ValidationEngine", () => {
 
     expect(Array.isArray(resultList)).toBe(true);
   });
+
+  it("should select rules that have no conditions", async () => {
+    validationEngine.register([
+      {
+        type: "model",
+        name: "should have at least one component",
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+      {
+        type: "model",
+        name: "should have at least one component",
+        conditionalRules: [],
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+    ]);
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    expect(resultList.length).toBe(2);
+  });
+
+  it("should select appropriate rules based on conditions", async () => {
+    validationEngine.register([
+      {
+        type: "model",
+        name: "should be selected",
+        conditionalRules: [async (args) => true],
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+      {
+        type: "model",
+        name: "should not be selected",
+        conditionalRules: [async (args) => false, async (args) => true],
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+    ]);
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    expect(resultList.length).toBe(1);
+    expect(resultList[0].ruleName).toBe("should be selected");
+  });
 });

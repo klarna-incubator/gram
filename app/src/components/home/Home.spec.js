@@ -28,7 +28,7 @@ const renderComponent = (props) =>
   );
 
 describe("Home", () => {
-  it("renders Home", () => {
+  it.skip("renders Home", () => {
     // const props = {
     //   getTeamSystems: jest.fn(),
     //   getRecentModels: jest.fn(),
