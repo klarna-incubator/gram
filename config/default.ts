@@ -36,6 +36,7 @@ import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import { SystemRegistrySystemProvider } from "@gram/klarna";
 import defaultNotifications from "./notifications/index.js";
+import fs from "fs";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -72,7 +73,7 @@ export const defaultConfig: GramConfiguration = {
     ssl:
       process.env.POSTGRES_DISABLE_SSL === undefined
         ? {
-            rejectUnauthorized: true, //ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii")
+            rejectUnauthorized: false, //ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii")
           }
         : false,
   },
