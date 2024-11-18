@@ -244,7 +244,7 @@ export class SuggestionDataService extends EventEmitter {
           this.pool.query(threatsQuery, [modelId, ...componentIds]),
           this.pool.query(controlsQuery, [modelId, ...componentIds]),
         ])
-      ).reduce((p, c) => p + c.rowCount, 0) > 0
+      ).reduce((p, c) => p + (c.rowCount || 0), 0) > 0
     );
   }
 
@@ -282,7 +282,7 @@ export class SuggestionDataService extends EventEmitter {
     this.emit("updated-for", {
       modelId,
     });
-    return res.rowCount > 0;
+    return res.rowCount != null && res.rowCount > 0;
   }
 
   async getById(modelId: string, suggestionId: SuggestionID) {

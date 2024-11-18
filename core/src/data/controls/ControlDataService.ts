@@ -191,7 +191,7 @@ export class ControlDataService extends EventEmitter {
 
     const result = await this.pool.runTransaction(async (client) => {
       const res = await client.query(query, [modelId, ...ids]);
-      const result = res.rowCount > 0;
+      const result = res.rowCount != null && res.rowCount > 0;
 
       if (result) {
         const suggestionIds = res.rows
@@ -257,7 +257,7 @@ export class ControlDataService extends EventEmitter {
 
     const res = await this.pool.query(query, params);
 
-    if (res.rowCount > 0) {
+    if (res.rowCount != null && res.rowCount > 0) {
       this.emit("updated-for", {
         modelId: res.rows[0].model_id,
         componentId: res.rows[0].component_id,
