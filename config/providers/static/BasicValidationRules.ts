@@ -17,7 +17,7 @@ export const basicValidationRules: ValidationRule[] = [
       component.description ? component.description.length > 0 : false,
     messageTrue: "Component has a description",
     messageFalse:
-      "Description helps reviewer understand how the component functions and its purpose",
+      "Description helps the reviewer understand how the component functions and its purpose",
   },
   {
     type: "component",
