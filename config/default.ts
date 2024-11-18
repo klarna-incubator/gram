@@ -46,7 +46,12 @@ export const defaultConfig: GramConfiguration = {
     password: new EnvSecret("POSTGRES_PASSWORD"),
     database: new EnvSecret("POSTGRES_DATABASE"),
     port: new EnvSecret("POSTGRES_PORT"),
-    ssl: process.env.POSTGRES_DISABLE_SSL === undefined ? true : false,
+    ssl:
+      process.env.POSTGRES_DISABLE_SSL === undefined
+        ? {
+            rejectUnauthorized: true, //ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii")
+          }
+        : false,
   },
 
   notifications: {
