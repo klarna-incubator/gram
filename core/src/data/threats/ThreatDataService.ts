@@ -214,7 +214,7 @@ export class ThreatDataService extends EventEmitter {
 
     const res = await this.pool.query(query, params);
 
-    if (res.rowCount > 0) {
+    if (res.rowCount != null && res.rowCount > 0) {
       this.emit("updated-for", {
         modelId: res.rows[0].model_id,
         componentId: res.rows[0].component_id,
@@ -268,7 +268,7 @@ export class ThreatDataService extends EventEmitter {
         let suggestionIds: SuggestionID[] = [];
 
         const res = await client.query(query, [modelId, ...ids]);
-        const result = res.rowCount > 0;
+        const result = res.rowCount != null && res.rowCount > 0;
 
         if (result) {
           suggestionIds = res.rows
