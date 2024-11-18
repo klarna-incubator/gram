@@ -143,12 +143,10 @@ export class ValidationEngine extends EventEmitter {
           return await condition(ruleArgs);
         });
         const results = await Promise.all(conditions);
-        console.log(`Conditional results: ${results}`);
 
         const areAllConditionsMet = results.every((condition) => condition);
 
         if (!areAllConditionsMet) {
-          console.log(`Skipping rule: ${rule.name}`);
           continue;
         }
       }
