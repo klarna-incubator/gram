@@ -49,19 +49,25 @@ export class ValidationEngine extends EventEmitter {
       dal.threatService.on("updated-for", ({ modelId }) => {
         this.queueValidation(modelId);
       });
+      dal.threatService.on("deleted-for", ({ modelId }) => {
+        this.queueValidation(modelId);
+      });
 
       dal.controlService.on("updated-for", ({ modelId }) => {
         this.queueValidation(modelId);
       });
+      dal.controlService.on("deleted-for", ({ modelId }) => {
+        this.queueValidation(modelId);
+      });
+
+      dal.suggestionService.on("updated-for", ({ modelId }) => {
+        this.queueValidation(modelId);
+      });
+
+      dal.mitigationService.on("updated-for", ({ modelId }) => {
+        this.queueValidation(modelId);
+      });
     }
-
-    // dal.suggestionService.on("updated-for", ({ modelId }) => {
-    //   this.queueValidation(modelId);
-    // });
-
-    // dal.mitigationService.on("updated-for", ({ modelId }) => {
-    //   this.queueValidation(modelId);
-    // });
   }
 
   private queueValidation(modelId: any) {
@@ -103,6 +109,13 @@ export class ValidationEngine extends EventEmitter {
       ? await this.dal.mitigationService.list(model.id)
       : [];
 
+    const threatSuggestions = model?.id
+      ? await this.dal.suggestionService.listThreatSuggestions(model.id)
+      : [];
+    const controlSuggestions = model?.id
+      ? await this.dal.suggestionService.listControlSuggestions(model.id)
+      : [];
+
     // Rules
     const componentRules = this.rules.filter(
       (rule) => rule.type === "component"
@@ -110,14 +123,36 @@ export class ValidationEngine extends EventEmitter {
     const modelRules = this.rules.filter((rule) => rule.type === "model");
     const results: ValidationResult[] = [];
 
+    const ruleArgs = {
+      model,
+      threats,
+      controls,
+      mitigations,
+      threatSuggestions,
+      controlSuggestions,
+    };
+
     // Validate model
     for (const rule of modelRules) {
       if (!isModelValidation(rule)) {
         continue;
       }
 
+      if (rule.conditionalRules && rule.conditionalRules.length > 0) {
+        const conditions = rule.conditionalRules.map(async (condition) => {
+          return await condition(ruleArgs);
+        });
+        const results = await Promise.all(conditions);
+
+        const areAllConditionsMet = results.every((condition) => condition);
+
+        if (!areAllConditionsMet) {
+          continue;
+        }
+      }
+
       try {
-        const testResult = await rule.test({ model });
+        const testResult = await rule.test(ruleArgs);
         results.push({
           type: rule.type,
           elementName: "Model",
@@ -136,17 +171,20 @@ export class ValidationEngine extends EventEmitter {
         if (!isComponentValidation(rule)) {
           continue;
         }
-        if (!rule.affectedType.includes(component.type)) {
-          continue;
+        //Skip the rule if conditional rules are not met
+        if (rule.conditionalRules && rule.conditionalRules.length > 0) {
+          for (const condition of rule.conditionalRules) {
+            const isConditionMet = await condition(ruleArgs);
+            if (!isConditionMet) {
+              continue;
+            }
+          }
         }
-
         try {
           const testResult = await rule.test({
+            ...ruleArgs,
             component,
             dataflows: dataFlows,
-            threats,
-            controls,
-            mitigations,
           });
           results.push({
             type: rule.type,
