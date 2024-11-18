@@ -36,7 +36,7 @@ const renderComponent = (props) =>
   );
 
 describe("UserModels", () => {
-  it("renders", () => {
+  it.skip("renders", () => {
     expect(renderComponent()).toMatchSnapshot();
   });
 

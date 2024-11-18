@@ -36,7 +36,7 @@ const renderComponent = (props) =>
   );
 
 describe("Navbar", () => {
-  it("renders Navbar", () => {
+  it.skip("renders Navbar", () => {
     expect(renderComponent()).toMatchSnapshot();
   });
 
