@@ -1,6 +1,6 @@
 import { config } from "@gram/core/dist/config/index.js";
 import * as Sentry from "@sentry/node";
-import { nodeProfilingIntegration } from "@sentry/profiling-node";
+
 import { Express } from "express";
 import log4js from "log4js";
 import { version } from "./version.js";
@@ -24,11 +24,14 @@ export function hasSentry() {
   return !!config.sentryDSN;
 }
 
-export function initSentry(app: Express) {
+export function initSentry() {
   const sentryDSN = config.sentryDSN;
   if (!sentryDSN) {
     return;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { nodeProfilingIntegration } = require("@sentry/profiling-node"); 
 
   Sentry.init({
     release: `gram@${version}`,
