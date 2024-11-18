@@ -29,9 +29,6 @@ export function initSentry() {
     return;
   }
 
-  
-  
-
   Sentry.init({
     release: `gram@${version}`,
     environment: process.env["NODE_ENV"],
