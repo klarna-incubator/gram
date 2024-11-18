@@ -31,7 +31,7 @@ export function initSentry() {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { nodeProfilingIntegration } = require("@sentry/profiling-node"); 
+  const { nodeProfilingIntegration } = require("@sentry/profiling-node");
 
   Sentry.init({
     release: `gram@${version}`,
