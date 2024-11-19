@@ -165,6 +165,8 @@ export const defaultConfig: GramConfiguration = {
         defaultValue: [],
         label: "Authentication",
         options: [
+          "Bouncer",
+          "System User",
           "Basic Auth",
           "Password",
           "JWT",
