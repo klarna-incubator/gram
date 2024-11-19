@@ -143,4 +143,42 @@ describe("ValidationEngine", () => {
     expect(resultList.length).toBe(1);
     expect(resultList[0].ruleName).toBe("should be selected");
   });
+
+  it("should select appropriate component rules based on affectedType", async () => {
+    validationEngine.register([
+      {
+        type: "component",
+        name: "should apply to all components",
+        affectedType: [],
+        test: async ({ component }) => {
+          return false;
+        },
+        messageTrue: "should never be true",
+        messageFalse: "Yep, it applied to all components",
+      },
+      {
+        type: "component",
+        name: "should apply to external entity only",
+        affectedType: ["ee"],
+        test: async ({ component }) => {
+          return false;
+        },
+        messageTrue: "should never be true",
+        messageFalse: "Yep, it applied to external entity only",
+      },
+    ]);
+
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    const applyAllResult = resultList.filter((r) => {
+      return r.ruleName === "should apply to all components";
+    });
+    const applyEEOnlyResult = resultList.filter((r) => {
+      return r.ruleName === "should apply to external entity only";
+    });
+
+    expect(applyAllResult.length).toBe(2);
+    expect(applyEEOnlyResult.length).toBe(1);
+    expect(applyEEOnlyResult[0].elementName).toBe("omegalul");
+  });
 });

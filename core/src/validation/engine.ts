@@ -180,6 +180,14 @@ export class ValidationEngine extends EventEmitter {
             }
           }
         }
+
+        // Skip the rule if the component type is not in the affectedType array
+        if (rule.affectedType.length > 0) {
+          if (!rule.affectedType.includes(component.type)) {
+            continue;
+          }
+        }
+
         try {
           const testResult = await rule.test({
             ...ruleArgs,
