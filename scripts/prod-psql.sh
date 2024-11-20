@@ -8,9 +8,6 @@
 eval $(aws-login-tool login -d 14400 -r iam-sync/gram/gram.IdP_admin -a 715798949107 -o)
 
 REGION=eu-west-1
-AWS_ACCOUNT_ID=715798949107
-ROLE=gram.IdP_admin
-DURATION=900
 
 RDSHOST=gram-production-database-cluster.cluster-cludl8iseytr.eu-west-1.rds.amazonaws.com
 USERNAME=gram.IdP_admin
@@ -28,9 +25,10 @@ PGPASSWORD="$( aws rds generate-db-auth-token  \
   --username $USERNAME \
   --region $REGION)"
 
-HOST="13859a1b0001d0110ebc1ad6b4c9132318567df3.instance.production.eu1.bastion.klarna.net"
-PORT=5433
+echo $PGPASSWORD
+
+PORT=5439
 
 # docker run -v "$(pwd)/aws-global-bundle.pem:/aws-global-bundle.pem" --network host -it --rm postgres
-psql "sslmode=verify-ca sslrootcert=./aws-global-bundle.pem host=127.0.0.1 port=$PORT dbname=$DBNAME user=$USERNAME password=$PGPASSWORD"
+psql "sslmode=verify-ca sslrootcert=./aws-global-bundle.pem host=127.0.0.1 port=$PORT dbname=$DBNAME user=$USERNAME password='$PGPASSWORD'"
 # sslmode=verify-full does not work due to localhost being the proxy
