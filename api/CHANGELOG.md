@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.19.0](https://github.com/klarna/gram/compare/v4.18.0...v4.19.0) (2024-11-20)
+
+### Bug Fixes
+
+- can't import via require, move back to import (which unfortunately still starts the bundled sentry binary) ([7fcdd07](https://github.com/klarna/gram/commit/7fcdd07928030c9aec49156e54377768d951c72c))
+- migrations should now use the same pg client as the rest of the application ([5126e4e](https://github.com/klarna/gram/commit/5126e4ed6bf00a0cc646ecdc9d6813f49b83c2c8))
+- sentry should not load if sentryDSN is not set ([b13228b](https://github.com/klarna/gram/commit/b13228b558516c080ce5e1af86485fc4f1d33a26))
+
 # [4.18.0](https://github.com/klarna/gram/compare/v4.17.6...v4.18.0) (2024-11-18)
 
 **Note:** Version bump only for package @gram/api

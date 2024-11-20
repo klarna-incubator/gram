@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.19.0](https://github.com/klarna/gram/compare/v4.18.0...v4.19.0) (2024-11-20)
+
+### Bug Fixes
+
+- :bug: select reviewer rules based on affectedType ([cc172e8](https://github.com/klarna/gram/commit/cc172e8a690903d8b394d04684a2ec0250b0bb7f))
+- migrations should now use the same pg client as the rest of the application ([5126e4e](https://github.com/klarna/gram/commit/5126e4ed6bf00a0cc646ecdc9d6813f49b83c2c8))
+- set default SSL to use rejectUnauthorized to enforce signed tls certs ([7d37bfc](https://github.com/klarna/gram/commit/7d37bfc52e2995733b83899c0b5dffb81ed86560))
+
+### Features
+
+- add more ssl options to config ([2d595c7](https://github.com/klarna/gram/commit/2d595c7dd901b8b360d18efec6a5b3a46b46a1c6))
+
 # [4.18.0](https://github.com/klarna/gram/compare/v4.17.6...v4.18.0) (2024-11-18)
 
 ### Features
