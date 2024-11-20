@@ -224,10 +224,6 @@ const _workshopValidationRules: ValidationRule[] = [
         isComponentSuggestion
       );
 
-      if (component.type === "tb") {
-        console.log("filteredThreats", filteredThreats);
-        console.log("filteredControls", filteredControls);
-      }
       if (filteredThreats?.length === 0 && filteredControls?.length === 0) {
         return true; // If no suggestion is present, the rule passes automatically
       }
