@@ -39,6 +39,12 @@ export function BottomPanel() {
       : [];
   }
 
+  const passedResults = validationResults.filter((result) => result.testResult);
+  const successRatio =
+    validationResults.length === 0
+      ? 0
+      : Number((passedResults.length / validationResults.length).toFixed(2));
+
   if (tab === 0) {
     // TAB.ALL
     filteredResults = allNegativeResults;
@@ -57,16 +63,15 @@ export function BottomPanel() {
   }
 
   useEffect(() => {
-    if (!selectedComponent) {
+    if (!selectedComponent && tab === TAB.SELECTED_COMPONENT) {
       setTab(0);
-    } else {
-      setTab(2);
     }
-  }, [selectedComponent]);
+  }, [selectedComponent, tab]);
 
   if (bottomPanelCollapsed) {
     return <></>;
   }
+
   return (
     <Box sx={{ gridArea: "bottom", backgroundColor: "rgb(20,20,20)" }}>
       {!isLoading && (
@@ -77,12 +82,15 @@ export function BottomPanel() {
             allLength={allNegativeResults.length}
             modelLength={modelResults.length}
             selectedLength={selectedResults.length}
+            selectedComponent={selectedComponent}
+            successRatio={successRatio}
           />
           <ValidationTab
             tab={tab}
             setTab={setTab}
             filteredResults={filteredResults}
             isLoading={isLoading}
+            selectedComponent={selectedComponent}
           />
         </>
       )}

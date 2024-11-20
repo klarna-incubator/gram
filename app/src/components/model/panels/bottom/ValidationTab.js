@@ -11,7 +11,6 @@ import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSetSelected } from "../../hooks/useSetSelected";
 import { useDeselectAll } from "../../hooks/useSetMultipleSelected";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 function selectElement(type, elementId, setSelected, deselectAll, setTab) {
   deselectAll();
@@ -74,11 +73,15 @@ function renderResults(results, setSelected, deselectAll, setTab) {
   });
 }
 
-export function ValidationTab({ tab, setTab, filteredResults, isLoading }) {
+export function ValidationTab({
+  tab,
+  setTab,
+  filteredResults,
+  isLoading,
+  selectedComponent,
+}) {
   const setSelected = useSetSelected();
   const deselectAll = useDeselectAll();
-
-  const selectedComponent = useSelectedComponent();
 
   if (isLoading) {
     return (
