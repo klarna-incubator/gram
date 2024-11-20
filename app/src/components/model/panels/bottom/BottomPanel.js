@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { useValidateQuery } from "../../../../api/gram/validation";
-import { COMPONENT_TYPE } from "../../board/constants";
 
 export function BottomPanel() {
   const modelId = useModelID();
@@ -39,6 +38,12 @@ export function BottomPanel() {
         )
       : [];
   }
+
+  const passedResults = validationResults.filter((result) => result.testResult);
+  const successRatio =
+    validationResults.length === 0
+      ? 0
+      : Number((passedResults.length / validationResults.length).toFixed(2));
 
   if (tab === 0) {
     // TAB.ALL
@@ -78,6 +83,7 @@ export function BottomPanel() {
             modelLength={modelResults.length}
             selectedLength={selectedResults.length}
             selectedComponent={selectedComponent}
+            successRatio={successRatio}
           />
           <ValidationTab
             tab={tab}

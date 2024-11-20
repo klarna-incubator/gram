@@ -25,6 +25,15 @@ function getBadgeColor(length) {
   return "error";
 }
 
+function getSuccessRatioColor(ratio) {
+  if (ratio >= 0.75) {
+    return "success";
+  } else if (ratio >= 0.5) {
+    return "warning";
+  }
+  return "error";
+}
+
 export function BottomTabsHeader({
   tab,
   setTab,
@@ -32,6 +41,7 @@ export function BottomTabsHeader({
   modelLength,
   selectedLength,
   selectedComponent,
+  successRatio,
 }) {
   return (
     <Paper elevation={3} sx={{ display: "flex" }}>
@@ -39,6 +49,7 @@ export function BottomTabsHeader({
         sx={{
           mx: 3,
           display: "flex",
+          gap: 1,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -46,6 +57,12 @@ export function BottomTabsHeader({
         <Typography variant="h6" sx={{ fontSize: "0.8rem" }}>
           QUALITY CHECK
         </Typography>
+        <Badge
+          showZero
+          badgeContent={`${successRatio * 100}%`}
+          color={getSuccessRatioColor(successRatio)}
+          sx={tabBadgeStyle}
+        ></Badge>
       </Box>
       <Box sx={{ flexGrow: 1 }}>
         <Grow in={true}>
