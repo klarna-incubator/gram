@@ -3,7 +3,7 @@ version: "3.1"
 services:
   database:
     container_name: gram-demo-postgres
-    image: postgres:12
+    image: postgres:17
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: somethingsecret
