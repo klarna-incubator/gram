@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.19.0](https://github.com/klarna/gram/compare/v4.18.0...v4.19.0) (2024-11-20)
+
+### Bug Fixes
+
+- set default SSL to use rejectUnauthorized to enforce signed tls certs ([7d37bfc](https://github.com/klarna/gram/commit/7d37bfc52e2995733b83899c0b5dffb81ed86560))
+
+### Features
+
+- add some new default authentication options ([#133](https://github.com/klarna/gram/issues/133)) ([da5252f](https://github.com/klarna/gram/commit/da5252fd4efe7b8fec3eda5aee7519d2113889d3))
+
 # [4.18.0](https://github.com/klarna/gram/compare/v4.17.6...v4.18.0) (2024-11-18)
 
 **Note:** Version bump only for package @gram/config

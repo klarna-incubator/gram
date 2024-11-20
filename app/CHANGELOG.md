@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.19.0](https://github.com/klarna-incubator/gram/compare/v4.18.0...v4.19.0) (2024-11-20)
+
+### Bug Fixes
+
+- :bug: fix blocked tabs with dataflows ([793f423](https://github.com/klarna-incubator/gram/commit/793f42310f7bf00e9543743e4d8122f690c9ca97))
+
+### Features
+
+- :sparkles: add review score to bottom panel ([a910d42](https://github.com/klarna-incubator/gram/commit/a910d422d4667210c471907d62a7dcd517bee433))
+
 # [4.18.0](https://github.com/klarna-incubator/gram/compare/v4.17.6...v4.18.0) (2024-11-18)
 
 ### Features

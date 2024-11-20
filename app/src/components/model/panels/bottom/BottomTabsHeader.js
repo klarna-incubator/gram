@@ -1,5 +1,4 @@
 import { Paper, Grow, Tab, Tabs, Badge, Typography, Box } from "@mui/material";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export const TAB = {
   ALL: 0,
@@ -26,24 +25,31 @@ function getBadgeColor(length) {
   return "error";
 }
 
+function getSuccessRatioColor(ratio) {
+  if (ratio >= 0.75) {
+    return "success";
+  } else if (ratio >= 0.5) {
+    return "warning";
+  }
+  return "error";
+}
+
 export function BottomTabsHeader({
   tab,
   setTab,
   allLength,
   modelLength,
   selectedLength,
+  selectedComponent,
+  successRatio,
 }) {
-  const selected = useSelectedComponent();
-
-  // This fixes an annoying MUI console error when you deselect a component
-  const tabHck = !selected && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
-
   return (
     <Paper elevation={3} sx={{ display: "flex" }}>
       <Box
         sx={{
           mx: 3,
           display: "flex",
+          gap: 1,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -51,11 +57,17 @@ export function BottomTabsHeader({
         <Typography variant="h6" sx={{ fontSize: "0.8rem" }}>
           QUALITY CHECK
         </Typography>
+        <Badge
+          showZero
+          badgeContent={`${successRatio * 100}%`}
+          color={getSuccessRatioColor(successRatio)}
+          sx={tabBadgeStyle}
+        ></Badge>
       </Box>
       <Box sx={{ flexGrow: 1 }}>
         <Grow in={true}>
           <Tabs
-            value={tabHck}
+            value={tab}
             onChange={(_, v) => setTab(v)}
             textColor="inherit"
             variant="fullWidth"
@@ -97,7 +109,7 @@ export function BottomTabsHeader({
               }
               value={TAB.MODEL}
             />
-            {selected && (
+            {selectedComponent && (
               <Tab
                 disableRipple
                 label={
