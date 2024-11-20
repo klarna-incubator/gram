@@ -1,5 +1,4 @@
 import { Paper, Grow, Tab, Tabs, Badge, Typography, Box } from "@mui/material";
-import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 
 export const TAB = {
   ALL: 0,
@@ -32,12 +31,8 @@ export function BottomTabsHeader({
   allLength,
   modelLength,
   selectedLength,
+  selectedComponent,
 }) {
-  const selected = useSelectedComponent();
-
-  // This fixes an annoying MUI console error when you deselect a component
-  const tabHck = !selected && tab === TAB.COMPONENT ? TAB.SYSTEM : tab;
-
   return (
     <Paper elevation={3} sx={{ display: "flex" }}>
       <Box
@@ -55,7 +50,7 @@ export function BottomTabsHeader({
       <Box sx={{ flexGrow: 1 }}>
         <Grow in={true}>
           <Tabs
-            value={tabHck}
+            value={tab}
             onChange={(_, v) => setTab(v)}
             textColor="inherit"
             variant="fullWidth"
@@ -97,7 +92,7 @@ export function BottomTabsHeader({
               }
               value={TAB.MODEL}
             />
-            {selected && (
+            {selectedComponent && (
               <Tab
                 disableRipple
                 label={

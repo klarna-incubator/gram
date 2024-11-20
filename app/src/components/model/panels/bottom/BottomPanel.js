@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { useValidateQuery } from "../../../../api/gram/validation";
+import { COMPONENT_TYPE } from "../../board/constants";
 
 export function BottomPanel() {
   const modelId = useModelID();
@@ -57,16 +58,15 @@ export function BottomPanel() {
   }
 
   useEffect(() => {
-    if (!selectedComponent) {
+    if (!selectedComponent && tab === TAB.SELECTED_COMPONENT) {
       setTab(0);
-    } else {
-      setTab(2);
     }
-  }, [selectedComponent]);
+  }, [selectedComponent, tab]);
 
   if (bottomPanelCollapsed) {
     return <></>;
   }
+
   return (
     <Box sx={{ gridArea: "bottom", backgroundColor: "rgb(20,20,20)" }}>
       {!isLoading && (
@@ -77,12 +77,14 @@ export function BottomPanel() {
             allLength={allNegativeResults.length}
             modelLength={modelResults.length}
             selectedLength={selectedResults.length}
+            selectedComponent={selectedComponent}
           />
           <ValidationTab
             tab={tab}
             setTab={setTab}
             filteredResults={filteredResults}
             isLoading={isLoading}
+            selectedComponent={selectedComponent}
           />
         </>
       )}
