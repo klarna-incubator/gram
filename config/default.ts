@@ -50,6 +50,7 @@ export const ldapSettings: LDAPClientSettings = {
   },
 };
 import { basicValidationRules } from "./providers/static/BasicValidationRules.js";
+import { workshopValidationRules } from "./providers/static/WorkshopValidationRules.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -365,7 +366,7 @@ export const defaultConfig: GramConfiguration = {
         j1TeamProvider, // completely optional
         dal.modelService,
       ],
-      validationSources: [basicValidationRules],
+      validationSources: [basicValidationRules, workshopValidationRules],
     };
   },
 };
