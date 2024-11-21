@@ -137,7 +137,7 @@ export class MitigationDataService extends EventEmitter {
 
     const res = await this.pool.query(query, [threatId, controlId]);
 
-    if (res.rowCount > 0) {
+    if (res.rowCount != null && res.rowCount > 0) {
       this.emit("updated-for", {
         modelId: res.rows[0].model_id,
         componentId: res.rows[0].component_id,

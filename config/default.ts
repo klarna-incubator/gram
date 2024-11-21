@@ -50,6 +50,7 @@ export const ldapSettings: LDAPClientSettings = {
   },
 };
 import { basicValidationRules } from "./providers/static/BasicValidationRules.js";
+import { workshopValidationRules } from "./providers/static/WorkshopValidationRules.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -69,7 +70,9 @@ export const defaultConfig: GramConfiguration = {
     password: new EnvSecret("POSTGRES_PASSWORD"),
     database: new EnvSecret("POSTGRES_DATABASE"),
     port: new EnvSecret("POSTGRES_PORT"),
-    ssl: process.env.POSTGRES_DISABLE_SSL === undefined ? true : false,
+    ssl: {
+      rejectUnauthorized: false, //ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii")
+    },
   },
 
   notifications: {
@@ -162,7 +165,20 @@ export const defaultConfig: GramConfiguration = {
         type: "select",
         defaultValue: [],
         label: "Authentication",
-        options: ["Basic Auth", "JWT", "OIDC", "None"],
+        options: [
+          "Bouncer",
+          "System User",
+          "Basic Auth",
+          "Password",
+          "JWT",
+          "OIDC",
+          "OAuth",
+          "Client Certificate",
+          "Cookie",
+          "Session",
+          "AWS Signature Version 4",
+          "None",
+        ],
         allowCustomValue: true,
         allowMultiple: true,
         optional: false,
@@ -350,7 +366,7 @@ export const defaultConfig: GramConfiguration = {
         j1TeamProvider, // completely optional
         dal.modelService,
       ],
-      validationSources: [basicValidationRules],
+      validationSources: [basicValidationRules, workshopValidationRules],
     };
   },
 };

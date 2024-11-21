@@ -18,53 +18,6 @@ data "aws_subnets" "private_subnets" {
   }
 }
 
-resource "aws_security_group" "postgres_allow_office" {
-  name        = "postgres_allow_office"
-  description = "Allow connections from offices and VPN"
-  vpc_id      = data.aws_vpc.klarna_vpc.id
-
-  tags = {
-    SystemID = "gram"
-    Team     = "Secure Development"
-  }
-
-  ingress {
-    description = "ITOPS WiFi"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["10.3.210.0/24"]
-  }
-  ingress {
-    description = "ITOPS VPN"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["10.4.128.0/24"]
-  }
-  ingress {
-    description = "ITOPS Wired"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["10.3.10.0/24"]
-  }
-  ingress {
-    description = "DevTech VPN"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["10.4.136.0/22"]
-  }
-  ingress {
-    description = "GlobalProtect VPN"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["10.2.0.0/16"]
-  }
-}
-
 resource "aws_security_group" "postgres_allow_gram_c2c" {
   name        = "postgres_allow_gram_c2c"
   description = "Allow connections from Gram C2C Staging EU"

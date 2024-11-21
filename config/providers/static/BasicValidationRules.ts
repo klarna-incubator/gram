@@ -11,14 +11,13 @@ export const basicValidationRules: ValidationRule[] = [
   },
   {
     type: "component",
-    name: "should have a long enough description",
+    name: "should have a description",
     affectedType: ["proc", "ee", "ds", "tb"],
-    conditionalRules: [["should have a description", true]],
     test: async ({ component }) =>
-      component.description ? component.description.length > 50 : false,
-    messageTrue: "Component has a long enough description",
+      component.description ? component.description.length > 0 : false,
+    messageTrue: "Component has a description",
     messageFalse:
-      "Component's description should be at least 50, to be descriptive enough",
+      "Description helps the reviewer understand how the component functions and its purpose",
   },
   {
     type: "component",

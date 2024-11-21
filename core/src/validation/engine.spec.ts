@@ -91,4 +91,94 @@ describe("ValidationEngine", () => {
 
     expect(Array.isArray(resultList)).toBe(true);
   });
+
+  it("should select rules that have no conditions", async () => {
+    validationEngine.register([
+      {
+        type: "model",
+        name: "should have at least one component",
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+      {
+        type: "model",
+        name: "should have at least one component",
+        conditionalRules: [],
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+    ]);
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    expect(resultList.length).toBe(2);
+  });
+
+  it("should select appropriate rules based on conditions", async () => {
+    validationEngine.register([
+      {
+        type: "model",
+        name: "should be selected",
+        conditionalRules: [async (args) => true],
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+      {
+        type: "model",
+        name: "should not be selected",
+        conditionalRules: [async (args) => false, async (args) => true],
+        affectedType: [],
+        test: async ({ model }) => model.data.components.length > 0,
+        messageTrue: "Model has at least one component",
+        messageFalse: "Model is empty",
+      },
+    ]);
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    expect(resultList.length).toBe(1);
+    expect(resultList[0].ruleName).toBe("should be selected");
+  });
+
+  it("should select appropriate component rules based on affectedType", async () => {
+    validationEngine.register([
+      {
+        type: "component",
+        name: "should apply to all components",
+        affectedType: [],
+        test: async ({ component }) => {
+          return false;
+        },
+        messageTrue: "should never be true",
+        messageFalse: "Yep, it applied to all components",
+      },
+      {
+        type: "component",
+        name: "should apply to external entity only",
+        affectedType: ["ee"],
+        test: async ({ component }) => {
+          return false;
+        },
+        messageTrue: "should never be true",
+        messageFalse: "Yep, it applied to external entity only",
+      },
+    ]);
+
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    const applyAllResult = resultList.filter((r) => {
+      return r.ruleName === "should apply to all components";
+    });
+    const applyEEOnlyResult = resultList.filter((r) => {
+      return r.ruleName === "should apply to external entity only";
+    });
+
+    expect(applyAllResult.length).toBe(2);
+    expect(applyEEOnlyResult.length).toBe(1);
+    expect(applyEEOnlyResult[0].elementName).toBe("omegalul");
+  });
 });

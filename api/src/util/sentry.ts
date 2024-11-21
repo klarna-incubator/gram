@@ -1,9 +1,8 @@
 import { config } from "@gram/core/dist/config/index.js";
 import * as Sentry from "@sentry/node";
-import { nodeProfilingIntegration } from "@sentry/profiling-node";
-import { Express } from "express";
 import log4js from "log4js";
 import { version } from "./version.js";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 const log = log4js.getLogger("sentry");
 
@@ -24,7 +23,7 @@ export function hasSentry() {
   return !!config.sentryDSN;
 }
 
-export function initSentry(app: Express) {
+export function initSentry() {
   const sentryDSN = config.sentryDSN;
   if (!sentryDSN) {
     return;

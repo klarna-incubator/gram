@@ -1,22 +1,18 @@
-resource "random_password" "initial_password" {
-  length           = 40
-  special          = true
-  min_special      = 5
-  override_special = "!#$%^&*()-_=+[]{}<>:?"
-  keepers = {
-    pass_version = 1
-  }
-}
+# resource "random_password" "initial_password" {
+#   length           = 40
+#   special          = true
+#   min_special      = 5
+#   override_special = "!#$%^&*()-_=+[]{}<>:?"
+#   keepers = {
+#     pass_version = 1
+#   }
+# }
 
 resource "aws_db_subnet_group" "default" {
   name       = "main"
   subnet_ids = data.aws_subnets.private_subnets.ids
 
-  tags = {
-    Name     = "Gram DB subnet group"
-    SystemID = "gram"
-    Team     = "Secure Development"
-  }
+  tags = local.tags
 }
 
 resource "aws_rds_cluster" "encrypted_db_cluster" {
@@ -34,15 +30,12 @@ resource "aws_rds_cluster" "encrypted_db_cluster" {
   copy_tags_to_snapshot               = true
   skip_final_snapshot                 = false
 
-  db_cluster_parameter_group_name = "default.aurora-postgresql16"  
-  # db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.rds_parameter_group.name
+  # db_cluster_parameter_group_name = "default.aurora-postgresql16"  
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.rds_parameter_group.name
   
-  tags = {
-    SystemID          = "gram"
-    Team              = "Secure Development"
-    OhPoliceNamespace = "gram"
+  tags = merge(local.tags, {    
     "kep:kbsd:enableDisasterRecoveryBackup" = "false"
-  }
+  })
   
   deletion_protection                 = true
   apply_immediately = false
@@ -82,6 +75,8 @@ resource "aws_rds_cluster_parameter_group" "rds_parameter_group" {
     name  = "rds.force_ssl"
     value = "1"
   }
+
+  tags = local.tags 
 }
 
 # output "initial_password" {

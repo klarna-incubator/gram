@@ -129,7 +129,7 @@ func bastionStatus(auth Auth, requestID string) (BastionStatusResponse, error) {
 }
 
 func StartSSHTunnel(ready chan bool, done chan error, proxyTarget string, proxyUser string, proxyHost string) {
-	c := fmt.Sprintf("-t -A -L 5433:%s:5432 %s@%s", proxyTarget, proxyUser, proxyHost)
+	c := fmt.Sprintf("-t -A -L 5439:%s:5432 %s@%s", proxyTarget, proxyUser, proxyHost)
 	// Might need to unset TMOUT (this didnt work, but might be useful for future lookup) -o RemoteCommand='export TMOUT=; printenv; bash -l'
 	args := strings.Split(c, " ")
 	fmt.Println("ssh", c)
@@ -262,7 +262,7 @@ func main() {
 				fmt.Print("> Do you want to reuse it? (y/n): ")
 				var reuse string
 				fmt.Scanln(&reuse)
-				if reuse == "y" {
+				if reuse == "y" || reuse == "yes" {
 					fmt.Println("# Reusing request ID:", prevRequestID)
 					requestID = prevRequestID
 					fmt.Println()

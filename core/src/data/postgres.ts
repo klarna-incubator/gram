@@ -116,13 +116,7 @@ export async function createPostgresPool(passedOpts?: pg.PoolConfig) {
   );
   defaultOpts.ssl = config.postgres.ssl;
 
-  //TODO: should be configuration...
-  // if (defaultOpts.ssl) {
-  // Load AWS RDS CA to verify connection
-  // defaultOpts.ssl = {
-  //   ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii"),
-  // };
-  // }
+  log.info("defaultOpts.ssl", defaultOpts.ssl, config.postgres.ssl);
 
   let opts = defaultOpts;
   if (passedOpts) {

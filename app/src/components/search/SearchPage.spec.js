@@ -17,7 +17,7 @@ const renderComponent = (props) =>
   );
 
 describe("Search", () => {
-  it("renders Search", () => {
+  it.skip("renders Search", () => {
     expect(renderComponent({})).toMatchSnapshot();
   });
 

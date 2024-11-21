@@ -116,7 +116,7 @@ export class NotificationDataService {
     WHERE id IN (${safeInString})`;
 
     const res = await this.pool.query(query, [status]);
-    return res.rowCount > 0;
+    return res.rowCount != null && res.rowCount > 0;
   }
 
   /**

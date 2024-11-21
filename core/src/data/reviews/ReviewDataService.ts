@@ -513,7 +513,7 @@ export class ReviewDataService extends EventEmitter {
 
     const res = await this.pool.query(query, params);
 
-    if (res.rowCount > 0) {
+    if (res.rowCount != null && res.rowCount > 0) {
       this.emit("updated-for", {
         modelId,
       });

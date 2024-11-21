@@ -6,36 +6,36 @@ exports[`Home renders Home 1`] = `
   "baseElement": <body>
     <div>
       <div
-        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-imdfze-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-1qi6pw9-MuiGrid2-root"
       >
         <div
-          class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-105iddl-MuiGrid2-root"
+          class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-13jpe7a-MuiGrid2-root"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
           >
             Recent Threat Models
           </h5>
           <p
-            class="MuiTypography-root MuiTypography-body1 dimmed css-rizt0-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 dimmed css-1edfpdg-MuiTypography-root"
           >
             Threat models you recently interacted with
           </p>
           <div
-            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1eg0ry7-MuiPaper-root-MuiCard-root"
+            class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1pyfb4v-MuiPaper-root-MuiCard-root"
             style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
           >
             <div
-              class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
+              class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
             >
               <ul
-                class="MuiList-root MuiList-padding css-b7dj7n-MuiList-root"
+                class="MuiList-root MuiList-padding css-1u169s7-MuiList-root"
               >
                 <div
-                  class="MuiListItemText-root css-cfq8qh-MuiListItemText-root"
+                  class="MuiListItemText-root css-1y2w5y4-MuiListItemText-root"
                 >
                   <span
-                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-rizt0-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1edfpdg-MuiTypography-root"
                   >
                     No models exist
                   </span>
@@ -49,36 +49,36 @@ exports[`Home renders Home 1`] = `
   </body>,
   "container": <div>
     <div
-      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-imdfze-MuiGrid2-root"
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-1qi6pw9-MuiGrid2-root"
     >
       <div
-        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-105iddl-MuiGrid2-root"
+        class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 css-13jpe7a-MuiGrid2-root"
       >
         <h5
-          class="MuiTypography-root MuiTypography-h5 css-16xl4zq-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-ku7d13-MuiTypography-root"
         >
           Recent Threat Models
         </h5>
         <p
-          class="MuiTypography-root MuiTypography-body1 dimmed css-rizt0-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 dimmed css-1edfpdg-MuiTypography-root"
         >
           Threat models you recently interacted with
         </p>
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1eg0ry7-MuiPaper-root-MuiCard-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-1pyfb4v-MuiPaper-root-MuiCard-root"
           style="--Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);"
         >
           <div
-            class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
+            class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
           >
             <ul
-              class="MuiList-root MuiList-padding css-b7dj7n-MuiList-root"
+              class="MuiList-root MuiList-padding css-1u169s7-MuiList-root"
             >
               <div
-                class="MuiListItemText-root css-cfq8qh-MuiListItemText-root"
+                class="MuiListItemText-root css-1y2w5y4-MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-rizt0-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-1edfpdg-MuiTypography-root"
                 >
                   No models exist
                 </span>
