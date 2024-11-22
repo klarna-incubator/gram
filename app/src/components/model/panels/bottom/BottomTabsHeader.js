@@ -59,7 +59,7 @@ export function BottomTabsHeader({
         </Typography>
         <Badge
           showZero
-          badgeContent={`${successRatio * 100}%`}
+          badgeContent={`${(successRatio * 100).toFixed(0)}%`}
           color={getSuccessRatioColor(successRatio)}
           sx={tabBadgeStyle}
         ></Badge>
