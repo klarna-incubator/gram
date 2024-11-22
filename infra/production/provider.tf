@@ -1,8 +1,8 @@
 terraform {
+  required_version = ">= 1.9.8"
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+      source = "hashicorp/aws"
     }
   }
 }
@@ -14,8 +14,8 @@ provider "aws" {
 
   default_tags {
     tags = {
-      SystemID = "gram"
-      Team     = "Secure Development"
+      SystemID          = "gram"
+      Team              = "Secure Development"
       OhPoliceNamespace = "gram"
     }
   }

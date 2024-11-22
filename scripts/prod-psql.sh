@@ -25,8 +25,6 @@ PGPASSWORD="$( aws rds generate-db-auth-token  \
   --username $USERNAME \
   --region $REGION)"
 
-echo $PGPASSWORD
-
 PORT=5439
 
 # docker run -v "$(pwd)/aws-global-bundle.pem:/aws-global-bundle.pem" --network host -it --rm postgres
