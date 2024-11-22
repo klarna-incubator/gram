@@ -16,7 +16,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { modalActions } from "../../../redux/modalSlice";
+import { ContactChip } from "../../elements/ContactChip";
 import HightlightOverlay from "../../elements/overlay/HightlightOverlay";
+import actionItemImg from "./img/actionItem.gif";
 import addcomponentImg from "./img/addcomponent.png";
 import indicatorAlmostSecureImg from "./img/almost-secure.svg";
 import componentctrlsImg from "./img/componentctrls.gif";
@@ -26,19 +28,19 @@ import creatingThreats from "./img/creatingthreats.gif";
 import dataflowImg from "./img/dataflow.gif";
 import datastoreImg from "./img/datastore.png";
 import externalEntityImg from "./img/externalentity.png";
-import trustBoundaryImg from "./img/trustboundary.png";
 import indicatorsImg from "./img/indicators.png";
 import processImg from "./img/process.png";
 import reviewRequestViewImg from "./img/reviewRequestView.png";
 import rightPanelHeader from "./img/rightpanelheader.png";
 import indicatorSecureImg from "./img/secure.svg";
 import suggestions from "./img/suggestions.gif";
+import trustBoundaryImg from "./img/trustboundary.png";
 import indicatorUnknownImg from "./img/unknown.svg";
 import indicatorVulnerableImg from "./img/vulnerable.svg";
-import actionItemImg from "./img/actionItem.gif";
-import { ContactChip } from "../../elements/ContactChip";
 
 import { setMultipleSelected } from "../../../actions/model/setSelected";
+import { COMPONENT_TYPE } from "../board/constants";
+import { useSelectedComponent } from "../hooks/useSelectedComponent";
 
 const Introduction = () => (
   <>
@@ -160,6 +162,9 @@ const CreateComponent = () => (
 const ComponentTab = () => (
   <>
     <Typography>
+      When you select a component you'll notice the left panel changes to show the component tab.
+    </Typography>
+    <Typography>
       The component tab contain input fields for specifying component specific
       information not relating to threats or controls.
     </Typography>
@@ -208,9 +213,9 @@ const DataFlows = () => (
       dataflow.
     </Typography>
     <Typography>
-      What is the right direction for the arrow? The direction of the arrow
-      represents the flow of meaningful data. Meaningful data is any data that
-      is of value for the system in scope.
+      <b>What is the right direction for the arrow?</b> The direction of the
+      arrow represents the flow of meaningful data. Meaningful data is any data
+      that is of value for the system in scope.
     </Typography>
     <Typography>
       An example of a unidirectional flow could be a system fetching data from
@@ -220,6 +225,28 @@ const DataFlows = () => (
     <Typography>
       An example of a bidirectional flow could be a database connection where a
       process is both storing and fetching data.
+    </Typography>
+    <Typography>
+      <b>Create and select a data flow to proceed.</b>
+    </Typography>
+  </>
+);
+
+const DataFlowAttributes = () => (
+  <>
+    <Typography>
+      When a data flow is selected, you can set a properties for the data flow
+      in the left panel.
+    </Typography>
+    <Typography>
+      The label property allows you to put a text label that will be displayed
+      in the diagram.
+    </Typography>
+    <Typography>
+      Data flows can be given more context by creating "flows". These flows are
+      meant to describe the data flow in more detail by allowing you to set
+      different attributes. These may be attributes such as: protocol,
+      authentication, type of data or description.
     </Typography>
   </>
 );
@@ -231,7 +258,7 @@ const ComponentSelection = () => (
       currently selected
     </Typography>
     <Typography sx={{ fontWeight: "bold" }}>
-      Select a component on the board, and then press next to continue.
+      Select a component again on the board, and then press next to continue.
     </Typography>
   </>
 );
@@ -568,6 +595,9 @@ const steps = [
     },
     highlighted: ["#diagram-container"],
     position: "flex-start",
+    nextCondition: (state) =>
+      state.selectedComponent &&
+      state.selectedComponent.type !== COMPONENT_TYPE.DATA_FLOW,
   },
   {
     title: "Component",
@@ -598,12 +628,22 @@ const steps = [
     },
     highlighted: ["#diagram-container"],
     position: "flex-start",
+    nextCondition: (state) =>
+      state.selectedComponent?.type === COMPONENT_TYPE.DATA_FLOW,
+  },
+  {
+    title: "Dataflow selection",
+    body: DataFlowAttributes,
+    highlighted: ["#panel-left"],
+    position: "center",
   },
   {
     title: "Component selection",
     body: ComponentSelection,
     highlighted: ["#diagram-container"],
     position: "flex-start",
+    nextCondition: (state) =>
+      !!state.selectedComponent,
   },
   {
     title: "Right panel tabs",
@@ -701,6 +741,8 @@ function Tutorial() {
   const dispatch = useDispatch();
   const [step, setStep] = useState(0);
 
+  const selectedComponent = useSelectedComponent();
+
   const currentStep = steps[step];
   const Body = currentStep.body;
   const title = currentStep.title;
@@ -787,6 +829,10 @@ function Tutorial() {
                 step === steps.length - 1 ? close() : setStep(step + 1);
               }}
               sx={{ marginLeft: "auto" }}
+              disabled={
+                currentStep.nextCondition &&
+                !currentStep.nextCondition({ selectedComponent })
+              }
             >
               {step === steps.length - 1 ? "Close" : "Next"}
             </Button>
