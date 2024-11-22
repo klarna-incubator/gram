@@ -44,7 +44,7 @@ const _workshopValidationRules: ValidationRule[] = [
       model.data.components.some(
         (component) =>
           component.type === "ee" &&
-          ["authentication", "auth"].includes(component.name.toLowerCase())
+          component.name.toLowerCase().includes("auth")
       ),
     messageTrue: "Component is there",
     messageFalse: "No component matches the type of component and name",
