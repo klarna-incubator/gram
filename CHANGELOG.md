@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.1](https://github.com/klarna-incubator/gram/compare/v4.20.0...v4.20.1) (2024-11-25)
+
+### Bug Fixes
+
+- correct search page layout ([b81bb74](https://github.com/klarna-incubator/gram/commit/b81bb7475fa2a41da8ce1918ac9b981d40bde92e))
+- show system-id as secondary text ([f24b7c8](https://github.com/klarna-incubator/gram/commit/f24b7c855d2fa76976929fd64e4dab4f4b1040fe))
+
 # [4.20.0](https://github.com/klarna-incubator/gram/compare/v4.19.0...v4.20.0) (2024-11-25)
 
 ### Bug Fixes
