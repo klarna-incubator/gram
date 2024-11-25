@@ -65,7 +65,10 @@ export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
                   to={`/system/${system.id}`}
                   key={`sys-btn-${system.id}`}
                 >
-                  <ListItemText primary={system.displayName} />
+                  <ListItemText
+                    primary={system.displayName}
+                    secondary={system.id}
+                  />
                   <SystemComplianceBadge compliance={system.compliance} />
                 </ListItemButton>
                 {i < systems.length - 1 && <Divider component="li" />}
