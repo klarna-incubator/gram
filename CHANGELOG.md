@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.20.0](https://github.com/klarna-incubator/gram/compare/v4.19.0...v4.20.0) (2024-11-25)
+
+### Bug Fixes
+
+- set precision of quality check badge to 0 decimals and in the correct place (had a case with .9999999998 because of the %-multiplier) ([10e137b](https://github.com/klarna-incubator/gram/commit/10e137b1aa6961187f381e8c65351aeae83ee6fc))
+
+### Features
+
+- update the tutorial to hint towards new dataflow functionality. Also make it a bit more interactive by checking that components have been selected. ([7b83e5a](https://github.com/klarna-incubator/gram/commit/7b83e5a91209e9cecf3f1ee68b1ac3d2c6831976))
+
 # [4.19.0](https://github.com/klarna-incubator/gram/compare/v4.18.0...v4.19.0) (2024-11-20)
 
 ### Bug Fixes
