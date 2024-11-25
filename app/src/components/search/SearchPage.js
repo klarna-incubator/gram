@@ -16,29 +16,27 @@ export default function SearchPage() {
 
   return (
     <CenteredPage>
-      <Card sx={{ maxWidth: "md" }}>
-        <CardContent>
-          <Typography variant="h5">
-            Search results for "{queryValue}"
-          </Typography>
-        </CardContent>
-      </Card>
-      <br />
-      <Divider />
-      <br />
-      <>
-        {!isLoading ? (
-          <Grid container spacing={2}>
-            {data?.map((searchType) => (
-              <Grid size={{ md: 4 }}>
-                <SearchResultBox searchText={queryValue} type={searchType} />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Loading />
-        )}
-      </>
+      <Grid size={12}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5">
+              Search results for "{queryValue}"
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+
+      {!isLoading ? (
+        <>
+          {data?.map((searchType) => (
+            <Grid size={4}>
+              <SearchResultBox searchText={queryValue} type={searchType} />
+            </Grid>
+          ))}
+        </>
+      ) : (
+        <Loading />
+      )}
     </CenteredPage>
   );
 }
