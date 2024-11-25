@@ -162,7 +162,8 @@ const CreateComponent = () => (
 const ComponentTab = () => (
   <>
     <Typography>
-      When you select a component you'll notice the left panel changes to show the component tab.
+      When you select a component you'll notice the left panel changes to show
+      the component tab.
     </Typography>
     <Typography>
       The component tab contain input fields for specifying component specific
@@ -642,8 +643,7 @@ const steps = [
     body: ComponentSelection,
     highlighted: ["#diagram-container"],
     position: "flex-start",
-    nextCondition: (state) =>
-      !!state.selectedComponent,
+    nextCondition: (state) => !!state.selectedComponent,
   },
   {
     title: "Right panel tabs",

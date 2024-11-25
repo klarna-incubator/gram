@@ -43,7 +43,7 @@ export function BottomPanel() {
   const successRatio =
     validationResults.length === 0
       ? 0
-      : Number((passedResults.length / validationResults.length));
+      : Number(passedResults.length / validationResults.length);
 
   if (tab === 0) {
     // TAB.ALL
