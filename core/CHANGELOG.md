@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.2](https://github.com/klarna/gram/compare/v4.20.1...v4.20.2) (2024-11-26)
+
+### Bug Fixes
+
+- database creation for plugins should happen with the default pg pool ([1259c32](https://github.com/klarna/gram/commit/1259c326d6a10edd5168ee5a97d6a7bb7c08bce9))
+
 ## [4.20.1](https://github.com/klarna/gram/compare/v4.20.0...v4.20.1) (2024-11-25)
 
 **Note:** Version bump only for package @gram/core

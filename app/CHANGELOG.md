@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.2](https://github.com/klarna-incubator/gram/compare/v4.20.1...v4.20.2) (2024-11-26)
+
+### Bug Fixes
+
+- set team list page size to 9 to ensure it fits within the height of the page ([daaff8c](https://github.com/klarna-incubator/gram/commit/daaff8c7481a84205d397df525d04b3c99865cbe))
+
 ## [4.20.1](https://github.com/klarna-incubator/gram/compare/v4.20.0...v4.20.1) (2024-11-25)
 
 ### Bug Fixes
