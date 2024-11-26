@@ -30,7 +30,7 @@ export class Migration {
     const databaseName = await getDatabaseName(this.pluginSuffix);
 
     await this.ensureDbExists(dal.pool._pool, databaseName);
-    
+
     const pool = this.pluginSuffix
       ? await dal.pluginPool(this.pluginSuffix)
       : dal.pool._pool;
