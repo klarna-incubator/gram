@@ -28,6 +28,9 @@ export class Migration {
   async migrate(dal: DataAccessLayer) {
     const host = await config.postgres.host.getValue();
     const databaseName = await getDatabaseName(this.pluginSuffix);
+
+    await this.ensureDbExists(dal.pool._pool, databaseName);
+    
     const pool = this.pluginSuffix
       ? await dal.pluginPool(this.pluginSuffix)
       : dal.pool._pool;
@@ -35,8 +38,6 @@ export class Migration {
     log.info(
       `Starting migration for ${process.env.NODE_ENV} (${host} - ${databaseName})`
     );
-
-    await this.ensureDbExists(pool, databaseName);
 
     const migrationConfig: MigrateDBConfig = { client: pool };
 
