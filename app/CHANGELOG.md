@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.2](https://github.com/klarna-incubator/gram/compare/v4.20.1...v4.20.2) (2024-11-26)
+
+### Bug Fixes
+
+- set team list page size to 9 to ensure it fits within the height of the page ([daaff8c](https://github.com/klarna-incubator/gram/commit/daaff8c7481a84205d397df525d04b3c99865cbe))
+
+## [4.20.1](https://github.com/klarna-incubator/gram/compare/v4.20.0...v4.20.1) (2024-11-25)
+
+### Bug Fixes
+
+- correct search page layout ([b81bb74](https://github.com/klarna-incubator/gram/commit/b81bb7475fa2a41da8ce1918ac9b981d40bde92e))
+- show system-id as secondary text ([f24b7c8](https://github.com/klarna-incubator/gram/commit/f24b7c855d2fa76976929fd64e4dab4f4b1040fe))
+
+# [4.20.0](https://github.com/klarna-incubator/gram/compare/v4.19.0...v4.20.0) (2024-11-25)
+
+### Bug Fixes
+
+- set precision of quality check badge to 0 decimals and in the correct place (had a case with .9999999998 because of the %-multiplier) ([10e137b](https://github.com/klarna-incubator/gram/commit/10e137b1aa6961187f381e8c65351aeae83ee6fc))
+
+### Features
+
+- update the tutorial to hint towards new dataflow functionality. Also make it a bit more interactive by checking that components have been selected. ([7b83e5a](https://github.com/klarna-incubator/gram/commit/7b83e5a91209e9cecf3f1ee68b1ac3d2c6831976))
+
 # [4.19.0](https://github.com/klarna-incubator/gram/compare/v4.18.0...v4.19.0) (2024-11-20)
 
 ### Bug Fixes

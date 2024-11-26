@@ -59,7 +59,7 @@ export default function Home() {
                     <TeamSystemsPageList
                       key={team.id}
                       teamId={team.id}
-                      pagesize={user?.teams.length > 1 ? 5 : 10}
+                      pagesize={user?.teams.length > 1 ? 4 : 8}
                     />
                   </Grid>
                 ))}

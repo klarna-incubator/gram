@@ -16,7 +16,7 @@ import { SystemComplianceBadge } from "../../elements/SystemComplianceBadge";
 import Loading from "../../loading";
 import { useGetTeamQuery } from "../../../api/gram/team";
 
-export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
+export function TeamSystemsPageList({ teamId, pagesize = 8 }) {
   const [page, setPage] = useState(0);
 
   const opts = { filter: "team", teamId, pagesize, page };
@@ -65,7 +65,10 @@ export function TeamSystemsPageList({ teamId, pagesize = 10 }) {
                   to={`/system/${system.id}`}
                   key={`sys-btn-${system.id}`}
                 >
-                  <ListItemText primary={system.displayName} />
+                  <ListItemText
+                    primary={system.displayName}
+                    secondary={system.id}
+                  />
                   <SystemComplianceBadge compliance={system.compliance} />
                 </ListItemButton>
                 {i < systems.length - 1 && <Divider component="li" />}

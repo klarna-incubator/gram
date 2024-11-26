@@ -25,7 +25,7 @@ export function SearchResultBox({ searchText, type }) {
 
   if (isFetching || isLoading) {
     return (
-      <Card sx={{ maxWidth: "sm" }}>
+      <Card>
         <CardContent>
           <Typography variant="h5">{type.label}s</Typography>
           <br />
@@ -36,7 +36,7 @@ export function SearchResultBox({ searchText, type }) {
   }
 
   return (
-    <Card sx={{ maxWidth: "sm" }}>
+    <Card>
       <CardContent>
         <Typography variant="h5">
           {type.label}s {r.count > 0 && <>({r.count})</>}
