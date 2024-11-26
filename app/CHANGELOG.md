@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.3](https://github.com/klarna-incubator/gram/compare/v4.20.2...v4.20.3) (2024-11-26)
+
+### Bug Fixes
+
+- set the overloaded pagesize this time as well, also 8 fits on the page, not 9 ([89eed65](https://github.com/klarna-incubator/gram/commit/89eed65efc080f81c2c92713930c633198b7d7ed))
+
 ## [4.20.2](https://github.com/klarna-incubator/gram/compare/v4.20.1...v4.20.2) (2024-11-26)
 
 ### Bug Fixes

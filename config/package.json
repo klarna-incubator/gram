@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "private": true,
-  "version": "4.20.2",
+  "version": "4.20.3",
   "description": "Gram Configuration",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -28,15 +28,15 @@
     "node": "20"
   },
   "dependencies": {
-    "@gram/aws": "^4.20.2",
-    "@gram/azure": "^4.20.2",
-    "@gram/cncf": "^4.20.2",
-    "@gram/core": "^4.20.2",
-    "@gram/kubernetes": "^4.20.2",
-    "@gram/magiclink": "^4.20.2",
-    "@gram/stride": "^4.20.2",
-    "@gram/svgporn": "^4.20.2",
-    "@gram/threatlib": "^4.20.2",
+    "@gram/aws": "^4.20.3",
+    "@gram/azure": "^4.20.3",
+    "@gram/cncf": "^4.20.3",
+    "@gram/core": "^4.20.3",
+    "@gram/kubernetes": "^4.20.3",
+    "@gram/magiclink": "^4.20.3",
+    "@gram/stride": "^4.20.3",
+    "@gram/svgporn": "^4.20.3",
+    "@gram/threatlib": "^4.20.3",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
