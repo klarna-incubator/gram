@@ -16,7 +16,7 @@ import { SystemComplianceBadge } from "../../elements/SystemComplianceBadge";
 import Loading from "../../loading";
 import { useGetTeamQuery } from "../../../api/gram/team";
 
-export function TeamSystemsPageList({ teamId, pagesize = 9 }) {
+export function TeamSystemsPageList({ teamId, pagesize = 8 }) {
   const [page, setPage] = useState(0);
 
   const opts = { filter: "team", teamId, pagesize, page };
