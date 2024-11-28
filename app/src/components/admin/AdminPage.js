@@ -22,7 +22,7 @@ export default function AdminPage() {
 
   return (
     <CenteredPage>
-      <Grid container spacing={2} size={12}>
+      <Grid spacing={2} size={12}>
         <Typography variant="h5">Admin</Typography>
         <Typography variant="subtitle1">
           {user?.roles.includes("admin")

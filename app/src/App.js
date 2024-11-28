@@ -16,6 +16,7 @@ import { NewWizard } from "./components/model/New";
 import { Navbar } from "./components/navbar/Navbar";
 import { Reviews } from "./components/reviews/Reviews";
 import SearchPage from "./components/search/SearchPage";
+import { StatsPage } from "./components/stats/StatsPage";
 import { LatestSystem } from "./components/system/LatestSystem";
 import { System } from "./components/system/System";
 import { TeamSystemsPage } from "./components/systems/TeamSystems/TeamSystemPage";
@@ -129,6 +130,7 @@ export default function App() {
                     </Route>
                     <Route path="/reviews" element={<Reviews />} />
                     <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/stats" element={<StatsPage />} />
                   </>
                 )}
                 <Route component={() => <ErrorPage code={404} />} />

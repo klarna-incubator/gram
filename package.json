@@ -53,6 +53,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@mui/x-charts": "^7.22.3",
     "log4js": "^6.9.1"
   }
 }
