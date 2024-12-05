@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.21.0](https://github.com/klarna/gram/compare/v4.20.3...v4.21.0) (2024-12-05)
+
+### Features
+
+- :sparkles: add resource handler ([7a29f1c](https://github.com/klarna/gram/commit/7a29f1cfe5a53b2ef58a9debb1f5dc4195a270da))
+
 ## [4.20.3](https://github.com/klarna/gram/compare/v4.20.2...v4.20.3) (2024-11-26)
 
 **Note:** Version bump only for package @gram/api

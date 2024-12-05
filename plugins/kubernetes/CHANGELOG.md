@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.21.0](https://github.com/klarna-incubator/gram/compare/v4.20.3...v4.21.0) (2024-12-05)
+
+**Note:** Version bump only for package @gram/kubernetes
+
 ## [4.20.3](https://github.com/klarna-incubator/gram/compare/v4.20.2...v4.20.3) (2024-11-26)
 
 **Note:** Version bump only for package @gram/kubernetes
