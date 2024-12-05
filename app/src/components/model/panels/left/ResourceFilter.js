@@ -19,13 +19,9 @@ function toggleGroupBy(groupBy, setGroupBy, value) {
 export function ResourceFilter({
   groupBy,
   setGroupBy,
-  isLoading,
   searchInput,
   setSearchInput,
 }) {
-  if (isLoading) {
-    return null;
-  }
   return (
     <Box
       sx={{
