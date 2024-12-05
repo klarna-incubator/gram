@@ -29,9 +29,8 @@ export function ResourceTab() {
         padding: "1em",
       }}
     >
-      {resources.length > 0 && !isError && (
+      {!isLoading && !isError && resources?.length > 0 && (
         <ResourceFilter
-          isLoading={isLoading}
           groupBy={groupBy}
           setGroupBy={setGroupBy}
           searchInput={searchInput}
