@@ -14,6 +14,7 @@ import {
   JupiterOneDomainSystemPropertyProvider,
   JupiterOneSystemPropertyProvider,
   JupiterOneTeamProvider,
+  JupiterOneResourceProvider,
   createJ1Client,
 } from "@gram/jupiterone";
 import {
@@ -282,6 +283,7 @@ export const defaultConfig: GramConfiguration = {
     const j1DomainProvider = new JupiterOneDomainSystemPropertyProvider(
       j1ClientFactory
     );
+    const j1ResourceProvider = new JupiterOneResourceProvider(j1ClientFactory);
 
     const reviewerProvider = new KlarnaReviewerProvider(
       dal,
@@ -367,6 +369,7 @@ export const defaultConfig: GramConfiguration = {
         dal.modelService,
       ],
       validationSources: [basicValidationRules, workshopValidationRules],
+      resourceProviders: [j1ResourceProvider],
     };
   },
 };

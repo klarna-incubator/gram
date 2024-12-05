@@ -7,3 +7,4 @@ export {
 } from "./client.js";
 export { JupiterOneSystemProvider } from "./JupiterOneSystemProvider.js";
 export { JupiterOneDomainSystemPropertyProvider } from "./JupiterOneDomainSystemPropertyProvider.js";
+export { JupiterOneResourceProvider } from "./JupiterOneResourceProvider.js";
