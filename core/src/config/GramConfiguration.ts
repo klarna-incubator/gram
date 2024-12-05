@@ -6,6 +6,7 @@ import type { DataAccessLayer } from "../data/dal.js";
 import type { ReviewerProvider } from "../data/reviews/ReviewerProvider.js";
 import type { SystemPropertyProvider } from "../data/system-property/SystemPropertyProvider.js";
 import type { SystemProvider } from "../data/systems/SystemProvider.js";
+import type { ResourceProvider } from "../resources/ResourceHandler.js";
 import type { NotificationTemplate } from "../notifications/NotificationTemplate.js";
 import type { SuggestionSource } from "../suggestions/models.js";
 import type { AssetFolder } from "./AssetFolder.js";
@@ -40,6 +41,7 @@ export interface Providers {
   actionItemExporters?: ActionItemExporter[];
   searchProviders?: SearchProvider[];
   validationSources?: ValidationRule[][];
+  resourceProviders?: ResourceProvider[];
 }
 
 export interface GramConfiguration {

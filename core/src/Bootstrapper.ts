@@ -126,6 +126,11 @@ export class Bootstrapper {
     this.dal.searchHandler.register(searchProvider);
   }
 
+  registerResourceProvider(resourceProvider: any) {
+    this.log.info(`Registered Resource Provider: ${resourceProvider.key}`);
+    this.dal.resourceHandler.register(resourceProvider);
+  }
+
   setAuthorizationProvider(authzProvider: AuthzProvider) {
     this.log.info(`Set Authz Provider: ${authzProvider.key}`);
     setAuthorizationProvider(authzProvider);

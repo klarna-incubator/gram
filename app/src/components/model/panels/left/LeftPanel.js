@@ -6,6 +6,7 @@ import { ToggleLeftPanelButton } from "../../board/components/ToggleLeftPanelBut
 import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { ActionItemTab } from "./ActionItemTab";
+import { ResourceTab } from "./ResourceTab";
 import { ComponentTab } from "./ComponentTab";
 import { DataFlowTab } from "./DataFlowTab";
 import { LeftFooter } from "./Footer";
@@ -16,6 +17,7 @@ const TAB = {
   ACTION_ITEMS: 1,
   COMPONENT: 2,
   DATA_FLOW: 3,
+  RESOURCES: 4,
 };
 
 function TabPanel({ children, value, index, ...other }) {
@@ -86,6 +88,7 @@ export function LeftPanel() {
           <Tabs
             value={tabHck}
             onChange={(_, v) => setTab(v)}
+            scrollButtons="auto"
             textColor="inherit"
             variant="fullWidth"
             sx={{
@@ -102,6 +105,7 @@ export function LeftPanel() {
             {isDataFlow && (
               <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
             )}
+            <Tab disableRipple label="RESOURCES" value={TAB.RESOURCES} />
           </Tabs>
         </Grow>
       </AppBar>
@@ -118,7 +122,9 @@ export function LeftPanel() {
       <TabPanel value={tab} index={TAB.DATA_FLOW}>
         {isDataFlow && <DataFlowTab />}
       </TabPanel>
-
+      <TabPanel value={tab} index={TAB.RESOURCES}>
+        <ResourceTab />
+      </TabPanel>
       <LeftFooter />
     </Box>
   );
