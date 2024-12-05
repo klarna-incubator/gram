@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.1](https://github.com/klarna-incubator/gram/compare/v4.21.0...v4.21.1) (2024-12-05)
+
+### Bug Fixes
+
+- :bug: fix resource tab error when no resources ([5322b4d](https://github.com/klarna-incubator/gram/commit/5322b4d5553caa3181f3f0e21cafdaf3ddd0be42))
+
 # [4.21.0](https://github.com/klarna-incubator/gram/compare/v4.20.3...v4.21.0) (2024-12-05)
 
 ### Features
