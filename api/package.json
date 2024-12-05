@@ -11,8 +11,7 @@
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
     "debug": "NODE_ENV=development node --loader ts-node/esm --inspect=127.0.0.1 src/index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
-    "test-validate": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache ./src/resources/gram/v1/validation/validateModel.spec.ts"
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
   },
   "main": "dist/index.js",
   "repository": {

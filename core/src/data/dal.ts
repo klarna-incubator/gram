@@ -30,6 +30,7 @@ import { SearchHandler } from "../search/SearchHandler.js";
 import { FlowDataService } from "./flow/FlowDataService.js";
 
 import { ValidationEngine } from "../validation/engine.js";
+import { ResourceHandler } from "../resources/ResourceHandler.js";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
@@ -61,6 +62,7 @@ export class DataAccessLayer {
   teamHandler: TeamHandler;
   actionItemHandler: ActionItemHandler;
   searchHandler: SearchHandler;
+  resourceHandler: ResourceHandler;
   validationEngine: ValidationEngine;
 
   get authzProvider(): AuthzProvider {
@@ -85,6 +87,7 @@ export class DataAccessLayer {
     this.userHandler = new UserHandler();
     this.reviewerHandler = new ReviewerHandler();
     this.searchHandler = new SearchHandler();
+    this.resourceHandler = new ResourceHandler();
 
     // Initialize Data Services
     this.modelService = new ModelDataService(this);
