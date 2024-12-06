@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.2](https://github.com/klarna/gram/compare/v4.21.1...v4.21.2) (2024-12-06)
+
+### Bug Fixes
+
+- upgrade express package ([3f08d8d](https://github.com/klarna/gram/commit/3f08d8d8529716acaa2204d29ddb89b3b779d330))
+
 ## [4.21.1](https://github.com/klarna/gram/compare/v4.21.0...v4.21.1) (2024-12-05)
 
 **Note:** Version bump only for package @gram/api
