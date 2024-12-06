@@ -36,7 +36,7 @@
     "@sentry/node": "^8.35.0",
     "@sentry/profiling-node": "^8.35.0",
     "cookie-parser": "^1.4.7",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "express-async-error-wrapper": "^1.0.4",
     "express-physical": "^2.0.0",
     "express-prom-bundle": "^6.4.1",
