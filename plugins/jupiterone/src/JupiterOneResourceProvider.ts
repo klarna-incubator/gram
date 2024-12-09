@@ -27,7 +27,7 @@ function formatAttributes(result: any): Record<string, any> {
   return Object.entries(result).reduce(
     (acc: Record<string, any>, [key, value]) => {
       if (!["id", "displayName", "systemId"].includes(key)) {
-        acc[key] = value;
+        acc[key] = String(value);
       }
       return acc;
     },
