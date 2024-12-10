@@ -54,6 +54,9 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   providers.assetFolders?.forEach((af) =>
     bt.registerAssets(af.name, af.folderPath)
   );
+
+  providers.resourceProviders?.forEach((rp) => bt.registerResourceProvider(rp));
+
   bt.compileAssets();
 
   return dal;

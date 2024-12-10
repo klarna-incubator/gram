@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.2](https://github.com/klarna/gram/compare/v4.21.1...v4.21.2) (2024-12-06)
+
+### Bug Fixes
+
+- upgrade express package ([3f08d8d](https://github.com/klarna/gram/commit/3f08d8d8529716acaa2204d29ddb89b3b779d330))
+
+## [4.21.1](https://github.com/klarna/gram/compare/v4.21.0...v4.21.1) (2024-12-05)
+
+**Note:** Version bump only for package @gram/api
+
+# [4.21.0](https://github.com/klarna/gram/compare/v4.20.3...v4.21.0) (2024-12-05)
+
+### Features
+
+- :sparkles: add resource handler ([7a29f1c](https://github.com/klarna/gram/commit/7a29f1cfe5a53b2ef58a9debb1f5dc4195a270da))
+
+## [4.20.3](https://github.com/klarna/gram/compare/v4.20.2...v4.20.3) (2024-11-26)
+
+**Note:** Version bump only for package @gram/api
+
 ## [4.20.2](https://github.com/klarna/gram/compare/v4.20.1...v4.20.2) (2024-11-26)
 
 **Note:** Version bump only for package @gram/api

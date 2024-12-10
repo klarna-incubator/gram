@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.2](https://github.com/klarna-incubator/gram/compare/v4.21.1...v4.21.2) (2024-12-06)
+
+**Note:** Version bump only for package @gram/app
+
+## [4.21.1](https://github.com/klarna-incubator/gram/compare/v4.21.0...v4.21.1) (2024-12-05)
+
+### Bug Fixes
+
+- :bug: fix resource tab error when no resources ([5322b4d](https://github.com/klarna-incubator/gram/commit/5322b4d5553caa3181f3f0e21cafdaf3ddd0be42))
+
+# [4.21.0](https://github.com/klarna-incubator/gram/compare/v4.20.3...v4.21.0) (2024-12-05)
+
+### Features
+
+- :sparkles: add resource handler ([7a29f1c](https://github.com/klarna-incubator/gram/commit/7a29f1cfe5a53b2ef58a9debb1f5dc4195a270da))
+
+## [4.20.3](https://github.com/klarna-incubator/gram/compare/v4.20.2...v4.20.3) (2024-11-26)
+
+### Bug Fixes
+
+- set the overloaded pagesize this time as well, also 8 fits on the page, not 9 ([89eed65](https://github.com/klarna-incubator/gram/commit/89eed65efc080f81c2c92713930c633198b7d7ed))
+
 ## [4.20.2](https://github.com/klarna-incubator/gram/compare/v4.20.1...v4.20.2) (2024-11-26)
 
 ### Bug Fixes
