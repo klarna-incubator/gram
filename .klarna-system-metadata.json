@@ -23,7 +23,7 @@
       "description": "Used for fetching Threat Modeling suggestions"
     },
     {
-      "system_id": "jira",
+      "system_id": "jiracloud",
       "sla_impact": "NO_IMPACT",
       "description": "Used for creating Threat Tickets"
     }
