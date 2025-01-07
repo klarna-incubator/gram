@@ -2,7 +2,7 @@
   "name": "@gram/api",
   "private": true,
   "type": "module",
-  "version": "4.21.2",
+  "version": "4.21.3",
   "description": "API for threat modelling",
   "scripts": {
     "start": "NODE_ENV=development node dist/index.js",
@@ -31,8 +31,8 @@
     "node": "20"
   },
   "dependencies": {
-    "@gram/config": "^4.21.2",
-    "@gram/core": "^4.21.2",
+    "@gram/config": "^4.21.3",
+    "@gram/core": "^4.21.3",
     "@sentry/node": "^8.35.0",
     "@sentry/profiling-node": "^8.35.0",
     "cookie-parser": "^1.4.7",

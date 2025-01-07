@@ -25,20 +25,26 @@ function groupResourceBy(resources, key) {
   });
 }
 
+function ListItem({ resource }) {
+  return (
+    <Typography sx={{ wordBreak: "break-word" }} variant="body1">
+      <Typography component="span" sx={{ fontWeight: "bold" }}>
+        {resource.key}:{" "}
+      </Typography>
+      <Typography component="span" sx={{ fontSize: "0.95rem" }}>
+        {resource.value}
+      </Typography>
+    </Typography>
+  );
+}
+
 function AttributeList({ attributes }) {
   const [showAll, setShowAll] = useState(false);
   const attributeList = Object.entries(attributes).map(([key, value]) => {
-    return (
-      <Typography variant="body2" sx={{ pl: "1em" }} key={key}>
-        - <strong>{key}:</strong> {value}
-      </Typography>
-    );
+    return <ListItem key={key} resource={{ key, value }} />;
   });
   return (
-    <Stack direction="column">
-      <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-        Attributes:
-      </Typography>
+    <>
       {showAll ? attributeList : attributeList.slice(0, 2)}
       <Typography
         sx={{ pl: "1em", cursor: "pointer", textDecoration: "underline" }}
@@ -47,7 +53,7 @@ function AttributeList({ attributes }) {
       >
         {showAll ? "See less" : "See more"}
       </Typography>
-    </Stack>
+    </>
   );
 }
 
@@ -58,15 +64,9 @@ function StandardList({ resources }) {
         <Typography>{resource.displayName}</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography variant="body1">
-          <strong>Id: </strong> {resource.id}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Type: </strong> {resource.type}
-        </Typography>
-        <Typography variant="body1">
-          <strong>System id: </strong> {resource.systemId}
-        </Typography>
+        <ListItem resource={{ key: "Id", value: resource.id }} />
+        <ListItem resource={{ key: "Type", value: resource.type }} />
+        <ListItem resource={{ key: "System id", value: resource.systemId }} />
         {resource.attributes && (
           <AttributeList attributes={resource.attributes} />
         )}
