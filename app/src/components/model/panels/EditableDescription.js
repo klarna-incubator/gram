@@ -118,6 +118,7 @@ export function DescriptionPreview({
           sx={{
             color: "rgba(255, 255, 255, 0.5)",
             borderColor: "rgba(255, 255, 255, 0.5)",
+            wordBreak: "break-word",
             ...bSx,
           }}
         ></Box>
