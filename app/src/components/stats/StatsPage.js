@@ -7,46 +7,95 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useState } from "react";
 
+function MonthlyDates(length) {
+  const today = new Date();
+  const dates = Array.from({ length }, (_, i) => {
+    const date = new Date(today);
+    date.setMonth(date.getMonth() - i);
+    return date;
+  });
+  return dates;
+}
+
+function DailyDates(length) {
+  const today = new Date();
+  const dates = Array.from({ length }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    return date;
+  });
+  return dates;
+}
+
+function QuarterlyDates(length) {
+  const today = new Date();
+  const dates = Array.from({ length }, (_, i) => {
+    const date = new Date(today);
+    date.setMonth(date.getMonth() - i * 3);
+    return date;
+  });
+  return dates;
+}
+
 export function StatsPage() {
-  const [platform, setPlatform] = useState('web');
+  const [interval, setInterval] = useState('month');
 
   const handleChange = (
     event,
     newAlignment,
   ) => {
-    setPlatform(newAlignment);
+    setInterval(newAlignment);
   };
+
+
+  let dateAxis = { data: DailyDates(31), scaleType: 'time', label: 'Date' };
+  if (interval === 'year') {
+    dateAxis = { data: MonthlyDates(12), scaleType: 'time', label: 'Date' };
+  } else if (interval === 'all time') {
+    dateAxis = {
+      data: QuarterlyDates(12), scaleType: 'time', label: 'Date', valueFormatter: (date, context) =>
+        `${date.getMonth()} ${date.getYear()}`, // TODO: Use a better formatter, set different on tick/label
+    };
+  }
 
   return (
     <CenteredPage>
       <Grid size={12}>
         <Typography variant="h5">Stats</Typography>
-        <Typography>Stats about the application</Typography>
+        <br />
+        <Typography>Metics for your threat modeling process.</Typography>
+        <br />
+
         <ToggleButtonGroup
-        color="primary"
-        value={platform}
-        exclusive
-        onChange={handleChange}
-        aria-label="Platform"
+          color="primary"
+          value={interval}
+          exclusive
+          onChange={handleChange}
+          aria-label="Time interval"
+          size="small"
         >
-            <ToggleButton value="web">month</ToggleButton>
-            <ToggleButton value="android">year</ToggleButton>
-            <ToggleButton value="ios">all time</ToggleButton>
+          <ToggleButton value="month">month</ToggleButton>
+          <ToggleButton value="year">year</ToggleButton>
+          <ToggleButton value="all time">all time</ToggleButton>
         </ToggleButtonGroup>
       </Grid>
       <Grid size={6}>
         <Paper sx={{ padding: "20px" }}>
           <Typography variant="h6">Systems with an approved threat model (%)</Typography>
           <LineChart
-            xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+            xAxis={[dateAxis]}
+            yAxis={[{ max: 100, label: 'Percentage' }]}
             series={[
               {
-                data: [2, 5.5, 2, 8.5, 1.5, 5],
+                data: [2, null, null, 5.5, 2, 8.5, 1.5, 5],
               },
+
             ]}
             width={700}
             height={300}
             grid={{ vertical: true, horizontal: true }}
+            loading={false}
+            title="Systems with an approved threat model (%)"
           />
         </Paper>
       </Grid>
@@ -54,10 +103,13 @@ export function StatsPage() {
         <Paper sx={{ padding: "20px" }}>
           <Typography variant="h6">Systems with an approved threat model (Total)</Typography>
           <LineChart
-            xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+            xAxis={[dateAxis]}
             series={[
               {
-                data: [2, 5.5, 2, 8.5, 1.5, 5],
+                data: [2, 5.5, 2, 8, 1.5, 5],
+              },
+              {
+                data: [8, 9, 8, 8, 10, 10], label: 'Total Systems',
               },
             ]}
             width={700}
@@ -74,7 +126,8 @@ export function StatsPage() {
             series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
             width={500}
             height={300}
-            />
+            grid={{ horizontal: true }}
+          />
         </Paper>
       </Grid>
       <Grid size={6}>

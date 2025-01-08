@@ -1,10 +1,9 @@
-import pg from "pg";
 import log4js from "log4js";
 import { linkToModel } from "../../util/links.js";
 import { DataAccessLayer } from "../dal.js";
-import { SystemPropertyValue } from "../system-property/types.js";
-import { RequestContext } from "../providers/RequestContext.js";
 import { GramConnectionPool } from "../postgres.js";
+import { RequestContext } from "../providers/RequestContext.js";
+import { SystemPropertyValue } from "../system-property/types.js";
 
 interface SystemCompliance {
   SystemID: string;
@@ -67,13 +66,11 @@ export class ReportDataService {
         ) pending_models on pending_models.system_id = m.system_id
         WHERE m.system_id IS NOT NULL
         ORDER BY m.system_id DESC
-        ${
-          pagesize && pagesize > 0
-            ? `LIMIT ${pagesize} ${
-                page && page > 0 ? `OFFSET ${(page - 1) * pagesize}` : ""
-              }`
-            : ""
-        };
+        ${pagesize && pagesize > 0
+        ? `LIMIT ${pagesize} ${page && page > 0 ? `OFFSET ${(page - 1) * pagesize}` : ""
+        }`
+        : ""
+      };
       `;
 
     const res = await this.pool.query(query);
