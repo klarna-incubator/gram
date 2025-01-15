@@ -12,7 +12,7 @@ function resultToExternalEntity(
   additionalAttributes: Record<string, any> = {}
 ): Resource {
   return {
-    id: ID_PREFIX + result.id,
+    id: ID_PREFIX + result.key,
     type: "external entity",
     displayName: result.displayName,
     systemId: result.systemId,
@@ -27,7 +27,7 @@ function resultToDatastore(
   additionalAttributes: Record<string, any> = {}
 ): Resource {
   return {
-    id: ID_PREFIX + result.id,
+    id: ID_PREFIX + result.arn,
     type: "datastore",
     displayName: result.displayName,
     systemId: result.systemId,
@@ -71,7 +71,7 @@ export class JupiterOneResourceProvider implements ResourceProvider {
     const dependingSystemResult = await j1Client.queryV1(
       `FIND UNIQUE KSystem as system 
     THAT DEPENDS >> KSystem WITH systemId = '${sanitizeJ1QueryParam(systemId)}' 
-    RETURN system._id as id, system.displayName as displayName, system.systemId as systemId, system._type as systemType, 
+    RETURN system._key as key, system.displayName as displayName, system.systemId as systemId, system._type as systemType, 
     system.audienceClass as audienceClass, system.availabilityClass as availabilityClass, system.confidentialityClass as confidentialityClass, 
     system.integrityClass as integrityClass, system.lifecycleState as lifecycleState
       `
@@ -86,7 +86,7 @@ export class JupiterOneResourceProvider implements ResourceProvider {
     const dependencyResult = await j1Client.queryV1(
       `FIND UNIQUE KSystem as system 
     THAT DEPENDS << KSystem WITH systemId = '${sanitizeJ1QueryParam(systemId)}' 
-    RETURN system._id as id, system.displayName as displayName, system.systemId as systemId, system._type as systemType, 
+    RETURN system._key as key, system.displayName as displayName, system.systemId as systemId, system._type as systemType, 
     system.audienceClass as audienceClass, system.availabilityClass as availabilityClass, system.confidentialityClass as confidentialityClass, 
     system.integrityClass as integrityClass, system.lifecycleState as lifecycleState
         `
@@ -110,13 +110,12 @@ export class JupiterOneResourceProvider implements ResourceProvider {
     THAT OWNS << KSystem WITH systemId = '${sanitizeJ1QueryParam(
       systemId
     )}' as s 
-    RETURN d._type as dbType, d._id as id, d.name as displayName, d.engine as engine, d.bucketName as bucketName, 
+    RETURN d._type as dbType, d._key as key, d.name as displayName, d.engine as engine, d.bucketName as bucketName, 
     d.region as region, d.encrypted as encrypted, d.hasBackup as hasBackup, d.continuousBackupEnabled as continuousBackupEnabled, 
     d.arn as arn, s.systemId as systemId, account.tag.environment as environment, d.iamDatabaseAuthenticationEnabled as iamDatabaseAuthenticationEnabled, d.multiAZ as multiAZ,
     account.name as accountName, d.accountId as accountId
       `
     );
-
     return datastores.map((r) => resultToDatastore(r));
   }
 }
