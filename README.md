@@ -85,8 +85,8 @@ For license details, see the [LICENSE](LICENSE) file in the root of this project
 
 <!-- Markdown link & img dfn's -->
 
-[ci-image]: https://github.com/klarna-incubator/gram/actions/workflows/ci.yml/badge.svg?branch=master
-[ci-url]: https://github.com/klarna-incubator/gram/actions?query=branch%3Amaster
+[ci-image]: https://github.com/klarna-incubator/gram/actions/workflows/ci.yml/badge.svg?branch=main
+[ci-url]: https://github.com/klarna-incubator/gram/actions?query=branch%3Amain
 [license-image]: https://img.shields.io/badge/license-Apache%202-blue?style=flat-square
 [license-url]: http://www.apache.org/licenses/LICENSE-2.0
 [discord-image]: https://badgen.net/badge/icon/discord?icon=discord&label
