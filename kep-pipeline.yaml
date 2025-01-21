@@ -27,5 +27,5 @@ tasks:
       NODE_OPTIONS: --max-old-space-size=4096
     docker: true
     command:
-      - docker run --rm -d -e POSTGRES_PASSWORD=somethingsecretfortesting -e POSTGRES_USER=gram-test -p 5433:5432 -t r-docker-docker-hub.artifactory.klarna.net/postgres:12      
+      - docker run --rm -d -e POSTGRES_PASSWORD=somethingsecretfortesting -e POSTGRES_USER=gram-test -p 5433:5432 r-docker-docker-hub.artifactory.klarna.net/postgres:12      
       - npm test
