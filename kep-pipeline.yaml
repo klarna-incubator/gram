@@ -17,7 +17,7 @@ tasks:
   build:
     stage: build
     command:
-      - npm build
+      - npm run build
   test:
     stage: test
     resources:
