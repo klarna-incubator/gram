@@ -1,4 +1,5 @@
 version: '2'
+image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202501201120-builder
 include:
   - standardPipeline: node-20-service@4
 
