@@ -8,7 +8,7 @@ tasks:
     var:
       NODE_ENV: development
     command:
-      - npm ci
+      - npm install
   lint:
     stage: quality
     command:
