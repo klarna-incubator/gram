@@ -1,3 +1,29 @@
 version: '2'
 include:
   - standardPipeline: node-20-service@4
+
+tasks:
+  install:
+    stage: install
+    var:
+      NODE_ENV: development
+    command:
+      - npm ci
+  lint:
+    stage: quality
+    command:
+      - npm run lint
+  build:
+    stage: build
+    command:
+      - npm build
+  test:
+    stage: test
+    resources:
+      size: extra-large
+    var:
+      NODE_ENV: test
+      NODE_OPTIONS: --max-old-space-size=4096
+    docker: true
+    command:
+      - npm test
