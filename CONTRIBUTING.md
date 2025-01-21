@@ -6,7 +6,7 @@ All members of our community are expected to follow our [Code of Conduct](https:
 
 ## Get in touch
 
-- Report bugs, suggest features or view the source code on GitHub.
+- Report bugs, suggest features or view the source code on [GitHub](https://github.com/klarna-incubator/gram).
 - If you have any questions concerning this product, please contact developers@klarna.com.
 
 ## Contributing to development
