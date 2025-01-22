@@ -1,11 +1,4 @@
 {
-  "system_id": "gram",
-  "artifact": "l-docker-secure-development-production.artifactory.klarna.net",
-  "build_command": "docker build -t $artifact .",
-  "agent": {
-    "image": "l-docker-jenkins-tools.artifactory.klarna.net/jenkins/jenkins-agent-amazon-docker:697",
-    "memory": "8Gi",
-    "cpu_req": "2",
-    "cpu_limit": "8"
+    "system_id": "gram",
+    "artifact": "l-docker-gram-production/gram/gram"
   }
-}
