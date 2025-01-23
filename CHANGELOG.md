@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.3](https://github.com/klarna-incubator/gram/compare/v4.21.2...v4.21.3) (2025-01-07)
+
+### Bug Fixes
+
+- :art: fix text overflow in description preview and resource tab ([0a6ded1](https://github.com/klarna-incubator/gram/commit/0a6ded10428dd116364280d35f2b6badead72949))
+
 ## [4.21.2](https://github.com/klarna-incubator/gram/compare/v4.21.1...v4.21.2) (2024-12-06)
 
 ### Bug Fixes

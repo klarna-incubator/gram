@@ -13,16 +13,6 @@
         ]
       },
       "env": {
-        "HSF_S3_BUCKET": {
-          "value": "secdev-qliksense-exporter-staging-source"
-        },
-        "HSF_S3_KEY": { "value": "hsf-systems-daily.csv" },
-        "HSF_AWS_ROLE": {
-          "value": "arn:aws:iam::422554941857:role/iam-sync/gram/c2c/gram/eu/staging/gram.c2c_gram"
-        },
-        "HSF_AWS_EXTERNAL_ID": {
-          "value": "73fddbb9-a953-4f1c-9198-16a6113fe681"
-        },
         "THREATSAURUS_URL": {
           "value": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
         }
@@ -41,16 +31,6 @@
       },
       "custom_domain_names": [{ "fqdn": "gram.klarna.net" }],
       "env": {
-        "HSF_S3_BUCKET": {
-          "value": "secdev-qliksense-exporter-production-source"
-        },
-        "HSF_S3_KEY": { "value": "hsf-systems-daily.csv" },
-        "HSF_AWS_ROLE": {
-          "value": "arn:aws:iam::715798949107:role/iam-sync/gram/c2c/gram/eu/production/gram.c2c_gram"
-        },
-        "HSF_AWS_EXTERNAL_ID": {
-          "value": "e2105a81-0156-4321-b757-4e3f20aaacac"
-        },
         "THREATSAURUS_URL": {
           "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
         }
