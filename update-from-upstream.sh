@@ -5,6 +5,7 @@ git fetch
 git fetch github # assuming here that github origin is the OSS repo
 
 git checkout develop
+git pull
 
 # create branch from upstream tag + date
 tag=$(git describe --tags --abbrev=0 github/main)
