@@ -1,6 +1,8 @@
-export default class Matching {
+export default class ResourceMatching {
   createdAt: number;
   updatedAt: number;
+  updatedBy: string;
+  deletedAt: number | null;
 
   constructor(
     public modelId: string,
@@ -10,6 +12,8 @@ export default class Matching {
   ) {
     this.createdAt = Date.now();
     this.updatedAt = Date.now();
+    this.updatedBy = createdBy;
+    this.deletedAt = null;
   }
 
   toJSON() {
@@ -20,6 +24,8 @@ export default class Matching {
       createdBy: this.createdBy,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      updatedBy: this.updatedBy,
+      deletedAt: this.deletedAt,
     };
   }
 }

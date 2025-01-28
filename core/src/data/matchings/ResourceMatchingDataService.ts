@@ -2,10 +2,10 @@ import log4js from "log4js";
 import { EventEmitter } from "node:events";
 import { DataAccessLayer } from "../dal.js";
 import { GramConnectionPool } from "../postgres.js";
-import Matching from "./Matching.js";
+import ResourceMatching from "./ResourceMatching.js";
 
 function convertToMatching(row: any) {
-  const matching = new Matching(
+  const matching = new ResourceMatching(
     row.model_id,
     row.resource_id,
     row.component_id_by,
@@ -16,7 +16,7 @@ function convertToMatching(row: any) {
   return matching;
 }
 
-export class MatchingDataService extends EventEmitter {
+export class ResourceMatchingDataService extends EventEmitter {
   constructor(private dal: DataAccessLayer) {
     super();
     this.pool = dal.pool;
@@ -25,13 +25,13 @@ export class MatchingDataService extends EventEmitter {
   private pool: GramConnectionPool;
   log: any;
 
-  async create(matching: Matching) {
+  async create(matching: ResourceMatching) {
     const { modelId, resourceId, componentId, createdBy } = matching;
     const query = `
-      INSERT INTO resource_matchings (model_id, resource_id, component_id, created_by) 
-      VALUES ($1::uuid, $2::uuid, $3::uuid, $4::varchar)
+      INSERT INTO resource_matchings (model_id, resource_id, component_id, created_by, deleted_at) 
+      VALUES ($1::uuid, $2::uuid, $3::uuid, $4::varchar, NULL)
       ON CONFLICT (model_id, resource_id) DO UPDATE
-        SET created_by = $4::varchar, deleted_at = NULL
+        SET updated_by = $4::varchar, component_id = $3::uuid
     `;
 
     const queryMatchings = `
@@ -58,32 +58,6 @@ export class MatchingDataService extends EventEmitter {
     return { modelId, resourceId, componentId };
   }
 
-  async delete(matching: Matching) {
-    const { modelId, resourceId, componentId, createdBy } = matching;
-    const query = `
-      UPDATE resource_matchings
-      SET deleted_at = NOW()
-      SET deleted_by = $4::varchar
-      WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id = $3::uuid
-    `;
-
-    await this.pool.runTransaction(async (client) => {
-      await client.query(query, [modelId, resourceId, componentId, createdBy]);
-      /* const res_matchings = await client.query(queryMatchings, [
-        modelId,
-        resourceId,
-        componentId,
-      ]); */
-
-      /* this.emit("updated-for", {
-        modelId: res_matchings.rows[0].model_id,
-        componentId: res_matchings.rows[0].component_id,
-        resourceId: res_matchings.rows[0].resource_id,
-      }); */
-    });
-    return { modelId, resourceId, componentId };
-  }
-
   async list(modelId: string) {
     const query = `
       SELECT 
@@ -104,8 +78,42 @@ export class MatchingDataService extends EventEmitter {
       return [];
     }
 
-    return res.rows.map((record) => convertToMatching(record));
+    const model = await this.dal.modelService.getById(modelId);
+    const componentList =
+      model?.data.components.map((component) => component.id) || [];
+
+    return res.rows
+      .filter((record) => componentList.includes(record.component_id))
+      .map((record) => convertToMatching(record));
   }
 
+  async delete(
+    modelId: string,
+    resourceId: string,
+    componentId: string,
+    deletedBy: string
+  ) {
+    const query = `
+      UPDATE resource_matchings
+      SET deleted_at = NOW(), updated_by = $4::varchar
+      WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id = $3::uuid
+    `;
+
+    await this.pool.runTransaction(async (client) => {
+      await client.query(query, [modelId, resourceId, componentId, deletedBy]);
+      /* const res_matchings = await client.query(queryMatchings, [
+        modelId,
+        resourceId,
+        componentId,
+      ]); */
+
+      /* this.emit("updated-for", {
+        modelId: res_matchings.rows[0].model_id,
+        componentId: res_matchings.rows[0].component_id,
+        resourceId: res_matchings.rows[0].resource_id,
+      }); */
+    });
+    return { modelId, resourceId, componentId };
+  }
   async copyMatchingsBetweenModels(srcModelId: string, targetModelId: string) {}
 }
