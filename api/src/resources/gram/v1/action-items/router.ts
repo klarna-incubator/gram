@@ -6,7 +6,7 @@ import { listActionItems } from "./list.js";
 import { listExporters } from "./listExporters.js";
 
 export function actionItemRouter(dal: DataAccessLayer): express.Router {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
   router.get("/exporters", errorWrap(listExporters(dal)));
   router.get("/:modelId", errorWrap(listActionItems(dal)));
   router.post("/export", errorWrap(exportActionItem(dal)));

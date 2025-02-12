@@ -16,7 +16,8 @@ function cache() {
     const cacheData = cache.get(req.originalUrl);
     if (cacheReq && cacheData && cacheData.expires > Date.now()) {
       res.set("x-data-cached", "1");
-      return res.json(cacheData.data);
+      res.json(cacheData.data);
+      return;
     } else if (cacheData) {
       cache.delete(req.originalUrl);
     }
@@ -27,7 +28,8 @@ function cache() {
         data: body,
         expires: Date.now() + 86400 * 1000,
       });
-      return oldRes(body);
+      oldRes(body);
+      return res;
     };
     next();
   };

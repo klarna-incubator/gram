@@ -13,7 +13,7 @@ import templates from "./templates.js";
 import setShouldReviewActionItems from "./setShouldReviewActionItems.js";
 
 export function modelsRouter(dal: DataAccessLayer): express.Router {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
   router.get("/", errorWrap(list(dal)));
   router.post("/", errorWrap(create(dal)));
   router.get("/templates", errorWrap(templates(dal))); // Model templates

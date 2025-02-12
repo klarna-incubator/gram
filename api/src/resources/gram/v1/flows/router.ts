@@ -7,7 +7,7 @@ import { deleteFlow } from "./delete.js";
 import { patchFlow } from "./patch.js";
 
 export function flowsRouter(dal: DataAccessLayer): express.Router {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
   router.delete("/:flowId", errorWrap(deleteFlow(dal)));
   router.patch("/:flowId", errorWrap(patchFlow(dal)));
   router.get("/model/:modelId/dataflow/:dataFlowId", errorWrap(getFlows(dal)));

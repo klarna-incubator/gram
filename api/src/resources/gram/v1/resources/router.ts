@@ -4,7 +4,7 @@ import { errorWrap } from "../../../../util/errorHandler.js";
 import { getResources } from "./resource.js";
 
 export function resourceRouter(dal: DataAccessLayer): express.Router {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
 
   router.get("/:id", errorWrap(getResources(dal)));
   return router;

@@ -5,7 +5,7 @@ import { getById } from "./getById.js";
 import get from "./get.js";
 
 export function userRouter(dal: DataAccessLayer): express.Router {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
   router.get("/", errorWrap(get));
   router.get("/:userId", errorWrap(getById(dal)));
   return router;
