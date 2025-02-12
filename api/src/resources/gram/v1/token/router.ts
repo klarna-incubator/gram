@@ -7,9 +7,9 @@ import getAuthParams from "./params.js";
 
 export function tokenRouter(dal: DataAccessLayer): express.Router {
   const router = express.Router({ mergeParams: true });
-  router.get("/auth/token", errorWrap(getAuthToken(dal)));
-  router.post("/auth/token", errorWrap(getAuthToken(dal)));
-  router.get("/auth/params", errorWrap(getAuthParams));
-  router.delete("/auth/token", errorWrap(deleteToken));
+  router.get("/token", errorWrap(getAuthToken(dal)));
+  router.post("/token", errorWrap(getAuthToken(dal)));
+  router.get("/params", errorWrap(getAuthParams));
+  router.delete("/token", errorWrap(deleteToken));
   return router;
 }

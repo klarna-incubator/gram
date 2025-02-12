@@ -82,7 +82,7 @@ export async function createApp(dal: DataAccessLayer): Promise<Express.Applicati
   unauthenticatedRoutes.get("/attributes/flow", getFlowAttributes);
 
   // Token (Auth) Routes
-  unauthenticatedRoutes.use("/auth/token", tokenRouter(dal));
+  unauthenticatedRoutes.use("/auth", tokenRouter(dal));
 
   // Authenticated routes
   const authenticatedRoutes = express.Router();
