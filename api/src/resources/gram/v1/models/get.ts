@@ -12,13 +12,15 @@ export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const id = req.params.id;
     if (!validateUUID(id)) {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     const model = await dal.modelService.getById(id);
 
     if (model === null) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
     await req.authz?.hasPermissionsForModel(model, Permission.Read);
@@ -32,5 +34,6 @@ export default (dal: DataAccessLayer) =>
       model.data.dataFlows = [];
     }
 
-    return res.json({ model });
+    res.json({ model });
+    return;
   };

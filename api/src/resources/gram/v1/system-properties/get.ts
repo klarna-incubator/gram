@@ -6,22 +6,22 @@ import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 
-export function getProperties(
-  dal: DataAccessLayer
-) {
+export function getProperties(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const id = req.params.id;
 
     const model = await dal.modelService.getById(id);
 
     if (model === null) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
     await req.authz.hasPermissionsForModel(model, Permission.Read);
 
     if (model.systemId === null) {
-      return res.json({ properties: [] });
+      res.json({ properties: [] });
+      return;
     }
 
     const properties = await dal.sysPropHandler.contextualize(
@@ -29,6 +29,7 @@ export function getProperties(
       model.systemId
     );
 
-    return res.json({ properties });
+    res.json({ properties });
+    return;
   };
 }

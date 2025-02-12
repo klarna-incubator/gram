@@ -43,10 +43,11 @@ import { threatsRouter } from "./resources/gram/v1/threats/router.js";
 import { tokenRouter } from "./resources/gram/v1/token/router.js";
 import { userRouter } from "./resources/gram/v1/user/router.js";
 import { validationRouter } from "./resources/gram/v1/validation/router.js";
-import { errorWrap } from "./util/errorHandler.js";
 import { initSentry } from "./util/sentry.js";
 
-export async function createApp(dal: DataAccessLayer): Promise<Express.Application> {
+export async function createApp(
+  dal: DataAccessLayer
+): Promise<Express.Application> {
   // Start constructing the app.
   const app = express();
 
@@ -77,9 +78,9 @@ export async function createApp(dal: DataAccessLayer): Promise<Express.Applicati
 
   // Register Routes
   const unauthenticatedRoutes = express.Router();
-  unauthenticatedRoutes.get("/banners", errorWrap(getBanner(dal)));
-  unauthenticatedRoutes.get("/menu", errorWrap(getMenu));
-  unauthenticatedRoutes.get("/contact", errorWrap(getContact));
+  unauthenticatedRoutes.get("/banners", getBanner(dal));
+  unauthenticatedRoutes.get("/menu", getMenu);
+  unauthenticatedRoutes.get("/contact", getContact);
   unauthenticatedRoutes.get("/attributes/flow", getFlowAttributes);
 
   // Token (Auth) Routes
@@ -103,7 +104,10 @@ export async function createApp(dal: DataAccessLayer): Promise<Express.Applicati
   authenticatedRoutes.use("/models/:modelId/controls", controlsRouter(dal));
 
   // Mitigations
-  authenticatedRoutes.use("/models/:modelId/mitigations", mitigationsRouter(dal));
+  authenticatedRoutes.use(
+    "/models/:modelId/mitigations",
+    mitigationsRouter(dal)
+  );
 
   // Models
   authenticatedRoutes.use("/models", modelsRouter(dal));
@@ -124,16 +128,19 @@ export async function createApp(dal: DataAccessLayer): Promise<Express.Applicati
   authenticatedRoutes.use("/suggestions", suggestionsRouter(dal));
 
   // System Properties
-  authenticatedRoutes.use("/system-properties", systemPropertiesRouter(dal, cache));
+  authenticatedRoutes.use(
+    "/system-properties",
+    systemPropertiesRouter(dal, cache)
+  );
 
   // Team
-  authenticatedRoutes.get("/teams/:id", cache, errorWrap(getTeam(dal)));
+  authenticatedRoutes.get("/teams/:id", cache, getTeam(dal));
 
   // Component Classes
   authenticatedRoutes.get(
     "/component-class",
     cache,
-    errorWrap(searchClasses(dal.ccHandler))
+    searchClasses(dal.ccHandler)
   );
 
   // Model Validation
@@ -149,24 +156,16 @@ export async function createApp(dal: DataAccessLayer): Promise<Express.Applicati
   authenticatedRoutes.get(
     "/reports/system-compliance",
     cache,
-    errorWrap(listSystemCompliance(dal))
+    listSystemCompliance(dal)
   );
 
   // Admin Routes
-  authenticatedRoutes.post(
-    "/admin/set-roles",
-    authz.is(Role.Admin),
-    errorWrap(setRoles)
-  );
-  authenticatedRoutes.get(
-    "/admin/crash",
-    authz.is(Role.Admin),
-    errorWrap(crash)
-  );
+  authenticatedRoutes.post("/admin/set-roles", authz.is(Role.Admin), setRoles);
+  authenticatedRoutes.get("/admin/crash", authz.is(Role.Admin), crash);
   authenticatedRoutes.post(
     "/admin/retry_review_approval",
     authz.is(Role.Admin),
-    errorWrap(retryReviewApproval(dal))
+    retryReviewApproval(dal)
   );
 
   app.use("/api/v1", unauthenticatedRoutes);

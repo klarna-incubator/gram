@@ -10,11 +10,14 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const { modelId } = req.params;
-    const note = req.body.note;
-    const extras = req.body.extras;
-    const approvingUser = req.user.sub;
 
     await req.authz.hasPermissionsForModelId(modelId, Permission.Review);
+
+    const note = req.body?.note;
+    const extras = req.body?.extras;
+
+    const approvingUser = req.user.sub;
+
     const result = await dal.reviewService.approve(
       modelId,
       approvingUser,
@@ -22,5 +25,5 @@ export default (dal: DataAccessLayer) =>
       extras
     );
 
-    return res.json({ result });
+    res.json({ result });
   };

@@ -13,7 +13,10 @@ export default (dal: DataAccessLayer) =>
     const { reviewedBy } = req.body;
     const requestedBy = req.user.sub;
 
-    if (!modelId || !requestedBy || !reviewedBy) return res.sendStatus(400);
+    if (!modelId || !requestedBy || !reviewedBy) {
+      res.sendStatus(400);
+      return;
+    }
 
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
 
@@ -25,7 +28,9 @@ export default (dal: DataAccessLayer) =>
     );
     const id = await dal.reviewService.create(review);
     if (!id) {
-      return res.status(500);
+      res.status(500);
+      return;
     }
-    return res.json({ review });
+
+    res.json({ review });
   };

@@ -44,6 +44,5 @@ export function create(dal: DataAccessLayer) {
     }
 
     res.json({ threat: { id } });
-    return;
   };
 }

@@ -16,7 +16,7 @@ app.get(
   auth,
   authz.is(Role.Admin), // this is the important part.
   cache,
-  errorWrap(threats.list)
+  threats.list
 );
 ```
 

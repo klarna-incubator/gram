@@ -20,6 +20,7 @@ export default (dal: DataAccessLayer) => {
     const { isTemplate } = SetTemplateSchema.parse(req.body);
 
     const result = await dal.modelService.setTemplate(modelId, isTemplate);
-    return res.json({ result });
+    res.json({ result });
+    return;
   };
 };

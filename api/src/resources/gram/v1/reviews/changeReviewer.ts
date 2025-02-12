@@ -18,7 +18,8 @@ export default (dal: DataAccessLayer) =>
         newReviewer &&
         (await dal.reviewerHandler.lookup(ctx, [newReviewer])).length === 0)
     ) {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     /**
@@ -30,5 +31,6 @@ export default (dal: DataAccessLayer) =>
       Permission.Write
     );
     const result = await dal.reviewService.changeReviewer(modelId, newReviewer);
-    return res.json({ result });
+    res.json({ result });
+    return;
   };

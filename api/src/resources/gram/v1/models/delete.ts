@@ -12,5 +12,6 @@ export default (dal: DataAccessLayer) =>
     const id = req.params.id;
     await req.authz.hasPermissionsForModelId(id, Permission.Delete);
     const result = await dal.modelService.delete(id);
-    return res.json({ deleted: result });
+    res.json({ deleted: result });
+    return;
   };

@@ -35,8 +35,11 @@ export default function errorHandler(err: any, req: any, res: any, next: any) {
     res.status(500);
     log.error(err, { errorHandled: true });
   }
-  if (["test", "development"].includes(process.env.NODE_ENV!)) {
-    res.send(JSON.stringify(err));
+
+  if (["test", "development"].includes(process.env.NODE_ENV || "")) {
+    res.send(
+      JSON.stringify({ err, message: err.message, stack: err.stack }, null, 2)
+    );
   } else {
     res.send("Something went wrong.");
   }
