@@ -5,4 +5,3 @@ export const metricsMiddleware = promBundle({
   metricType: "summary",
   autoregister: true, // Adds the /metrics endpoint on both 8080 and 8081
 });
-
