@@ -2,19 +2,17 @@
  * GET /api/v1/models/{id}
  * @exports {function} handler
  */
-import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization.js";
-import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.js";
-import { SystemPropertyHandler } from "@gram/core/dist/data/system-property/SystemPropertyHandler.js";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { Request, Response } from "express";
 
 export function getProperties(
-  sysPropHandler: SystemPropertyHandler,
-  dataModels: ModelDataService
+  dal: DataAccessLayer
 ) {
   return async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const model = await dataModels.getById(id);
+    const model = await dal.modelService.getById(id);
 
     if (model === null) {
       return res.sendStatus(404);
@@ -26,7 +24,7 @@ export function getProperties(
       return res.json({ properties: [] });
     }
 
-    const properties = await sysPropHandler.contextualize(
+    const properties = await dal.sysPropHandler.contextualize(
       { currentRequest: req },
       model.systemId
     );

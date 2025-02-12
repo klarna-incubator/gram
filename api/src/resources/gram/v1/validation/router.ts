@@ -4,7 +4,7 @@ import { errorWrap } from "../../../../util/errorHandler.js";
 import { validateModel } from "./validateModel.js";
 
 export function validationRouter(dal: DataAccessLayer): express.Router {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
 
   router.get("/:id", errorWrap(validateModel(dal)));
   return router;

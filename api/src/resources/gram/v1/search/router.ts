@@ -5,7 +5,7 @@ import { search } from "./search.js";
 import { getSearchTypes } from "./types.js";
 
 export function searchRouter(dal: DataAccessLayer): express.Router {
-  const router = express.Router();
+  const router = express.Router({ mergeParams: true });
   router.post("/", errorWrap(search(dal)));
   router.get("/types", errorWrap(getSearchTypes(dal))); // Model templates
   return router;
