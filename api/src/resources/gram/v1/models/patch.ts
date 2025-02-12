@@ -19,10 +19,12 @@ export default (dal: DataAccessLayer) =>
     });
 
     if (!result) {
-      return res.sendStatus(500);
+      res.sendStatus(500);
+      return;
     }
 
     await dal.modelService.logAction(req.user.sub, id, "patch"); // consider removing this as it triggers every time the diagram is changed
 
-    return res.json({ id, version, data });
+    res.json({ id, version, data });
+    return;
   };

@@ -14,7 +14,8 @@ export default function list(dal: DataAccessLayer) {
 
     if (!validateUUID(modelId)) {
       res.status(400);
-      return res.json({ message: "Invalid modelID" });
+      res.json({ message: "Invalid modelID" });
+      return;
     }
 
     await req.authz.hasPermissionsForModelId(modelId, Permission.Read);
@@ -24,6 +25,7 @@ export default function list(dal: DataAccessLayer) {
     );
     const threats = await dal.suggestionService.listThreatSuggestions(modelId);
 
-    return res.json({ controls, threats });
+    res.json({ controls, threats });
+    return;
   };
 }

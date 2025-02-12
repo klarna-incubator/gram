@@ -10,6 +10,7 @@ export function listProperties(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const ctx: RequestContext = { currentRequest: req };
     const properties = await dal.sysPropHandler.getProperties(ctx);
-    return res.json({ properties });
+    res.json({ properties });
+    return;
   };
 }

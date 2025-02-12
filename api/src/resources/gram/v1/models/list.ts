@@ -20,7 +20,8 @@ export default (dal: DataAccessLayer) =>
       !(typeof filter === "string") ||
       !ModelFilters.includes(filter)
     ) {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     const opts: ModelListOptions = {
@@ -30,5 +31,6 @@ export default (dal: DataAccessLayer) =>
     };
 
     const models = await dal.modelService.list(filter as ModelFilter, opts);
-    return res.json({ models: models.map((model) => model.toJSON()) });
+    res.json({ models: models.map((model) => model.toJSON()) });
+    return;
   };

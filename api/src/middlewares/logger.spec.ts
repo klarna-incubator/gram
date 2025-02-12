@@ -1,8 +1,7 @@
-import { Application } from "express";
+import { jest } from "@jest/globals";
 import request from "supertest";
 import { createTestApp } from "../test-util/app.js";
 import logger from "./logger.js";
-import { jest } from "@jest/globals";
 
 const logMock = {
   info: jest.fn(),
@@ -26,14 +25,17 @@ const loggerOpts = {
 };
 
 describe("logger middleware", () => {
-  let app: Application;
+  let app: any;
 
   beforeAll(async () => {
     ({ app } = await createTestApp());
+
     app.post(
       "/logged-endpoint/:excludedParam/:id",
       logger(loggerOpts),
-      (req: any, res: any) => res.end()
+      (req: any, res: any) => {
+        res.end();
+      }
     );
   });
 

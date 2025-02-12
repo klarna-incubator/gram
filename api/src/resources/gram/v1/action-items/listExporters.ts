@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 export function listExporters(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    return res.json({
+    res.json({
       exporterKeys: dal.actionItemHandler.exporters.map((e) => e.key),
     });
   };

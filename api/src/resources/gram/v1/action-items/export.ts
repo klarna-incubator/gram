@@ -24,13 +24,15 @@ export function exportActionItem(dal: DataAccessLayer) {
     const threat = await dal.threatService.getById(actionItem.threatId);
 
     if (!threat) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
     await req.authz.hasPermissionsForModelId(threat.modelId, Permission.Write);
 
     await dal.actionItemHandler.export(actionItem.exporterKey, [threat]);
 
-    return res.json({ success: true });
+    res.json({ success: true });
+    return;
   };
 }

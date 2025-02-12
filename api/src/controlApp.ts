@@ -25,8 +25,9 @@ export function createControlApp(dal: DataAccessLayer): Express.Application {
       tags: ["threat-modeling", "appsec", "security"],
     });
   });
-  app.get("/ping", (_req, res) => { res.json({ message: "pong" }) });
-
+  app.get("/ping", (_req, res) => {
+    res.json({ message: "pong" });
+  });
 
   // Sentry Error Handler
   Sentry.setupExpressErrorHandler(app);

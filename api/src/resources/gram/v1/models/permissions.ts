@@ -11,9 +11,11 @@ export default (dal: DataAccessLayer) =>
     const id = req.params.id;
     const model = await dal.modelService.getById(id);
     if (model === null) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
     const permissions = await req.authz.getPermissionsForModel(model);
-    return res.json({ permissions });
+    res.json({ permissions });
+    return;
   };

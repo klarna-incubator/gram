@@ -1,6 +1,6 @@
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import express from "express";
-import { errorWrap } from "../../../../util/errorHandler.js";
+
 import approve from "./approve.js";
 import cancel from "./cancel.js";
 import changeReviewer from "./changeReviewer.js";
@@ -14,31 +14,17 @@ import reviewers from "./reviewers.js";
 
 export function reviewsRouter(dal: DataAccessLayer): express.Router {
   const router = express.Router({ mergeParams: true });
-  router.get("/", errorWrap(list(dal)));
-  router.get("/reviewers", errorWrap(reviewers(dal)));
-  router.get("/:modelId", errorWrap(get(dal)));
-  router.post("/:modelId", errorWrap(create(dal)));
-  router.patch("/:modelId", errorWrap(patch(dal)));
-  router.post(
-    "/:modelId/cancel",
-    errorWrap(cancel(dal))
-  );
-  router.post(
-    "/:modelId/decline",
-    errorWrap(decline(dal))
-  );
-  router.post(
-    "/:modelId/approve",
-    errorWrap(approve(dal))
-  );
-  router.post(
-    "/:modelId/request-meeting",
-    errorWrap(requestMeeting(dal))
-  );
-  router.post(
-    "/:modelId/change-reviewer",
-    errorWrap(changeReviewer(dal))
-  );
+  router.get("/", list(dal));
+  router.get("/reviewers", reviewers(dal));
+  router.get("/:modelId", get(dal));
+
+  router.post("/:modelId/cancel", cancel(dal));
+  router.post("/:modelId/decline", decline(dal));
+  router.post("/:modelId/approve", approve(dal));
+  router.post("/:modelId/request-meeting", requestMeeting(dal));
+  router.post("/:modelId/change-reviewer", changeReviewer(dal));
+  router.post("/:modelId", create(dal));
+  router.patch("/:modelId", patch(dal));
 
   return router;
 }

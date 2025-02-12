@@ -31,7 +31,8 @@ export default (dal: DataAccessLayer) =>
       !filter ||
       !Object.values<string>(SystemListFilter).includes(filter.toString())
     ) {
-      return res.status(400).json("Invalid filter type.");
+      res.status(400).json("Invalid filter type.");
+      return;
     }
 
     const validatedOpts: any = {};
@@ -62,7 +63,7 @@ export default (dal: DataAccessLayer) =>
     // Find reviews and map latest approved one to the system.
     const complianceMap = await getComplianceStuff(result, dal);
 
-    return res.json({
+    res.json({
       systems: result.systems.map((system) => ({
         ...system.toJSON(),
         compliance: complianceMap.get(system.id)?.toJSON(),
