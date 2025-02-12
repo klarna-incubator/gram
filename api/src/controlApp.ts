@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/node";
 import express from "express";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { createHealthChecks } from "./healthchecks/index.js";
-import { metricsMiddleware } from "./metrics/metrics.js";
+import { metricsMiddleware } from "./middlewares/metrics.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import { version } from "./util/version.js";
 
