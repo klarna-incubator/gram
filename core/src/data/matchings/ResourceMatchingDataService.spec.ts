@@ -26,8 +26,15 @@ describe("MatchingDataService implementation", () => {
       components: [
         {
           id: randomUUID(),
-          name: "some-component-name",
+          name: "Component name 1",
           type: "ds",
+          x: 0,
+          y: 0,
+        },
+        {
+          id: randomUUID(),
+          name: "Component name 2",
+          type: "ee",
           x: 0,
           y: 0,
         },
@@ -65,23 +72,10 @@ describe("MatchingDataService implementation", () => {
       expect(result.rows[0].resource_id).toEqual(resourceId);
     });
 
-    it("should throw an error if the model does not exist", async () => {
-      const resourceId = randomUUID();
-      const componentId = model.data.components[0].id;
-      const matching = new ResourceMatching(
-        randomUUID(),
-        resourceId,
-        componentId,
-        "test@klarna.com"
-      );
-
-      await expect(data.create(matching)).rejects.toThrowError();
-    });
-
     it("should update an existing matching for an existing model", async () => {
       const resourceId = randomUUID();
       const componentId1 = model.data.components[0].id;
-      const componentId2 = randomUUID();
+      const componentId2 = model.data.components[1].id;
       const modelId = model.id!;
       const matching1 = new ResourceMatching(
         modelId,

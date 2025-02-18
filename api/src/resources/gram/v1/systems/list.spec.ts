@@ -47,7 +47,6 @@ describe("systems.list", () => {
     list.mockImplementation(async () => {
       const error = new Error("Something messed up");
       error.name = "Some other error";
-      console.log("mock was called");
       throw error;
     });
 

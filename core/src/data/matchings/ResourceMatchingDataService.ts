@@ -8,7 +8,7 @@ function convertToMatching(row: any) {
   const matching = new ResourceMatching(
     row.model_id,
     row.resource_id,
-    row.component_id_by,
+    row.component_id,
     row.created_by
   );
   matching.createdAt = row.created_at * 1000;
@@ -27,34 +27,33 @@ export class ResourceMatchingDataService extends EventEmitter {
 
   async create(matching: ResourceMatching) {
     const { modelId, resourceId, componentId, createdBy } = matching;
-    const query = `
-      INSERT INTO resource_matchings (model_id, resource_id, component_id, created_by, deleted_at) 
-      VALUES ($1::uuid, $2::uuid, $3::uuid, $4::varchar, NULL)
-      ON CONFLICT (model_id, resource_id) DO UPDATE
-        SET updated_by = $4::varchar, component_id = $3::uuid
-    `;
 
-    const queryMatchings = `
-      SELECT model_id, component_id, resource_id
-      FROM resource_matchings
-      WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id = $3::uuid 
-    `;
+    const model = await this.dal.modelService.getById(modelId);
+    const componentList =
+      model?.data.components.map((component) => component.id) || [];
 
-    await this.pool.runTransaction(async (client) => {
-      await client.query(query, [modelId, resourceId, componentId, createdBy]);
-      const res_matchings = await client.query(queryMatchings, [
-        modelId,
-        resourceId,
-        componentId,
-      ]);
+    if (componentList.includes(componentId) || componentId === null) {
+      const query = `
+        INSERT INTO resource_matchings (model_id, resource_id, component_id, created_by, deleted_at) 
+        VALUES ($1::uuid, $2::uuid, $3::uuid, $4::varchar, NULL)
+        ON CONFLICT (model_id, resource_id) DO UPDATE
+          SET updated_by = $4::varchar, component_id = $3::uuid, deleted_at = NULL
+      `;
 
-      /* 
-      For websockets
+      await this.pool.runTransaction(async (client) => {
+        await client.query(query, [
+          modelId,
+          resourceId,
+          componentId,
+          createdBy,
+        ]);
+
         this.emit("updated-for", {
-        modelId: res_matchings.rows[0].model_id,
-        componentId: res_matchings.rows[0].component_id,
-      }); */
-    });
+          modelId: modelId,
+        });
+      });
+    }
+
     return { modelId, resourceId, componentId };
   }
 
@@ -83,7 +82,11 @@ export class ResourceMatchingDataService extends EventEmitter {
       model?.data.components.map((component) => component.id) || [];
 
     return res.rows
-      .filter((record) => componentList.includes(record.component_id))
+      .filter(
+        (record) =>
+          componentList.includes(record.component_id) ||
+          record.component_id === null
+      )
       .map((record) => convertToMatching(record));
   }
 
@@ -93,25 +96,31 @@ export class ResourceMatchingDataService extends EventEmitter {
     componentId: string,
     deletedBy: string
   ) {
-    const query = `
-      UPDATE resource_matchings
-      SET deleted_at = NOW(), updated_by = $4::varchar
-      WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id = $3::uuid
-    `;
-
     await this.pool.runTransaction(async (client) => {
-      await client.query(query, [modelId, resourceId, componentId, deletedBy]);
-      /* const res_matchings = await client.query(queryMatchings, [
-        modelId,
-        resourceId,
-        componentId,
-      ]); */
+      if (componentId === null) {
+        const query = `
+        UPDATE resource_matchings
+        SET deleted_at = NOW(), updated_by = $3::varchar
+        WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id IS NULL
+      `;
+        await client.query(query, [modelId, resourceId, deletedBy]);
+      } else {
+        const query = `
+        UPDATE resource_matchings
+        SET deleted_at = NOW(), updated_by = $4::varchar
+        WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id = $3::uuid
+      `;
+        await client.query(query, [
+          modelId,
+          resourceId,
+          componentId,
+          deletedBy,
+        ]);
+      }
 
-      /* this.emit("updated-for", {
-        modelId: res_matchings.rows[0].model_id,
-        componentId: res_matchings.rows[0].component_id,
-        resourceId: res_matchings.rows[0].resource_id,
-      }); */
+      this.emit("updated-for", {
+        modelId: modelId,
+      });
     });
     return { modelId, resourceId, componentId };
   }
