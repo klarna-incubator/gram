@@ -83,8 +83,6 @@ export function LeftPanel() {
     >
       <ToggleLeftPanelButton />
 
-      {/* <AppBar position="static">
-        <Grow in={true}> */}
       <Tabs
         value={tabHck}
         onChange={(_, v) => setTab(v)}
@@ -108,8 +106,6 @@ export function LeftPanel() {
         )}
         <Tab disableRipple label="RESOURCES" value={TAB.RESOURCES} />
       </Tabs>
-      {/*   </Grow>
-      </AppBar> */}
 
       <TabPanel value={tab} index={TAB.SYSTEM}>
         <SystemTab />
