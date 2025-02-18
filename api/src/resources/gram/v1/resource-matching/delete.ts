@@ -11,8 +11,6 @@ export function deleteResourceMatching(dal: DataAccessLayer) {
     const { modelId } = req.params;
     const { user } = req;
 
-    console.log("deleteResourceMatching", modelId, resourceId, componentId);
-
     if (!validateUUID(modelId) || !validateUUID(resourceId)) {
       throw new NotFoundError();
     }
