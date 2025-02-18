@@ -102,6 +102,7 @@ function bind(dispatch, modelId) {
         "ActionItems",
         "Flows",
         "Validation",
+        "ResourceMatchings",
       ])
     );
   };
@@ -188,6 +189,9 @@ function refetch(dispatch, event, modelId) {
     // case "model":
     //   dispatch(api.util.invalidateTags(["Model"]));
     //   break;
+    case "resource-matchings":
+      dispatch(api.util.invalidateTags(["ResourceMatchings"]));
+      break;
 
     default:
       break;
