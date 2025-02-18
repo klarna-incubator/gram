@@ -27,6 +27,7 @@ import { Team } from "@gram/core/dist/auth/models/Team.js";
 import { StaticTeamProvider } from "./providers/static/StaticTeamProvider.js";
 import { StrideSuggestionProvider } from "@gram/stride";
 import { basicValidationRules } from "./providers/static/BasicValidationRules.js";
+import { StaticResourceProvider } from "./providers/static/StaticResourceProvider.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -294,6 +295,7 @@ export const defaultConfig: GramConfiguration = {
         dal.modelService,
       ],
       validationSources: [basicValidationRules],
+      resourceProviders: [new StaticResourceProvider()],
     };
   },
 };
