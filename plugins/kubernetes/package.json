@@ -1,6 +1,6 @@
 {
   "name": "@gram/kubernetes",
-  "version": "4.21.3",
+  "version": "4.22.0",
   "type": "module",
   "description": "Kubernetes icons for Gram",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.21.3"
+    "@gram/core": "^4.22.0"
   },
   "private": true
 }

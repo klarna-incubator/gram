@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.22.0](https://github.com/klarna-incubator/gram/compare/v4.21.3...v4.22.0) (2025-02-18)
+
+### Bug Fixes
+
+- :lipstick: make left panel tabs scrollable ([2d31748](https://github.com/klarna-incubator/gram/commit/2d3174857d1631744bd9480de9435a588b1f9f29))
+
+### Features
+
+- :sparkles: add resource matching to component and resource tab ([9f43ffb](https://github.com/klarna-incubator/gram/commit/9f43ffbcfafa92994eba240776e9ad4f3ceea793))
+
 ## [4.21.3](https://github.com/klarna-incubator/gram/compare/v4.21.2...v4.21.3) (2025-01-07)
 
 ### Bug Fixes
