@@ -152,6 +152,13 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     server.tellClientsToRefetch("flows", { modelId, dataFlowId });
   });
 
+  dal.resourceMatchingService.on("updated-for", ({ modelId }) => {
+    const server = wssRegistry.get(modelId);
+    log.debug(`resource-matching was updated for ${modelId}`);
+    if (!server) return;
+    server.tellClientsToRefetch("resource-matchings", { modelId });
+  });
+
   // Clean up leftover websocket servers
   const cleanupInterval = setInterval(() => {
     log.debug(`Number active channels: ${wssRegistry.size}`);

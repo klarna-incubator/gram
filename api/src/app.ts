@@ -45,6 +45,7 @@ import { validationRouter } from "./resources/gram/v1/validation/router.js";
 import { getFlowAttributes } from "./resources/gram/v1/attributes/get.js";
 import { flowsRouter } from "./resources/gram/v1/flows/router.js";
 import { resourceRouter } from "./resources/gram/v1/resources/router.js";
+import { resourceMatchingRouter } from "./resources/gram/v1/resource-matching/router.js";
 
 export async function createApp(dal: DataAccessLayer) {
   // Start constructing the app.
@@ -235,6 +236,9 @@ export async function createApp(dal: DataAccessLayer) {
 
   // Resources
   authenticatedRoutes.use("/resources", resourceRouter(dal));
+
+  // Resource Matching
+  authenticatedRoutes.use("/resources-matching", resourceMatchingRouter(dal));
 
   // Report Routes
   authenticatedRoutes.get(

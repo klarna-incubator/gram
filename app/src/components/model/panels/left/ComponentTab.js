@@ -5,6 +5,9 @@ import {
   MenuItem,
   TextField,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -15,6 +18,13 @@ import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
 import { TechStacksDropdown } from "./TechStackDropdown";
 import { EditableDescription } from "../EditableDescription";
+import { ResourceList } from "./ResourceList";
+import { useGetResourcesQuery } from "../../../../api/gram/resources";
+import {
+  useListMatchingQuery,
+  useCreateMatchingMutation,
+} from "../../../../api/gram/resource-matching";
+import { useModelID } from "../../hooks/useModelID";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -25,6 +35,16 @@ export function ComponentTab() {
   const { type, classes, systems } = component;
   const [name, setName] = useState(component.name);
   const [description, setDescription] = useState(component.description || "");
+  const modelId = useModelID();
+  const { isLoading, isError, data: resources } = useGetResourcesQuery(modelId);
+  const { data: resourceMatchings } = useListMatchingQuery(modelId);
+
+  const filteredResources = resources?.filter((resource) =>
+    resourceMatchings?.find(
+      (match) =>
+        match.resourceId === resource.id && match.componentId === component.id
+    )
+  );
 
   // Update controlled states if redux changed from outside the component
   useEffect(() => {
@@ -134,7 +154,93 @@ export function ComponentTab() {
             </Box>
           </CardContent>
         </Card>
+        <Card elevation={2}>
+          <CardContent>
+            <Typography variant="h6">Resources</Typography>
+            <MatchComponentWithResource
+              modelId={modelId}
+              resources={resources}
+              component={component}
+              matchings={resourceMatchings}
+            />
+            {filteredResources?.length > 0 ? (
+              <ResourceList
+                isLoading={isLoading}
+                isError={isError}
+                resources={filteredResources}
+              />
+            ) : (
+              <Typography sx={{ marginTop: "1rem" }}>
+                No resource matched
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
       </Box>
     </Box>
+  );
+}
+
+export function MatchComponentWithResource({
+  modelId,
+  component,
+  resources,
+  matchings,
+}) {
+  const [resourceInput, setResourceInput] = useState(null);
+  const [createMatching] = useCreateMatchingMutation();
+  console.log({ resources, modelId, component });
+
+  const filteredResources = resources
+    ? resources?.filter((r) => {
+        const typeMap = {
+          proc: "process",
+          ds: "datastore",
+          ee: "external entity",
+        };
+        const matchedId = matchings ? matchings?.map((m) => m.resourceId) : [];
+
+        return (
+          typeMap[component.type] === r.type.toLowerCase() &&
+          !matchedId.includes(r.id)
+        );
+      })
+    : [];
+
+  function handleChange(e) {
+    const selectedResource = resources.find((c) => c.id === e.target.value);
+    createMatching({
+      modelId: modelId,
+      resourceId: selectedResource.id,
+      componentId: component.id,
+    });
+    setResourceInput("");
+  }
+
+  if (filteredResources.length === 0) {
+    return null;
+  }
+
+  return (
+    <FormControl fullWidth size="small">
+      <InputLabel id="match-component-select-label">
+        Match with a resource
+      </InputLabel>
+      <Select
+        id="match-resource-select-label"
+        label="Match with a resource"
+        fullWidth
+        value={resourceInput ? resourceInput.id : null}
+        onChange={handleChange}
+        disabled={filteredResources.length === 0}
+      >
+        {filteredResources.length > 0 &&
+          filteredResources.map((resource, idx) => (
+            <MenuItem key={idx} value={resource.id}>
+              {resource.displayName}
+            </MenuItem>
+          ))}
+      </Select>
+    </FormControl>
   );
 }

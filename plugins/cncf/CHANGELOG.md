@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.22.0](https://github.com/klarna-incubator/gram/compare/v4.21.3...v4.22.0) (2025-02-18)
+
+**Note:** Version bump only for package @gram/cncf
+
 ## [4.21.3](https://github.com/klarna-incubator/gram/compare/v4.21.2...v4.21.3) (2025-01-07)
 
 **Note:** Version bump only for package @gram/cncf
