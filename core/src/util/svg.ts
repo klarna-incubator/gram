@@ -1,7 +1,7 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from "fs";
+import { readdirSync, readFileSync, statSync } from "fs";
 import path from "path";
 
-const assetDir = path.join(import.meta.url.replace("file:", ""), '../../assets');
+// const assetDir = path.join(import.meta.url.replace("file:", ""), '../../assets');
 
 export function getAllSvgFiles(dir: string) {
     let results: string[] = [];
@@ -12,14 +12,14 @@ export function getAllSvgFiles(dir: string) {
         if (stat && stat.isDirectory()) {
             results = results.concat(getAllSvgFiles(file));
         } else if (file.endsWith('.svg')) {
-            results.push(path.relative(assetDir, file));
+            results.push(file);
         }
     });
     return results;
 }
 
 export function checkSvgFileForWidthHeight(svgFile: string) {
-    const svgContent = readFileSync(path.join(assetDir, svgFile), 'utf-8');
+    const svgContent = readFileSync(svgFile, 'utf-8');
 
     const tag = svgContent.match(/<svg([^>]*)>/);
 
