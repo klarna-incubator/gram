@@ -189,7 +189,6 @@ export function MatchComponentWithResource({
 }) {
   const [resourceInput, setResourceInput] = useState(null);
   const [createMatching] = useCreateMatchingMutation();
-  console.log({ resources, modelId, component });
 
   const filteredResources = resources
     ? resources?.filter((r) => {

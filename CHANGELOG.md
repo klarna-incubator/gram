@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.22.1](https://github.com/klarna-incubator/gram/compare/v4.22.0...v4.22.1) (2025-02-19)
+
+### Bug Fixes
+
+- :bug: fix validation on resource-matching api routes ([905bfc6](https://github.com/klarna-incubator/gram/commit/905bfc62d4f122ba519527f056983b3fc7b84a97))
+
 # [4.22.0](https://github.com/klarna-incubator/gram/compare/v4.21.3...v4.22.0) (2025-02-18)
 
 ### Bug Fixes

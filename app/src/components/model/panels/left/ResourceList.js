@@ -355,12 +355,6 @@ function MatchResourceWithComponent({
 
   function handleChange(e) {
     if (e.target.value === null) {
-      console.log("Ignore this resource", {
-        modelId: modelId,
-        resourceId: resource.id,
-        componentId: null,
-      });
-
       createMatching({
         modelId: modelId,
         resourceId: resource.id,
