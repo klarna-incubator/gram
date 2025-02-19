@@ -11,11 +11,15 @@ export function deleteResourceMatching(dal: DataAccessLayer) {
     const { modelId } = req.params;
     const { user } = req;
 
-    if (!validateUUID(modelId) || !validateUUID(resourceId)) {
+    if (!validateUUID(modelId)) {
       throw new NotFoundError();
     }
 
     if (componentId !== null && !validateUUID(componentId)) {
+      throw new NotFoundError();
+    }
+
+    if (!resourceId) {
       throw new NotFoundError();
     }
 

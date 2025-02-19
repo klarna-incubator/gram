@@ -9,7 +9,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { GROUP_BY } from "./ResourceTab";
 function toggleGroupBy(groupBy, setGroupBy, value) {
   if (groupBy === value) {
-    console.log("should reset to null");
     setGroupBy(null);
   } else {
     setGroupBy(value);
