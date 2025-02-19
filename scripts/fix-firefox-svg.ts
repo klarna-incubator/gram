@@ -1,10 +1,11 @@
 import { readFileSync, writeFileSync } from "fs";
 import path from "path";
-import { checkSvgFileForWidthHeight, getAllSvgFiles } from "./svg-util.js";
+import { checkSvgFileForWidthHeight, getAllSvgFiles } from "@gram/core/dist/util/svg.js";
+
 
 
 function fixSvgFile(svgFile: string) {
-    const svgContent = readFileSync(path.join(assetDir, svgFile), 'utf-8');
+    const svgContent = readFileSync(svgFile, 'utf-8');
 
     const tag = svgContent.match(/<svg([^>]*)>/);
 
@@ -23,17 +24,17 @@ function fixSvgFile(svgFile: string) {
     const newSvgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 width="${width}px" height="${height}px">`);
     // console.log(newSvgContent);
 
-    writeFileSync(path.join(assetDir, svgFile), newSvgContent);
+    writeFileSync(svgFile, newSvgContent);
 }
 
 
-const assetDir = path.join(import.meta.url.replace("file:", ""), '../../assets');
+const assetDir = path.join(import.meta.url.replace("file:", ""), '../../plugins/');
 const svg = getAllSvgFiles(assetDir).filter(svgFile => !checkSvgFileForWidthHeight(svgFile));
 
 let failed = 0;
 let passed = 0;
 
-console.log("Fault SVGs found:");
+console.log("Faulty SVGs found:");
 for (const svgFile of svg) {
     console.log(svgFile);
     try {

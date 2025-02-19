@@ -11,8 +11,7 @@
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
     "debug": "NODE_ENV=development node --loader ts-node/esm --inspect=127.0.0.1 src/index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit",
-    "fix-firefox-svg": "tsx scripts/fix-firefox-svg.ts"
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
   },
   "main": "dist/index.js",
   "repository": {
@@ -46,7 +45,6 @@
     "lodash": "^4.17.21",
     "log4js": "^6.6.1",
     "tslib": "^2.6.2",
-    "tsx": "^4.19.3",
     "ws": "^8.17.1",
     "zod": "^3.22.4"
   },
