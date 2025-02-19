@@ -19,6 +19,6 @@ const config: Config.InitialOptions = {
   },
   coverageProvider: "v8",
   transformIgnorePatterns: ["<rootDir>/node_modules/"],
-  testPathIgnorePatterns: ["<rootDir>/dist/"]
+  testPathIgnorePatterns: ["<rootDir>/dist/"],
 };
 export default config;
