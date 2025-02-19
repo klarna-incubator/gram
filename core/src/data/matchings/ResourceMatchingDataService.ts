@@ -35,7 +35,7 @@ export class ResourceMatchingDataService extends EventEmitter {
     if (componentList.includes(componentId) || componentId === null) {
       const query = `
         INSERT INTO resource_matchings (model_id, resource_id, component_id, created_by, deleted_at) 
-        VALUES ($1::uuid, $2::uuid, $3::uuid, $4::varchar, NULL)
+        VALUES ($1::uuid, $2::varchar, $3::uuid, $4::varchar, NULL)
         ON CONFLICT (model_id, resource_id) DO UPDATE
           SET updated_by = $4::varchar, component_id = $3::uuid, deleted_at = NULL
       `;
@@ -101,14 +101,14 @@ export class ResourceMatchingDataService extends EventEmitter {
         const query = `
         UPDATE resource_matchings
         SET deleted_at = NOW(), updated_by = $3::varchar
-        WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id IS NULL
+        WHERE model_id = $1::uuid AND resource_id = $2::varchar AND component_id IS NULL
       `;
         await client.query(query, [modelId, resourceId, deletedBy]);
       } else {
         const query = `
         UPDATE resource_matchings
         SET deleted_at = NOW(), updated_by = $4::varchar
-        WHERE model_id = $1::uuid AND resource_id = $2::uuid AND component_id = $3::uuid
+        WHERE model_id = $1::uuid AND resource_id = $2::varchar AND component_id = $3::uuid
       `;
         await client.query(query, [
           modelId,

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.22.2](https://github.com/klarna-incubator/gram/compare/v4.22.1...v4.22.2) (2025-02-19)
+
+### Bug Fixes
+
+- :bug: fix sql queries for resource matching ([9f96e33](https://github.com/klarna-incubator/gram/commit/9f96e3349850bc8bd050b2a041538fc2577752bd))
+- :bug: fix sql queries for resource matching ([279286a](https://github.com/klarna-incubator/gram/commit/279286a1c08e6e11adae9df98e8563ebd67cc48e))
+
 ## [4.22.1](https://github.com/klarna-incubator/gram/compare/v4.22.0...v4.22.1) (2025-02-19)
 
 ### Bug Fixes

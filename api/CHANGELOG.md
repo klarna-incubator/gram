@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.22.2](https://github.com/klarna/gram/compare/v4.22.1...v4.22.2) (2025-02-19)
+
+### Bug Fixes
+
+- :bug: fix sql queries for resource matching ([9f96e33](https://github.com/klarna/gram/commit/9f96e3349850bc8bd050b2a041538fc2577752bd))
+
 ## [4.22.1](https://github.com/klarna/gram/compare/v4.22.0...v4.22.1) (2025-02-19)
 
 ### Bug Fixes

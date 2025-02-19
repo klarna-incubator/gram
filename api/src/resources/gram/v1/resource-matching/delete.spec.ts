@@ -128,7 +128,7 @@ describe("ResourceMatchingDataService", () => {
     const query = `
         SELECT model_id, component_id, resource_id, created_by, deleted_at, updated_by
         FROM resource_matchings
-        WHERE model_id = $1::uuid AND component_id = $2::uuid AND resource_id = $3::uuid`;
+        WHERE model_id = $1::uuid AND component_id = $2::uuid AND resource_id = $3::varchar`;
 
     const res = await pool.query(query, [
       validModelId,

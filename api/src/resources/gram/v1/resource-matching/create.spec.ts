@@ -118,7 +118,7 @@ describe("ResourceMatchingDataService", () => {
     const query = `
         SELECT model_id, component_id, resource_id, created_by
         FROM resource_matchings
-        WHERE model_id = $1::uuid AND component_id = $2::uuid AND resource_id = $3::uuid`;
+        WHERE model_id = $1::uuid AND component_id = $2::uuid AND resource_id = $3::varchar`;
 
     const res = await pool.query(query, [
       validModelId,
@@ -147,7 +147,7 @@ describe("ResourceMatchingDataService", () => {
     const query = `
         SELECT model_id, component_id, resource_id, created_by
         FROM resource_matchings
-        WHERE model_id = $1::uuid AND component_id = $2::uuid AND resource_id = $3::uuid`;
+        WHERE model_id = $1::uuid AND component_id = $2::uuid AND resource_id = $3::varchar`;
     const res = await pool.query(query, [modelId, componentId, resourceId]);
     console.log({ rows: res.rows.length });
     expect(res.rows.length).toBe(0);
