@@ -27,6 +27,7 @@ import {
   useCreateMatchingMutation,
 } from "../../../../api/gram/resource-matching";
 import { useModelID } from "../../hooks/useModelID";
+import { useGetReviewQuery } from "../../../../api/gram/review";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -38,6 +39,13 @@ export function ComponentTab() {
   const [name, setName] = useState(component.name);
   const [description, setDescription] = useState(component.description || "");
   const modelId = useModelID();
+
+  const { data: review } = useGetReviewQuery({
+    modelId,
+  });
+
+  console.log({ review });
+
   const {
     isLoading: isLoadingResources,
     isError,
@@ -188,7 +196,9 @@ export function ComponentTab() {
                   resources={resources}
                   component={component}
                   matchings={resourceMatchings}
+                  modelReviewStatus={review?.status}
                 />
+
                 {filteredResources?.length > 0 ? (
                   <ResourceList
                     isLoading={isLoadingResources}
@@ -214,9 +224,11 @@ export function MatchComponentWithResource({
   component,
   resources,
   matchings,
+  modelReviewStatus,
 }) {
   const [resourceInput, setResourceInput] = useState(null);
   const [createMatching] = useCreateMatchingMutation();
+  console.log({ modelReviewStatus });
 
   const filteredResources = resources
     ? resources?.filter((r) => {
@@ -245,6 +257,10 @@ export function MatchComponentWithResource({
   }
 
   if (filteredResources.length === 0) {
+    return null;
+  }
+
+  if (modelReviewStatus === "approved") {
     return null;
   }
 

@@ -27,6 +27,7 @@ import { useGetModelQuery } from "../../../../api/gram/model";
 
 import { useSetSelected } from "../../hooks/useSetSelected";
 import { useDeselectAll } from "../../hooks/useSetMultipleSelected";
+import { useGetReviewQuery } from "../../../../api/gram/review";
 
 function capitalizeFirstLetter(string) {
   return string
@@ -123,6 +124,9 @@ function AttributeList({ attributes }) {
 
 function ResourceListItem({ i, resource, components, matching }) {
   const modelId = useModelID();
+  const { data: review } = useGetReviewQuery({
+    modelId,
+  });
 
   return (
     <Accordion key={i} elevation={10}>
@@ -136,6 +140,7 @@ function ResourceListItem({ i, resource, components, matching }) {
             resource={resource}
             components={components}
             matching={matching}
+            modelReviewStatus={review?.status}
           />
         </Box>
         <Paper elevation={24} sx={{ padding: "8px", marginTop: "5px" }}>
@@ -330,6 +335,7 @@ function MatchResourceWithComponent({
   resource,
   components,
   matching,
+  modelReviewStatus,
 }) {
   const [createMatching] = useCreateMatchingMutation();
   const [deleteMatching] = useDeleteMatchingMutation();
@@ -387,6 +393,30 @@ function MatchResourceWithComponent({
     setSelected(matchedComponent.id, true);
   }
 
+  if (modelReviewStatus === "approved") {
+    if (matchedComponent?.name) {
+      return (
+        <Box sx={{ marginLeft: "4px" }}>
+          <Chip label={matchedComponent.name} onClick={handleOnClick} />
+        </Box>
+      );
+    }
+
+    if (matching && matching.componentId === null) {
+      return (
+        <Box sx={{ marginLeft: ".5em" }}>
+          <Chip label="Ignored" />
+        </Box>
+      );
+    }
+
+    return (
+      <Box sx={{ marginY: ".5em", marginLeft: ".5em" }}>
+        <Typography variant="subtitle2">No component matched</Typography>
+      </Box>
+    );
+  }
+
   if (matching && matching.componentId === null) {
     return (
       <Box sx={{ marginLeft: "4px" }}>
@@ -395,34 +425,7 @@ function MatchResourceWithComponent({
     );
   }
 
-  if (!matchedComponent) {
-    return (
-      <FormControl fullWidth size="small">
-        <InputLabel id="match-component-select-label">
-          Match with a component
-        </InputLabel>
-        <Select
-          id="match-component-select-label"
-          label="Match with a component"
-          fullWidth
-          value={matchedComponent ? matchedComponent.id : ""}
-          onChange={handleChange}
-        >
-          {filteredComponents &&
-            filteredComponents.map((component, idx) => (
-              <MenuItem key={idx} value={component.id}>
-                {component.name}
-              </MenuItem>
-            ))}
-          ;
-          {!filteredComponents && (
-            <MenuItem value="">No components found</MenuItem>
-          )}
-          <MenuItem value={null}>Ignore this resource</MenuItem>
-        </Select>
-      </FormControl>
-    );
-  } else {
+  if (matchedComponent) {
     return (
       <Box sx={{ marginLeft: "4px" }}>
         <Chip
@@ -433,4 +436,31 @@ function MatchResourceWithComponent({
       </Box>
     );
   }
+
+  return (
+    <FormControl fullWidth size="small">
+      <InputLabel id="match-component-select-label">
+        Match with a component
+      </InputLabel>
+      <Select
+        id="match-component-select-label"
+        label="Match with a component"
+        fullWidth
+        value={matchedComponent ? matchedComponent.id : ""}
+        onChange={handleChange}
+      >
+        {filteredComponents &&
+          filteredComponents.map((component, idx) => (
+            <MenuItem key={idx} value={component.id}>
+              {component.name}
+            </MenuItem>
+          ))}
+        ;
+        {!filteredComponents && (
+          <MenuItem value="">No components found</MenuItem>
+        )}
+        <MenuItem value={null}>Ignore this resource</MenuItem>
+      </Select>
+    </FormControl>
+  );
 }
