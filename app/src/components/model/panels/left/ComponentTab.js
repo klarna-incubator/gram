@@ -8,6 +8,8 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Stack,
+  LinearProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -36,8 +38,13 @@ export function ComponentTab() {
   const [name, setName] = useState(component.name);
   const [description, setDescription] = useState(component.description || "");
   const modelId = useModelID();
-  const { isLoading, isError, data: resources } = useGetResourcesQuery(modelId);
-  const { data: resourceMatchings } = useListMatchingQuery(modelId);
+  const {
+    isLoading: isLoadingResources,
+    isError,
+    data: resources,
+  } = useGetResourcesQuery(modelId);
+  const { data: resourceMatchings, isLoading: isLoadingMatchings } =
+    useListMatchingQuery(modelId);
 
   const filteredResources = resources?.filter((resource) =>
     resourceMatchings?.find(
@@ -156,23 +163,44 @@ export function ComponentTab() {
         </Card>
         <Card elevation={2}>
           <CardContent>
-            <Typography variant="h6">Resources</Typography>
-            <MatchComponentWithResource
-              modelId={modelId}
-              resources={resources}
-              component={component}
-              matchings={resourceMatchings}
-            />
-            {filteredResources?.length > 0 ? (
-              <ResourceList
-                isLoading={isLoading}
-                isError={isError}
-                resources={filteredResources}
-              />
-            ) : (
-              <Typography sx={{ marginTop: "1rem" }}>
-                No resource matched
-              </Typography>
+            <Typography variant="h6" sx={{ marginBottom: "1rem" }}>
+              Resources
+            </Typography>
+            {(isLoadingMatchings || isLoadingResources) && (
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Stack spacing={1}>
+                  <Typography>Loading</Typography>
+                  <LinearProgress sx={{ width: "100%" }} />
+                </Stack>
+              </Box>
+            )}
+            {!isLoadingMatchings && !isLoadingResources && (
+              <>
+                <MatchComponentWithResource
+                  modelId={modelId}
+                  resources={resources}
+                  component={component}
+                  matchings={resourceMatchings}
+                />
+                {filteredResources?.length > 0 ? (
+                  <ResourceList
+                    isLoading={isLoadingResources}
+                    isError={isError}
+                    resources={filteredResources}
+                  />
+                ) : (
+                  <Typography sx={{ marginTop: "1rem" }}>
+                    No resource matched
+                  </Typography>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
