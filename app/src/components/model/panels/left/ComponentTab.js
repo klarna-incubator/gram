@@ -44,8 +44,6 @@ export function ComponentTab() {
     modelId,
   });
 
-  console.log({ review });
-
   const {
     isLoading: isLoadingResources,
     isError,
@@ -228,7 +226,6 @@ export function MatchComponentWithResource({
 }) {
   const [resourceInput, setResourceInput] = useState(null);
   const [createMatching] = useCreateMatchingMutation();
-  console.log({ modelReviewStatus });
 
   const filteredResources = resources
     ? resources?.filter((r) => {
