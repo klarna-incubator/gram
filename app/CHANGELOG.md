@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.22.3](https://github.com/klarna-incubator/gram/compare/v4.22.2...v4.22.3) (2025-02-25)
+
+### Bug Fixes
+
+- :lipstick: prevent matching in ui when model is approved ([89f6bb1](https://github.com/klarna-incubator/gram/commit/89f6bb10d2d10a4e72f98a1720d9846213886ebb))
+
 ## [4.22.2](https://github.com/klarna-incubator/gram/compare/v4.22.1...v4.22.2) (2025-02-19)
 
 **Note:** Version bump only for package @gram/app
