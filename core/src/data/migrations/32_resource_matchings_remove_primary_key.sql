@@ -1,0 +1,2 @@
+ALTER TABLE resource_matchings
+DROP CONSTRAINT resource_matchings_pkey;
