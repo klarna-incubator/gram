@@ -24,6 +24,7 @@ export default (dal: DataAccessLayer) => {
       modelId,
       shouldReviewActionItems
     );
-    return res.json({ result });
+    res.json({ result });
+    return;
   };
 };

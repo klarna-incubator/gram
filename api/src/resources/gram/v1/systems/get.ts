@@ -17,8 +17,10 @@ export default (dal: DataAccessLayer) =>
     );
 
     if (system === null) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
-    return res.json({ system });
+    res.json({ system });
+    return;
   };

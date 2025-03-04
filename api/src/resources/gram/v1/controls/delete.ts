@@ -12,6 +12,7 @@ export function _delete(dal: DataAccessLayer) {
     const { modelId, id } = req.params;
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
     const result = await dal.controlService.delete(modelId, id);
-    return res.json({ deleted: result });
+    res.json({ deleted: result });
+    return;
   };
 }

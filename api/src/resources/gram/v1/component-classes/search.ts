@@ -15,20 +15,20 @@ export const searchClasses =
     const search = req.query.search;
 
     if (typeof type !== "string" || !ComponentTypes.includes(type)) {
-      return res
-        .status(400)
-        .json({ error: `type must be one of ${ComponentTypes}` });
+      res.status(400).json({ error: `type must be one of ${ComponentTypes}` });
+      return;
     }
 
     if (typeof search !== "string") {
-      return res
+      res
         .status(400)
         .json({ error: `invalid search parameter (not a string?)` });
+      return;
     }
 
     const classes = ccHandler.search(type as ComponentType, search);
 
-    return res.json({
+    res.json({
       truncated: classes.length > 50,
       count: classes.length,
       classes: classes.slice(0, 50),

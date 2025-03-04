@@ -16,7 +16,8 @@ export function create(dal: DataAccessLayer) {
     const inPlace = req.body.inPlace ? req.body.inPlace : false;
 
     if (title === "" || modelId === "" || componentId === "") {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
@@ -42,6 +43,7 @@ export function create(dal: DataAccessLayer) {
       );
     }
 
-    return res.json({ control: { id } });
+    res.json({ control: { id } });
+    return;
   };
 }

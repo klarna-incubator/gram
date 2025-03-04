@@ -10,7 +10,7 @@ import { sampleUser } from "../../../../test-util/sampleUser.js";
 import { jest } from "@jest/globals";
 
 describe("reviews.get", () => {
-  let app: Express;
+  let app: Express.Application;
   let pool: any;
   let getByModelId: any;
   let modelId: string;

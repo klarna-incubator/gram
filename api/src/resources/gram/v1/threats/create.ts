@@ -14,9 +14,11 @@ export function create(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const { title, description, componentId, controlIds } = req.body;
     const { modelId } = req.params;
+    console.log(modelId);
 
     if (title === "" || modelId === "" || componentId === "") {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
@@ -41,6 +43,6 @@ export function create(dal: DataAccessLayer) {
       );
     }
 
-    return res.json({ threat: { id } });
+    res.json({ threat: { id } });
   };
 }

@@ -14,5 +14,6 @@ export default (dal: DataAccessLayer) =>
       req.params.id,
       req.user
     );
-    return res.json({ permissions });
+    res.json({ permissions });
+    return;
   };

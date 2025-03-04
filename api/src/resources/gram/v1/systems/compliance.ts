@@ -14,10 +14,11 @@ export default (dal: DataAccessLayer) =>
     ]);
 
     if (compliances.length === 0) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
-    return res.json({
+    res.json({
       compliance: compliances[0],
     });
   };

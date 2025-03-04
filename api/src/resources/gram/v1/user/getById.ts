@@ -18,7 +18,8 @@ export const getById =
     );
 
     if (!user) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
     res.json({ ...user });

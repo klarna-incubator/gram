@@ -7,11 +7,12 @@ export function listResourceMatching(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const { modelId } = req.params;
     if (!validateUUID(modelId)) {
-      return res
+      res
         .json({
           message: "modelId must be a valid UUID",
         })
         .sendStatus(400);
+      return;
     }
 
     // Check authz
