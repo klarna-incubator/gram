@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.23.0](https://github.com/klarna-incubator/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
+
+### Bug Fixes
+
+- :bug: fix dropdown in resource list ([9004068](https://github.com/klarna-incubator/gram/commit/900406892a86d26edd3f2fcc1dcc87028d13da9c))
+
 ## [4.22.3](https://github.com/klarna-incubator/gram/compare/v4.22.2...v4.22.3) (2025-02-25)
 
 ### Bug Fixes

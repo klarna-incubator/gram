@@ -4,14 +4,14 @@
  */
 import * as jwt from "@gram/core/dist/auth/jwt.js";
 import * as Sentry from "@sentry/node";
-import { NextFunction, Response } from "express";
+import { NextFunction, Response, Request } from "express";
 import log4js from "log4js";
 import { hasSentry } from "../util/sentry.js";
 
 const log = log4js.getLogger("authMw");
 
 export async function validateTokenMiddleware(
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
@@ -33,17 +33,17 @@ export async function validateTokenMiddleware(
       // TODO: Error on suspicious errors (failed signature)
     }
   }
-
-  return next();
+  next();
 }
 
 export async function authRequiredMiddleware(
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
   if (!req.user) {
-    return res.sendStatus(401);
+    res.sendStatus(401);
+    return;
   }
-  return next();
+  next();
 }

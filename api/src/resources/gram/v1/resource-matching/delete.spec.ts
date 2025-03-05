@@ -68,22 +68,22 @@ describe("ResourceMatchingDataService", () => {
     expect(res.status).toBe(401);
   });
 
-  it("should return 404 with invalid model id", async () => {
+  it("should return 400 with invalid model id", async () => {
     const modelId = randomUUID();
     const res = await request(app)
       .delete(baseUrl + modelId)
       .set("Authorization", token);
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(400);
   });
 
-  it("should return 404 with a valid model id and missing payload", async () => {
+  it("should return 400 with a valid model id and missing payload", async () => {
     const res = await request(app)
       .delete(baseUrl + validModelId)
       .set("Authorization", token);
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(400);
   });
 
-  it("should return 404 with a valid model id and invalid payload", async () => {
+  it("should return 400 with a valid model id and invalid payload", async () => {
     const res = await request(app)
       .delete(baseUrl + validModelId)
       .set("Authorization", token)
@@ -92,7 +92,7 @@ describe("ResourceMatchingDataService", () => {
         resourceId: "invalid",
         componentId: "invalid",
       });
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(400);
   });
 
   it("should return 200 with a valid model id and valid payload", async () => {

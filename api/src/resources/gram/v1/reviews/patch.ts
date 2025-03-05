@@ -29,8 +29,10 @@ export default (dal: DataAccessLayer) =>
     });
 
     if (!review) {
-      return res.sendStatus(500);
+      res.sendStatus(500);
+      return;
     }
 
-    return res.json({ review });
+    res.json({ review });
+    return;
   };

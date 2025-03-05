@@ -13,5 +13,6 @@ export default (dal: DataAccessLayer) =>
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
     const result = await dal.reviewService.cancel(modelId);
 
-    return res.json({ result });
+    res.json({ result });
+    return;
   };

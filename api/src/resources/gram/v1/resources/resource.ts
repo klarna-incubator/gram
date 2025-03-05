@@ -7,7 +7,8 @@ export function getResources(dal: DataAccessLayer) {
     const model = await dal.modelService.getById(modelId);
     if (model && model.systemId) {
       const resources = await dal.resourceHandler.getResources(model.systemId);
-      return res.json(resources);
+      res.json(resources);
+      return;
     }
   };
 }

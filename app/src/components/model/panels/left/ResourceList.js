@@ -28,6 +28,7 @@ import { useGetModelQuery } from "../../../../api/gram/model";
 import { useSetSelected } from "../../hooks/useSetSelected";
 import { useDeselectAll } from "../../hooks/useSetMultipleSelected";
 import { useGetReviewQuery } from "../../../../api/gram/review";
+import { useSelector } from "react-redux";
 
 function capitalizeFirstLetter(string) {
   return string
@@ -87,7 +88,7 @@ function ListItem({ resource }) {
         variant="subtitle2"
         sx={{ fontWeight: "bold" }}
       >
-        {resource.key}:{" "}
+        {capitalizeFirstLetter(resource.key)}:{" "}
       </Typography>
       <Typography component="span" variant="subtitle2">
         {resource.value}
@@ -122,7 +123,7 @@ function AttributeList({ attributes }) {
   );
 }
 
-function ResourceListItem({ i, resource, components, matching }) {
+function ResourceListItem({ i, resource, matching }) {
   const modelId = useModelID();
   const { data: review } = useGetReviewQuery({
     modelId,
@@ -138,7 +139,6 @@ function ResourceListItem({ i, resource, components, matching }) {
           <MatchResourceWithComponent
             modelId={modelId}
             resource={resource}
-            components={components}
             matching={matching}
             modelReviewStatus={review?.status}
           />
@@ -161,14 +161,7 @@ function StandardList({ resources, model, resourceMatchings }) {
       const matching = resourceMatchings
         ? resourceMatchings.find((rm) => rm.resourceId === resource.id)
         : null;
-      return (
-        <ResourceListItem
-          i={i}
-          resource={resource}
-          components={model.data.components}
-          matching={matching}
-        />
-      );
+      return <ResourceListItem i={i} resource={resource} matching={matching} />;
     });
   }
 }
@@ -333,7 +326,6 @@ export function ResourceList({
 function MatchResourceWithComponent({
   modelId,
   resource,
-  components,
   matching,
   modelReviewStatus,
 }) {
@@ -342,6 +334,9 @@ function MatchResourceWithComponent({
   const setSelected = useSetSelected();
   const deselectAll = useDeselectAll();
   const [matchedComponent, setMatchedComponent] = useState(null);
+  const { components } = useSelector(({ model }) => ({
+    components: model.components,
+  }));
 
   const filteredComponents = components.filter((c) => {
     const typeMap = {
@@ -360,7 +355,7 @@ function MatchResourceWithComponent({
   }, [matching, components]);
 
   function handleChange(e) {
-    if (e.target.value === null) {
+    if (e.target.value === "") {
       createMatching({
         modelId: modelId,
         resourceId: resource.id,
@@ -459,7 +454,7 @@ function MatchResourceWithComponent({
         {!filteredComponents && (
           <MenuItem value="">No components found</MenuItem>
         )}
-        <MenuItem value={null}>Ignore this resource</MenuItem>
+        <MenuItem value={""}>Ignore this resource</MenuItem>
       </Select>
     </FormControl>
   );

@@ -17,5 +17,6 @@ export default (dal: DataAccessLayer) =>
       requestingUser
     );
 
-    return res.json({ result });
+    res.json({ result });
+    return;
   };

@@ -8,9 +8,11 @@ export function getTeam(dal: DataAccessLayer) {
     const team = await dal.teamHandler.getTeam({ currentRequest: req }, id);
 
     if (team === null) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
 
-    return res.json({ team });
+    res.json({ team });
+    return;
   };
 }

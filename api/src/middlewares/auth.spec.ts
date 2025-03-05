@@ -7,8 +7,12 @@ import { authRequiredMiddleware, validateTokenMiddleware } from "./auth.js";
 
 const app = express();
 app.use(validateTokenMiddleware);
-app.get("/unprotected", (req, res) => res.end());
-app.get("/protected", authRequiredMiddleware, (req, res) => res.end());
+app.get("/unprotected", (req, res) => {
+  res.end();
+});
+app.get("/protected", authRequiredMiddleware, (req, res) => {
+  res.end();
+});
 
 const token = await sampleUserToken();
 
