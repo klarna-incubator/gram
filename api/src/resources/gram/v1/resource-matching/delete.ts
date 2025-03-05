@@ -3,24 +3,28 @@ import { validateUUID } from "@gram/core/dist/util/uuid.js";
 import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { ensureModelAndMatchingPermission } from "./utils.js";
-import { NotFoundError } from "@gram/core/dist/util/errors.js";
+import {
+  NotFoundError,
+  InvalidInputError,
+} from "@gram/core/dist/util/errors.js";
 
 export function deleteResourceMatching(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const { resourceId, componentId } = req.body;
-    const { modelId } = req.params;
-    const { user } = req;
+    const modelId = req.params?.modelId;
+    const resourceId = req.body?.resourceId;
+    const componentId = req.body?.componentId;
+    const user = req.user;
 
     if (!validateUUID(modelId)) {
-      throw new NotFoundError();
+      throw new InvalidInputError("Invalid modelId");
     }
 
     if (componentId !== null && !validateUUID(componentId)) {
-      throw new NotFoundError();
+      throw new InvalidInputError("Invalid componentId and /or resourceId");
     }
 
     if (!resourceId) {
-      throw new NotFoundError();
+      throw new InvalidInputError("Invalid componentId and /or resourceId");
     }
 
     // Check authz
