@@ -6,7 +6,7 @@ import { sampleUser } from "../../../../test-util/sampleUser.js";
 import { jest } from "@jest/globals";
 
 describe("token.get", () => {
-  let app: any;
+  let app: Express.Application;
   const dummyAuth = new MockAuthProvider();
   const getIdentity = jest.spyOn(dummyAuth, "getIdentity");
 

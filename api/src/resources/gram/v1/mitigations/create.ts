@@ -19,11 +19,12 @@ export function create(dal: DataAccessLayer) {
       !validateUUID(threatId) ||
       !validateUUID(controlId)
     ) {
-      return res
+      res
         .json({
           message: "modelId, threatId and controlId must be valid UUIDs",
         })
         .sendStatus(400);
+      return;
     }
 
     // Check authz
@@ -35,14 +36,15 @@ export function create(dal: DataAccessLayer) {
     const createRes = await dal.mitigationService.create(newMitigation);
 
     if (createRes) {
-      return res.json({
+      res.json({
         mitigation: {
           threatId: createRes.threatId,
           controlId: createRes.controlId,
         },
       });
-    } else {
-      return res.sendStatus(422);
+      return;
     }
+
+    res.sendStatus(422);
   };
 }

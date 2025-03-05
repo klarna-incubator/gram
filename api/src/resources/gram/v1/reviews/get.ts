@@ -11,18 +11,21 @@ export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const { modelId } = req.params;
     if (!modelId) {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     if (!validateUUID(modelId)) {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     await req.authz.hasPermissionsForModelId(modelId, Permission.Read);
     const review = await dal.reviewService.getByModelId(modelId);
 
     if (!review) {
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return;
     }
     const requester = await dal.userHandler.lookupUser(
       { currentRequest: req },
@@ -33,7 +36,7 @@ export default (dal: DataAccessLayer) =>
       review.reviewedBy
     );
 
-    return res.json({
+    res.json({
       review: {
         model_id: review.modelId,
         status: review.status,

@@ -224,7 +224,7 @@ export function MatchComponentWithResource({
   matchings,
   modelReviewStatus,
 }) {
-  const [resourceInput, setResourceInput] = useState(null);
+  const [resourceInput, setResourceInput] = useState("");
   const [createMatching] = useCreateMatchingMutation();
 
   const filteredResources = resources

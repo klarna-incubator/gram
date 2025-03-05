@@ -12,6 +12,7 @@ export function _delete(dal: DataAccessLayer) {
     await ensureControlAndThreatPermission(dal, modelId, controlId, threatId);
 
     const result = await dal.mitigationService.delete(threatId, controlId);
-    return res.json({ deleted: result });
+    res.json({ deleted: result });
+    return;
   };
 }

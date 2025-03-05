@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.23.0](https://github.com/klarna/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
+
+### Bug Fixes
+
+- :bug: fix test for resource-matching api ([dba0bf1](https://github.com/klarna/gram/commit/dba0bf1becf508a73c858537ed84490b385d7d57))
+- enable /metrics route again ([5c93b0d](https://github.com/klarna/gram/commit/5c93b0de6e98569898c390e8bd808fcfc8f69d3d))
+- new express-v5 syntax for resource-matching routes ([13a9782](https://github.com/klarna/gram/commit/13a97822ea2e4a02de2e46aa38e93e28bd0f9f67))
+- remove now unneeded errorWrap function. Ensure all routes return void as express v5 expects this ([db76cdd](https://github.com/klarna/gram/commit/db76cdda218d1ec801ebfab31e4693f789c335c5))
+- remove unused package ([7ae1ee8](https://github.com/klarna/gram/commit/7ae1ee8357174ec7bd22a9e300bdfc04551c1bb6))
+- upgrade to express v5 ([5db6c65](https://github.com/klarna/gram/commit/5db6c657ba3876c672d41818a25b026dc9e54dbd))
+- wrong paths for auth routes ([60f1c64](https://github.com/klarna/gram/commit/60f1c64859dc7200b64d43ec7072cb17f8c34fa3))
+
+### Features
+
+- add new metrics for tracking active websockets ([ff4de73](https://github.com/klarna/gram/commit/ff4de73fc1cd270254cb40eb7fa141caebf12c29))
+
 ## [4.22.3](https://github.com/klarna/gram/compare/v4.22.2...v4.22.3) (2025-02-25)
 
 **Note:** Version bump only for package @gram/api

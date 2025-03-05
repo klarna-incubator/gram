@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.23.0](https://github.com/klarna/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
+
+### Bug Fixes
+
+- upgrade to express v5 ([5db6c65](https://github.com/klarna/gram/commit/5db6c657ba3876c672d41818a25b026dc9e54dbd))
+
 ## [4.22.3](https://github.com/klarna/gram/compare/v4.22.2...v4.22.3) (2025-02-25)
 
 ### Bug Fixes

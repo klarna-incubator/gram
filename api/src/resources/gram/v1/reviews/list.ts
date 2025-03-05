@@ -65,5 +65,6 @@ export default (dal: DataAccessLayer) =>
       items: _.merge(reviews.items, employees), // This might not merge correctly if the list of users !=
     };
 
-    return res.json(result);
+    res.json(result);
+    return;
   };

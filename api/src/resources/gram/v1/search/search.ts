@@ -21,6 +21,7 @@ export function search(dal: DataAccessLayer) {
       pageSize: 10,
     });
 
-    return res.json(result);
+    res.json(result);
+    return;
   };
 }

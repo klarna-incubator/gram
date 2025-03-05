@@ -45,8 +45,10 @@ export default async function setRoles(req: Request, res: Response) {
       res.json({ new_roles: user.roles });
     }
   } catch (error: any) {
-    if (error.message === "missing") return res.sendStatus(400);
-    if (error.message === "forbidden") return res.sendStatus(403);
+    if (error.message === "missing") res.sendStatus(400);
+    return;
+    if (error.message === "forbidden") res.sendStatus(403);
+    return;
     throw error;
   }
 }

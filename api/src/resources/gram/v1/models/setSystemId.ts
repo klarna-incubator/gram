@@ -27,5 +27,6 @@ export default (dal: DataAccessLayer) =>
     }
 
     const result = await dal.modelService.setSystemId(id, systemId);
-    return res.json({ result });
+    res.json({ result });
+    return;
   };
