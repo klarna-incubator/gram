@@ -179,7 +179,7 @@ export async function createApp(
 
   // Static routes and Frontend
   if (process.env.SERVE_FRONTEND) {
-    app.get("*", (_, res) =>
+    app.get("/{*splat}", (_, res) =>
       res.sendFile(path.resolve("frontend", "index.html"))
     );
   }
