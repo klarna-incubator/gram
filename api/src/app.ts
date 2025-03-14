@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/node";
 import express from "express";
 import log4js from "log4js";
 import path from "path";
+import cookieParser from 'cookie-parser';
 import { metricsMiddleware } from "./middlewares/metrics.js";
 import {
   authRequiredMiddleware,
@@ -50,7 +51,6 @@ export async function createApp(
 ): Promise<Express.Application> {
   // Start constructing the app.
   const app = express();
-
   // Sentry has to be set up before everything else.
   initSentry();
 
@@ -59,7 +59,7 @@ export async function createApp(
 
   // JSON middleware to automatically parse incoming requests
   app.use(express.json());
-  // app.use((req, res, next) => { cookieParser()(req, res, next); });
+  app.use(cookieParser() as unknown as express.RequestHandler);
   app.use(securityHeaders());
 
   const loggerMwOpts = {
