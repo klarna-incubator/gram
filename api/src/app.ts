@@ -6,7 +6,7 @@ import * as Sentry from "@sentry/node";
 import express from "express";
 import log4js from "log4js";
 import path from "path";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import { metricsMiddleware } from "./middlewares/metrics.js";
 import {
   authRequiredMiddleware,
