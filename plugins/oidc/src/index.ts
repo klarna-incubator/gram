@@ -140,8 +140,32 @@ export class OIDCIdentityProvider implements IdentityProvider {
       throw new Error("Request is undefined or null");
     }
 
-    if (!ctx.currentRequest.cookies["oidc-code"]) {
-      throw new Error("oidc-code cookie is not set");
+    // Check if cookies object exists
+    if (!ctx.currentRequest.cookies) {
+      log.error(
+        "Cookies object is undefined - cookie-parser middleware may not be configured"
+      );
+
+      // Try to get cookie from headers directly as fallback
+      const cookieHeader = ctx.currentRequest.headers?.cookie;
+      if (cookieHeader) {
+        const cookies = Object.fromEntries(
+          cookieHeader
+            .split(";")
+            .map((cookie) => cookie.trim().split("="))
+            .map(([key, value]) => [key, decodeURIComponent(value)])
+        );
+
+        if (cookies["oidc-code"]) {
+          ctx.currentRequest.cookies = cookies;
+        } else {
+          throw new Error("oidc-code cookie not found in headers");
+        }
+      } else {
+        throw new Error(
+          "No cookies found in request. Ensure cookie-parser middleware is configured."
+        );
+      }
     }
 
     const [ct, iv, authTag] =
