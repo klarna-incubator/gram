@@ -7,10 +7,28 @@ import {
   AccordionSummary,
   AccordionDetails,
   Badge,
+  Paper,
+  FormControl,
+  MenuItem,
+  Select,
+  InputLabel,
+  Chip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GROUP_BY } from "./ResourceTab";
+import {
+  useListMatchingQuery,
+  useCreateMatchingMutation,
+  useDeleteMatchingMutation,
+} from "../../../../api/gram/resource-matching";
+import { useModelID } from "../../hooks/useModelID";
+import { useGetModelQuery } from "../../../../api/gram/model";
+
+import { useSetSelected } from "../../hooks/useSetSelected";
+import { useDeselectAll } from "../../hooks/useSetMultipleSelected";
+import { useGetReviewQuery } from "../../../../api/gram/review";
+import { useSelector } from "react-redux";
 
 function capitalizeFirstLetter(string) {
   return string
@@ -19,60 +37,32 @@ function capitalizeFirstLetter(string) {
     .join(" ");
 }
 
-function groupResourceBy(resources, key) {
-  return Object.groupBy(resources, (resource) => {
-    return resource[key] || "Unknown";
-  });
-}
+function groupResourceBy(resources, groupBy, matchings) {
+  if (groupBy === GROUP_BY.TYPE.value || groupBy === GROUP_BY.SYSTEM_ID.value) {
+    return Object.groupBy(resources, (resource) => {
+      return resource[groupBy] || "Unknown";
+    });
+  }
 
-function ListItem({ resource }) {
-  return (
-    <Typography sx={{ wordBreak: "break-word" }} variant="body1">
-      <Typography component="span" sx={{ fontWeight: "bold" }}>
-        {resource.key}:{" "}
-      </Typography>
-      <Typography component="span" sx={{ fontSize: "0.95rem" }}>
-        {resource.value}
-      </Typography>
-    </Typography>
-  );
-}
+  if (groupBy === GROUP_BY.MATCHED.value) {
+    let matched = [];
+    let unmatched = [];
+    let ignored = [];
 
-function AttributeList({ attributes }) {
-  const [showAll, setShowAll] = useState(false);
-  const attributeList = Object.entries(attributes).map(([key, value]) => {
-    return <ListItem key={key} resource={{ key, value }} />;
-  });
-  return (
-    <>
-      {showAll ? attributeList : attributeList.slice(0, 2)}
-      <Typography
-        sx={{ pl: "1em", cursor: "pointer", textDecoration: "underline" }}
-        variant="body2"
-        onClick={() => setShowAll(!showAll)}
-      >
-        {showAll ? "See less" : "See more"}
-      </Typography>
-    </>
-  );
-}
-
-function StandardList({ resources }) {
-  return resources.map((resource, i) => (
-    <Accordion key={i} elevation={3}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>{resource.displayName}</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <ListItem resource={{ key: "Id", value: resource.id }} />
-        <ListItem resource={{ key: "Type", value: resource.type }} />
-        <ListItem resource={{ key: "System id", value: resource.systemId }} />
-        {resource.attributes && (
-          <AttributeList attributes={resource.attributes} />
-        )}
-      </AccordionDetails>
-    </Accordion>
-  ));
+    resources.forEach((resource) => {
+      const matching = matchings.find((m) => m.resourceId === resource.id);
+      if (matching) {
+        if (matching.componentId) {
+          matched.push(resource);
+        } else {
+          ignored.push(resource);
+        }
+      } else {
+        unmatched.push(resource);
+      }
+    });
+    return { matched, unmatched, ignored };
+  }
 }
 
 function reorderResourceKeys(keys, systemInScope, groupBy) {
@@ -90,7 +80,99 @@ function reorderResourceKeys(keys, systemInScope, groupBy) {
   return keys;
 }
 
-function GroupedList({ groupedResources, groupBy, systemInScope }) {
+function ListItem({ resource }) {
+  return (
+    <Typography sx={{ wordBreak: "break-word" }} variant="body1">
+      <Typography
+        component="span"
+        variant="subtitle2"
+        sx={{ fontWeight: "bold" }}
+      >
+        {capitalizeFirstLetter(resource.key)}:{" "}
+      </Typography>
+      <Typography component="span" variant="subtitle2">
+        {resource.value}
+      </Typography>
+    </Typography>
+  );
+}
+
+function AttributeList({ attributes }) {
+  const [showAll, setShowAll] = useState(false);
+  const attributeList = Object.entries(attributes).map(([key, value]) => {
+    return <ListItem key={key} resource={{ key, value }} />;
+  });
+  return (
+    <>
+      {showAll ? attributeList : attributeList.slice(0, 2)}
+      {attributeList.length > 2 && (
+        <Typography
+          sx={{
+            marginTop: "0.5em",
+            textAlign: "center",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          variant="body2"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "See less" : "See more"}
+        </Typography>
+      )}
+    </>
+  );
+}
+
+function ResourceListItem({ i, resource, matching }) {
+  const modelId = useModelID();
+  const { data: review } = useGetReviewQuery({
+    modelId,
+  });
+
+  return (
+    <Accordion key={i} elevation={10}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography>{resource.displayName}</Typography>
+      </AccordionSummary>
+      <AccordionDetails sx={{ padding: "1px" }}>
+        <Box sx={{ display: "flex", gap: "0.3em" }}>
+          <MatchResourceWithComponent
+            modelId={modelId}
+            resource={resource}
+            matching={matching}
+            modelReviewStatus={review?.status}
+          />
+        </Box>
+        <Paper elevation={24} sx={{ padding: "8px", marginTop: "5px" }}>
+          <ListItem resource={{ key: "Type", value: resource.type }} />
+          <ListItem resource={{ key: "System id", value: resource.systemId }} />
+          {resource.attributes && (
+            <AttributeList attributes={resource.attributes} />
+          )}
+        </Paper>
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
+function StandardList({ resources, model, resourceMatchings }) {
+  if (resources) {
+    return resources.map((resource, i) => {
+      const matching = resourceMatchings
+        ? resourceMatchings.find((rm) => rm.resourceId === resource.id)
+        : null;
+      return <ResourceListItem i={i} resource={resource} matching={matching} />;
+    });
+  }
+}
+
+function GroupedList({
+  groupedResources,
+  groupBy,
+  systemInScope,
+  model,
+  resourceMatchings,
+}) {
   const inScopeKeys = ["process", "datastore", systemInScope];
   const orderedKeys = reorderResourceKeys(
     Object.keys(groupedResources),
@@ -102,24 +184,43 @@ function GroupedList({ groupedResources, groupBy, systemInScope }) {
     return (
       <Accordion key={key}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {inScopeKeys.includes(key) && (
+          <Box sx={{ display: "flex", gap: "0.3em" }}>
             <Badge
+              badgeContent={groupedResources[key].length || "0"}
               sx={{
-                "& .MuiBadge-badge": {
-                  right: -35,
-                  top: 6,
+                alignItems: "center",
+                gap: "10px",
+                "& span": {
+                  position: "relative",
+                  transform: "scale(1)",
+                  backgroundColor: "dimgray",
                 },
               }}
-              color="primary"
-              badgeContent="in scope"
             >
               {capitalizeFirstLetter(key)}
             </Badge>
-          )}
-          {!inScopeKeys.includes(key) && capitalizeFirstLetter(key)}
+            {inScopeKeys.includes(key) && (
+              <Badge
+                sx={{
+                  alignItems: "center",
+                  gap: "10px",
+                  "& span": {
+                    position: "relative",
+                    transform: "scale(1)",
+                    backgroundColor: "dimgray",
+                  },
+                }}
+                badgeContent="scope"
+              ></Badge>
+            )}
+          </Box>
         </AccordionSummary>
-        <AccordionDetails>
-          <StandardList resources={groupedResources[key]} />
+        <AccordionDetails sx={{ padding: "0 1px" }}>
+          <StandardList
+            resources={groupedResources[key]}
+            model={model}
+            resourceMatchings={resourceMatchings}
+          />
         </AccordionDetails>
       </Accordion>
     );
@@ -127,13 +228,17 @@ function GroupedList({ groupedResources, groupBy, systemInScope }) {
 }
 
 export function ResourceList({
-  groupBy,
+  groupBy = null,
   isLoading,
   isError,
   resources,
   searchInput,
   systemInScope,
 }) {
+  const modelId = useModelID();
+  const { data: model } = useGetModelQuery(modelId);
+  const { data: resourceMatchings } = useListMatchingQuery(modelId);
+
   if (isLoading) {
     return (
       <Box
@@ -195,14 +300,162 @@ export function ResourceList({
 
   return (
     <Box sx={{ marginTop: "2em" }}>
-      {groupBy === null && <StandardList resources={resources} />}
-      {groupBy && (
+      {groupBy === null ? (
+        <StandardList
+          resources={resources}
+          model={model}
+          resourceMatchings={resourceMatchings}
+        />
+      ) : (
         <GroupedList
           groupBy={groupBy}
           systemInScope={systemInScope}
-          groupedResources={groupResourceBy(resources, groupBy)}
+          groupedResources={groupResourceBy(
+            resources,
+            groupBy,
+            resourceMatchings
+          )}
+          model={model}
+          resourceMatchings={resourceMatchings}
         />
       )}
     </Box>
+  );
+}
+
+function MatchResourceWithComponent({
+  modelId,
+  resource,
+  matching,
+  modelReviewStatus,
+}) {
+  const [createMatching] = useCreateMatchingMutation();
+  const [deleteMatching] = useDeleteMatchingMutation();
+  const setSelected = useSetSelected();
+  const deselectAll = useDeselectAll();
+  const [matchedComponent, setMatchedComponent] = useState(null);
+  const { components } = useSelector(({ model }) => ({
+    components: model.components,
+  }));
+
+  const filteredComponents = components.filter((c) => {
+    const typeMap = {
+      proc: "process",
+      ds: "datastore",
+      ee: "external entity",
+    };
+    return typeMap[c.type] === resource.type.toLowerCase();
+  });
+
+  useEffect(() => {
+    if (matching) {
+      const component = components.find((c) => c.id === matching.componentId);
+      setMatchedComponent(component);
+    }
+  }, [matching, components]);
+
+  function handleChange(e) {
+    if (e.target.value === "") {
+      createMatching({
+        modelId: modelId,
+        resourceId: resource.id,
+        componentId: null,
+      });
+
+      setMatchedComponent(null);
+    } else {
+      const selectedComponent = components.find((c) => c.id === e.target.value);
+      createMatching({
+        modelId: modelId,
+        resourceId: resource.id,
+        componentId: selectedComponent.id,
+      });
+      setMatchedComponent(selectedComponent);
+    }
+  }
+
+  function handleDelete(e) {
+    deleteMatching({
+      modelId,
+      resourceId: resource.id,
+      componentId: matchedComponent?.id || null,
+    });
+    setMatchedComponent(null);
+  }
+
+  function handleOnClick(e) {
+    deselectAll();
+    setSelected(matchedComponent.id, true);
+  }
+
+  if (modelReviewStatus === "approved") {
+    if (matchedComponent?.name) {
+      return (
+        <Box sx={{ marginLeft: "4px" }}>
+          <Chip label={matchedComponent.name} onClick={handleOnClick} />
+        </Box>
+      );
+    }
+
+    if (matching && matching.componentId === null) {
+      return (
+        <Box sx={{ marginLeft: ".5em" }}>
+          <Chip label="Ignored" />
+        </Box>
+      );
+    }
+
+    return (
+      <Box sx={{ marginY: ".5em", marginLeft: ".5em" }}>
+        <Typography variant="subtitle2">No component matched</Typography>
+      </Box>
+    );
+  }
+
+  if (matching && matching.componentId === null) {
+    return (
+      <Box sx={{ marginLeft: "4px" }}>
+        <Chip label="Ignored" onDelete={handleDelete} />
+      </Box>
+    );
+  }
+
+  if (matchedComponent) {
+    return (
+      <Box sx={{ marginLeft: "4px" }}>
+        <Chip
+          label={matchedComponent.name}
+          onDelete={handleDelete}
+          onClick={handleOnClick}
+        />
+      </Box>
+    );
+  }
+
+  return (
+    <FormControl fullWidth size="small">
+      <InputLabel id="match-component-select-label">
+        Match with a component
+      </InputLabel>
+      <Select
+        id="match-component-select-label"
+        label="Match with a component"
+        fullWidth
+        value={matchedComponent ? matchedComponent.id : ""}
+        onChange={handleChange}
+      >
+        {filteredComponents &&
+          filteredComponents.map((component, idx) => (
+            <MenuItem key={idx} value={component.id}>
+              {component.name}
+            </MenuItem>
+          ))}
+        ;
+        {!filteredComponents && (
+          <MenuItem value="">No components found</MenuItem>
+        )}
+        <MenuItem value={""}>Ignore this resource</MenuItem>
+      </Select>
+    </FormControl>
   );
 }

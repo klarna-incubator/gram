@@ -1,5 +1,4 @@
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import { Application } from "express";
 import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import { createSampleModel } from "../../../../test-util/model.js";
@@ -7,7 +6,7 @@ import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 import { sampleReviewer } from "../../../../test-util/sampleUser.js";
 
 describe("reviews.list", () => {
-  let app: Application;
+  let app: Express.Application;
   let dal: DataAccessLayer;
   let modelId: string;
   let token = "";

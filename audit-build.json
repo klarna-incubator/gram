@@ -1,4 +1,5 @@
 {
   "system_id": "gram",  
-  "artifact": "l-docker-secure-development-production.artifactory.klarna.net/secure-development/gram"
+  "artifact": "l-docker-secure-development-production.artifactory.klarna.net/secure-development/gram:$commitHash",
+  "build_command": "docker build -t $artifact ."
 }

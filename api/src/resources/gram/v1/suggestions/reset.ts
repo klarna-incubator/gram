@@ -20,7 +20,8 @@ export default function reset(dal: DataAccessLayer) {
 
     if (!validateUUID(modelId)) {
       res.status(400);
-      return res.json({ message: "Invalid modelID" });
+      res.json({ message: "Invalid modelID" });
+      return;
     }
 
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
@@ -31,6 +32,7 @@ export default function reset(dal: DataAccessLayer) {
     );
 
     if (!result) res.status(404);
-    return res.json({ result });
+    res.json({ result });
+    return;
   };
 }

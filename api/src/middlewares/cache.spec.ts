@@ -6,9 +6,9 @@ import cache from "./cache.js";
 describe("auth middleware", () => {
   let counter = 0;
   const app = express();
-  app.get("/cacheable", cache(), (req, res) =>
-    res.json({ success: ++counter })
-  );
+  app.get("/cacheable", cache(), (req, res) => {
+    res.json({ success: ++counter });
+  });
 
   it("should return 200 on cacheable endpoint", async () => {
     const res = await request(app).get("/cacheable");

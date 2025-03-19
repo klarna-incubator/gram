@@ -11,12 +11,15 @@ export interface AuthzMiddlewareOptions {
 interface AuthzMiddlewareFunction {
   authz: Authz;
   (req: GramRequest, resp: Response, next: NextFunction): void;
+
   is<Role>(
     role: Role
   ): (req: GramRequest, resp: Response, next: NextFunction) => void;
+
   all<Role>(
     ...roles: [Role]
   ): (req: GramRequest, resp: Response, next: NextFunction) => void;
+
   any<Role>(
     ...roles: [Role]
   ): (req: GramRequest, resp: Response, next: NextFunction) => void;

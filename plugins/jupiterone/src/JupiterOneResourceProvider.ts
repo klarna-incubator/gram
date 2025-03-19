@@ -32,7 +32,13 @@ function resultToDatastore(
     displayName: result.displayName,
     systemId: result.systemId,
     attributes: {
-      ...formatAttributes({ ...additionalAttributes, ...result }),
+      ...formatAttributes({
+        ...additionalAttributes,
+        dbType: result.dbType,
+        encrypted: result.encrypted,
+        arn: result.arn,
+        ...result,
+      }),
     },
   };
 }
@@ -116,6 +122,7 @@ export class JupiterOneResourceProvider implements ResourceProvider {
     account.name as accountName, d.accountId as accountId
       `
     );
+
     return datastores.map((r) => resultToDatastore(r));
   }
 }

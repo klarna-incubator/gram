@@ -24,6 +24,7 @@ export const api = createApi({
     "Links",
     "Validation",
     "Resources",
+    "ResourceMatchings",
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: `${BASE_URL}/api/v1/`,

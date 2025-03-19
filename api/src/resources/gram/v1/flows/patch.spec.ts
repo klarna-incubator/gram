@@ -89,7 +89,6 @@ describe("Flow.patch", () => {
         attributes: sampleAttributes(),
       });
 
-    console.log("res.body", JSON.stringify(res.body));
     expect(res.status).toBe(404);
   });
 });

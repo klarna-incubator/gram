@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.23.0](https://github.com/klarna/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
+
+### Bug Fixes
+
+- upgrade to express v5 ([5db6c65](https://github.com/klarna/gram/commit/5db6c657ba3876c672d41818a25b026dc9e54dbd))
+
+## [4.22.3](https://github.com/klarna/gram/compare/v4.22.2...v4.22.3) (2025-02-25)
+
+### Bug Fixes
+
+- :bug: fix matching when resource is matched in another model ([c1750f8](https://github.com/klarna/gram/commit/c1750f8202547dbdb9946cc0b778d308734be851))
+
+## [4.22.2](https://github.com/klarna/gram/compare/v4.22.1...v4.22.2) (2025-02-19)
+
+### Bug Fixes
+
+- :bug: fix sql queries for resource matching ([279286a](https://github.com/klarna/gram/commit/279286a1c08e6e11adae9df98e8563ebd67cc48e))
+
+## [4.22.1](https://github.com/klarna/gram/compare/v4.22.0...v4.22.1) (2025-02-19)
+
+**Note:** Version bump only for package @gram/core
+
+# [4.22.0](https://github.com/klarna/gram/compare/v4.21.3...v4.22.0) (2025-02-18)
+
+### Features
+
+- :sparkles: add resource matching api ([9d16059](https://github.com/klarna/gram/commit/9d160599b32b83649053110e6f2faeedb4ffab53))
+
 ## [4.21.3](https://github.com/klarna/gram/compare/v4.21.2...v4.21.3) (2025-01-07)
 
 **Note:** Version bump only for package @gram/core

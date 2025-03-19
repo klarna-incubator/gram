@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.23.0](https://github.com/klarna-incubator/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
+
+### Bug Fixes
+
+- :bug: fix dropdown in resource list ([9004068](https://github.com/klarna-incubator/gram/commit/900406892a86d26edd3f2fcc1dcc87028d13da9c))
+
+## [4.22.3](https://github.com/klarna-incubator/gram/compare/v4.22.2...v4.22.3) (2025-02-25)
+
+### Bug Fixes
+
+- :lipstick: prevent matching in ui when model is approved ([89f6bb1](https://github.com/klarna-incubator/gram/commit/89f6bb10d2d10a4e72f98a1720d9846213886ebb))
+
+## [4.22.2](https://github.com/klarna-incubator/gram/compare/v4.22.1...v4.22.2) (2025-02-19)
+
+**Note:** Version bump only for package @gram/app
+
+## [4.22.1](https://github.com/klarna-incubator/gram/compare/v4.22.0...v4.22.1) (2025-02-19)
+
+**Note:** Version bump only for package @gram/app
+
+# [4.22.0](https://github.com/klarna-incubator/gram/compare/v4.21.3...v4.22.0) (2025-02-18)
+
+### Bug Fixes
+
+- :lipstick: make left panel tabs scrollable ([2d31748](https://github.com/klarna-incubator/gram/commit/2d3174857d1631744bd9480de9435a588b1f9f29))
+
+### Features
+
+- :sparkles: add resource matching to component and resource tab ([9f43ffb](https://github.com/klarna-incubator/gram/commit/9f43ffbcfafa92994eba240776e9ad4f3ceea793))
+
 ## [4.21.3](https://github.com/klarna-incubator/gram/compare/v4.21.2...v4.21.3) (2025-01-07)
 
 ### Bug Fixes

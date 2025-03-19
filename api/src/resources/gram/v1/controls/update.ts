@@ -12,6 +12,7 @@ export function update(dal: DataAccessLayer) {
     const { modelId, id } = req.params;
     await req.authz.hasPermissionsForModelId(modelId, Permission.Write);
     const result = await dal.controlService.update(modelId, id, req.body);
-    return res.json({ result });
+    res.json({ result });
+    return;
   };
 }

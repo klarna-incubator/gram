@@ -17,7 +17,8 @@ export const getAuthToken =
       !req.query.provider ||
       IdentityProviderRegistry.has(req.query.provider as string) === false
     ) {
-      return res.sendStatus(400);
+      res.sendStatus(400);
+      return;
     }
 
     const provider = req.query.provider as string;
@@ -42,10 +43,11 @@ export const getAuthToken =
         log.warn(
           `Login successful but no user found for ${identity.identity.sub}`
         );
-        return res.status(403).json({
+        res.status(403).json({
           status: "error",
           message: `No user found for ${identity.identity.sub}`,
         });
+        return;
       }
 
       const roles = await dal.authzProvider.getRolesForUser(
@@ -70,11 +72,15 @@ export const getAuthToken =
         teams,
       };
       const jwtToken = await jwt.generateToken({ ...token });
-      return res.json({ status: "ok", token: jwtToken });
+      res.json({ status: "ok", token: jwtToken });
+      return;
     }
 
     if (!identity || identity?.status === "error") {
       res.status(400);
+      return;
     }
-    return res.json(identity);
+
+    res.json(identity);
+    return;
   };

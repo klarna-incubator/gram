@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.23.0](https://github.com/klarna-incubator/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
+
+### Bug Fixes
+
+- :bug: fix dropdown in resource list ([9004068](https://github.com/klarna-incubator/gram/commit/900406892a86d26edd3f2fcc1dcc87028d13da9c))
+- :bug: fix test for resource-matching api ([dba0bf1](https://github.com/klarna-incubator/gram/commit/dba0bf1becf508a73c858537ed84490b385d7d57))
+- enable /metrics route again ([5c93b0d](https://github.com/klarna-incubator/gram/commit/5c93b0de6e98569898c390e8bd808fcfc8f69d3d))
+- new express-v5 syntax for resource-matching routes ([13a9782](https://github.com/klarna-incubator/gram/commit/13a97822ea2e4a02de2e46aa38e93e28bd0f9f67))
+- remove now unneeded errorWrap function. Ensure all routes return void as express v5 expects this ([db76cdd](https://github.com/klarna-incubator/gram/commit/db76cdda218d1ec801ebfab31e4693f789c335c5))
+- remove unused package ([7ae1ee8](https://github.com/klarna-incubator/gram/commit/7ae1ee8357174ec7bd22a9e300bdfc04551c1bb6))
+- upgrade to express v5 ([5db6c65](https://github.com/klarna-incubator/gram/commit/5db6c657ba3876c672d41818a25b026dc9e54dbd))
+- wrong paths for auth routes ([60f1c64](https://github.com/klarna-incubator/gram/commit/60f1c64859dc7200b64d43ec7072cb17f8c34fa3))
+
+### Features
+
+- add new metrics for tracking active websockets ([ff4de73](https://github.com/klarna-incubator/gram/commit/ff4de73fc1cd270254cb40eb7fa141caebf12c29))
+
+## [4.22.3](https://github.com/klarna-incubator/gram/compare/v4.22.2...v4.22.3) (2025-02-25)
+
+### Bug Fixes
+
+- :bug: fix matching when resource is matched in another model ([c1750f8](https://github.com/klarna-incubator/gram/commit/c1750f8202547dbdb9946cc0b778d308734be851))
+- :lipstick: prevent matching in ui when model is approved ([89f6bb1](https://github.com/klarna-incubator/gram/commit/89f6bb10d2d10a4e72f98a1720d9846213886ebb))
+
+## [4.22.2](https://github.com/klarna-incubator/gram/compare/v4.22.1...v4.22.2) (2025-02-19)
+
+### Bug Fixes
+
+- :bug: fix sql queries for resource matching ([9f96e33](https://github.com/klarna-incubator/gram/commit/9f96e3349850bc8bd050b2a041538fc2577752bd))
+- :bug: fix sql queries for resource matching ([279286a](https://github.com/klarna-incubator/gram/commit/279286a1c08e6e11adae9df98e8563ebd67cc48e))
+
+## [4.22.1](https://github.com/klarna-incubator/gram/compare/v4.22.0...v4.22.1) (2025-02-19)
+
+### Bug Fixes
+
+- :bug: fix validation on resource-matching api routes ([905bfc6](https://github.com/klarna-incubator/gram/commit/905bfc62d4f122ba519527f056983b3fc7b84a97))
+
+# [4.22.0](https://github.com/klarna-incubator/gram/compare/v4.21.3...v4.22.0) (2025-02-18)
+
+### Bug Fixes
+
+- :lipstick: make left panel tabs scrollable ([2d31748](https://github.com/klarna-incubator/gram/commit/2d3174857d1631744bd9480de9435a588b1f9f29))
+
+### Features
+
+- :sparkles: add resource matching api ([9d16059](https://github.com/klarna-incubator/gram/commit/9d160599b32b83649053110e6f2faeedb4ffab53))
+- :sparkles: add resource matching to component and resource tab ([9f43ffb](https://github.com/klarna-incubator/gram/commit/9f43ffbcfafa92994eba240776e9ad4f3ceea793))
+
 ## [4.21.3](https://github.com/klarna-incubator/gram/compare/v4.21.2...v4.21.3) (2025-01-07)
 
 ### Bug Fixes

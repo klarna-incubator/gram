@@ -9,6 +9,7 @@ import { useGetModelQuery } from "../../../../api/gram/model";
 export const GROUP_BY = {
   TYPE: { label: "Type", value: "type" },
   SYSTEM_ID: { label: "System Id", value: "systemId" },
+  MATCHED: { label: "Matched", value: "matched" },
 };
 
 export function ResourceTab() {
@@ -26,7 +27,7 @@ export function ResourceTab() {
       sx={{
         overflow: "auto",
         height: "100%",
-        padding: "1em",
+        padding: "0.5em",
       }}
     >
       {!isLoading && !isError && resources?.length > 0 && (

@@ -20,6 +20,7 @@ export function listSystemCompliance(dal: DataAccessLayer) {
       pagesize,
       page
     );
-    return res.json(report);
+    res.json(report);
+    return;
   };
 }

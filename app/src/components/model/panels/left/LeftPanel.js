@@ -1,4 +1,4 @@
-import { AppBar, Grow, Tab, Tabs } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -83,32 +83,29 @@ export function LeftPanel() {
     >
       <ToggleLeftPanelButton />
 
-      <AppBar position="static">
-        <Grow in={true}>
-          <Tabs
-            value={tabHck}
-            onChange={(_, v) => setTab(v)}
-            scrollButtons="auto"
-            textColor="inherit"
-            variant="fullWidth"
-            sx={{
-              "& .MuiTabs-indicator": {
-                backgroundColor: (theme) => theme.palette.common.gramPink,
-              },
-            }}
-          >
-            <Tab disableRipple label="SYSTEM" value={TAB.SYSTEM} />
-            <Tab disableRipple label="ACTION ITEMS" value={TAB.ACTION_ITEMS} />
-            {isComponent && (
-              <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
-            )}
-            {isDataFlow && (
-              <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
-            )}
-            <Tab disableRipple label="RESOURCES" value={TAB.RESOURCES} />
-          </Tabs>
-        </Grow>
-      </AppBar>
+      <Tabs
+        value={tabHck}
+        onChange={(_, v) => setTab(v)}
+        textColor="inherit"
+        variant="scrollable"
+        scrollButtons="auto"
+        selectionFollowsFocus
+        sx={{
+          "& .MuiTabs-indicator": {
+            backgroundColor: (theme) => theme.palette.common.gramPink,
+          },
+        }}
+      >
+        <Tab disableRipple label="SYSTEM" value={TAB.SYSTEM} />
+        <Tab disableRipple label="ACTION ITEMS" value={TAB.ACTION_ITEMS} />
+        {isComponent && (
+          <Tab disableRipple label="COMPONENT" value={TAB.COMPONENT} />
+        )}
+        {isDataFlow && (
+          <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
+        )}
+        <Tab disableRipple label="RESOURCES" value={TAB.RESOURCES} />
+      </Tabs>
 
       <TabPanel value={tab} index={TAB.SYSTEM}>
         <SystemTab />

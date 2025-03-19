@@ -13,19 +13,21 @@ export default (dal: DataAccessLayer) =>
 
     if (!modelId) {
       const reviewers = await dal.reviewerHandler.getReviewers(ctx);
-      return res.json({ reviewers });
-    } else {
-      const model = await dal.modelService.getById(modelId as string);
-
-      if (!model) {
-        return res.status(404);
-      }
-
-      const reviewers = await dal.reviewerHandler.getReviewersForModel(
-        ctx,
-        model
-      );
-
-      return res.json({ reviewers });
+      res.json({ reviewers });
+      return;
     }
+
+    const model = await dal.modelService.getById(modelId as string);
+
+    if (!model) {
+      res.status(404);
+      return;
+    }
+
+    const reviewers = await dal.reviewerHandler.getReviewersForModel(
+      ctx,
+      model
+    );
+
+    res.json({ reviewers });
   };

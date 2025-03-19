@@ -9,6 +9,7 @@ import { Request, Response } from "express";
 export default (dal: DataAccessLayer) => {
   return async (req: Request, res: Response) => {
     const templates = await dal.modelService.getTemplates();
-    return res.json({ templates });
+    res.json({ templates });
+    return;
   };
 };

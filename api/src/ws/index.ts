@@ -5,6 +5,7 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import log4js from "log4js";
 import { ModelWebsocketServer } from "./model.js";
 import { config } from "@gram/core/dist/config/index.js";
+import { initWebsocketMetrics } from "./metrics.js";
 
 const log = log4js.getLogger("wss");
 const wssRegistry = new Map<string, ModelWebsocketServer>();
@@ -152,6 +153,13 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
     server.tellClientsToRefetch("flows", { modelId, dataFlowId });
   });
 
+  dal.resourceMatchingService.on("updated-for", ({ modelId }) => {
+    const server = wssRegistry.get(modelId);
+    log.debug(`resource-matching was updated for ${modelId}`);
+    if (!server) return;
+    server.tellClientsToRefetch("resource-matchings", { modelId });
+  });
+
   // Clean up leftover websocket servers
   const cleanupInterval = setInterval(() => {
     log.debug(`Number active channels: ${wssRegistry.size}`);
@@ -169,6 +177,8 @@ export function attachWebsocketServer(server: Server, dal: DataAccessLayer) {
       }
     });
   }, 30000);
+
+  initWebsocketMetrics(wssRegistry);
 
   return { wssRegistry, cleanupInterval };
 }

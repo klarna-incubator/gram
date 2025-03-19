@@ -9,29 +9,32 @@ export function validateModel(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const modelId = req.params.id;
     if (dal.validationEngine.rules.length === 0) {
-      return res.json({
+      res.json({
         id: modelId,
         total: 0,
         results: [],
         message: "No validation rules registered",
       });
+      return;
     }
 
     const validationResults = await dal.validationEngine.getResults(modelId);
 
     if (validationResults.length === 0) {
-      return res.json({
+      res.json({
         id: modelId,
         total: 0,
         results: [],
         message: `No rule applies to model ${modelId}`,
       });
+      return;
     }
 
-    return res.json({
+    res.json({
       id: modelId,
       total: validationResults.length,
       results: validationResults,
     });
+    return;
   };
 }
