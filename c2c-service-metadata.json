@@ -55,7 +55,7 @@
     "public_loadbalancer": false,
     "egress": {
       "allowed_destinations": [
-        { "destination": "jupiter-one-proxy-eu.production.c2c.klarna.net", "ports": [443] },
+        { "destination": ".eu.jupiterone.io", "ports": [443] },
         { "destination": "o24547.ingest.sentry.io", "ports": [443] },        
         { "destination": "sso.klarna.net", "ports": [443] },
         { "destination": "klarna-sandbox-343.atlassian.net", "ports": [443] },
