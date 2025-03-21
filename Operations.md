@@ -48,9 +48,8 @@ Ensure you are authenticated via `aws-login-tool`.
 ```sh
 # Login to production (it's how we access C2C)
 # eval $(aws-login-tool login -d 14400 -r iam-sync/gram/gram.IdP_admin -a 715798949107 -o)
-grond auth login
 # To get the secrets from staging, you can use the following command:
-grond secrets get-by-path -n gram -p eu -s staging --path / --with-decryption
+kep c2c secret list --service-name gram --partition eu --stage staging
 ```
 
 ### Redeploying or rolling back
