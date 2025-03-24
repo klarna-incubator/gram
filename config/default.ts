@@ -264,8 +264,8 @@ export const defaultConfig: GramConfiguration = {
     const j1ClientFactory = () =>
       createJ1Client(
         new EnvSecret("J1_KEY"),
-        "45377d01-965c-4c5c-a3c1-e6ac4f80cc48",
-        "https://jupiter-one-proxy-eu.production.c2c.klarna.net"
+        process.env["J1_ACCOUNT_ID"] as string,
+        process.env["J1_BASE_URL"] as string
       );
 
     const j1TeamProvider = new JupiterOneTeamProvider(j1ClientFactory);
