@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@gram/core": "^4.9.4",
-    "@jupiterone/jupiterone-client-nodejs": "^1.1.0",
+    "@jupiterone/jupiterone-client-nodejs": "^2.1.1",
     "node-fetch": "^3.3.2"
   }
 }
