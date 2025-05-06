@@ -42,7 +42,7 @@ export class JupiterOneTeamProvider implements TeamProvider, SearchProvider {
     const j1Client = await this.j1ClientFactory();
     const query = `FIND Team WITH inactive != 'Yes' 
       That has Person
-      WHERE Person.mail = '${sanitizeJ1QueryParam(userId)}'`;
+      WHERE Person.email = '${sanitizeJ1QueryParam(userId)}'`;
 
     const result = await j1Client.queryV1(query);
     return result.map((team: any) => {
