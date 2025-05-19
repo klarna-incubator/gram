@@ -60,7 +60,7 @@ tasks:
       - push:
           branches:
             - develop
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:2.202504280956
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202505141318
     var:
       PARTITION: eu
       STAGE: staging
@@ -86,7 +86,7 @@ tasks:
       - push:
           branches:
             - main
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:2.202504280956
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202505141318
     var:
       PARTITION: eu
       STAGE: production
