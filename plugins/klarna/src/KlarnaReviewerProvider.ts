@@ -163,7 +163,7 @@ export class KlarnaReviewerProvider extends LDAPGroupBasedReviewerProvider {
         return true;
       })
       // Add special case for Lucas Berner as he is in SecDev but should not be assigned reviews.
-      .filter((r) => r.sub !== "lucas.berner@klarna.com")      
+      // .filter((r) => r.sub !== "lucas.berner@klarna.com")      
       .map((r) => this.overrideCalendar({ ...r, mail: r.sub }));
 
     if (newReviewers.length > 0) {
