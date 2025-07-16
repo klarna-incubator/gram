@@ -34,11 +34,13 @@
     "use-image": "^1.0.6"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-modules-commonjs": "^7.0.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "@testing-library/react": "^9.5.0",
     "@testing-library/react-hooks": "^3.4.1",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "jest-canvas-mock": "^2.4.0",
     "jest-each": "^27.0.6",
     "react-scripts": "^5.0.1",
