@@ -1,0 +1,23 @@
+{
+  "name": "@gram/threatsaurus",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "Threatsaurus suggestions for Gram",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "*",
+    "node-fetch": "^3.3.2"
+  },
+  "private": true
+}

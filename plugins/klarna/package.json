@@ -1,0 +1,37 @@
+{
+  "name": "@gram/klarna",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "Custom Gram logic for Klarna",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rimraf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "*",
+    "@gram/jupiterone": "^4.9.4",
+    "@gram/ldap": "^4.0.2",
+    "@sentry/node": "^7.94.1",
+    "aws-sdk": "^2.1465.0",
+    "hpagent": "^1.2.0",
+    "jira-client": "^8.2.2",
+    "jsprim": "^2.0.2",
+    "ldapts": "^4.2.6",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
+    "postman-request": "^2.88.1-postman.33",
+    "precond": "^0.2.3"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/jira-client": "^7.1.7"
+  }
+}

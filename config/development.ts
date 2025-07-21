@@ -1,6 +1,11 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
 import { defaultConfig } from "./default.js";
+import { createJiraActionItemExporter } from "./jira.js";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus/dist/index.js";
+import log4js from "log4js";
+
+const log = log4js.getLogger("DevelopmentConfig");
 
 export const developmentConfig: GramConfiguration = {
   ...defaultConfig,
@@ -9,7 +14,7 @@ export const developmentConfig: GramConfiguration = {
     ttl: 86400,
     secret: {
       auth: new ExposedSecret(
-        "6bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f"
+        "7bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f"
       ),
     },
   },
@@ -30,8 +35,8 @@ export const developmentConfig: GramConfiguration = {
         port: new ExposedSecret("25"),
         password: new ExposedSecret(""),
         user: new ExposedSecret(""),
-        // overrideRecipient: "your-email"
-        // senderName: "[Development] Gram",
+        overrideRecipient: "secure-development@klarna.com",
+        senderName: "[Development] Gram",
       },
     },
   },
@@ -49,5 +54,32 @@ export const developmentConfig: GramConfiguration = {
       },
       simplified: true,
     },
+  },
+
+  async bootstrapProviders(dal) {
+    const providers = await defaultConfig.bootstrapProviders(dal);
+
+    if (process.env.JIRA_USER && process.env.JIRA_API_TOKEN) {
+      const jiraActionItemExporter = createJiraActionItemExporter(
+        this,
+        dal,
+        "sandbox"
+      );
+      providers.actionItemExporters = [jiraActionItemExporter];
+    } else {
+      log.debug("JIRA is not configured. Skipping");
+    }
+
+    if (process.env.THREATSAURUS_URL) {
+      const threatsaurus = new ThreatsaurusSuggestionSource(
+        "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+      );
+
+      providers.suggestionSources?.push(threatsaurus);
+    } else {
+      log.debug("Threatsaurus is not configured. Skipping");
+    }
+
+    return providers;
   },
 };

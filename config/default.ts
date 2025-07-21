@@ -2,6 +2,7 @@ import { AWSAssets, AWSComponentClasses } from "@gram/aws";
 import { AzureAssets, AzureComponentClasses } from "@gram/azure";
 import { CNCFAssets, CNCFComponentClasses } from "@gram/cncf";
 import { Reviewer } from "@gram/core/dist/auth/models/Reviewer.js";
+import { Role } from "@gram/core/dist/auth/models/Role.js";
 import { User } from "@gram/core/dist/auth/models/User.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
 import type {
@@ -9,25 +10,48 @@ import type {
   Providers,
 } from "@gram/core/dist/config/GramConfiguration.js";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import System from "@gram/core/dist/data/systems/System.js";
+import {
+  JupiterOneDomainSystemPropertyProvider,
+  JupiterOneSystemPropertyProvider,
+  JupiterOneTeamProvider,
+  JupiterOneResourceProvider,
+  createJ1Client,
+} from "@gram/jupiterone";
+import {
+  KlarnaAssets,
+  KlarnaComponentClasses,
+  KlarnaCronJob,
+  KlarnaReviewerProvider,
+  KlarnaSystemProvider,
+} from "@gram/klarna";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
 import {
-  MagicLinkEmail,
-  MagicLinkIdentityProvider,
-  MagicLinkMigrations,
-} from "@gram/magiclink";
-import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
-import { ThreatLibSuggestionProvider } from "@gram/threatlib";
-import defaultNotifications from "./notifications/index.js";
-import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider.js";
-import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider.js";
-import { StaticSystemProvider } from "./providers/static/StaticSystemProvider.js";
-import { StaticUserProvider } from "./providers/static/StaticUserProvider.js";
-import { Team } from "@gram/core/dist/auth/models/Team.js";
-import { StaticTeamProvider } from "./providers/static/StaticTeamProvider.js";
+  LDAPBasicAuthIdentityProvider,
+  LDAPGroupBasedAuthzProvider,
+  LDAPUserProvider,
+} from "@gram/ldap";
+import { LDAPClientSettings } from "@gram/ldap/dist/LDAPClientSettings.js";
+import { OIDCIdentityProvider } from "@gram/oidc";
 import { StrideSuggestionProvider } from "@gram/stride";
+import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
+import { SystemRegistrySystemProvider } from "@gram/klarna";
+import defaultNotifications from "./notifications/index.js";
+
+export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
+export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
+
+export const ldapSettings: LDAPClientSettings = {
+  clientOptions: {
+    url: "ldaps://ldap.klarna.net",
+  },
+  bindOptions: {
+    bindDN: new EnvSecret("LDAP_BIND_DN"),
+    bindCredentials: new EnvSecret("LDAP_BIND_CREDENTIALS"),
+  },
+};
 import { basicValidationRules } from "./providers/static/BasicValidationRules.js";
-import { StaticResourceProvider } from "./providers/static/StaticResourceProvider.js";
+import { workshopValidationRules } from "./providers/static/WorkshopValidationRules.js";
 
 export const defaultConfig: GramConfiguration = {
   appPort: 8080,
@@ -47,12 +71,9 @@ export const defaultConfig: GramConfiguration = {
     password: new EnvSecret("POSTGRES_PASSWORD"),
     database: new EnvSecret("POSTGRES_DATABASE"),
     port: new EnvSecret("POSTGRES_PORT"),
-    ssl:
-      process.env.POSTGRES_DISABLE_SSL === undefined
-        ? {
-            rejectUnauthorized: true, //ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii")
-          }
-        : false,
+    ssl: {
+      rejectUnauthorized: false, //ca: fs.readFileSync("/opt/rds-ca-2019-root.pem", "ascii")
+    },
   },
 
   notifications: {
@@ -83,8 +104,8 @@ export const defaultConfig: GramConfiguration = {
 
   allowedSrc: {
     img: ["https:"],
-    connect: [],
-    frameAncestors: [],
+    connect: ["o24547.ingest.sentry.io"],
+    frameAncestors: ["https://*.klarna.net", "http://localhost:*"],
   },
 
   menu: [
@@ -92,15 +113,27 @@ export const defaultConfig: GramConfiguration = {
       name: "Github",
       path: "https://github.com/klarna-incubator/gram",
     },
+    {
+      name: "Feedback",
+      path: "https://docs.google.com/forms/d/e/1FAIpQLSfVTLCR_VHTzIhDZ8MRFLpfm58LNlf0zICS2brYMOok7LrURA/viewform?usp=sf_link",
+    },
+    {
+      name: "Docs",
+      path: "https://wiki.klarna.net/wiki/Secure_Development/Threat_Modeling_-_Threat_Modeling_Process",
+    },
+    {
+      name: "Support",
+      path: "https://klarna.slack.com/archives/C04RMEJ8VFD",
+    },
   ],
 
   contact: {
-    name: "Security Team",
-    email: undefined,
-    slackUrl: undefined,
+    name: "Secure Development Team",
+    email: "secure-development@klarna.com",
+    slackUrl: "https://klarna.enterprise.slack.com/archives/C01FZM386J1",
   },
 
-  additionalMigrations: [MagicLinkMigrations],
+  additionalMigrations: [],
 
   attributes: {
     flow: [
@@ -134,6 +167,8 @@ export const defaultConfig: GramConfiguration = {
         defaultValue: [],
         label: "Authentication",
         options: [
+          "Bouncer",
+          "System User",
           "Basic Auth",
           "Password",
           "JWT",
@@ -172,130 +207,169 @@ export const defaultConfig: GramConfiguration = {
   bootstrapProviders: async function (
     dal: DataAccessLayer
   ): Promise<Providers> {
-    const pluginPool = await dal.pluginPool("magic-link");
-    const magicLink = new MagicLinkIdentityProvider(dal, pluginPool);
+    // process.env.GLOBAL_AGENT_HTTPS_PROXY = process.env.HTTPS_PROXY;
+    // (global as any).GLOBAL_AGENT.HTTPS_PROXY = process.env.HTTPS_PROXY;
+    //   global as any
+    // ).GLOBAL_AGENT.HTTP_PROXY = process.env.HTTPS_PROXY;
 
-    const sampleUsers: User[] = [
-      {
-        name: "User",
-        sub: "user@localhost", // Must be the same as sub provided by IdentityProvider for authz to work
-        mail: "user@localhost",
-      },
-      {
-        name: "Reviewer",
-        sub: "reviewer@localhost",
-        mail: "reviewer@localhost",
-      },
-      {
-        name: "Admin",
-        sub: "admin@localhost",
-        mail: "admin@localhost",
-      },
-    ];
+    const oidc = new OIDCIdentityProvider(
+      (await new EnvSecret("OIDC_CLIENT_DISCOVER_URL").getValue()) as string,
+      new EnvSecret("OIDC_CLIENT_ID"),
+      new EnvSecret("OIDC_CLIENT_SECRET"),
+      new EnvSecret("OIDC_SESSION_SECRET"),
+      "email",
+      "okta"
+    );
 
-    const sampleReviewers: Reviewer[] = [
-      {
-        name: "Reviewer",
-        sub: "reviewer@localhost",
-        mail: "reviewer@localhost",
-        recommended: false,
+    const ldap = new LDAPBasicAuthIdentityProvider(
+      ldapSettings,
+      (name: string) => `uid=${name},ou=People,dc=internal,dc=machines`,
+      (username: string) => `${username}@klarna.com`
+    );
+
+    const ldapAuthz = new LDAPGroupBasedAuthzProvider(dal, {
+      ldapSettings,
+      groupAttribute: "memberOfGroupId",
+      groupToRoleMap: new Map([
+        ["access.1288598.stag.admins", Role.Admin],
+        ["domain.security.leads", Role.Admin],
+        ["access.1288598.stag.reviewers", Role.Reviewer],
+        ["security-champions", Role.Reviewer],
+        ["access.1288598.stag.users", Role.User],
+        ["access.1288598.stag.sso-prod", Role.User],
+      ]),
+      searchBase: LDAPUserSearchBase,
+      searchFilter: (sub: string) => {
+        return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
       },
-      {
-        name: "Admin",
-        sub: "admin@localhost",
-        mail: "admin@localhost",
-        recommended: false,
+    });
+
+    const ldapUserProvider = new LDAPUserProvider({
+      ldapSettings,
+      searchBase: LDAPUserSearchBase,
+      searchFilter: (sub: string) => {
+        return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
       },
-    ];
-
-    const fallbackReviewer: Reviewer = {
-      name: "Security Team",
-      recommended: true,
-      sub: "security-team@localhost",
-      mail: "security-team@localhost",
-      slackUrl: "",
-    };
-
-    const sampleTeams: Team[] = [
-      {
-        id: "frontend",
-        name: "Frontend Team",
-        email: "frontend@localhost",
+      attributes: ["displayName", "mail"],
+      attributesToUser: async (ldapUser) => {
+        const user: User = {
+          sub: ldapUser["mail"].toString(),
+          mail: ldapUser["mail"].toString(),
+          name: ldapUser["displayName"].toString(),
+        };
+        return user;
       },
+    });
+
+    const j1ClientFactory = () =>
+      createJ1Client(
+        new EnvSecret("J1_KEY"),
+        process.env["J1_ACCOUNT_ID"] as string,
+        process.env["J1_BASE_URL"] as string
+      );
+
+    const j1TeamProvider = new JupiterOneTeamProvider(j1ClientFactory);
+    const registrySystemProvider = new SystemRegistrySystemProvider(
+      new EnvSecret("SYSTEM_REGISTRY_USER"),
+      new EnvSecret("SYSTEM_REGISTRY_PASSWORD")
+    );
+    const j1SystemProvider = new KlarnaSystemProvider(
+      registrySystemProvider,
+      j1ClientFactory
+    );
+    const j1SysPropProvider = new JupiterOneSystemPropertyProvider(
+      j1ClientFactory
+    );
+    const j1DomainProvider = new JupiterOneDomainSystemPropertyProvider(
+      j1ClientFactory
+    );
+    const j1ResourceProvider = new JupiterOneResourceProvider(j1ClientFactory);
+
+    const reviewerProvider = new KlarnaReviewerProvider(
+      dal,
+      j1SystemProvider,
+      j1SysPropProvider,
       {
-        id: "backend",
-        name: "Backend Team",
-        email: "backend@localhost",
-      },
-    ];
+        groupLookup: {
+          searchBase: LDAPUserSearchBase,
+          groupFilters: [
+            "(&(memberOfGroupId=access.secure-development)(kreditorEnabledUser=TRUE))",
+            "(&(memberOfGroupId=domain.security.leads)(kreditorEnabledUser=TRUE))",
+            process.env["NODE_ENV"] == "production"
+              ? "(&(memberOfGroupId=access.1288598.prod.reviewers)(kreditorEnabledUser=TRUE))"
+              : "(&(memberOfGroupId=access.1288598.stag.reviewers)(kreditorEnabledUser=TRUE))",
+            "(&(memberOfGroupId=security-champions)(kreditorEnabledUser=TRUE))",
+          ],
+          attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
+          attributesToReviewer: async (ldapUser: any) => {
+            const user: Reviewer = {
+              sub: ldapUser["mail"].toString(),
+              mail: ldapUser["mail"].toString(),
+              name: ldapUser["displayName"].toString(),
+              recommended: false,
+            };
+            return user;
+          },
+        },
+        reviewerLookup: {
+          searchBase: LDAPUserSearchBase,
+          searchFilter: (sub: string) => {
+            return `(&(mail=${sub})(kreditorEnabledUser=TRUE))`;
+          },
+          attributes: ["displayName", "mail", "klarnaAccountabilityOU"],
+          attributesToReviewer: async (ldapUser: any) => {
+            const user: Reviewer = {
+              sub: ldapUser["mail"].toString(),
+              mail: ldapUser["mail"].toString(),
+              name: ldapUser["displayName"].toString(),
+              recommended: false,
+            };
+            return user;
+          },
+        },
+        ldapSettings,
+      }
+    );
 
-    const teamMap: Map<string, string[]> = new Map([
-      ["user@localhost", ["frontend"]],
-      ["reviewer@localhost", ["backend"]],
-      ["admin@localhost", ["backend", "frontend"]],
-    ]);
+    const threatsaurus = new ThreatsaurusSuggestionSource(
+      process.env["THREATSAURUS_URL"] as string
+    );
 
-    const sampleSystems: System[] = [
-      new System(
-        "web",
-        "Website",
-        "Website",
-        [sampleTeams[0]],
-        "The main website of the org"
-      ),
-      new System(
-        "order-api",
-        "Order API",
-        "Order API",
-        [sampleTeams[1]],
-        "Backend API for receiving orders"
-      ),
-    ];
-
-    const systemProvider = new StaticSystemProvider(sampleSystems);
-    const teamProvider = new StaticTeamProvider(sampleTeams, teamMap);
+    new KlarnaCronJob(dal, reviewerProvider);
 
     return {
       assetFolders: [
+        KlarnaAssets,
         AWSAssets,
+        SVGPornAssets,
         AzureAssets,
         CNCFAssets,
         KubernetesAssets,
-        SVGPornAssets,
       ],
       componentClasses: [
+        ...KlarnaComponentClasses,
         ...AWSComponentClasses,
+        ...SVGPornComponentClasses,
         ...AzureComponentClasses,
         ...CNCFComponentClasses,
         ...KubernetesComponentClasses,
-        ...SVGPornComponentClasses,
       ],
-      identityProviders: [magicLink],
-      notificationTemplates: [MagicLinkEmail(), ...defaultNotifications],
-      reviewerProvider: new StaticReviewerProvider(
-        sampleReviewers,
-        fallbackReviewer
-      ),
-      authzProvider: new StaticAuthzProvider(
-        dal,
-        [sampleUsers[0].sub],
-        [sampleUsers[1].sub],
-        [sampleUsers[2].sub]
-      ),
-      userProvider: new StaticUserProvider(sampleUsers),
-      systemProvider: systemProvider,
-      suggestionSources: [
-        new ThreatLibSuggestionProvider(),
-        new StrideSuggestionProvider(),
-      ],
-      teamProvider: teamProvider,
+      identityProviders: [oidc, ldap],
+      notificationTemplates: [...defaultNotifications],
+      reviewerProvider,
+      systemProvider: j1SystemProvider,
+      systemPropertyProviders: [j1SysPropProvider, j1DomainProvider],
+      authzProvider: ldapAuthz,
+      userProvider: ldapUserProvider,
+      teamProvider: j1TeamProvider,
+      suggestionSources: [threatsaurus, new StrideSuggestionProvider()],
       searchProviders: [
-        systemProvider, // Without a system search provider, certain features will not work
-        teamProvider, // completely optional
+        j1SystemProvider, // Without a system search provider, certain features will not work
+        j1TeamProvider, // completely optional
         dal.modelService,
       ],
-      validationSources: [basicValidationRules],
-      resourceProviders: [new StaticResourceProvider()],
+      validationSources: [basicValidationRules, workshopValidationRules],
+      resourceProviders: [j1ResourceProvider],
     };
   },
 };

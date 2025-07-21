@@ -1,15 +1,10 @@
-# FROM node:16-alpine as builder
-
-# WORKDIR /home/gram
-
-# ADD app .
-
-# Build the react app
-FROM node:20-alpine
-
-WORKDIR /home/gram
+FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202506300906-builder AS builder
 
 USER root
+
+WORKDIR /tmp/app
+
+# USER root
 
 RUN mkdir assets
 
@@ -28,28 +23,36 @@ ADD plugins plugins
 
 
 # This value is not secret and accessible in the frontend. 
-# ENV REACT_APP_SENTRY_DSN=""
-RUN npm i --loglevel=warn --no-progress
+ENV REACT_APP_SENTRY_DSN="https://c469b8a74d3f4abe8aad090b51c7dc0e@o24547.ingest.sentry.io/6236788"
+RUN NODE_ENV=dev npm ci
 RUN npm run build
 
-# COPY --from=builder 
-RUN cp -r /home/gram/app/build ./frontend/
+RUN cp -r /tmp/app/app/build ./frontend/
+RUN cp api/assets/* assets/
 
 # Remove dev dependencies (needed typescript and types to build)
 RUN npm prune --omit=dev
 
-# gram user needs write access to the assets folder in order to set up the symlinks
-# however when we use ADD all files are owned by root and not writeable by anyone but root, so we need to 
-# swap here briefly to root to fix the permissions.
-# USER root 
 
-RUN addgroup -S gram && adduser -S gram -G gram
+FROM l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202506300906
 
-RUN cp api/assets/* assets/
+USER klarna
 
-RUN chown gram:gram assets
+WORKDIR /opt/app
+
+# # copy over the yarn cache to speed up the second install
+# COPY --from=builder --chown=klarna:klarna /root/.yarn /home/klarna/.yarn
+
+# copy over the build dir and other relevant files
+COPY --from=builder /tmp/app/ .
+
+# RUN cp api/assets/* assets/
+USER root
+RUN chown klarna:klarna assets
 
 # drop back to gram
-USER gram
+USER klarna
+
 EXPOSE 8080 8081
+
 CMD ["npm", "run", "docker-start"]

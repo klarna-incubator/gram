@@ -14,6 +14,10 @@ You can access and review the threat model here: {{model.link}}
  
 Please complete this review within 14 days.
 
+You can refer to this playbook ({{playbookLink}}) on how to perform threat model reviews.
+
+If you are unable to complete this review, please decline the review in Gram or reach out to the Secure Development team at #tm-secure-development-dm-kep. 
+
 Thank you.
 `.trim();
 
@@ -25,6 +29,9 @@ export const EmailReviewRequested = () =>
     async (dal, { review }) => {
       const variables = await generalReviewNotificationVariables(dal, review);
       const cc = [variables.requester];
+      if (variables.owner.email && variables.owner.email !== "UNDEFINED") {
+        cc.push(variables.owner);
+      }
       const recipients = [variables.reviewer];
 
       return {

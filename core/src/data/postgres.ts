@@ -116,6 +116,8 @@ export async function createPostgresPool(passedOpts?: pg.PoolConfig) {
   );
   defaultOpts.ssl = config.postgres.ssl;
 
+  log.info("defaultOpts.ssl", defaultOpts.ssl, config.postgres.ssl);
+
   let opts = defaultOpts;
   if (passedOpts) {
     opts = { ...defaultOpts, ...passedOpts };

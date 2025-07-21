@@ -1,0 +1,115 @@
+{
+  "service_name": "gram",
+  "eu": {
+    "staging": {
+      "canary_promotion": {
+        "strategy": "AUTOMATIC"
+      },
+      "egress": {
+        "security_groups": [
+          { "named_security_group": "rds-eu-staging" },
+          { "named_security_group": "smtp-eu-staging" },
+          { "named_security_group": "ldap-eu-staging" }
+        ]
+      },
+      "env": {
+        "THREATSAURUS_URL": {
+          "value": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+        },
+        "J1_BASE_URL": {
+          "value": "https://jupiter-one-proxy-eu.staging.c2c.klarna.net"
+        },
+        "J1_ACCOUNT_ID": {
+          "value": "3b98116a-9563-43c5-8b64-54f0650a7e97"
+        }
+      }
+    },
+    "production": {
+      "canary_promotion": {
+        "strategy": "AUTOMATIC"
+      },
+      "egress": {
+        "security_groups": [
+          { "named_security_group": "rds-eu-production" },
+          { "named_security_group": "smtp-eu-production" },
+          { "named_security_group": "ldap-eu-production" }
+        ]
+      },
+      "custom_domain_names": [{ "fqdn": "gram.klarna.net" }],
+      "env": {
+        "THREATSAURUS_URL": {
+          "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+        },
+        "J1_BASE_URL": {
+          "value": "https://jupiter-one-proxy-eu.production.c2c.klarna.net"
+        },
+        "J1_ACCOUNT_ID": {
+          "value": "45377d01-965c-4c5c-a3c1-e6ac4f80cc48"
+        }
+      }
+    }
+  },
+  "default": {
+    "api_version": "v2",
+    "automated_maintenance_redeployment": { "enabled": true },
+    "minimum_instances": 1,
+    "container_size": "xsmall",
+    "canary_promotion": {
+      "strategy": "CONFIRM",
+      "timeout": 1200
+    },
+    "bouncer": {
+      "enabled": true,
+      "specification": "2",
+      "ingress_mode": "authenticate_authorize_never",
+      "paths": []
+    },
+    "public_loadbalancer": false,
+    "egress": {
+      "allowed_destinations": [
+        { "destination": ".eu.jupiterone.io", "ports": [443] },
+        { "destination": "o24547.ingest.sentry.io", "ports": [443] },        
+        { "destination": "sso.klarna.net", "ports": [443] },
+        { "destination": "klarna-sandbox-343.atlassian.net", "ports": [443] },
+        { "destination": "klarna.atlassian.net", "ports": [443] },
+        { "destination": "klarna-dev-admin.oktapreview.com", "ports": [443] },
+        {
+          "destination": "inbound.production.eu1.smtp-service.klarna.net",
+          "ports": [25, 587]
+        },
+        {
+          "destination": "inbound.production.eu2.smtp-service.klarna.net",
+          "ports": [25, 587]
+        }
+      ],
+      "security_groups": [{ "named_security_group": "smtp-eu-production" }]
+    },
+    "clients": {
+      "cidr_blocks": ["10.0.0.0/8"]
+    },
+    "env": {
+      "POSTGRES_HOST": { "secret": "/data._providers.postgres.host" },
+      "POSTGRES_USER": { "secret": "/data._providers.postgres.user" },
+      "POSTGRES_PASSWORD": { "secret": "/data._providers.postgres.password" },
+      "POSTGRES_DATABASE": { "secret": "/data._providers.postgres.database" },
+      "POSTGRES_PORT": { "secret": "/data._providers.postgres.port" },
+      "AUTH_SECRET": { "secret": "/auth.jwt.secret" },
+      "EMAIL_HOST": { "secret": "/notifications.providers.email.host" },
+      "EMAIL_PORT": { "secret": "/notifications.providers.email.port" },
+      "EMAIL_USER": { "secret": "/notifications.providers.email.user" },
+      "EMAIL_PASSWORD": { "secret": "/notifications.providers.email.password" },
+      "LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
+      "LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
+      "JIRA_USER": { "secret": "/jira.user" },
+      "JIRA_API_TOKEN": { "secret": "/jira.token" },
+      "OIDC_CLIENT_DISCOVER_URL": { "value": "https://sso.klarna.net/" },
+      "OIDC_SESSION_SECRET": { "secret": "/auth.oidc.session_secret" },
+      "OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },
+      "OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" },
+      "THREATSAURUS_URL": {
+        "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+      },
+      "J1_KEY": { "secret": "/j1.key" }
+    }
+  }
+}

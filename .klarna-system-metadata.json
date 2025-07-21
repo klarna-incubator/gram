@@ -1,0 +1,31 @@
+{
+  "system_id": "gram",
+  "regions": ["EU"],
+  "system_dependencies": [
+    {
+      "system_id": "jupiter-one",
+      "sla_impact": "IMMEDIATE",
+      "description": "Used for looking up Klarna Systems and information thereabouts"
+    },
+    {
+      "system_id": "ldap",
+      "sla_impact": "IMMEDIATE",
+      "description": "Used for authorization lookup"
+    },
+    {
+      "system_id": "cgw",
+      "sla_impact": "NO_IMPACT",
+      "description": "Used for sending email notifications"
+    },
+    {
+      "system_id": "threatsaurus",
+      "sla_impact": "NO_IMPACT",
+      "description": "Used for fetching Threat Modeling suggestions"
+    },
+    {
+      "system_id": "jiracloud",
+      "sla_impact": "NO_IMPACT",
+      "description": "Used for creating Threat Tickets"
+    }
+  ]
+}

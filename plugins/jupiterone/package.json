@@ -1,0 +1,25 @@
+{
+  "name": "@gram/jupiterone",
+  "type": "module",
+  "version": "4.9.4",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "prettier --check .",
+    "lint-fix": "prettier -l . --write",
+    "list-fields": "node dist/getFields.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^4.9.4",
+    "@jupiterone/jupiterone-client-nodejs": "^2.1.1",
+    "node-fetch": "^3.3.2"
+  }
+}

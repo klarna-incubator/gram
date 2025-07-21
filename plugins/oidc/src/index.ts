@@ -9,7 +9,7 @@ import { RequestContext } from "@gram/core/dist/data/providers/RequestContext.js
 import { InvalidInputError } from "@gram/core/dist/util/errors.js";
 import log4js from "log4js";
 import { Client, Issuer, custom, generators } from "openid-client";
-import { aes256gcm } from "./util.js";
+import { aes256gcm, encryptWithPublicKeyString } from "./util.js";
 
 const log = log4js.getLogger("OIDCIdentityProvider");
 
@@ -98,7 +98,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
     const state = generators.state();
 
     const frontendRedirectUrl = this.client.authorizationUrl({
-      scope: "openid email profile groups",
+      scope: "openid email profile",
       // resource: origin,
       code_challenge,
       response_type: "code",
@@ -186,6 +186,14 @@ export class OIDCIdentityProvider implements IdentityProvider {
         code_verifier,
         state,
       });
+      // log.info(
+      //   "access_token",
+      //   encryptWithPublicKeyString(JSON.stringify(tokenSet.access_token))
+      // );
+      // log.info(
+      //   "id_token",
+      //   encryptWithPublicKeyString(JSON.stringify(tokenSet.id_token))
+      // );
     } catch (error: any) {
       let message = error.toString();
       if (error?.error === "invalid_grant") {

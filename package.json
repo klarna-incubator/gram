@@ -3,8 +3,8 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "lerna run test",
-    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build",
+    "test": "lerna run --concurrency 1 test",
+    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build --concurrency 1",
     "build-backend": "lerna run --scope=@gram/api --include-dependencies build",
     "build-all": "lerna run build",
     "dev": "npm run build-backend && lerna run start --parallel",
@@ -14,7 +14,7 @@
     "lint-fix": "lerna run lint-fix",
     "start-frontend": "npm run -w app start",
     "start-backend": "npm run -w api start",
-    "docker-start": "SERVE_FRONTEND=yesplease node api/dist/index.js",
+    "docker-start": "NODE_ENV=$C2C_SERVICE_STAGE SERVE_FRONTEND=yesplease node api/dist/index.js",
     "version": "lerna version --force-publish"
   },
   "repository": {
@@ -38,6 +38,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@tsconfig/node18": "^18.2.2",
+    "@types/global-agent": "^2.1.3",
     "@types/jest": "^29.4.0",
     "@types/node": "^20.4.2",
     "all-contributors-cli": "^6.26.1",
@@ -55,5 +56,8 @@
   },
   "dependencies": {
     "log4js": "^6.9.1"
+  },
+  "volta": {
+    "node": "20.18.2"
   }
 }
