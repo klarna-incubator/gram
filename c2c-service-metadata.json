@@ -17,7 +17,7 @@
           "value": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
         },
         "J1_BASE_URL": {
-          "value": "https://jupiter-one-proxy-eu.staging.c2c.klarna.net"
+          "value": "http://jupiter-one-proxy-eu.staging.c2c.klarna.net"
         },
         "J1_ACCOUNT_ID": {
           "value": "3b98116a-9563-43c5-8b64-54f0650a7e97"
@@ -41,7 +41,7 @@
           "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
         },
         "J1_BASE_URL": {
-          "value": "https://jupiter-one-proxy-eu.production.c2c.klarna.net"
+          "value": "http://jupiter-one-proxy-eu.production.c2c.klarna.net"
         },
         "J1_ACCOUNT_ID": {
           "value": "45377d01-965c-4c5c-a3c1-e6ac4f80cc48"
@@ -61,7 +61,7 @@
     "bouncer": {
       "enabled": true,
       "specification": "2",
-      "ingress_mode": "authenticate_authorize_never",
+      "ingress_mode": "authenticate_authorize_if_possible",
       "paths": []
     },
     "public_loadbalancer": false,
