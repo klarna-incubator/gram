@@ -61,6 +61,7 @@
     "bouncer": {
       "enabled": true,
       "specification": "2",
+      "guestlist": [],
       "ingress_mode": "authenticate_authorize_if_possible",
       "paths": []
     },
