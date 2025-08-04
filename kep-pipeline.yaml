@@ -17,24 +17,24 @@ var:
 tasks:
   install:
     stage: install
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202508041300-builder
     var:
       NODE_ENV: development
     command:
       - npm install
   lint:
     stage: quality
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202508041300-builder
     command:
       - npm run lint
   build:
     stage: build
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202508041300-builder
     command:
       - npm run build
   test:
     stage: test
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202508041300-builder
     resources:
       size: extra-large
     var:
@@ -60,7 +60,7 @@ tasks:
       - push:
           branches:
             - develop
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202507281540
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202508041300
     var:
       PARTITION: eu
       STAGE: staging
@@ -86,7 +86,7 @@ tasks:
       - push:
           branches:
             - main
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202507281540
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202508041300
     var:
       PARTITION: eu
       STAGE: production
