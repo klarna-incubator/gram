@@ -51,7 +51,7 @@ tasks:
           branches:
             - main
             - develop
-    image: l-docker-kep-pipelines-production.artifactory.klarna.net/kep-pipelines/kepci:202507181345
+    image: l-docker-kep-pipelines-production.artifactory.klarna.net/kep-pipelines/kepci:202508111431
     command:
       - "kepci auditbuild trigger --commitSHA=$COMMIT_HASH --token=audit-build --platformURL=https://audit-build.jenkins.tools.klarna.net"
   deploy_staging:
