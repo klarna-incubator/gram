@@ -17,24 +17,24 @@ var:
 tasks:
   install:
     stage: install
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202509221639-builder
     var:
       NODE_ENV: development
     command:
       - npm install
   lint:
     stage: quality
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202509221639-builder
     command:
       - npm run lint
   build:
     stage: build
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202509221639-builder
     command:
       - npm run build
   test:
     stage: test
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202507281540-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202509221639-builder
     resources:
       size: extra-large
     var:
@@ -51,7 +51,7 @@ tasks:
           branches:
             - main
             - develop
-    image: l-docker-kep-pipelines-production.artifactory.klarna.net/kep-pipelines/kepci:202507181345
+    image: l-docker-kep-pipelines-production.artifactory.klarna.net/kep-pipelines/kepci:202509231113
     command:
       - "kepci auditbuild trigger --commitSHA=$COMMIT_HASH --token=audit-build --platformURL=https://audit-build.jenkins.tools.klarna.net"
   deploy_staging:
@@ -60,7 +60,7 @@ tasks:
       - push:
           branches:
             - develop
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202507281540
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202509221639
     var:
       PARTITION: eu
       STAGE: staging
@@ -86,7 +86,7 @@ tasks:
       - push:
           branches:
             - main
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202507281540
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202509221639
     var:
       PARTITION: eu
       STAGE: production
