@@ -1,5 +1,7 @@
 // Taken from https://gist.github.com/rjz/15baffeab434b8125ca4d783f4116d81
 import crypto from "crypto";
+import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import { OIDCUserStore, OIDCUserInfo } from "./OIDCUserStore.js";
 
 export const aes256gcm = (key: string) => {
   const ALGO = "aes-256-gcm";
@@ -26,7 +28,8 @@ export const aes256gcm = (key: string) => {
     const decipher = crypto.createDecipheriv(
       ALGO,
       keyBytes,
-      Buffer.from(iv, "base64")
+      Buffer.from(iv, "base64"),
+      { authTagLength: 16 }
     );
     decipher.setAuthTag(Buffer.from(authTag, "base64"));
     let str = decipher.update(enc, "base64", "utf8");
@@ -39,3 +42,66 @@ export const aes256gcm = (key: string) => {
     decrypt,
   };
 };
+
+// Shared utility functions for OIDC providers
+
+/**
+ * Extract groups from OIDC claims/user info data
+ * @param data The data object containing group information
+ * @param claimName The name of the claim/field containing groups
+ * @returns Array of group names
+ */
+export function extractGroups(data: any, claimName: string): string[] {
+  const groups = data[claimName];
+  if (!groups) {
+    return [];
+  }
+
+  if (Array.isArray(groups)) {
+    return groups.map((g) => g.toString());
+  }
+
+  if (typeof groups === "string") {
+    return [groups];
+  }
+
+  return [];
+}
+
+/**
+ * Retrieve user info from the OIDC user store with standard validation and logging
+ * @param dal Data access layer instance
+ * @param userId User identifier (sub or email)
+ * @param log Logger instance
+ * @returns User info or null if not found/invalid
+ */
+export async function getUserInfo(
+  dal: DataAccessLayer,
+  userId: string,
+  log: any
+): Promise<OIDCUserInfo | null> {
+  try {
+    const userStore = OIDCUserStore.getInstance(dal);
+    const userInfo = await userStore.getUser(userId);
+
+    if (!userInfo) {
+      log.debug(`No stored user info found for user ${userId}`);
+      return null;
+    }
+
+    // Validate that stored user info matches requested user
+    if (userInfo.sub !== userId && userInfo.email !== userId) {
+      log.debug(`Stored user info doesn't match requested userId ${userId}`);
+      return null;
+    }
+
+    log.debug(`Found stored user info for user ${userId}`, {
+      groupCount: userInfo.groups?.length || 0,
+    });
+
+    return userInfo;
+  } catch (error) {
+    log.error(`Error fetching user info for ${userId}:`, error);
+    return null;
+  }
+}
