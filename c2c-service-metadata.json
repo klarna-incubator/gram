@@ -14,7 +14,7 @@
       },
       "env": {
         "THREATSAURUS_URL": {
-          "value": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+          "value": "http://threatsaurus-eu.staging.c2c.klarna.net/v1/"
         },
         "J1_BASE_URL": {
           "value": "http://jupiter-one-proxy-eu.staging.c2c.klarna.net"
@@ -38,7 +38,7 @@
       "custom_domain_names": [{ "fqdn": "gram.klarna.net" }],
       "env": {
         "THREATSAURUS_URL": {
-          "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+          "value": "http://threatsaurus-eu.production.c2c.klarna.net/v1/"
         },
         "J1_BASE_URL": {
           "value": "http://jupiter-one-proxy-eu.production.c2c.klarna.net"
@@ -108,7 +108,7 @@
       "OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },
       "OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" },
       "THREATSAURUS_URL": {
-        "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+        "value": "http://threatsaurus-eu.production.c2c.klarna.net/v1/"
       },
       "J1_KEY": { "secret": "/j1.key" }
     }
