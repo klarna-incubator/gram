@@ -89,14 +89,10 @@
       "employees": true,
       "services": [
         {
-          "service_name": "offsec-automation-api",
-          "partition": {"same": true},
-          "stage": {"same": true}
+          "service_name": "offsec-automation-api"
         },
         {
-          "service_name": "compliance-evaluator-api",
-          "partition": {"same": true},
-          "stage": {"same": true}
+          "service_name": "compliance-evaluator-api"
         }
       ]
     },
