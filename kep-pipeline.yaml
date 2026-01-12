@@ -27,6 +27,11 @@ tasks:
     image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202512310819-builder
     command:
       - npm run lint
+  validate_metadata:
+    stage: build
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202601051239
+    command:
+      - grond service validate-metadata $SERVICE_METADATA_FILE
   build:
     stage: build
     image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:20.202512310819-builder
