@@ -86,7 +86,19 @@
       "security_groups": [{ "named_security_group": "smtp-eu-production" }]
     },
     "clients": {
-      "cidr_blocks": ["10.0.0.0/8"]
+      "employees": true,
+      "services": [
+        {
+          "service_name": "offsec-automation-api",
+          "partition": {"same": true},
+          "stage": {"same": true}
+        },
+        {
+          "service_name": "compliance-evaluator-api",
+          "partition": {"same": true},
+          "stage": {"same": true}
+        }
+      ]
     },
     "env": {
       "POSTGRES_HOST": { "secret": "/data._providers.postgres.host" },
