@@ -89,7 +89,9 @@
       "employees": true,
       "services": [
         {
-          "service_name": "offsec-automation-api"
+          "service_name": "offsec-automation-api",
+          "partition": "eu",
+          "stage": "production"
         },
         {
           "service_name": "compliance-evaluator-api"
