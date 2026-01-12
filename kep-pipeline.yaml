@@ -3,7 +3,6 @@ version: '2'
 stages:
   - install
   - lint
-  - validate_metadata
   - build
   - test
   - audit_build
@@ -29,7 +28,7 @@ tasks:
     command:
       - npm run lint
   validate_metadata:
-    stage: quality
+    stage: build
     image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/grond:5.202601051239
     command:
       - grond service validate-metadata $SERVICE_METADATA_FILE
