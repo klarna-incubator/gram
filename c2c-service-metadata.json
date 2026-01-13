@@ -58,13 +58,6 @@
       "strategy": "CONFIRM",
       "timeout": 1200
     },
-    "bouncer": {
-      "enabled": true,
-      "specification": "2",
-      "guestlist": [],
-      "ingress_mode": "authenticate_authorize_if_possible",
-      "paths": []
-    },
     "public_loadbalancer": false,
     "egress": {
       "allowed_destinations": [
