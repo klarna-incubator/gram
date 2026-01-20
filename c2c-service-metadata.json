@@ -58,13 +58,6 @@
       "strategy": "CONFIRM",
       "timeout": 1200
     },
-    "bouncer": {
-      "enabled": true,
-      "specification": "2",
-      "guestlist": [],
-      "ingress_mode": "authenticate_authorize_if_possible",
-      "paths": []
-    },
     "public_loadbalancer": false,
     "egress": {
       "allowed_destinations": [
@@ -86,7 +79,17 @@
       "security_groups": [{ "named_security_group": "smtp-eu-production" }]
     },
     "clients": {
-      "cidr_blocks": ["10.0.0.0/8"]
+      "employees": true,
+      "services": [
+        {
+          "service_name": "offsec-automation-api",
+          "partition": "eu",
+          "stage": "production"
+        },
+        {
+          "service_name": "compliance-evaluator-api"
+        }
+      ]
     },
     "env": {
       "POSTGRES_HOST": { "secret": "/data._providers.postgres.host" },
