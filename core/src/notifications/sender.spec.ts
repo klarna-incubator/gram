@@ -23,6 +23,7 @@ describe("notification sender", () => {
   beforeAll(async () => {
     const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
+    templateHandler = dal.templateHandler;
     dal.templateHandler.register(
       new PlaintextHandlebarsNotificationTemplate(
         "review-approved",
