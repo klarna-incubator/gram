@@ -1,13 +1,21 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "isolatedModules": true,
-    "types": ["node", "jest"],
+    "types": [
+      "node",
+      "jest"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@gram/*": ["./plugins/*/src"],
-      "@gram/config/dist/": ["./config/*"],
-      "@gram/core/dist/*": ["./core/src/*"]
+      "@gram/*": [
+        "./plugins/*/src"
+      ],
+      "@gram/config/dist/": [
+        "./config/*"
+      ],
+      "@gram/core/dist/*": [
+        "./core/src/*"
+      ]
     }
   }
 }

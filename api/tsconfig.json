@@ -1,11 +1,14 @@
 {
   "extends": "../tsconfig.json",
-
   "compilerOptions": {
-    "isolatedModules": true,
+    //"isolatedModules": true,
     "target": "ESNext",
-    "types": ["node", "jest"]
+    "types": [
+      "node",
+      "jest"
+    ]
   },
-
-  "include": ["src/"]
+  "include": [
+    "src/"
+  ]
 }

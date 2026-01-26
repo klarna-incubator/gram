@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "isolatedModules": true,
+    //"isolatedModules": true,
     "target": "ESNext",
     "types": [
       "node",

@@ -1,11 +1,17 @@
 {
   "extends": "../tsconfig.json",
-
   "compilerOptions": {
-    "isolatedModules": true,
-    "types": ["jest"]
+    //"isolatedModules": true,
+    "types": [
+      "jest"
+    ]
   },
-
-  "include": ["**/*.ts"],
-  "exclude": ["../*.ts", "**/*.spec.ts", "dist/*"]
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "../*.ts",
+    "**/*.spec.ts",
+    "dist/*"
+  ]
 }
