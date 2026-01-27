@@ -4,14 +4,15 @@ import System from "@gram/core/dist/data/systems/System.js";
 import { SystemProvider } from "@gram/core/dist/data/systems/SystemProvider.js";
 import {
   SystemListInput,
-  SystemListResult
+  SystemListResult,
 } from "@gram/core/dist/data/systems/systems.js";
 import { isDevelopment } from "@gram/core/dist/util/env.js";
+import type { Agent } from "http";
+import { HttpProxyAgent } from "http-proxy-agent";
 import log4js from "log4js";
 import fetch from "node-fetch";
 
 const log = log4js.getLogger("SystemRegistrySystemProvider");
-
 
 export interface SystemRegistrySystem {
   /**
@@ -67,9 +68,13 @@ export class SystemRegistrySystemProvider implements SystemProvider {
   systemsByTeam: Map<string, SystemRegistrySystem[]> = new Map();
   systemsById: Map<string, SystemRegistrySystem> = new Map();
 
-  constructor(private systemRegistryUser?: Secret, private systemRegistryPassword?: Secret) {}
+  constructor() {}
 
-  listSystems(ctx: RequestContext, input: SystemListInput, pagination: { page: number; pageSize: number; }): Promise<SystemListResult> {
+  listSystems(
+    ctx: RequestContext,
+    input: SystemListInput,
+    pagination: { page: number; pageSize: number },
+  ): Promise<SystemListResult> {
     throw new Error("Method not implemented.");
   }
 
@@ -80,33 +85,41 @@ export class SystemRegistrySystemProvider implements SystemProvider {
    */
   async getSystem(
     ctx: RequestContext,
-    systemId: string
-  ): Promise<System | null> {    
+    systemId: string,
+  ): Promise<System | null> {
     let url = `http://systems.klarna.net/api/v1/systems/${systemId}`;
     if (isDevelopment()) {
-      url = `https://systems.klarna.net/api/v1/systems/${systemId}`;
+      url = `http://systems.nonprod.klarna.net/api/v1/systems/${systemId}`;
     } else if (process.env.NODE_ENV === "staging") {
       url = `http://systems.nonprod.klarna.net/api/v1/systems/${systemId}`;
-    }    
-    const headers: any = {
-      Accept: "application/json",      
-    };
-    if (isDevelopment() && this.systemRegistryUser && this.systemRegistryPassword) {
-      const user = await this.systemRegistryUser.getValue();
-      const pass = await this.systemRegistryPassword.getValue();
-      const auth = Buffer.from(`${user}:${pass}`).toString("base64");
-      log.debug(`Using basic auth for system registry: ${user}`);
-      headers["Authorization"] = `Basic ${auth}`;
     }
-    log.debug(`Fetching system ${systemId} from System Registry`);    
-    const resp = await fetch(url, { headers });
+    const headers: any = {
+      Accept: "application/json",
+    };
+
+    let resp: any;
+
+    if (isDevelopment()) {
+      const agent = new HttpProxyAgent(process.env.C2C_PROXY || "");
+      log.debug(
+        `Fetching system ${systemId} from System Registry with proxy: ${url}`,
+      );
+      resp = await fetch(url, { headers, agent: agent as unknown as Agent });
+    } else {
+      resp = await fetch(url, { headers });
+    }
+    log.debug(`Fetching system ${systemId} from System Registry`);
 
     if (!resp.ok) {
-      log.error(`Failed to fetch system ${systemId} from System Registry: ${resp.status} ${resp.statusText} ${await resp.text()}`);
+      log.error(
+        `Failed to fetch system ${systemId} from System Registry: ${
+          resp.status
+        } ${resp.statusText} ${await resp.text()}`,
+      );
       return null;
     }
 
-    const system = await resp.json() as SystemRegistrySystem;    
+    const system = (await resp.json()) as SystemRegistrySystem;
 
     return new System(
       system.system_id,
@@ -118,7 +131,7 @@ export class SystemRegistrySystemProvider implements SystemProvider {
           name: system.klarna_team_name,
         },
       ],
-      system.system_description
+      system.system_description,
     );
   }
 }
