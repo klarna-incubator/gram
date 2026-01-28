@@ -70,10 +70,11 @@ export class WikibaseEditClient {
         create: true,
         ...data,
       });
+      console.log("Entity created in Wikibase:", { entity });
       const claims = entity.claims;
       if (!claims) {
         throw new Error(
-          "No claims returned from Wikibase after item creation."
+          "No claims returned from Wikibase after item creation.",
         );
       }
 
@@ -93,7 +94,7 @@ export class WikibaseEditClient {
           const guid = claim.id;
           // qualifiersForProperty is an object: { qualifierProperty: value }
           for (const [qualifierProperty, value] of Object.entries(
-            qualifiersForProperty
+            qualifiersForProperty,
           )) {
             qualifierObjects.push({
               guid,

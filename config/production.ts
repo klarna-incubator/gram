@@ -4,6 +4,7 @@ import { LDAPGroupBasedAuthzProvider } from "@gram/ldap";
 import { LDAPUserSearchBase, ldapSettings } from "./default.js";
 import { defaultConfig } from "./default.js";
 import { createJiraActionItemExporter } from "./jira.js";
+import { WikibaseActionItemExporter } from "@gram/wikibase/dist/index.js";
 
 export const productionConfig: GramConfiguration = {
   ...defaultConfig,
@@ -42,9 +43,14 @@ export const productionConfig: GramConfiguration = {
     const jiraActionItemExporter = createJiraActionItemExporter(
       this,
       dal,
-      "production"
+      "production",
     );
-    providers.actionItemExporters = [jiraActionItemExporter];
+    const wikibaseActionItemExporter = new WikibaseActionItemExporter(dal);
+
+    providers.actionItemExporters = [
+      jiraActionItemExporter,
+      wikibaseActionItemExporter,
+    ];
 
     return providers;
   },

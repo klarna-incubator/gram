@@ -1,13 +1,12 @@
 import {
   PROPERTIES,
   INSTANCE_OF_LIST,
-  NEW,
+  BACKLOG,
   InstanceOfListType,
   REPORTER_TEAM_TYPE,
   PRIORITY_TYPE,
   SECURE_DEVELOPMENT_ORG_UNIT,
   QUALIFIERS,
-  SECURITY_ENABLEMENT_ORG_UNIT,
 } from "./WikibaseConstants.js";
 import { WikibaseEditClient } from "./WikibaseEditClient.js";
 import { WikibaseSdkClient } from "./WikibaseSdkClient.js";
@@ -17,8 +16,16 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Link, LinkObjectType } from "@gram/core/dist/data/links/Link.js";
 import log4js from "log4js";
 import { EntityId, PropertyId } from "wikibase-sdk";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { Review } from "@gram/core/dist/data/reviews/Review.js";
 
 const log = log4js.getLogger("WikibaseActionItemExporter");
+
+const WIKIBASE_URL_DOMAIN = "knowledgegraph.klarna.net";
+const LOW_SEVERITIES: ThreatSeverity[] = [
+  ThreatSeverity.Informative,
+  ThreatSeverity.Low,
+];
 
 export class ThreatModelFinding {
   type: string;
@@ -39,7 +46,7 @@ export class ThreatModelFinding {
     public label: string,
     public description: string,
     public systemId: string,
-    public modelId: string
+    public modelId: string,
   ) {
     this.systemId = systemId;
     this.modelId = modelId;
@@ -67,267 +74,387 @@ export class ThreatModelFinding {
         [PROPERTIES.RELATED_TO]: this.relatedTo,
         [PROPERTIES.OBSERVED_ISSUE]: this.description,
         [PROPERTIES.SUGGESTED_SOLUTION]: this.suggestedSolution,
-        [PROPERTIES.STATUS]: NEW,
-        [PROPERTIES.DUE_DATE]: new Date().toISOString().split("T")[0], // TBD: set due date based on SLA
+        [PROPERTIES.STATUS]: BACKLOG,
+        [PROPERTIES.DUE_DATE]: this.dueDate,
         [PROPERTIES.REPORTED_ESTIMATED_EFFORT]: 1,
       },
     };
   }
 
   getQualifiers(): Record<PropertyId, Record<PropertyId, EntityId | string>> {
-    return {
-      [PROPERTIES.ACCOUNTABLE]: {
+    const qualifiers: Record<
+      PropertyId,
+      Record<PropertyId, EntityId | string>
+    > = {};
+    if (this.accountableContributor) {
+      qualifiers[PROPERTIES.ACCOUNTABLE] = {
         [QUALIFIERS.CONTRIBUTOR]: this.accountableContributor,
-      },
-      [PROPERTIES.REPORTER_TEAM]: {
+      };
+    }
+    if (this.reporterContributor) {
+      qualifiers[PROPERTIES.REPORTER_TEAM] = {
         [QUALIFIERS.CONTRIBUTOR]: this.reporterContributor,
-      },
-      [PROPERTIES.OBSERVED_ISSUE]: {
+      };
+    }
+    if (this.modelId) {
+      qualifiers[PROPERTIES.OBSERVED_ISSUE] = {
         [QUALIFIERS.URL]: `https://gram.klarna.net/model/${this.modelId}`,
-      },
-    };
+      };
+    }
+    return qualifiers;
   }
 }
 
 export class WikibaseActionItemExporter implements ActionItemExporter {
   // ActionItemExporter
   key: string = "wikibase";
-  exportOnReviewApproved: boolean = false;
+  exportOnReviewApproved: boolean;
+
   wikibaseClient: WikibaseEditClient = new WikibaseEditClient();
   wikibaseSdkClient: WikibaseSdkClient = new WikibaseSdkClient();
-  constructor(private dal: DataAccessLayer) {}
-
-  async convertActionItemToFinding(
-    dal: DataAccessLayer,
-    actionItem: Threat
-  ): Promise<ThreatModelFinding> {
-    const severityToPriorityMap: Record<ThreatSeverity, PRIORITY_TYPE> = {
-      [ThreatSeverity.Critical]: 1,
-      [ThreatSeverity.High]: 2,
-      [ThreatSeverity.Medium]: 3,
-      [ThreatSeverity.Low]: 3, // Not used as low severity items are skipped
-      [ThreatSeverity.Informative]: 3, // Not used as informative severity items are skipped
-    };
-    // Find the team owning the system in scope
-    const model = await dal.modelService.getById(actionItem.modelId);
-    const systemId = model ? model.systemId : null;
-
-    const finding = new ThreatModelFinding(
-      `${actionItem.title}`,
-      actionItem.description,
-      systemId || "Unknown System",
-      actionItem.modelId
-    );
-
-    // Find the system QID
-    const systemQID = await this.wikibaseSdkClient.getSystemQID(
-      model?.systemId!
-    );
-
-    if (!systemQID) {
-      log.warn(
-        `Could not find system QID for system ID ${model?.systemId}, skipping accountable team assignment.`
-      );
-    } else {
-      // Assign the system QID to related to field
-      finding.relatedTo = systemQID;
-
-      // Find the accountable team for the system
-      const systemClaims = await this.wikibaseSdkClient.getItemDetails(
-        systemQID,
-        [PROPERTIES.ACCOUNTABLE]
-      );
-
-      if (systemClaims && PROPERTIES.ACCOUNTABLE in systemClaims) {
-        finding.accountableTeam = systemClaims[PROPERTIES.ACCOUNTABLE][0];
-        log.debug(
-          `Found accountable team QID ${systemClaims} for system QID ${systemQID}.`
-        );
-      } else {
-        log.warn(
-          `Could not find accountable team QID for system QID ${systemQID}, skipping accountable team assignment.`
-        );
-      }
-    }
-
-    //Find the reporter contributor and team
-    const review = await this.dal.reviewService.getByModelId(
-      actionItem.modelId
-    );
-
-    if (!review) {
-      log.info(
-        `Could not find review for model ${actionItem.modelId}, using token user as reporter`
-      );
-    }
-
-    const reporterContributorEmail = review?.reviewedBy;
-
-    const reporterContributorQID =
-      await this.wikibaseSdkClient.getUserQIDFromEmail(
-        reporterContributorEmail!
-      );
-
-    if (!reporterContributorQID || reporterContributorQID === null) {
-      log.warn(
-        `Could not find reporter contributor QID for email ${reporterContributorEmail}, skipping reporter contributor assignment.`
-      );
-    } else {
-      log.debug(
-        `Found reporter contributor QID ${reporterContributorQID} for email ${reporterContributorEmail}.`
-      );
-      finding.reporterContributor = reporterContributorQID;
-    }
-
-    // Find the reporter's team
-    // Default to Secure Development org unit
-    let reporterTeamQID = SECURE_DEVELOPMENT_ORG_UNIT;
-
-    if (reporterContributorEmail) {
-      try {
-        const teams = await dal.teamHandler.getTeamsForUser(
-          { currentRequest: undefined },
-          reporterContributorEmail
-        );
-        if (teams && teams.length > 0) {
-          // If multiple teams, pick the first one (or implement logic as needed)
-          reporterTeamQID = teams[0].id;
-          const isDSLTeam = teams.some((team) =>
-            team.name.toLowerCase().includes("security enablement")
-          );
-          // If reporter is part of DSL team, set reporter team to Security Enablement org unit
-          if (isDSLTeam) {
-            log.info(
-              `Reporter ${reporterContributorEmail} is part of Security Enablement team, setting reporter team to Security Enablement org unit.`
-            );
-            reporterTeamQID = SECURITY_ENABLEMENT_ORG_UNIT;
-          }
-        }
-      } catch (err) {
-        log.warn(
-          `Failed to get reporter team for email ${reporterContributorEmail}: ${err}`
-        );
-      }
-    }
-
-    finding.dueDate = new Date().toISOString().split("T")[0];
-    finding.reporterEstimatedEffort = 1;
-    finding.priorityRank = actionItem.severity
-      ? severityToPriorityMap[actionItem.severity]
-      : 3; // Calculate priority based on severity
-
-    // Find associated controls
-    const controls = await dal.controlService.listByThreatId(actionItem.id!);
-    if (controls.length === 0) {
-      log.warn(`No controls found associated with threat ID ${actionItem.id}`);
-      finding.suggestedSolution =
-        "No suggested solutions available. Please contact the reporter contributor for more information.";
-    } else {
-      log.debug(
-        `Found ${controls.length} controls associated with action item ${actionItem.id}`
-      );
-      const suggestedSolutions = controls
-        .map((control, idx) => {
-          `Control #${idx + 1}: ${control.title} - ${control.description}`;
-        })
-        .join("; ");
-      finding.suggestedSolution = suggestedSolutions;
-    }
-
-    return finding;
+  constructor(
+    private dal: DataAccessLayer,
+    exportOnReviewApproved: boolean = true,
+  ) {
+    this.exportOnReviewApproved = exportOnReviewApproved;
   }
 
-  async createThreatModelFinding(
+  private static readonly SEVERITY_TO_PRIORITY: Record<
+    ThreatSeverity,
+    PRIORITY_TYPE
+  > = {
+    [ThreatSeverity.Critical]: 1,
+    [ThreatSeverity.High]: 2,
+    [ThreatSeverity.Medium]: 3,
+    [ThreatSeverity.Low]: 3,
+    [ThreatSeverity.Informative]: 3,
+  };
+
+  private static readonly SEVERITY_TO_SLA_IN_DAYS: Record<
+    ThreatSeverity,
+    number
+  > = {
+    [ThreatSeverity.Critical]: 30,
+    [ThreatSeverity.High]: 90,
+    [ThreatSeverity.Medium]: 180,
+    [ThreatSeverity.Low]: 365,
+    [ThreatSeverity.Informative]: 365,
+  };
+
+  private static readonly SKIP_REASONS = {
+    SEVERITY_LOW: "Low severity action items are not exported",
+    ALREADY_EXPORTED: "Action item is already exported to one or more tickets.",
+    NO_SYSTEM_ID: "Action item has no system ID.",
+  };
+
+  public async export(
     dal: DataAccessLayer,
-    actionItem: Threat
+    actionItems: Threat[],
+  ): Promise<void> {
+    await Promise.all(
+      actionItems.map((item) => this.exportActionItemIfEligible(dal, item)),
+    );
+  }
+
+  private async exportActionItemIfEligible(
+    dal: DataAccessLayer,
+    item: Threat,
+  ): Promise<void> {
+    const skipReasons: (keyof typeof WikibaseActionItemExporter.SKIP_REASONS)[] =
+      [];
+
+    this.shouldSkipBySeverity(item, skipReasons);
+
+    await this.shouldSkipIfAlreadyExported(dal, item, skipReasons);
+
+    await this.shouldSkipIfNoSystemId(item, dal, skipReasons);
+
+    if (skipReasons.length > 0) {
+      log.info(
+        `Skipping action item ${
+          item.id
+        } for the following reasons: ${skipReasons.join(", ")}`,
+      );
+      return;
+    }
+
+    const exportedItemQID = await this.createThreatModelFinding(dal, item);
+    if (exportedItemQID) {
+      log.info(
+        `Successfully exported action item to Wikibase: ${exportedItemQID}`,
+      );
+    }
+
+    // Insert as a link
+    await dal.linkService.insertLink(
+      LinkObjectType.Threat,
+      item.id!,
+      exportedItemQID,
+      `https://knowledgegraph.klarna.net/wiki/Item:${exportedItemQID}`,
+      "",
+      this.key,
+    );
+  }
+
+  // Helper methods for exportActionItemIfEligible - Beginning
+
+  private shouldSkipBySeverity(item: Threat, skipReasons: string[]) {
+    if (!item.severity || LOW_SEVERITIES.includes(item.severity)) {
+      skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.SEVERITY_LOW);
+    }
+  }
+
+  private async shouldSkipIfAlreadyExported(
+    dal: DataAccessLayer,
+    item: Threat,
+    skipReasons: string[],
+  ) {
+    const links = await dal.linkService.listLinks(
+      LinkObjectType.Threat,
+      item.id!,
+    );
+
+    const hasWikibaseLink = links.some(
+      (link) =>
+        link.createdBy === this.key || link.url.includes(WIKIBASE_URL_DOMAIN),
+    );
+    if (hasWikibaseLink) {
+      skipReasons.push(
+        WikibaseActionItemExporter.SKIP_REASONS.ALREADY_EXPORTED,
+      );
+    }
+  }
+
+  private async shouldSkipIfNoSystemId(
+    item: Threat,
+    dal: DataAccessLayer,
+    skipReasons: string[],
+  ) {
+    if (!item.modelId) {
+      skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.NO_SYSTEM_ID);
+    }
+    const model = await dal.modelService.getById(item.modelId);
+    if (!model) {
+      skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.NO_SYSTEM_ID);
+    }
+    if (!model?.systemId) {
+      skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.NO_SYSTEM_ID);
+    }
+  }
+  // Helper methods for exportActionItemIfEligible - End
+
+  private async createThreatModelFinding(
+    dal: DataAccessLayer,
+    actionItem: Threat,
   ): Promise<any> {
     try {
       // Convert action item to Threat Model Finding
       log.debug(`Converting action item to Threat Model Finding...`);
       const finding = await this.convertActionItemToFinding(dal, actionItem);
 
-      // Check if item already exists in Wikibase
-      const itemId = await this.wikibaseSdkClient.getItemQID(finding.label);
-
-      if (itemId) {
-        actionItem.id = itemId;
-        log.info(`Item already exists in Wikibase: ${finding.label}`);
-        // Edit the existing item
-        await this.wikibaseClient.editItem(finding);
-        log.info(
-          `Item has been updated. https://knowledgegraph.klarna.net/wiki/Item:${actionItem.id}`
-        );
-        return null;
-      }
       log.info(`Creating new Threat Model Finding in Wikibase...`);
-
-      return await this.wikibaseClient.createItem(finding);
+      const id = await this.wikibaseClient.createItem(finding);
+      log.debug(`Entity created in Wikibase: ${id}`);
+      return id;
     } catch (error) {
       log.error(
-        `Error converting action item ${actionItem.id} to Threat Model Finding: ${error}`
+        `Error converting action item ${actionItem.id} to Threat Model Finding: ${error}`,
       );
       throw error;
     }
   }
 
-  async export(dal: DataAccessLayer, actionItems: Threat[]): Promise<void> {
-    // Export action items to Wikibase
+  private async convertActionItemToFinding(
+    dal: DataAccessLayer,
+    actionItem: Threat,
+  ): Promise<ThreatModelFinding> {
+    const model = await dal.modelService.getById(actionItem.modelId);
+    if (!model) {
+      throw new Error(`Model not found for action item ${actionItem.id}`);
+    }
+    if (!model?.systemId) {
+      throw new Error(`System ID not found for model ${actionItem.modelId}`);
+    }
 
-    await Promise.all(
-      actionItems.map(async (item) => {
-        // Skip item if severity is Informative or Low
-        if (
-          !item.severity ||
-          [ThreatSeverity.Informative, ThreatSeverity.Low].includes(
-            item.severity
-          )
-        ) {
-          log.info(`Skipping action item (low severity): ${item.title}`);
-          return;
-        }
-
-        // Check if link already exists
-        const links = await dal.linkService.listLinks(
-          LinkObjectType.Threat,
-          item.id!
-        );
-
-        if (links.length > 0) {
-          const wikibaseLinkExists = links.filter(
-            (e) =>
-              e.createdBy === this.key ||
-              e.url.includes("knowledgegraph.klarna.net")
-          );
-          const jiraLinkExists = links.filter((e) => e.createdBy === this.key);
-
-          // Check if a link to Wikibase already exists
-          if (wikibaseLinkExists.length > 0) {
-            // TODO: Update logic to update existing Wikibase item if needed. TM reviewers should do it manually for now.
-            log.info(
-              `Action item ${item.id} is already exported to one or more tickets. Skipping export.`
-            );
-            return;
-          } else if (jiraLinkExists.length > 0) {
-            // TODO: Fetch Wikibase finding linked to the Jira ticket, if exist and link it to action item. TM reviewers should do it manually for now.
-            log.info(`Action item ${item.id} is exported to JIRA.`);
-            //return;
-          }
-        }
-
-        const exportedItem = await this.createThreatModelFinding(dal, item);
-        if (exportedItem) {
-          log.info(
-            `Exported action item to Wikibase: ${exportedItem.entity.id}`
-          );
-        }
-      })
+    const finding = new ThreatModelFinding(
+      actionItem.title,
+      actionItem.description,
+      model.systemId,
+      actionItem.modelId,
     );
 
-    //Only export action items with severity Medium and above
-    for (const item of actionItems) {
-      // Logic to export each action item to Wikibase
-      log.info(`Exporting action item: ${item.title}`);
-      // Placeholder for actual export logic
+    this.assignDescription(model, actionItem, finding);
+
+    await this.assignSystem(model, dal, finding);
+
+    if (finding.relatedTo) {
+      await this.assignAccountableTeam(finding.relatedTo, finding);
     }
+
+    const review = await dal.reviewService.getByModelId(actionItem.modelId);
+
+    if (review) {
+      await this.assignReporterContributor(
+        dal,
+        actionItem.modelId,
+        review,
+        finding,
+      );
+    }
+
+    await this.assignReporterTeam(dal, review?.reviewedBy, finding);
+
+    this.assignPriorityRank(actionItem, finding);
+
+    this.assignDueDate(actionItem, finding);
+
+    this.assignEstimatedEffort(actionItem, finding);
+
+    await this.assignSuggestedSolution(dal, actionItem, finding);
+
+    return finding;
+  }
+
+  // Helper methods for convertActionItemToFinding - Beginning
+
+  private assignDescription(
+    model: Model,
+    item: Threat,
+    finding: ThreatModelFinding,
+  ) {
+    const component = model.data.components.find(
+      (c) => c.id === item.componentId,
+    );
+
+    if (component) {
+      finding.description = `Threat of "${item.title}" on ${component.name} - ${item.description}`;
+    } else {
+      finding.description = `Threat of "${item.title}" - ${item.description}`;
+    }
+  }
+
+  private async assignSystem(
+    model: Model,
+    _dal: DataAccessLayer,
+    finding: ThreatModelFinding,
+  ): Promise<void> {
+    const systemQID = await this.wikibaseSdkClient.getSystemQID(
+      model.systemId!,
+    ); // We know that the model has a system ID because we checked it earlier
+
+    if (!systemQID) {
+      log.warn(
+        `Could not find system QID for system ID ${model?.systemId}, skipping accountable team assignment.`,
+      );
+      return;
+    }
+
+    finding.relatedTo = systemQID;
+  }
+
+  private async assignAccountableTeam(
+    systemQID: EntityId,
+    finding: ThreatModelFinding,
+  ): Promise<void> {
+    const systemClaims = await this.wikibaseSdkClient.getItemDetails(
+      systemQID,
+      [PROPERTIES.ACCOUNTABLE],
+    );
+
+    if (!systemClaims?.[PROPERTIES.ACCOUNTABLE]) {
+      log.warn(
+        `Could not find accountable team QID for system QID ${systemQID}, skipping accountable team assignment.`,
+      );
+      return;
+    }
+
+    finding.accountableTeam = systemClaims[PROPERTIES.ACCOUNTABLE][0];
+  }
+
+  private async assignReporterContributor(
+    _dal: DataAccessLayer,
+    modelId: string,
+    review: Review,
+    finding: ThreatModelFinding,
+  ): Promise<void> {
+    const reporterEmail = review.reviewedBy;
+    if (!reporterEmail) {
+      log.warn(
+        `Could not find reporter email for review, skipping reporter contributor assignment.`,
+      );
+      return;
+    }
+
+    const reporterQID = await this.wikibaseSdkClient.getUserQIDFromEmail(
+      reporterEmail,
+    );
+
+    if (!reporterQID) {
+      log.warn(
+        `Could not find reporter contributor QID for email ${reporterEmail}, skipping reporter contributor assignment.`,
+      );
+      return;
+    }
+
+    finding.reporterContributor = reporterQID;
+  }
+
+  private async assignReporterTeam(
+    dal: DataAccessLayer,
+    reporterEmail: string | undefined,
+    finding: ThreatModelFinding,
+  ) {
+    //TODO: Implement reporter team assignment
+    // For now, we're using the Secure Development org unit
+    finding.reporterTeam = SECURE_DEVELOPMENT_ORG_UNIT;
+  }
+
+  private assignDueDate(actionItem: Threat, finding: ThreatModelFinding): void {
+    const severity = actionItem.severity ?? ThreatSeverity.Medium;
+    const slaDays =
+      WikibaseActionItemExporter.SEVERITY_TO_SLA_IN_DAYS[severity];
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + slaDays);
+    finding.dueDate = dueDate.toISOString().split("T")[0];
+  }
+  private assignPriorityRank(
+    actionItem: Threat,
+    finding: ThreatModelFinding,
+  ): void {
+    finding.priorityRank =
+      actionItem.severity != null
+        ? WikibaseActionItemExporter.SEVERITY_TO_PRIORITY[actionItem.severity]
+        : 3;
+  }
+  private assignEstimatedEffort(
+    actionItem: Threat,
+    finding: ThreatModelFinding,
+  ): void {
+    finding.reporterEstimatedEffort = 1;
+  }
+
+  private async assignSuggestedSolution(
+    dal: DataAccessLayer,
+    actionItem: Threat,
+    finding: ThreatModelFinding,
+  ): Promise<void> {
+    const controls = await dal.controlService.listByThreatId(actionItem.id!);
+    if (controls.length === 0) {
+      log.warn(
+        `No controls for threat ${actionItem.id}, skipping suggested solution assignment.`,
+      );
+      finding.suggestedSolution =
+        "No suggested solutions available. Please contact the reporter contributor for more information.";
+    }
+    const suggestedSolutionText = controls
+      .map(
+        (control, idx) =>
+          `Control #${idx + 1} (${
+            control.inPlace ? "In place" : "Not in place"
+          }): ${control.title} - ${control.description}`,
+      )
+      .join("; ");
+
+    finding.suggestedSolution = suggestedSolutionText;
   }
 }
