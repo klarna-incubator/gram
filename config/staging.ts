@@ -3,6 +3,7 @@ import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import { defaultConfig } from "./default.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
 import { createJiraActionItemExporter } from "./jira.js";
+import { WikibaseActionItemExporter } from "@gram/wikibase/dist/index.js";
 
 export const stagingConfig: GramConfiguration = {
   ...defaultConfig,
@@ -32,7 +33,7 @@ export const stagingConfig: GramConfiguration = {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
     const threatsaurus = new ThreatsaurusSuggestionSource(
-      "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+      "https://threatsaurus-eu.staging.c2c.klarna.net/v1/",
     );
 
     providers.suggestionSources?.push(threatsaurus);
@@ -40,9 +41,16 @@ export const stagingConfig: GramConfiguration = {
     const jiraActionItemExporter = createJiraActionItemExporter(
       this,
       dal,
-      "sandbox"
+      "sandbox",
     );
-    providers.actionItemExporters = [jiraActionItemExporter];
+    const wikibaseActionItemExporter = new WikibaseActionItemExporter(
+      dal,
+      false,
+    );
+    providers.actionItemExporters = [
+      jiraActionItemExporter,
+      wikibaseActionItemExporter,
+    ];
 
     return providers;
   },

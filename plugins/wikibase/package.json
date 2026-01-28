@@ -1,0 +1,26 @@
+{
+  "name": "@gram/wikibase",
+  "type": "module",
+  "version": "4.23.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "prettier --check .",
+    "lint-fix": "prettier -l . --write",
+    "list-fields": "node dist/getFields.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^4.23.0",
+    "axios": "^1.10.0",
+    "wikibase-edit": "^8.0.6",
+    "wikibase-sdk": "^11.1.2"
+  }
+}

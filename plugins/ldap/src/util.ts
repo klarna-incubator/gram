@@ -1,18 +1,20 @@
 import { Entry } from "ldapts";
 
-export function getAttribute(ldapObj: Entry, name: string) {
-  return ldapObj[name] ? ldapObj[name].toString() : "";
+export function getAttribute(ldapObj: Entry, name: string): string {
+  return ldapObj[name] ? String(ldapObj[name]) : "";
 }
 
-export function getAttributeAsArray(ldapObj: Entry, name: string) {
+export function getAttributeAsArray(ldapObj: Entry, name: string): string[] {
   const attr = ldapObj[name];
-  if (typeof attr == "string") {
-    return [attr];
+  if (!attr) return [];
+
+  // `ldapts` Entry attribute types are a broad union (string, Buffer, number, Uint8Array, arrays of those).
+  // Normalize here so callers can treat attributes consistently as `string[]`.
+  if (Array.isArray(attr)) {
+    return attr.map((a) => String(a));
   }
-  if (attr instanceof Buffer) {
-    return [attr.toString()];
-  }
-  return attr ? attr.map((a: Buffer | string) => a.toString()) : [];
+
+  return [String(attr)];
 }
 
 // From https://github.com/ldapts/ldapts/blob/main/src/filters/Filter.ts#L32

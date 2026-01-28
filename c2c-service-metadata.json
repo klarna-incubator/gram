@@ -7,14 +7,20 @@
       },
       "egress": {
         "security_groups": [
-          { "named_security_group": "rds-eu-staging" },
-          { "named_security_group": "smtp-eu-staging" },
-          { "named_security_group": "ldap-eu-staging" }
+          {
+            "named_security_group": "rds-eu-staging"
+          },
+          {
+            "named_security_group": "smtp-eu-staging"
+          },
+          {
+            "named_security_group": "ldap-eu-staging"
+          }
         ]
       },
       "env": {
         "THREATSAURUS_URL": {
-          "value": "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+          "value": "http://threatsaurus-eu.staging.c2c.klarna.net/v1/"
         },
         "J1_BASE_URL": {
           "value": "http://jupiter-one-proxy-eu.staging.c2c.klarna.net"
@@ -30,15 +36,25 @@
       },
       "egress": {
         "security_groups": [
-          { "named_security_group": "rds-eu-production" },
-          { "named_security_group": "smtp-eu-production" },
-          { "named_security_group": "ldap-eu-production" }
+          {
+            "named_security_group": "rds-eu-production"
+          },
+          {
+            "named_security_group": "smtp-eu-production"
+          },
+          {
+            "named_security_group": "ldap-eu-production"
+          }
         ]
       },
-      "custom_domain_names": [{ "fqdn": "gram.klarna.net" }],
+      "custom_domain_names": [
+        {
+          "fqdn": "gram.klarna.net"
+        }
+      ],
       "env": {
         "THREATSAURUS_URL": {
-          "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+          "value": "http://threatsaurus-eu.production.c2c.klarna.net/v1/"
         },
         "J1_BASE_URL": {
           "value": "http://jupiter-one-proxy-eu.production.c2c.klarna.net"
@@ -51,7 +67,9 @@
   },
   "default": {
     "api_version": "v2",
-    "automated_maintenance_redeployment": { "enabled": true },
+    "automated_maintenance_redeployment": {
+      "enabled": true
+    },
     "minimum_instances": 1,
     "container_size": "xsmall",
     "canary_promotion": {
@@ -68,49 +86,127 @@
     "public_loadbalancer": false,
     "egress": {
       "allowed_destinations": [
-        { "destination": ".eu.jupiterone.io", "ports": [443] },
-        { "destination": "o24547.ingest.sentry.io", "ports": [443] },        
-        { "destination": "sso.klarna.net", "ports": [443] },
-        { "destination": "klarna-sandbox-343.atlassian.net", "ports": [443] },
-        { "destination": "klarna.atlassian.net", "ports": [443] },
-        { "destination": "klarna-dev-admin.oktapreview.com", "ports": [443] },
+        {
+          "destination": ".eu.jupiterone.io",
+          "ports": [
+            443
+          ]
+        },
+        {
+          "destination": "o24547.ingest.sentry.io",
+          "ports": [
+            443
+          ]
+        },
+        {
+          "destination": "sso.klarna.net",
+          "ports": [
+            443
+          ]
+        },
+        {
+          "destination": "klarna-sandbox-343.atlassian.net",
+          "ports": [
+            443
+          ]
+        },
+        {
+          "destination": "klarna.atlassian.net",
+          "ports": [
+            443
+          ]
+        },
+        {
+          "destination": "klarna-dev-admin.oktapreview.com",
+          "ports": [
+            443
+          ]
+        },
         {
           "destination": "inbound.production.eu1.smtp-service.klarna.net",
-          "ports": [25, 587]
+          "ports": [
+            25,
+            587
+          ]
         },
         {
           "destination": "inbound.production.eu2.smtp-service.klarna.net",
-          "ports": [25, 587]
+          "ports": [
+            25,
+            587
+          ]
         }
       ],
-      "security_groups": [{ "named_security_group": "smtp-eu-production" }]
+      "security_groups": [
+        {
+          "named_security_group": "smtp-eu-production"
+        }
+      ]
     },
     "clients": {
       "cidr_blocks": ["10.0.0.0/8"]
     },
     "env": {
-      "POSTGRES_HOST": { "secret": "/data._providers.postgres.host" },
-      "POSTGRES_USER": { "secret": "/data._providers.postgres.user" },
-      "POSTGRES_PASSWORD": { "secret": "/data._providers.postgres.password" },
-      "POSTGRES_DATABASE": { "secret": "/data._providers.postgres.database" },
-      "POSTGRES_PORT": { "secret": "/data._providers.postgres.port" },
-      "AUTH_SECRET": { "secret": "/auth.jwt.secret" },
-      "EMAIL_HOST": { "secret": "/notifications.providers.email.host" },
-      "EMAIL_PORT": { "secret": "/notifications.providers.email.port" },
-      "EMAIL_USER": { "secret": "/notifications.providers.email.user" },
-      "EMAIL_PASSWORD": { "secret": "/notifications.providers.email.password" },
-      "LDAP_BIND_DN": { "secret": "/auth.ldap.binddn" },
-      "LDAP_BIND_CREDENTIALS": { "secret": "/auth.ldap.bindcredentials" },
-      "JIRA_USER": { "secret": "/jira.user" },
-      "JIRA_API_TOKEN": { "secret": "/jira.token" },
-      "OIDC_CLIENT_DISCOVER_URL": { "value": "https://sso.klarna.net/" },
-      "OIDC_SESSION_SECRET": { "secret": "/auth.oidc.session_secret" },
-      "OIDC_CLIENT_ID": { "secret": "/auth.oidc.client_id" },
-      "OIDC_CLIENT_SECRET": { "secret": "/auth.oidc.client_secret" },
-      "THREATSAURUS_URL": {
-        "value": "https://threatsaurus-eu.production.c2c.klarna.net/v1/"
+      "POSTGRES_HOST": {
+        "secret": "/data._providers.postgres.host"
       },
-      "J1_KEY": { "secret": "/j1.key" }
+      "POSTGRES_USER": {
+        "secret": "/data._providers.postgres.user"
+      },
+      "POSTGRES_PASSWORD": {
+        "secret": "/data._providers.postgres.password"
+      },
+      "POSTGRES_DATABASE": {
+        "secret": "/data._providers.postgres.database"
+      },
+      "POSTGRES_PORT": {
+        "secret": "/data._providers.postgres.port"
+      },
+      "AUTH_SECRET": {
+        "secret": "/auth.jwt.secret"
+      },
+      "EMAIL_HOST": {
+        "secret": "/notifications.providers.email.host"
+      },
+      "EMAIL_PORT": {
+        "secret": "/notifications.providers.email.port"
+      },
+      "EMAIL_USER": {
+        "secret": "/notifications.providers.email.user"
+      },
+      "EMAIL_PASSWORD": {
+        "secret": "/notifications.providers.email.password"
+      },
+      "LDAP_BIND_DN": {
+        "secret": "/auth.ldap.binddn"
+      },
+      "LDAP_BIND_CREDENTIALS": {
+        "secret": "/auth.ldap.bindcredentials"
+      },
+      "JIRA_USER": {
+        "secret": "/jira.user"
+      },
+      "JIRA_API_TOKEN": {
+        "secret": "/jira.token"
+      },
+      "OIDC_CLIENT_DISCOVER_URL": {
+        "value": "https://sso.klarna.net/"
+      },
+      "OIDC_SESSION_SECRET": {
+        "secret": "/auth.oidc.session_secret"
+      },
+      "OIDC_CLIENT_ID": {
+        "secret": "/auth.oidc.client_id"
+      },
+      "OIDC_CLIENT_SECRET": {
+        "secret": "/auth.oidc.client_secret"
+      },
+      "THREATSAURUS_URL": {
+        "value": "http://threatsaurus-eu.production.c2c.klarna.net/v1/"
+      },
+      "J1_KEY": {
+        "secret": "/j1.key"
+      }
     }
   }
 }
