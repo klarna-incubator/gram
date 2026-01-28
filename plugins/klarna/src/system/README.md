@@ -43,9 +43,45 @@ The full registry payload is described by the `SystemRegistrySystem` interface i
 
 System Registry is only reachable from inside Klarna’s network. On your laptop you must use the **Bouncer (C2C) local proxy** so that traffic to `systems.nonprod.klarna.net` is tunneled and authenticated correctly.
 
-### 1. Bouncer config
+### 1. Bouncer config (if needed)
 
 Bouncer configuration for Gram is already defined in **`c2c-service-metadata.json`** at the repo root. You do not need to change it for normal local runs.
+However if you run into issues when using System registry, add this configuration in **`c2c-service-metadata.json`**
+```json
+
+"default": {
+...,
+
+  "bouncer": {
+    "guestlist": [
+      {
+        "subject": {
+          "service_name": "c2c-service-operator-vpn"
+        },
+        "capabilities": [
+          "read"
+        ]
+      },
+      {
+        "subject": {
+          "service_name": "gram",
+          "partition": {
+            "same": true
+          },
+          "stage": {
+            "same": true
+          }
+        },
+        "capabilities": [
+          "read"
+        ]
+      }
+    ]
+  },
+
+  ...
+} 
+```
 
 ### 2. Start the local proxy
 

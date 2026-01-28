@@ -67,32 +67,6 @@
   },
   "default": {
     "api_version": "v2",
-    "bouncer": {
-      "guestlist": [
-        {
-          "subject": {
-            "service_name": "c2c-service-operator-vpn"
-          },
-          "capabilities": [
-            "read"
-          ]
-        },
-        {
-          "subject": {
-            "service_name": "gram",
-            "partition": {
-              "same": true
-            },
-            "stage": {
-              "same": true
-            }
-          },
-          "capabilities": [
-            "read"
-          ]
-        }
-      ]
-    },
     "automated_maintenance_redeployment": {
       "enabled": true
     },
