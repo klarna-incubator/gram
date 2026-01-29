@@ -206,6 +206,12 @@
       },
       "J1_KEY": {
         "secret": "/j1.key"
+      },
+      "WIKIBASE_USERNAME": {
+        "secret": "/wikibase.username"
+      },
+      "WIKIBASE_PASSWORD": {
+        "secret": "/wikibase.password"
       }
     }
   }
