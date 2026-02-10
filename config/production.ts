@@ -48,7 +48,6 @@ export const productionConfig: GramConfiguration = {
     const wikibaseActionItemExporter = new WikibaseActionItemExporter(dal);
 
     providers.actionItemExporters = [
-      jiraActionItemExporter,
       wikibaseActionItemExporter,
     ];
 
