@@ -12,8 +12,8 @@ export const generalConfig: GeneralConfig = {
 
   // Credentials for the instance
   credentials: {
-    username: (await new EnvSecret("WIKIBASE_USERNAME").getValue()) || "",
-    password: (await new EnvSecret("WIKIBASE_PASSWORD").getValue()) || "",
+    username: process.env["WIKIBASE_USERNAME"] || "",
+    password: process.env["WIKIBASE_PASSWORD"] || "",
   },
 
   // The instance script path, used to find the API endpoint
