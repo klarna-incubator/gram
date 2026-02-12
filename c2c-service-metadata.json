@@ -71,7 +71,7 @@
       "enabled": true
     },
     "minimum_instances": 1,
-    "container_size": "xsmall",
+    "container_size": "small",
     "canary_promotion": {
       "strategy": "CONFIRM",
       "timeout": 1200
