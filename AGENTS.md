@@ -145,7 +145,16 @@ npm run version              # Lerna version bump with conventional commits
 
 ## Configuration
 
-**Environment Variables** (from config/ package):
+**Environment Variables**:
+
+Copy `.env.example` to `.env` and fill in required values:
+```bash
+cp .env.example .env
+```
+
+See `.env.example` for complete list of environment variables including:
+- **REQUIRED**: `NODE_ENV`, `ORIGIN`, `AUTH_SECRET`, Database credentials (POSTGRES_*)
+- **OPTIONAL**: Email config (EMAIL_*), Sentry (SENTRY_DSN), Frontend (PORT, REACT_APP_VERSION)
 
 The `config/` package loads environment-specific configurations:
 - `config/default.ts` - Base configuration
@@ -159,16 +168,11 @@ NODE_ENV=development npm run dev
 NODE_ENV=production npm run build
 ```
 
-Key env vars for deployment:
-```
-ORIGIN=http://localhost:4726
-POSTGRES_HOST=localhost
-POSTGRES_USER=gram
-POSTGRES_PASSWORD=somethingsecret
-POSTGRES_DATABASE=gram
-NODE_ENV=development
-AUTH_SECRET=<long-random-string>
-```
+**Important Security Notes**:
+- Never commit `.env` to version control (`.env` is in `.gitignore`)
+- Generate a strong `AUTH_SECRET` for production: `openssl rand -base64 32`
+- Use strong passwords for `POSTGRES_PASSWORD`
+- Ensure `.env` contains no committed secrets
 
 ### Plugins
 
