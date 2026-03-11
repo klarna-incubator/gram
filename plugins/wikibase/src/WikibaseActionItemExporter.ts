@@ -164,6 +164,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
       [];
 
     this.shouldSkipBySeverity(item, skipReasons);
+    await this.removeWikibaseLinksToDeletedItems(dal, item);
 
     await this.shouldSkipIfAlreadyExported(dal, item, skipReasons);
 
@@ -223,6 +224,44 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
         WikibaseActionItemExporter.SKIP_REASONS.ALREADY_EXPORTED,
       );
     }
+  }
+
+  private async removeWikibaseLinksToDeletedItems(
+    dal: DataAccessLayer,
+    item: Threat,
+  ) {
+    const links = await dal.linkService.listLinks(
+      LinkObjectType.Threat,
+      item.id!,
+    );
+    const wikibaseLinks = links.filter(
+      (link) =>
+        link.createdBy === this.key || link.url.includes(WIKIBASE_URL_DOMAIN),
+    );
+    // Get item ids from wikibase links; catch per-link so one failure doesn't fail the batch
+    await Promise.all(
+      wikibaseLinks.map(async (link) => {
+        try {
+          const match = link.url.match(/Q\d+$/);
+          if (!match) {
+            return;
+          }
+          const itemId = match[0] as EntityId;
+          const wikibaseItem = await this.wikibaseSdkClient.getItemDetails(
+            itemId,
+          );
+          log.debug(`Item ${itemId} details: ${JSON.stringify(wikibaseItem)}`);
+          if (!wikibaseItem) {
+            log.info(`Item ${itemId} not found, removing link ${link.id}`);
+            await dal.linkService.deleteLink(link.id);
+          }
+        } catch (err) {
+          log.warn(
+            `Failed to check or remove wikibase link ${link.id} for threat ${item.id}: ${err}`,
+          );
+        }
+      }),
+    );
   }
 
   private async shouldSkipIfNoSystemId(

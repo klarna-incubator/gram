@@ -26,7 +26,7 @@ export class WikibaseSdkClient {
 
   async getItemDetails(
     itemQID: EntityId,
-    properties: any[] = []
+    properties: any[] = [],
   ): Promise<any | null> {
     const url = this.wbSdk.getEntities({
       ids: itemQID,
@@ -37,7 +37,11 @@ export class WikibaseSdkClient {
 
     try {
       const response = await axios.get(url);
-
+      log.debug(`Response: ${JSON.stringify(response.data)}`);
+      if ("missing" in response.data.entities[itemQID]) {
+        log.debug(`Item QID ${itemQID} does not exist (missing)`);
+        return null;
+      }
       const entityData = simplifyClaims(response.data.entities[itemQID].claims);
 
       if (!entityData) {
@@ -79,7 +83,7 @@ export class WikibaseSdkClient {
       const response = await axios.get(url);
 
       const userQIDs = minimizeSimplifiedSparqlResults(
-        simplifySparqlResults(response.data)
+        simplifySparqlResults(response.data),
       );
 
       if (!userQIDs || userQIDs.length === 0) {
@@ -222,7 +226,7 @@ export class WikibaseSdkClient {
 
       const orgUnitQid = filteredData[0].id;
       log.debug(
-        `Found org unit QID: ${orgUnitQid} for org unit: ${systemName}`
+        `Found org unit QID: ${orgUnitQid} for org unit: ${systemName}`,
       );
       return orgUnitQid;
     } catch (error) {
