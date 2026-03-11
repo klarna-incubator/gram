@@ -439,22 +439,24 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
     finding: ThreatModelFinding,
   ): Promise<void> {
     const controls = await dal.controlService.listByThreatId(actionItem.id!);
-    if (controls.length === 0) {
-      log.warn(
-        `No controls for threat ${actionItem.id}, skipping suggested solution assignment.`,
-      );
+    if (controls.length > 0) {
+      const suggestedSolutionText = controls
+        .map(
+          (control, idx) =>
+            `Control #${idx + 1} (${
+              control.inPlace ? "In place" : "Not in place"
+            }): ${control.title} - ${
+              control.description
+                ? control.description
+                : "Please contact the reporter contributor for more information."
+            }`,
+        )
+        .join("; ");
+
+      finding.suggestedSolution = suggestedSolutionText;
+    } else {
       finding.suggestedSolution =
         "No suggested solutions available. Please contact the reporter contributor for more information.";
     }
-    const suggestedSolutionText = controls
-      .map(
-        (control, idx) =>
-          `Control #${idx + 1} (${
-            control.inPlace ? "In place" : "Not in place"
-          }): ${control.title} - ${control.description}`,
-      )
-      .join("; ");
-
-    finding.suggestedSolution = suggestedSolutionText;
   }
 }
