@@ -1,10 +1,12 @@
 import WBEdit from "wikibase-edit";
 import { GeneralConfig } from "wikibase-edit";
-
-import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
+import log4js from "log4js";
 import { ThreatModelFinding } from "./WikibaseActionItemExporter.js";
 
-import { Guid, PropertyId } from "wikibase-sdk";
+import { EntityId, Guid, PropertyId } from "wikibase-sdk";
+import { WikibaseSdkClient } from "./WikibaseSdkClient.js";
+
+const log = log4js.getLogger("WikibasEditClient");
 
 export const generalConfig: GeneralConfig = {
   // A Wikibase instance is required
@@ -45,9 +47,11 @@ export const generalConfig: GeneralConfig = {
 export class WikibaseEditClient {
   config: GeneralConfig = generalConfig;
   wbEdit: ReturnType<typeof WBEdit>;
+  wbSdk: WikibaseSdkClient;
 
-  constructor() {
+  constructor(private wikibaseSdkClient: WikibaseSdkClient) {
     this.wbEdit = WBEdit(this.config);
+    this.wbSdk = this.wikibaseSdkClient;
   }
 
   async editItem(finding: ThreatModelFinding): Promise<any> {
@@ -70,7 +74,7 @@ export class WikibaseEditClient {
         create: true,
         ...data,
       });
-      console.log("Entity created in Wikibase:", { entity });
+      log.info("Entity created in Wikibase:", { entity });
       const claims = entity.claims;
       if (!claims) {
         throw new Error(
@@ -111,7 +115,50 @@ export class WikibaseEditClient {
 
       return entity.id;
     } catch (error) {
-      console.log("Error creating item:", error);
+      log.warn("Error creating item:", error);
+      throw error;
+    }
+  }
+
+  async editQualifier(
+    itemId: EntityId,
+    propertyId: PropertyId,
+    qualifierId: PropertyId,
+    value: string,
+    replaceValue: boolean = true,
+  ) {
+    try {
+      const claim = await this.wbSdk.getClaimData(itemId, propertyId);
+
+      if (!claim?.id) {
+        log.warn(
+          `Claim GUID not found for item QID: ${itemId} and property ID: ${propertyId}`,
+        );
+        return;
+      }
+
+      if (replaceValue && claim?.qualifiers && claim.qualifiers[qualifierId]) {
+        await Promise.all(
+          claim.qualifiers[qualifierId].map(async (el: any) => {
+            await this.wbEdit.qualifier.remove({
+              guid: claim.id,
+              hash: el.hash,
+            });
+          }),
+        );
+      }
+
+      await this.wbEdit.qualifier.set({
+        guid: claim.id,
+        property: qualifierId,
+        value: value,
+      });
+
+      log.debug(
+        `Qualifier updated for item QID: ${itemId} and property ID: ${propertyId}`,
+      );
+    } catch (error) {
+      log.warn("Error editing qualifier:", error);
       throw error;
     }
   }

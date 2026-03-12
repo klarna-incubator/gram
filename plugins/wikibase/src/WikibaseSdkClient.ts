@@ -8,6 +8,7 @@ import {
   EntityId,
   simplifyClaims,
   SimplifiedClaims,
+  PropertyId,
 } from "wikibase-sdk";
 
 const wbkConfig: InstanceConfig = {
@@ -22,6 +23,33 @@ export class WikibaseSdkClient {
 
   constructor() {
     this.wbSdk = WBK(wbkConfig);
+  }
+
+  async getClaimData(itemQID: EntityId, propertyId: PropertyId) {
+    const url = this.wbSdk.getEntities({
+      ids: itemQID,
+      props: ["claims"],
+    });
+    log.debug(
+      `Fetching claim GUID for item QID: ${itemQID} and property ID: ${propertyId} at URL: ${url}`,
+    );
+    try {
+      const response = await axios.get(url);
+
+      if ("missing" in response.data.entities[itemQID]) {
+        log.debug(`Item QID ${itemQID} does not exist (missing)`);
+        return null;
+      }
+      const claimGUID = response.data.entities[itemQID].claims[propertyId][0];
+      log.debug(`Claim GUID: ${JSON.stringify(claimGUID)}`);
+
+      return claimGUID ?? null;
+    } catch (error) {
+      log.warn(
+        `Error fetching claim GUID for item QID: ${itemQID} and property ID: ${propertyId}: ${error}`,
+      );
+      throw error;
+    }
   }
 
   async getItemDetails(
