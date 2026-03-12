@@ -110,8 +110,10 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   key: string = "wikibase";
   exportOnReviewApproved: boolean;
 
-  wikibaseClient: WikibaseEditClient = new WikibaseEditClient();
   wikibaseSdkClient: WikibaseSdkClient = new WikibaseSdkClient();
+  wikibaseClient: WikibaseEditClient = new WikibaseEditClient(
+    this.wikibaseSdkClient,
+  );
   constructor(
     private dal: DataAccessLayer,
     exportOnReviewApproved: boolean = true,
@@ -144,7 +146,9 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   private static readonly SKIP_REASONS = {
     SEVERITY_LOW: "Low severity action items are not exported",
     ALREADY_EXPORTED: "Action item is already exported to one or more tickets.",
+    UPDATED: "Action item has been updated in Wikibase.",
     NO_SYSTEM_ID: "Action item has no system ID.",
+    NO_MODEL_ID: "Action item has no model ID.",
   };
 
   public async export(
@@ -164,14 +168,15 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
       [];
 
     this.shouldSkipBySeverity(item, skipReasons);
-
-    await this.shouldSkipIfAlreadyExported(dal, item, skipReasons);
-
     await this.shouldSkipIfNoSystemId(item, dal, skipReasons);
+    // Only run update path when we have a valid modelId (used in qualifier URL); otherwise we would send invalid data to Wikibase
+    if (skipReasons.length === 0) {
+      await this.shouldUpdateIfAlreadyExported(dal, item, skipReasons);
+    }
 
     if (skipReasons.length > 0) {
       log.info(
-        `Skipping action item ${
+        `Skipping action item creation for item ${
           item.id
         } for the following reasons: ${skipReasons.join(", ")}`,
       );
@@ -204,24 +209,65 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
     }
   }
 
-  private async shouldSkipIfAlreadyExported(
+  private async shouldUpdateIfAlreadyExported(
     dal: DataAccessLayer,
     item: Threat,
     skipReasons: string[],
   ) {
+    if (!item.modelId) {
+      skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.NO_MODEL_ID);
+      return;
+    }
     const links = await dal.linkService.listLinks(
       LinkObjectType.Threat,
       item.id!,
     );
-
-    const hasWikibaseLink = links.some(
+    const wikibaseLinks = links.filter(
       (link) =>
         link.createdBy === this.key || link.url.includes(WIKIBASE_URL_DOMAIN),
     );
-    if (hasWikibaseLink) {
-      skipReasons.push(
-        WikibaseActionItemExporter.SKIP_REASONS.ALREADY_EXPORTED,
+    if (wikibaseLinks.length > 0) {
+      // Get item ids from wikibase links; catch per-link so one failure doesn't fail the batch
+      await Promise.all(
+        wikibaseLinks.map(async (link) => {
+          try {
+            const match = link.url.match(/Q\d+$/);
+            if (!match) {
+              return;
+            }
+            const itemId = match[0] as EntityId;
+            const wikibaseItem = await this.wikibaseSdkClient.getItemDetails(
+              itemId,
+            );
+            log.debug(
+              `Item ${itemId} details: ${JSON.stringify(wikibaseItem)}`,
+            );
+            // If the item is not found, remove the link
+            if (!wikibaseItem) {
+              log.info(`Item ${itemId} not found, removing link ${link.id}`);
+              await dal.linkService.deleteLink(link.id);
+            } else {
+              // If the item is found, update the observed issue qualifier url to the new threat model url
+              log.info(
+                `Updating observed issue qualifier url for item ${itemId} to the new threat model url: https://gram.klarna.net/model/${item.modelId}`,
+              );
+              await this.wikibaseClient.editQualifier(
+                itemId,
+                PROPERTIES.OBSERVED_ISSUE,
+                QUALIFIERS.URL,
+                `https://gram.klarna.net/model/${item.modelId}`,
+              );
+              skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.UPDATED);
+            }
+
+          } catch (err) {
+            log.warn(
+              `Failed to check or update wikibase link ${link.id} for threat ${item.id}: ${err}`,
+            );
+          }
+        }),
       );
+    } else {
     }
   }
 
@@ -251,11 +297,24 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
       // Convert action item to Threat Model Finding
       log.debug(`Converting action item to Threat Model Finding...`);
       const finding = await this.convertActionItemToFinding(dal, actionItem);
-
-      log.info(`Creating new Threat Model Finding in Wikibase...`);
-      const id = await this.wikibaseClient.createItem(finding);
-      log.debug(`Entity created in Wikibase: ${id}`);
-      return id;
+      // Check if item exists in Wikibase
+      const itemQID = await this.wikibaseSdkClient.getItemQID(finding.label);
+      if (itemQID) {
+        log.info(`Item ${itemQID} already exists in Wikibase, updating...`);
+        await this.wikibaseClient.editQualifier(
+          itemQID,
+          PROPERTIES.OBSERVED_ISSUE,
+          QUALIFIERS.URL,
+          `https://gram.klarna.net/model/${actionItem.modelId}`,
+          true,
+        );
+        return itemQID;
+      } else {
+        log.info(`Creating new Threat Model Finding in Wikibase...`);
+        const id = await this.wikibaseClient.createItem(finding);
+        log.debug(`Entity created in Wikibase: ${id}`);
+        return id;
+      }
     } catch (error) {
       log.error(
         `Error converting action item ${actionItem.id} to Threat Model Finding: ${error}`,
@@ -439,22 +498,24 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
     finding: ThreatModelFinding,
   ): Promise<void> {
     const controls = await dal.controlService.listByThreatId(actionItem.id!);
-    if (controls.length === 0) {
-      log.warn(
-        `No controls for threat ${actionItem.id}, skipping suggested solution assignment.`,
-      );
+    if (controls.length > 0) {
+      const suggestedSolutionText = controls
+        .map(
+          (control, idx) =>
+            `Control #${idx + 1} (${
+              control.inPlace ? "In place" : "Not in place"
+            }): ${control.title} - ${
+              control.description
+                ? control.description
+                : "Please contact the reporter contributor for more information."
+            }`,
+        )
+        .join("; ");
+
+      finding.suggestedSolution = suggestedSolutionText;
+    } else {
       finding.suggestedSolution =
         "No suggested solutions available. Please contact the reporter contributor for more information.";
     }
-    const suggestedSolutionText = controls
-      .map(
-        (control, idx) =>
-          `Control #${idx + 1} (${
-            control.inPlace ? "In place" : "Not in place"
-          }): ${control.title} - ${control.description}`,
-      )
-      .join("; ");
-
-    finding.suggestedSolution = suggestedSolutionText;
   }
 }
