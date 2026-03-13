@@ -14,16 +14,19 @@ export class DefaultAuthzProvider implements AuthzProvider {
   async getPermissionsForSystem(
     ctx: RequestContext,
     systemId: string,
-    user: UserToken
+    user: UserToken,
   ): Promise<Permission[]> {
     if (user.roles.length === 0) return [];
+
+    const permissions: Set<Permission> = new Set();
 
     /**
      * Admins have full permission
      */
-    if (user.roles.find((r) => r === Role.Admin)) return AllPermissions;
-
-    const permissions: Permission[] = [];
+    if (user.roles.find((r) => r === Role.Admin)) {
+      AllPermissions.forEach((p) => permissions.add(p));
+      return [...permissions];
+    }
 
     /**
      * Reviewers may review any model
@@ -32,14 +35,20 @@ export class DefaultAuthzProvider implements AuthzProvider {
       /**
        * TODO: give write permission only if reviewer is assigned to the model.
        */
-      permissions.push(Permission.Read, Permission.Write, Permission.Review);
+      [
+        Permission.Read,
+        Permission.Write,
+        Permission.Review,
+        Permission.ExportActionItems,
+        Permission.ManageLink,
+      ].forEach((p) => permissions.add(p));
     }
 
     /**
      * Regular users may read any model
      */
     if (user.roles.find((r) => r === Role.User)) {
-      permissions.push(Permission.Read);
+      permissions.add(Permission.Read);
     }
 
     /**
@@ -47,27 +56,34 @@ export class DefaultAuthzProvider implements AuthzProvider {
      */
     const system = await systemProvider.getSystem(ctx, systemId);
     if (user.teams.find((t) => system?.owners?.find((o) => o.id === t.id))) {
-      permissions.push(Permission.Write, Permission.Delete);
+      [
+        Permission.Write,
+        Permission.Delete,
+        Permission.ExportActionItems,
+        Permission.ManageLink,
+      ].forEach((p) => permissions.add(p));
     }
 
-    return permissions;
+    return [...permissions];
   }
 
   async getPermissionsForStandaloneModel(
     ctx: RequestContext,
     model: Model,
-    user: UserToken
+    user: UserToken,
   ): Promise<Permission[]> {
     const review = await this.dal.reviewService.getByModelId(model.id!);
+
     if (model.systemId) {
       let systemPermissions = await this.getPermissionsForSystem(
         ctx,
         model.systemId,
-        user
+        user,
       );
+
       if (review?.status === ReviewStatus.Approved) {
         systemPermissions = systemPermissions.filter(
-          (p) => p !== Permission.Write
+          (p) => p !== Permission.Write,
         );
       }
       return systemPermissions;
@@ -86,19 +102,27 @@ export class DefaultAuthzProvider implements AuthzProvider {
      * by most users. Ideally here there should be some sharing system.
      */
     if (user.roles.find((r) => r === Role.Reviewer)) {
-      [Permission.Read, Permission.Review, Permission.Write].forEach((p) =>
-        permissions.add(p)
-      );
+      [
+        Permission.Read,
+        Permission.Review,
+        Permission.Write,
+        Permission.ManageLink,
+      ].forEach((p) => permissions.add(p));
     }
 
     if (user.roles.find((r) => r === Role.User)) {
-      [Permission.Read, Permission.Write].forEach((p) => permissions.add(p));
+      [Permission.Read, Permission.Write, Permission.ManageLink].forEach((p) =>
+        permissions.add(p),
+      );
     }
 
     if (model.createdBy === user.sub) {
-      [Permission.Read, Permission.Write, Permission.Delete].forEach((p) =>
-        permissions.add(p)
-      );
+      [
+        Permission.Read,
+        Permission.Write,
+        Permission.Delete,
+        Permission.ManageLink,
+      ].forEach((p) => permissions.add(p));
     }
 
     if (review?.status === ReviewStatus.Approved) {

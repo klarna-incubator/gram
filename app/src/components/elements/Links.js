@@ -5,28 +5,26 @@ import { useDeleteLinkMutation, useListLinksQuery } from "../../api/gram/links";
 import { modalActions } from "../../redux/modalSlice";
 import { ExternalLink } from "./ExternalLink";
 import { MODALS } from "./modal/ModalManager";
-import { useReadOnly } from "../../hooks/useReadOnly";
 
-export function Links({ objectType, objectId }) {
+export function Links({ objectType, objectId, canManageLink }) {
   const dispatch = useDispatch();
   const { data: links } = useListLinksQuery({
     objectType,
     objectId,
   });
   const [deleteLink] = useDeleteLinkMutation();
-  const readOnly = useReadOnly();
 
   const openAddLinkModal = () =>
     dispatch(
       modalActions.open({
         type: MODALS.AddLink.name,
         props: { objectType, objectId },
-      })
+      }),
     );
 
   return (
     <Box>
-      {!readOnly && (
+      {canManageLink && (
         <Tooltip title="Add custom link">
           <IconButton onClick={openAddLinkModal}>
             <AddLinkIcon
@@ -48,11 +46,11 @@ export function Links({ objectType, objectId }) {
             label={e.label}
             size="small"
             onDelete={
-              readOnly
-                ? null
-                : () => {
-                    deleteLink({ linkId: e.id, objectType, objectId });
-                  }
+              canManageLink
+                ? () => {
+                  deleteLink({ linkId: e.id, objectType, objectId });
+                }
+                : null
             }
           />
         ))}

@@ -30,7 +30,7 @@ function getAllTheSecrets(req: Request) {
 
 ## Permissions
 
-Permissions are: _read_, _write_, _delete_, and _review_. These detail the users permission upon a specific object, i.e. the threat model or the system.
+Permissions are: _read_, _write_, _delete_, _review_, _add_link_ and _export_action_items_. These detail the users permission upon a specific object, i.e. the threat model or the system.
 Each model-related route will likely fetch these permissions based on the model id.
 A typical check might look something like this:
 

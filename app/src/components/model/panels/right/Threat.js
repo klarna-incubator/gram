@@ -19,6 +19,8 @@ import {
   useDeleteThreatMutation,
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
+import { useCanExportActionItems } from "../../../../hooks/useCanExportActionItems";
+import { useCanManageLink } from "../../../../hooks/useCanManageLink";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
@@ -58,7 +60,7 @@ export function Threat({
       modalActions.open({
         type: MODALS.ExportActionItem.name,
         props: { threatId: threat.id },
-      })
+      }),
     );
 
   const partialThreatId = threat?.suggestionId
@@ -72,7 +74,7 @@ export function Threat({
     (s) =>
       partialThreatId &&
       s.status === "new" &&
-      s.mitigates.find((m) => m.partialThreatId === partialThreatId)
+      s.mitigates.find((m) => m.partialThreatId === partialThreatId),
   );
 
   const controls = useComponentControls(threat.componentId);
@@ -80,9 +82,10 @@ export function Threat({
   const threatsMap = mitigations?.threatsMap || {};
 
   const readOnly = useReadOnly();
-
+  const canExportActionItems = useCanExportActionItems();
+  const canManageLink = useCanManageLink();
   const linkedControls = controls.filter((c) =>
-    threatsMap[threat.id]?.includes(c.id)
+    threatsMap[threat.id]?.includes(c.id),
   );
 
   function createControlWithMitigation(title) {
@@ -125,7 +128,7 @@ export function Threat({
     controlIds?.length > 0 &&
     controls?.reduce(
       (p, c) => (controlIds.includes(c.id) ? c.inPlace && p : p),
-      true
+      true,
     )
   ) {
     mitigated = true;
@@ -210,16 +213,18 @@ export function Threat({
               />
 
               <Box sx={{ marginLeft: "auto", alignSelf: "flex-start" }}>
-                {!readOnly && !hideExport && exporters?.length > 0 && (
-                  <Tooltip title="Export Threat">
-                    <IconButton
-                      onClick={openExportActionItemModal}
-                      size="small"
-                    >
-                      <IosShareIcon fontSize="inherit" />
-                    </IconButton>
-                  </Tooltip>
-                )}
+                {canExportActionItems &&
+                  !hideExport &&
+                  exporters?.length > 0 && (
+                    <Tooltip title="Export Threat">
+                      <IconButton
+                        onClick={openExportActionItemModal}
+                        size="small"
+                      >
+                        <IosShareIcon fontSize="inherit" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
 
                 {!readOnly && !hideDelete && (
                   <Tooltip title="Delete Threat">
@@ -288,7 +293,7 @@ export function Threat({
             options={[
               ...controlSuggestions,
               ...controls.filter(
-                (c) => !linkedControls.map((l) => l.id).includes(c.id)
+                (c) => !linkedControls.map((l) => l.id).includes(c.id),
               ),
             ]}
             selectExisting={onSelectExisting}
@@ -305,7 +310,11 @@ export function Threat({
         )}
 
         <Box sx={{ marginTop: "10px" }}>
-          <Links objectType={"threat"} objectId={threat.id} />
+          <Links
+            objectType={"threat"}
+            objectId={threat.id}
+            canManageLink={canManageLink}
+          />
         </Box>
       </CardContent>
     </Card>
