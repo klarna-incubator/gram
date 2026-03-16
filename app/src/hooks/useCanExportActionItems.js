@@ -7,7 +7,7 @@ import { useHasModelPermissions } from "./useHasModelPermissions";
  */
 export function useCanExportActionItems() {
   const hasExportActionItems = useHasModelPermissions(
-    PERMISSIONS.EXPORT_ACTION_ITEMS,
+    PERMISSIONS.EXPORT_ACTION_ITEMS
   );
   return hasExportActionItems;
 }

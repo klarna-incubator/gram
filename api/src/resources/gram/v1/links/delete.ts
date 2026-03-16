@@ -26,7 +26,7 @@ export function deleteLink(dal: DataAccessLayer) {
       req,
       link.objectType,
       link.objectId,
-      Permission.ManageLink,
+      Permission.ManageLink
     );
 
     await dal.linkService.deleteLink(id);

@@ -14,7 +14,7 @@ export class DefaultAuthzProvider implements AuthzProvider {
   async getPermissionsForSystem(
     ctx: RequestContext,
     systemId: string,
-    user: UserToken,
+    user: UserToken
   ): Promise<Permission[]> {
     if (user.roles.length === 0) return [];
 
@@ -70,7 +70,7 @@ export class DefaultAuthzProvider implements AuthzProvider {
   async getPermissionsForStandaloneModel(
     ctx: RequestContext,
     model: Model,
-    user: UserToken,
+    user: UserToken
   ): Promise<Permission[]> {
     const review = await this.dal.reviewService.getByModelId(model.id!);
 
@@ -78,12 +78,12 @@ export class DefaultAuthzProvider implements AuthzProvider {
       let systemPermissions = await this.getPermissionsForSystem(
         ctx,
         model.systemId,
-        user,
+        user
       );
 
       if (review?.status === ReviewStatus.Approved) {
         systemPermissions = systemPermissions.filter(
-          (p) => p !== Permission.Write,
+          (p) => p !== Permission.Write
         );
       }
       return systemPermissions;
@@ -112,7 +112,7 @@ export class DefaultAuthzProvider implements AuthzProvider {
 
     if (user.roles.find((r) => r === Role.User)) {
       [Permission.Read, Permission.Write, Permission.ManageLink].forEach((p) =>
-        permissions.add(p),
+        permissions.add(p)
       );
     }
 

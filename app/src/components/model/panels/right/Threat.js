@@ -60,7 +60,7 @@ export function Threat({
       modalActions.open({
         type: MODALS.ExportActionItem.name,
         props: { threatId: threat.id },
-      }),
+      })
     );
 
   const partialThreatId = threat?.suggestionId
@@ -74,7 +74,7 @@ export function Threat({
     (s) =>
       partialThreatId &&
       s.status === "new" &&
-      s.mitigates.find((m) => m.partialThreatId === partialThreatId),
+      s.mitigates.find((m) => m.partialThreatId === partialThreatId)
   );
 
   const controls = useComponentControls(threat.componentId);
@@ -85,7 +85,7 @@ export function Threat({
   const canExportActionItems = useCanExportActionItems();
   const canManageLink = useCanManageLink();
   const linkedControls = controls.filter((c) =>
-    threatsMap[threat.id]?.includes(c.id),
+    threatsMap[threat.id]?.includes(c.id)
   );
 
   function createControlWithMitigation(title) {
@@ -128,7 +128,7 @@ export function Threat({
     controlIds?.length > 0 &&
     controls?.reduce(
       (p, c) => (controlIds.includes(c.id) ? c.inPlace && p : p),
-      true,
+      true
     )
   ) {
     mitigated = true;
@@ -293,7 +293,7 @@ export function Threat({
             options={[
               ...controlSuggestions,
               ...controls.filter(
-                (c) => !linkedControls.map((l) => l.id).includes(c.id),
+                (c) => !linkedControls.map((l) => l.id).includes(c.id)
               ),
             ]}
             selectExisting={onSelectExisting}

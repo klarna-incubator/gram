@@ -19,7 +19,7 @@ export function Links({ objectType, objectId, canManageLink }) {
       modalActions.open({
         type: MODALS.AddLink.name,
         props: { objectType, objectId },
-      }),
+      })
     );
 
   return (
@@ -48,8 +48,8 @@ export function Links({ objectType, objectId, canManageLink }) {
             onDelete={
               canManageLink
                 ? () => {
-                  deleteLink({ linkId: e.id, objectType, objectId });
-                }
+                    deleteLink({ linkId: e.id, objectType, objectId });
+                  }
                 : null
             }
           />

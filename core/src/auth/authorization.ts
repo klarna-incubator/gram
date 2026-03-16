@@ -43,7 +43,7 @@ export function setAuthorizationProvider(newAuthzProvider: AuthzProvider) {
 export async function getPermissionsForSystem(
   ctx: RequestContext,
   systemId: string,
-  user: UserToken,
+  user: UserToken
 ) {
   return authzProvider.getPermissionsForSystem(ctx, systemId, user);
 }
@@ -58,7 +58,7 @@ export async function getPermissionsForSystem(
 export async function getPermissionsForModel(
   ctx: RequestContext,
   model: Model,
-  user: UserToken,
+  user: UserToken
 ) {
   return authzProvider.getPermissionsForStandaloneModel(ctx, model, user);
 }
@@ -77,7 +77,7 @@ export async function hasPermissionsForModelId(
   dal: DataAccessLayer,
   modelId: string,
   user: UserToken,
-  requiredPermissions: Permission[],
+  requiredPermissions: Permission[]
 ) {
   const model = await dal.modelService.getById(modelId);
 
@@ -103,7 +103,7 @@ export async function hasAnyPermissionsForModelId(
   dal: DataAccessLayer,
   modelId: string,
   user: UserToken,
-  requiredPermissions: Permission[],
+  requiredPermissions: Permission[]
 ) {
   const model = await dal.modelService.getById(modelId);
 
@@ -125,7 +125,7 @@ export async function hasPermissionsForModel(
   ctx: RequestContext,
   model: Model,
   user: UserToken,
-  requiredPermissions: Permission[],
+  requiredPermissions: Permission[]
 ) {
   const permissions = await getPermissionsForModel(ctx, model, user);
 
@@ -134,8 +134,8 @@ export async function hasPermissionsForModel(
       `User ${user.sub} is unauthorized for model ${model.id} systemId: ${
         model.systemId
       }. (${permissions.join(",")}) vs required: (${requiredPermissions.join(
-        ",",
-      )})`,
+        ","
+      )})`
     );
   }
 }
@@ -151,7 +151,7 @@ export async function hasAnyPermissionsForModel(
   ctx: RequestContext,
   model: Model,
   user: UserToken,
-  requiredPermissions: Permission[],
+  requiredPermissions: Permission[]
 ) {
   const permissions = await getPermissionsForModel(ctx, model, user);
 
@@ -160,8 +160,8 @@ export async function hasAnyPermissionsForModel(
       `User ${user.sub} is unauthorized for model ${model.id} systemId: ${
         model.systemId
       }. (${permissions.join(",")}) vs required: (${requiredPermissions.join(
-        ",",
-      )})`,
+        ","
+      )})`
     );
   }
 }
@@ -179,7 +179,7 @@ export async function hasPermissionsForSystemId(
   ctx: RequestContext,
   systemId: string,
   user: UserToken,
-  requiredPermissions: Permission[],
+  requiredPermissions: Permission[]
 ) {
   const permissions = await getPermissionsForSystem(ctx, systemId, user);
 
@@ -188,8 +188,8 @@ export async function hasPermissionsForSystemId(
       `User ${
         user.sub
       } is unauthorized for system systemId: ${systemId}. (${permissions.join(
-        ",",
-      )}) vs required: (${requiredPermissions.join(",")})`,
+        ","
+      )}) vs required: (${requiredPermissions.join(",")})`
     );
   }
 }

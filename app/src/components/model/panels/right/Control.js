@@ -48,7 +48,7 @@ export function Control(props) {
   const readOnly = useReadOnly();
   const canManageLink = useCanManageLink();
   const linkedThreats = threats.filter((t) =>
-    controlsMap[control.id]?.includes(t.id),
+    controlsMap[control.id]?.includes(t.id)
   );
 
   useEffect(() => {
@@ -215,7 +215,7 @@ export function Control(props) {
           <EditableSelect
             placeholder="Add Threat"
             options={threats.filter(
-              (t) => !linkedThreats.map((l) => l.id).includes(t.id),
+              (t) => !linkedThreats.map((l) => l.id).includes(t.id)
             )}
             selectExisting={onSelectExisting}
             createNew={createThreatWithMitigation}

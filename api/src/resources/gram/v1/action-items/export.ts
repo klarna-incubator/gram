@@ -30,7 +30,7 @@ export function exportActionItem(dal: DataAccessLayer) {
 
     await req.authz.hasAnyPermissionsForModelId(
       threat.modelId,
-      Permission.ExportActionItems,
+      Permission.ExportActionItems
     );
 
     await dal.actionItemHandler.export(actionItem.exporterKey, [threat]);

@@ -32,21 +32,21 @@ export class CurrentAuthz {
   public any(...roles: Role[]) {
     if (!this.check.any(...roles))
       throw new AuthzError(
-        `required any role: ${roles}, but user had roles ${this.user.roles}`,
+        `required any role: ${roles}, but user had roles ${this.user.roles}`
       );
   }
 
   public all(...roles: Role[]) {
     if (!this.check.all(...roles))
       throw new AuthzError(
-        `required all role: ${roles}, but user had roles ${this.user.roles}`,
+        `required all role: ${roles}, but user had roles ${this.user.roles}`
       );
   }
 
   public is(role: Role) {
     if (!this.check.is(role))
       throw new AuthzError(
-        `required role: ${role}, but user had roles ${this.user.roles}`,
+        `required role: ${role}, but user had roles ${this.user.roles}`
       );
   }
 
@@ -59,7 +59,7 @@ export class CurrentAuthz {
       this.dal,
       modelId,
       this.user,
-      expectedPermissions,
+      expectedPermissions
     );
   }
 
@@ -72,7 +72,7 @@ export class CurrentAuthz {
       this.dal,
       modelId,
       this.user,
-      anyOfThesePermissions,
+      anyOfThesePermissions
     );
   }
 
@@ -84,7 +84,7 @@ export class CurrentAuthz {
       { currentRequest: this.req },
       model,
       this.user,
-      expectedPermissions,
+      expectedPermissions
     );
   }
 
@@ -96,7 +96,7 @@ export class CurrentAuthz {
       { currentRequest: this.req },
       systemId,
       this.user,
-      expectedPermissions,
+      expectedPermissions
     );
   }
 
@@ -104,7 +104,7 @@ export class CurrentAuthz {
     return await getPermissionsForModel(
       { currentRequest: this.req },
       model,
-      this.user,
+      this.user
     );
   }
 }
