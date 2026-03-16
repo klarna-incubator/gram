@@ -17,6 +17,7 @@ import {
   useListMitigationsQuery,
 } from "../../../../api/gram/mitigations";
 import { useCreateThreatMutation } from "../../../../api/gram/threats";
+import { useCanManageLink } from "../../../../hooks/useCanManageLink";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { useModelID } from "../../hooks/useModelID";
 import { useSelectedComponentThreats } from "../../hooks/useSelectedComponentThreats";
@@ -45,7 +46,7 @@ export function Control(props) {
   const controlsMap = mitigations?.controlsMap || {};
 
   const readOnly = useReadOnly();
-
+  const canManageLink = useCanManageLink();
   const linkedThreats = threats.filter((t) =>
     controlsMap[control.id]?.includes(t.id)
   );
@@ -220,7 +221,11 @@ export function Control(props) {
             createNew={createThreatWithMitigation}
           />
         )}
-        <Links objectType={"control"} objectId={control.id} />
+        <Links
+          objectType={"control"}
+          objectId={control.id}
+          canManageLink={canManageLink}
+        />
       </CardContent>
     </Card>
   );
