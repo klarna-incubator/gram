@@ -14,7 +14,7 @@ export function insertLink(dal: DataAccessLayer) {
       req,
       link.objectType,
       link.objectId,
-      Permission.Write
+      Permission.ManageLink
     );
 
     const newLink = await dal.linkService.insertLink(

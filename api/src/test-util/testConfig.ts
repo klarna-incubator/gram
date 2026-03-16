@@ -1,5 +1,6 @@
 import { DefaultAuthzProvider } from "@gram/core/dist/auth/DefaultAuthzProvider.js";
 import { DummyIdentityProvider } from "@gram/core/dist/auth/DummyIdentityProvider.js";
+import { DummyActionItemExporter } from "@gram/core/dist/action-items/DummyActionItemExporter.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
 import type {
   GramConfiguration,
@@ -164,6 +165,7 @@ export const testConfig: GramConfiguration = {
       suggestionSources: [],
       teamProvider: new TestTeamProvider(),
       validationSources: [testValidationRules],
+      actionItemExporters: [new DummyActionItemExporter()],
     };
   },
 };
