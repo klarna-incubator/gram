@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.24.0](https://github.com/klarna-incubator/gram/compare/v4.23.0...v4.24.0) (2026-03-16)
+
+### Bug Fixes
+
+- :bug: fix type errors in ldap plugin ([932922c](https://github.com/klarna-incubator/gram/commit/932922c482f7916b61fbbc00e043a8965eb0d63c))
+- fix path-to-route error ([9bec723](https://github.com/klarna-incubator/gram/commit/9bec723fb9a2b02fcacd64602160e19a224d2d8f))
+
+### Features
+
+- **auth:** add export_action_items and manage_link permissions ([487c458](https://github.com/klarna-incubator/gram/commit/487c458fad2e4f208463bb5ecc81c847b9d071a4))
+
 # [4.23.0](https://github.com/klarna-incubator/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
 
 ### Bug Fixes
