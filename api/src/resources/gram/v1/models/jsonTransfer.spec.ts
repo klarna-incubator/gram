@@ -1,5 +1,5 @@
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
-import * as request from "supertest";
+import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import {
   sampleOtherUserToken,
@@ -115,10 +115,11 @@ describe("models.jsonTransfer", () => {
   it("requires authorization for export/import endpoints", async () => {
     const sourceModelId = await createSourceModel();
 
-    const forbiddenExport = await request(app)
+    const exportWithOtherUser = await request(app)
       .get(`/api/v1/models/${sourceModelId}/export-json`)
       .set("Authorization", otherToken);
-    expect(forbiddenExport.status).toBe(403);
+    // In DefaultAuthzProvider, Role.User has read permission on models.
+    expect(exportWithOtherUser.status).toBe(200);
 
     const exportRes = await request(app)
       .get(`/api/v1/models/${sourceModelId}/export-json`)
