@@ -12,6 +12,8 @@ import { Tutorial } from "../../model/tutorial/Tutorial";
 import { CancelReview } from "../../reviews/modals/CancelReview";
 import { DeclineReview } from "../../reviews/modals/DeclineReview";
 import { ExportActionItem } from "../../model/modals/ExportActionItem";
+import { ExportModelJson } from "../../model/modals/ExportModelJson";
+import { ImportModelJson } from "../../model/modals/ImportModelJson";
 import { RevisitActionItems } from "../../model/modals/RevisitActionItems";
 import { QualityCheck } from "../../model/modals/QualityCheck";
 
@@ -29,6 +31,8 @@ export const MODALS = {
   CancelReview,
   AddLink,
   ExportActionItem,
+  ExportModelJson,
+  ImportModelJson,
   RevisitActionItems,
 };
 

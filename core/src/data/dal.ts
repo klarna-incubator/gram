@@ -32,6 +32,7 @@ import { FlowDataService } from "./flow/FlowDataService.js";
 import { ValidationEngine } from "../validation/engine.js";
 import { ResourceHandler } from "../resources/ResourceHandler.js";
 import { ResourceMatchingDataService } from "./matchings/ResourceMatchingDataService.js";
+import { ModelTransferService } from "./models/ModelTransferService.js";
 
 /**
  * Class that carries access to all DataServices, useful for passing dependencies.
@@ -53,6 +54,7 @@ export class DataAccessLayer {
   linkService: LinkDataService;
   flowService: FlowDataService;
   resourceMatchingService: ResourceMatchingDataService;
+  modelTransferService: ModelTransferService;
 
   // Non-Database related handlers
   sysPropHandler: SystemPropertyHandler;
@@ -104,6 +106,7 @@ export class DataAccessLayer {
     this.linkService = new LinkDataService(this);
     this.flowService = new FlowDataService(this);
     this.resourceMatchingService = new ResourceMatchingDataService(this);
+    this.modelTransferService = new ModelTransferService(this);
 
     // Initialize Engines
     this.validationEngine = new ValidationEngine(
