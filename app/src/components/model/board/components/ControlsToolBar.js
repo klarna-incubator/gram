@@ -3,6 +3,8 @@ import PanToolIcon from "@mui/icons-material/PanTool";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Paper, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,12 +22,18 @@ import { AddComponentButton } from "./AddComponentButton";
 import { DownloadImageButton } from "./DownloadImageButton";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { useIsFramed } from "../../../../hooks/useIsFramed";
+import { useHasModelPermissions } from "../../../../hooks/useHasModelPermissions";
+import { PERMISSIONS } from "../../constants";
+import { modalActions } from "../../../../redux/modalSlice";
+import { MODALS } from "../../../elements/modal/ModalManager";
 
 export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
   const dispatch = useDispatch();
 
   const readOnly = useReadOnly();
   const isFramed = useIsFramed();
+  const canReadModel = useHasModelPermissions(PERMISSIONS.READ);
+  const canWriteModel = useHasModelPermissions(PERMISSIONS.WRITE);
 
   let { cursorMode, bottomPanelCollapsed } = useSelector(({ model }) => ({
     cursorMode: model.cursorType,
@@ -80,6 +88,32 @@ export function ControlsToolBar({ zoomInCenter, onAddComponent }) {
           <ZoomOutIcon />
         </ToggleButton>
         <DownloadImageButton />
+        {!isFramed && (
+          <ToggleButton
+            value="export-model-json"
+            disabled={!canReadModel}
+            onClick={() =>
+              dispatch(modalActions.open({ type: MODALS.ExportModelJson.name }))
+            }
+          >
+            <Tooltip title={"Export full model as JSON"}>
+              <IosShareIcon />
+            </Tooltip>
+          </ToggleButton>
+        )}
+        {!isFramed && (
+          <ToggleButton
+            value="import-model-json"
+            disabled={readOnly || !canWriteModel}
+            onClick={() =>
+              dispatch(modalActions.open({ type: MODALS.ImportModelJson.name }))
+            }
+          >
+            <Tooltip title={"Import model from JSON"}>
+              <UploadFileIcon />
+            </Tooltip>
+          </ToggleButton>
+        )}
         {!isFramed && (
           <ToggleButton
             value="validate-model"
