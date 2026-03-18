@@ -7,10 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
@@ -41,7 +37,6 @@ export function ImportModelJson({ modelId }) {
   const navigate = useNavigate();
   const routeModelId = useModelID();
   const selectedModelId = modelId || routeModelId;
-  const [mode, setMode] = useState("create-new");
   const [file, setFile] = useState(null);
   const [localError, setLocalError] = useState("");
   const [importModelJson, result] = useImportModelJsonMutation();
@@ -59,21 +54,9 @@ export function ImportModelJson({ modelId }) {
         {localError && <ErrorLine message={localError} />}
         {result.error && <ErrorLine message={"Error importing model JSON"} />}
         <Typography sx={{ marginBottom: "12px" }}>
-          Import a previously exported Gram JSON file.
+          Replace current model contents using a previously exported Gram JSON
+          file.
         </Typography>
-
-        <FormControl fullWidth sx={{ marginBottom: "12px" }}>
-          <InputLabel id="import-mode-label">Import mode</InputLabel>
-          <Select
-            labelId="import-mode-label"
-            value={mode}
-            label="Import mode"
-            onChange={(event) => setMode(event.target.value)}
-          >
-            <MenuItem value="create-new">Create New Model</MenuItem>
-            <MenuItem value="in-place">Replace Current Model</MenuItem>
-          </Select>
-        </FormControl>
 
         <Button variant="outlined" component="label">
           Choose JSON file
@@ -106,13 +89,15 @@ export function ImportModelJson({ modelId }) {
               setLocalError("Please choose a JSON file first.");
               return;
             }
+            if (!selectedModelId) {
+              setLocalError("No target model selected for import.");
+              return;
+            }
             try {
               const payload = await parseJsonFile(file);
               const importResult = await importModelJson({
-                mode,
                 payload,
-                targetModelId:
-                  mode === "in-place" ? selectedModelId : undefined,
+                targetModelId: selectedModelId,
               }).unwrap();
               dispatch(modalActions.close());
               navigate(`/model/${importResult.modelId}`);
