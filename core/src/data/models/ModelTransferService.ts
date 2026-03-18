@@ -163,7 +163,11 @@ export class ModelTransferService extends EventEmitter {
       let targetShouldReviewActionItems =
         payload.model.shouldReviewActionItems || false;
       if (options.mode === "in-place") {
-        const targetModel = await this.prepareInPlaceImport(client, payload, options);
+        const targetModel = await this.prepareInPlaceImport(
+          client,
+          payload,
+          options
+        );
         targetModelId = targetModel.id;
         targetSystemId = targetModel.systemId;
         targetVersion = targetModel.version;

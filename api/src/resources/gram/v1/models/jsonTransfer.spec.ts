@@ -361,11 +361,11 @@ describe("models.jsonTransfer", () => {
 
     expect(importedThreatsRes.status).toBe(200);
     expect(importedControlsRes.status).toBe(200);
-    expect(importedFlowIds.has(importedThreatsRes.body.threats[0].componentId)).toBe(
-      true
-    );
-    expect(importedFlowIds.has(importedControlsRes.body.controls[0].componentId)).toBe(
-      true
-    );
+    expect(
+      importedFlowIds.has(importedThreatsRes.body.threats[0].componentId)
+    ).toBe(true);
+    expect(
+      importedFlowIds.has(importedControlsRes.body.controls[0].componentId)
+    ).toBe(true);
   });
 });

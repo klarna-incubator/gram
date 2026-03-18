@@ -146,9 +146,8 @@ export const ModelJsonTransferPayloadSchema = z.object({
     .nullable(),
 });
 
-export const ImportJsonRequestSchema = z
-  .object({
-    mode: z.literal("in-place"),
-    targetModelId: z.string().uuid(),
-    payload: ModelJsonTransferPayloadSchema,
-  });
+export const ImportJsonRequestSchema = z.object({
+  mode: z.literal("in-place"),
+  targetModelId: z.string().uuid(),
+  payload: ModelJsonTransferPayloadSchema,
+});

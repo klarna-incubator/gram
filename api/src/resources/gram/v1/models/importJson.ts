@@ -7,9 +7,7 @@ const MAX_IMPORT_PAYLOAD_BYTES = 10 * 1024 * 1024; // 10MB
 
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const { targetModelId, payload } = ImportJsonRequestSchema.parse(
-      req.body
-    );
+    const { targetModelId, payload } = ImportJsonRequestSchema.parse(req.body);
     if (
       Buffer.byteLength(JSON.stringify(payload), "utf8") >
       MAX_IMPORT_PAYLOAD_BYTES
