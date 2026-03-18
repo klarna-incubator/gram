@@ -84,6 +84,7 @@ export const ModelJsonTransferPayloadSchema = z.object({
       id: z.string().uuid(),
       title: z.string(),
       description: z.string().nullable(),
+      // Attachment target id: can be either component id or data-flow id.
       componentId: z.string().uuid(),
       isActionItem: z.boolean().optional(),
       severity: z.nativeEnum(ThreatSeverity).nullable().optional(),
@@ -96,6 +97,7 @@ export const ModelJsonTransferPayloadSchema = z.object({
       title: z.string(),
       description: z.string().nullable(),
       inPlace: z.boolean(),
+      // Attachment target id: can be either component id or data-flow id.
       componentId: z.string().uuid(),
       suggestionId: z.string().optional(),
     })
@@ -144,17 +146,8 @@ export const ModelJsonTransferPayloadSchema = z.object({
     .nullable(),
 });
 
-export const ImportJsonRequestSchema = z
-  .object({
-    mode: z.enum(["create-new", "in-place"]),
-    targetModelId: z.string().uuid().optional(),
-    payload: ModelJsonTransferPayloadSchema,
-  })
-  .superRefine((value, ctx) => {
-    if (value.mode === "in-place" && !value.targetModelId) {
-      ctx.addIssue({
-        code: "custom",
-        message: "targetModelId is required for in-place import mode",
-      });
-    }
-  });
+export const ImportJsonRequestSchema = z.object({
+  mode: z.literal("in-place"),
+  targetModelId: z.string().uuid(),
+  payload: ModelJsonTransferPayloadSchema,
+});

@@ -91,10 +91,10 @@ const modelApi = api.injectEndpoints({
       providesTags: [],
     }),
     importModelJson: build.mutation({
-      query: ({ mode, payload, targetModelId }) => ({
+      query: ({ payload, targetModelId }) => ({
         url: `/models/import-json`,
         method: "POST",
-        body: { mode, payload, targetModelId },
+        body: { mode: "in-place", payload, targetModelId },
       }),
       transformResponse: (response) => response,
       invalidatesTags: [
