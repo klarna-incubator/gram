@@ -156,10 +156,26 @@ export class ModelTransferService extends EventEmitter {
     this.validatePayload(payload, options.mode);
 
     const result = await this.dal.pool.runTransaction(async (client) => {
-      const targetModelId =
-        options.mode === "in-place"
-          ? await this.prepareInPlaceImport(client, payload, options)
-          : await this.createTargetModel(client, payload, options.importedBy);
+      let targetModelId: string;
+      let targetSystemId: string | null = payload.model.systemId;
+      let targetVersion = payload.model.version;
+      let targetIsTemplate = payload.model.isTemplate || false;
+      let targetShouldReviewActionItems =
+        payload.model.shouldReviewActionItems || false;
+      if (options.mode === "in-place") {
+        const targetModel = await this.prepareInPlaceImport(client, payload, options);
+        targetModelId = targetModel.id;
+        targetSystemId = targetModel.systemId;
+        targetVersion = targetModel.version;
+        targetIsTemplate = targetModel.isTemplate;
+        targetShouldReviewActionItems = targetModel.shouldReviewActionItems;
+      } else {
+        targetModelId = await this.createTargetModel(
+          client,
+          payload,
+          options.importedBy
+        );
+      }
 
       const componentMap = new Map<string, string>();
       payload.modelData.components.forEach((component) => {
@@ -169,6 +185,13 @@ export class ModelTransferService extends EventEmitter {
       const dataFlowMap = new Map<string, string>();
       payload.modelData.dataFlows.forEach((dataFlow) => {
         dataFlowMap.set(dataFlow.id, randomUUID());
+      });
+
+      // Threats/controls can be attached to either components or data-flows.
+      // Keep both attachment target types addressable during remap.
+      const elementMap = new Map(componentMap);
+      dataFlowMap.forEach((newId, oldId) => {
+        elementMap.set(oldId, newId);
       });
 
       const remappedModelData = {
@@ -192,7 +215,10 @@ export class ModelTransferService extends EventEmitter {
       await this.updateTargetModel(
         client,
         targetModelId,
-        payload,
+        targetSystemId,
+        targetVersion,
+        targetIsTemplate,
+        targetShouldReviewActionItems,
         remappedModelData
       );
 
@@ -206,7 +232,7 @@ export class ModelTransferService extends EventEmitter {
         client,
         targetModelId,
         payload,
-        componentMap,
+        elementMap,
         suggestionMap,
         options.importedBy
       );
@@ -214,7 +240,7 @@ export class ModelTransferService extends EventEmitter {
         client,
         targetModelId,
         payload,
-        componentMap,
+        elementMap,
         suggestionMap,
         options.importedBy
       );
@@ -249,7 +275,9 @@ export class ModelTransferService extends EventEmitter {
         componentMap,
         options.importedBy
       );
-      await this.upsertReview(client, targetModelId, payload);
+      if (options.mode !== "in-place") {
+        await this.upsertReview(client, targetModelId, payload);
+      }
 
       return targetModelId;
     });
@@ -280,6 +308,7 @@ export class ModelTransferService extends EventEmitter {
     }
 
     const dataFlowIds = new Set(payload.modelData.dataFlows.map((df) => df.id));
+    const attachableIds = new Set<string>([...componentIds, ...dataFlowIds]);
     if (dataFlowIds.size !== payload.modelData.dataFlows.length) {
       throw new InvalidInputError(
         "Duplicate data flow IDs in modelData.dataFlows."
@@ -308,17 +337,17 @@ export class ModelTransferService extends EventEmitter {
     }
 
     payload.threats.forEach((threat) => {
-      if (!componentIds.has(threat.componentId)) {
+      if (!attachableIds.has(threat.componentId)) {
         throw new InvalidInputError(
-          `Threat ${threat.id} references unknown component ${threat.componentId}.`
+          `Threat ${threat.id} references unknown component/data-flow ${threat.componentId}.`
         );
       }
     });
 
     payload.controls.forEach((control) => {
-      if (!componentIds.has(control.componentId)) {
+      if (!attachableIds.has(control.componentId)) {
         throw new InvalidInputError(
-          `Control ${control.id} references unknown component ${control.componentId}.`
+          `Control ${control.id} references unknown component/data-flow ${control.componentId}.`
         );
       }
     });
@@ -442,7 +471,7 @@ export class ModelTransferService extends EventEmitter {
   ) {
     const targetModelId = options.targetModelId || payload.model.id;
     const existing = await client.query(
-      "SELECT id FROM models WHERE id = $1::uuid AND deleted_at IS NULL",
+      "SELECT id, system_id, version, is_template, should_review_action_items FROM models WHERE id = $1::uuid AND deleted_at IS NULL",
       [targetModelId]
     );
     if (existing.rows.length === 0) {
@@ -493,7 +522,13 @@ export class ModelTransferService extends EventEmitter {
       [targetModelId, options.importedBy]
     );
 
-    return targetModelId;
+    return {
+      id: targetModelId,
+      systemId: existing.rows[0].systemId ?? existing.rows[0].system_id ?? null,
+      version: existing.rows[0].version,
+      isTemplate: existing.rows[0].is_template,
+      shouldReviewActionItems: existing.rows[0].should_review_action_items,
+    };
   }
 
   private async createTargetModel(
@@ -522,7 +557,10 @@ export class ModelTransferService extends EventEmitter {
   private async updateTargetModel(
     client: pg.PoolClient,
     targetModelId: string,
-    payload: ModelExportPayload,
+    systemId: string | null,
+    version: string,
+    isTemplate: boolean,
+    shouldReviewActionItems: boolean | null,
     modelData: object
   ) {
     await client.query(
@@ -536,11 +574,11 @@ export class ModelTransferService extends EventEmitter {
       WHERE id = $1::uuid`,
       [
         targetModelId,
-        payload.model.systemId,
-        payload.model.version,
+        systemId,
+        version,
         JSON.stringify(modelData),
-        payload.model.isTemplate || false,
-        payload.model.shouldReviewActionItems || false,
+        isTemplate,
+        shouldReviewActionItems,
       ]
     );
   }
@@ -620,7 +658,7 @@ export class ModelTransferService extends EventEmitter {
     client: pg.PoolClient,
     targetModelId: string,
     payload: ModelExportPayload,
-    componentMap: Map<string, string>,
+    attachmentMap: Map<string, string>,
     suggestionMap: ImportedSuggestion,
     importedBy: string
   ) {
@@ -637,7 +675,7 @@ export class ModelTransferService extends EventEmitter {
           threat.title,
           threat.description,
           targetModelId,
-          componentMap.get(threat.componentId),
+          attachmentMap.get(threat.componentId),
           importedBy,
           threat.suggestionId
             ? suggestionMap.threats.get(threat.suggestionId)
@@ -654,7 +692,7 @@ export class ModelTransferService extends EventEmitter {
     client: pg.PoolClient,
     targetModelId: string,
     payload: ModelExportPayload,
-    componentMap: Map<string, string>,
+    attachmentMap: Map<string, string>,
     suggestionMap: ImportedSuggestion,
     importedBy: string
   ) {
@@ -672,7 +710,7 @@ export class ModelTransferService extends EventEmitter {
           control.description,
           control.inPlace,
           targetModelId,
-          componentMap.get(control.componentId),
+          attachmentMap.get(control.componentId),
           importedBy,
           control.suggestionId
             ? suggestionMap.controls.get(control.suggestionId)

@@ -31,6 +31,7 @@ export interface ModelExportThreat {
   id: string;
   title: string;
   description: string | null;
+  // Attachment target id: can reference either a component id or a data-flow id.
   componentId: string;
   isActionItem?: boolean;
   severity?: ThreatSeverity | null;
@@ -42,6 +43,7 @@ export interface ModelExportControl {
   title: string;
   description: string | null;
   inPlace: boolean;
+  // Attachment target id: can reference either a component id or a data-flow id.
   componentId: string;
   suggestionId?: string;
 }
