@@ -11,6 +11,8 @@ import setSystemId from "./setSystemId.js";
 import setTemplate from "./setTemplate.js";
 import templates from "./templates.js";
 import setShouldReviewActionItems from "./setShouldReviewActionItems.js";
+import exportJson from "./exportJson.js";
+import importJson from "./importJson.js";
 
 export function modelsRouter(dal: DataAccessLayer): express.Router {
   const router = express.Router({ mergeParams: true });
@@ -27,5 +29,7 @@ export function modelsRouter(dal: DataAccessLayer): express.Router {
     "/:id/set-should-review-action-items",
     setShouldReviewActionItems(dal)
   );
+  router.get("/:id/export-json", exportJson(dal));
+  router.post("/import-json", importJson(dal));
   return router;
 }
