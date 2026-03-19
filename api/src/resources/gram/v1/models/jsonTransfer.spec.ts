@@ -1,4 +1,5 @@
 import { _deleteAllTheThings } from "@gram/core/dist/data/utils.js";
+import { randomUUID } from "crypto";
 import request from "supertest";
 import { createTestApp } from "../../../../test-util/app.js";
 import {
@@ -367,5 +368,167 @@ describe("models.jsonTransfer", () => {
     expect(
       importedFlowIds.has(importedControlsRes.body.controls[0].componentId)
     ).toBe(true);
+  });
+
+  it("imports while skipping controls with orphaned attachment targets", async () => {
+    const sourceModelId = await createSourceModel();
+
+    const exportRes = await request(app)
+      .get(`/api/v1/models/${sourceModelId}/export-json`)
+      .set("Authorization", token);
+    expect(exportRes.status).toBe(200);
+
+    const orphanTargetId = "ab2dfd16-3726-43ae-81ca-09497b248027";
+    const orphanControlId = "4f6b1a42-c2f6-4f20-9f64-4d8c9a5d0f18";
+
+    const payload = {
+      ...exportRes.body.payload,
+      controls: [
+        ...exportRes.body.payload.controls,
+        {
+          ...exportRes.body.payload.controls[0],
+          id: orphanControlId,
+          componentId: orphanTargetId,
+          title: "Orphan control",
+        },
+      ],
+      mitigations: [
+        ...exportRes.body.payload.mitigations,
+        {
+          threatId: exportRes.body.payload.threats[0].id,
+          controlId: orphanControlId,
+        },
+      ],
+      links: [
+        ...exportRes.body.payload.links,
+        {
+          objectType: "control",
+          objectId: orphanControlId,
+          label: "orphan",
+          url: "https://example.com/orphan",
+          icon: "link",
+        },
+      ],
+    };
+
+    const importRes = await request(app)
+      .post("/api/v1/models/import-json")
+      .set("Authorization", token)
+      .send({
+        mode: "in-place",
+        targetModelId: sourceModelId,
+        payload,
+      });
+    expect(importRes.status).toBe(200);
+
+    const controlsRes = await request(app)
+      .get(`/api/v1/models/${sourceModelId}/controls`)
+      .set("Authorization", token);
+    const mitigationsRes = await request(app)
+      .get(`/api/v1/models/${sourceModelId}/mitigations`)
+      .set("Authorization", token);
+
+    expect(controlsRes.status).toBe(200);
+    expect(mitigationsRes.status).toBe(200);
+    expect(controlsRes.body.controls.length).toBe(1);
+    expect(mitigationsRes.body.mitigations.length).toBe(1);
+    expect(
+      controlsRes.body.controls.some((c: any) => c.title === "Orphan control")
+    ).toBe(false);
+  });
+
+  it("export filters orphan controls and their dependencies", async () => {
+    const sourceModelId = await createSourceModel();
+    const orphanTargetId = randomUUID();
+    const orphanControlId = randomUUID();
+
+    const threatRes = await request(app)
+      .get(`/api/v1/models/${sourceModelId}/threats`)
+      .set("Authorization", token);
+    expect(threatRes.status).toBe(200);
+    const threatId = threatRes.body.threats[0].id;
+
+    await dal.pool.query(
+      `INSERT INTO controls
+      (id, title, description, in_place, model_id, component_id, created_by)
+      VALUES ($1::uuid, $2::varchar, $3::varchar, $4::boolean, $5::uuid, $6::uuid, $7::varchar)`,
+      [
+        orphanControlId,
+        "Orphan control for export filtering",
+        "orphan",
+        false,
+        sourceModelId,
+        orphanTargetId,
+        "test-user",
+      ]
+    );
+    await dal.pool.query(
+      `INSERT INTO mitigations (threat_id, control_id, created_by)
+      VALUES ($1::uuid, $2::uuid, $3::varchar)`,
+      [threatId, orphanControlId, "test-user"]
+    );
+    await dal.pool.query(
+      `INSERT INTO links (object_type, object_id, label, icon, url, created_by)
+      VALUES ($1::varchar, $2::varchar, $3::varchar, $4::varchar, $5::varchar, $6::varchar)`,
+      [
+        "control",
+        orphanControlId,
+        "orphan",
+        "link",
+        "https://example.com/orphan",
+        "test-user",
+      ]
+    );
+
+    const exportRes = await request(app)
+      .get(`/api/v1/models/${sourceModelId}/export-json`)
+      .set("Authorization", token);
+    expect(exportRes.status).toBe(200);
+
+    expect(
+      exportRes.body.payload.controls.some((c: any) => c.id === orphanControlId)
+    ).toBe(false);
+    expect(
+      exportRes.body.payload.mitigations.some(
+        (m: any) => m.controlId === orphanControlId
+      )
+    ).toBe(false);
+    expect(
+      exportRes.body.payload.links.some(
+        (l: any) => l.objectType === "control" && l.objectId === orphanControlId
+      )
+    ).toBe(false);
+  });
+
+  it("imports when component systems contains null values", async () => {
+    const sourceModelId = await createSourceModel();
+
+    const exportRes = await request(app)
+      .get(`/api/v1/models/${sourceModelId}/export-json`)
+      .set("Authorization", token);
+    expect(exportRes.status).toBe(200);
+
+    const payload = {
+      ...exportRes.body.payload,
+      modelData: {
+        ...exportRes.body.payload.modelData,
+        components: exportRes.body.payload.modelData.components.map(
+          (component: any, index: number) =>
+            index === 0
+              ? { ...component, systems: [null, "my-system"] }
+              : component
+        ),
+      },
+    };
+
+    const importRes = await request(app)
+      .post("/api/v1/models/import-json")
+      .set("Authorization", token)
+      .send({
+        mode: "in-place",
+        targetModelId: sourceModelId,
+        payload,
+      });
+    expect(importRes.status).toBe(200);
   });
 });
