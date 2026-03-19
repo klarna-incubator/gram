@@ -14,7 +14,7 @@ const ComponentSchema = z.object({
   name: z.string(),
   classes: z.array(z.any()).optional(),
   description: z.string().optional(),
-  systems: z.array(z.string()).optional(),
+  systems: z.array(z.string().nullable()).optional(),
 });
 
 const DataFlowSchema = z.object({
