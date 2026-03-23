@@ -71,7 +71,6 @@
       "enabled": true
     },
     "minimum_instances": 1,
-    "container_size": "small",
     "canary_promotion": {
       "strategy": "CONFIRM",
       "timeout": 1200
@@ -213,6 +212,7 @@
       "WIKIBASE_PASSWORD": {
         "secret": "/wikibase.password"
       }
-    }
+    },
+    "container_resources": {"size": "small", "architecture": "linux/arm64"}
   }
 }

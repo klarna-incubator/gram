@@ -1,5 +1,4 @@
 version: '2'
-
 stages:
   - install
   - lint
@@ -7,13 +6,10 @@ stages:
   - test
   - audit_build
   - deploy
-
 var:
   SERVICE_NAME: "gram"
   SERVICE_METADATA_FILE: "c2c-service-metadata.json"
   ARTIFACT_NAME: "l-docker-secure-development-production.artifactory.klarna.net/secure-development/gram"
-
-
 tasks:
   install:
     stage: install
@@ -47,7 +43,7 @@ tasks:
       NODE_OPTIONS: --max-old-space-size=4096
     docker: true
     command:
-      - docker run --rm -d -e POSTGRES_PASSWORD=somethingsecretfortesting -e POSTGRES_USER=gram-test -p 5433:5432 r-docker-docker-hub.artifactory.klarna.net/postgres:12      
+      - docker run --rm -d -e POSTGRES_PASSWORD=somethingsecretfortesting -e POSTGRES_USER=gram-test -p 5433:5432 r-docker-docker-hub.artifactory.klarna.net/postgres:12
       - npm test
   audit_build:
     stage: audit_build
@@ -111,3 +107,4 @@ tasks:
           --stage "$STAGE" \
           --tag "$COMMIT_HASH" \
           --wait-for-completion
+arch: arm64
