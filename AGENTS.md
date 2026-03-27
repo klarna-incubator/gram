@@ -340,6 +340,51 @@ The import handler enforces a **10 MB** limit on the payload (`importJson.ts`). 
 
 For large models, reduce verbose descriptions or remove the optional `aiInstructions` block from `metadata` before importing. A safe rule of thumb: descriptions truncated to 350 characters and no `aiInstructions` will keep a 40-threat / 60-control model well under the limit.
 
+### Discovering and assigning component classes
+
+Each component can carry a `classes` array that links it to a tech-stack icon and drives threat/control suggestions from the plugin library. Use the catalog script to discover every available class:
+
+```bash
+# List all classes (table)
+python3 scripts/list-component-classes.py
+
+# Filter by keyword
+python3 scripts/list-component-classes.py --filter secrets
+
+# Restrict to one plugin
+python3 scripts/list-component-classes.py --plugin aws
+
+# Output as JSON for scripting
+python3 scripts/list-component-classes.py --format json
+```
+
+**Commonly needed classes (quick reference)**
+
+| Class name | ID | Plugin | Typical use |
+|---|---|---|---|
+| `AWS` | `6f860ca0-d093-462e-8724-345de463917d` | aws | Generic AWS resource |
+| `AWS Secrets Manager` | `764ac511-e39b-499b-a8ee-7cac43ac72dc` | aws | Secrets store |
+| `AWS Systems Manager` | `c0d9c5bc-04b7-4a71-bf14-38dc104b1607` | aws | SSM Parameter Store |
+| `Amazon RDS` | `f313446f-d8b1-435d-b406-40f3b5d1b4ef` | aws | Relational database |
+| `Amazon S3 Standard` | `b40ebed3-46cd-41b7-a956-cfd23ce25a4e` | aws | Object storage |
+| `AWS Lambda` | `ef220954-5701-4a7c-8dae-416b8d5d8536` | aws | Serverless function |
+| `Amazon EC2` | `892eb7eb-3ed7-452e-9d57-4dd06c25b65d` | aws | Virtual machine |
+| `AWS Identity and Access Management` | `5c49ceab-723b-4911-902d-78588bc3af4c` | aws | IAM |
+| `Azure Active Directory` | `7e0c3809-64f4-4402-8f72-35cb214ab798` | azure | Microsoft Entra ID / AAD |
+| `Microsoft Azure` | `39032a3c-d160-412c-8d75-7064cc4362a5` | svgporn | Azure-hosted SaaS |
+| `Microsoft` | `7ea205a0-8256-44e2-bb18-3bf37d685bde` | svgporn | Microsoft product/service |
+| `Microsoft Windows` | `3fc8b4c6-0821-4f4d-9890-fb72f5e043b4` | svgporn | Windows endpoint |
+| `Microsoft Teams` | `d3d4e92b-a71e-4eaf-8588-ad13cebd52ca` | svgporn | Teams collaboration |
+| `Google Workspace` | `d3d98298-1600-4f36-9ed6-d0e688d4d8f6` | svgporn | Google Workspace |
+| `Google Drive` | `b9a59d2f-0960-4195-8593-0684cf825544` | svgporn | Google Drive |
+| `slack` | `8f937e72-4c0e-4774-a79b-a4b6268a2f6f` | svgporn | Slack |
+| `docker` | `ec2b239c-e9ac-4b6e-bb38-acd636d71269` | svgporn | Docker container |
+| `Python` | `761c167b-b742-4baa-a6cb-9e2ea2530b1e` | svgporn | Python service |
+| `Kafka` | `7452d79f-fa2a-49bf-a739-46bfe6af2c77` | svgporn | Kafka / streaming |
+| `Okta` | `3743370f-1118-426e-8263-7cb405fd74c1` | svgporn | Okta IdP |
+
+Each class object in the JSON must include `id`, `name`, `icon`, and `componentType`. Use the script output to get the correct `icon` path — **do not guess it**.
+
 ### Validating a generated JSON before import
 
 Use the Zod schema directly to pre-validate without running the server:
