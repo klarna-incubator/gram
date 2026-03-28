@@ -39,7 +39,7 @@
     "express": "^5.0.1",
     "express-physical": "^2.0.0",
     "express-prom-bundle": "^8.0.0",
-    "handlebars": "^4.7.7",
+    "handlebars": "^4.7.9",
     "helmet": "^6.0.0",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",

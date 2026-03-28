@@ -39,7 +39,7 @@
     "emailjs": "^4.0.3",
     "express": "^5.0.1",
     "global-agent": "^3.0.0",
-    "handlebars": "^4.7.7",
+    "handlebars": "^4.7.9",
     "jsonwebtoken": "^9.0.0",
     "log4js": "^6.6.1",
     "pg": "^8.13.1",
