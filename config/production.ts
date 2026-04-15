@@ -31,6 +31,7 @@ export const productionConfig: GramConfiguration = {
         ["security-champions", Role.Reviewer],
         ["access.1288598.prod.users", Role.User],
         ["access.1288598.prod.sso-prod", Role.User],
+        ["access.1288598.prod.system-api-access", Role.User],
       ]),
       searchBase: LDAPUserSearchBase,
       searchFilter: (sub: string) => {
@@ -47,9 +48,7 @@ export const productionConfig: GramConfiguration = {
     );
     const wikibaseActionItemExporter = new WikibaseActionItemExporter(dal);
 
-    providers.actionItemExporters = [
-      wikibaseActionItemExporter,
-    ];
+    providers.actionItemExporters = [wikibaseActionItemExporter];
 
     return providers;
   },
