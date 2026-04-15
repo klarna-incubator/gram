@@ -237,6 +237,7 @@ export const defaultConfig: GramConfiguration = {
         ["security-champions", Role.Reviewer],
         ["access.1288598.stag.users", Role.User],
         ["access.1288598.stag.sso-prod", Role.User],
+        ["access.1288598.stag.system-api-access", Role.User],
       ]),
       searchBase: LDAPUserSearchBase,
       searchFilter: (sub: string) => {
