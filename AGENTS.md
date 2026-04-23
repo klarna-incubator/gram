@@ -274,9 +274,112 @@ docker compose up -d          # Recreate fresh
 - Lint check passes
 - Build succeeds
 
+## Creating and Importing Threat Model JSON
+
+Gram supports exporting and importing full threat models as JSON. When an AI agent generates or modifies a threat model JSON for import, it **must** conform to the schema validated by Zod in `api/src/resources/gram/v1/models/jsonTransferSchema.ts` and the business-logic checks in `core/src/data/models/ModelTransferService.ts`. The sections below summarise everything an agent needs to know.
+
+### Top-level JSON structure
+
+```json
+{
+  "metadata": { "schemaVersion": 1, "exportedAt": "<ISO8601>", "exportedBy": "<email>" },
+  "model":     { "id": "<uuid>", "systemId": "<string|null>", "version": "<non-empty string>", "isTemplate": false, "shouldReviewActionItems": null },
+  "modelData": { "components": [...], "dataFlows": [...] },
+  "threats":   [...],
+  "controls":  [...],
+  "mitigations": [...],
+  "suggestions": { "threats": [], "controls": [] },
+  "links":     [],
+  "flows":     [...],
+  "resourceMatchings": [],
+  "review":    null
+}
+```
+
+### Component types (`modelData.components`)
+
+| `type` | Meaning |
+|--------|---------|
+| `"ee"` | External Entity (actor or external system outside trust boundary) |
+| `"proc"` | Process (internal service or application) |
+| `"ds"` | Data Store (database, file store, cache) |
+| `"tb"` | Trust Boundary (visual grouping box, no threat attachment) |
+
+Required fields per component: `id` (UUID), `x` (number), `y` (number), `type`, `name`.
+Optional: `width`, `height`, `description`, `classes`, `systems` (array of system-ID strings).
+
+### Canvas coordinate system
+
+- Component positions (`x`, `y`) are the top-left corner in canvas pixels.
+- A typical canvas layout uses 100–200 px spacing between components.
+- Trust boundary boxes use `width` and `height` to define their extent.
+- Data flow `points` arrays are flat `[x1, y1, x2, y2, ...]` canvas coordinates that define waypoints **between** the start and end components. An empty array `[]` draws a straight line.
+
+### Enum values — use exactly these strings
+
+| Field | Valid values |
+|-------|-------------|
+| `threats[].severity` | `"informative"` `"low"` `"medium"` `"high"` `"critical"` |
+| `suggestions[].status` | `"new"` `"rejected"` `"accepted"` |
+| `review.status` | `"requested"` `"approved"` `"canceled"` `"meeting-requested"` |
+| `links[].objectType` | `"model"` `"threat"` `"control"` `"system"` |
+| `modelData.components[].type` | `"ee"` `"ds"` `"proc"` `"tb"` |
+
+### Referential integrity rules (enforced by server)
+
+1. All `id` fields must be valid UUID strings.
+2. Every `dataFlow.startComponent.id` and `dataFlow.endComponent.id` must match a component `id` in `modelData.components`.
+3. Every `threats[].componentId` and `controls[].componentId` must match a component `id` **or** a data flow `id` (threats/controls can be attached to either).
+4. Every `mitigations[].threatId` must match a `threats[].id`; every `mitigations[].controlId` must match a `controls[].id`. There is **no skipping** — unresolvable mitigations throw an error.
+5. Every `flows[].dataFlowId` must match a data flow `id`; every `flows[].originComponentId` must match a component `id`. Unresolvable flows also throw an error (unlike threats/controls which are skipped with a warning).
+6. `metadata.schemaVersion` must be exactly `1`.
+
+### Size constraint
+
+The import handler enforces a **10 MB** limit on the payload (`importJson.ts`). The Express body parser allows **15 MB** (slightly higher so the handler's error message is displayed instead of a generic 413). Keep generated JSON files well under 10 MB.
+
+For large models, reduce verbose descriptions or remove the optional `aiInstructions` block from `metadata` before importing. A safe rule of thumb: descriptions truncated to 350 characters and no `aiInstructions` will keep a 40-threat / 60-control model well under the limit.
+
+### Validating a generated JSON before import
+
+Use the Zod schema directly to pre-validate without running the server:
+
+```bash
+# Install zod v3 (matches Gram's pinned version) in a temp dir
+mkdir -p /tmp/gram-validate && cd /tmp/gram-validate
+npm init -y && npm install zod@3
+
+# Then write a validate.js script that imports ModelJsonTransferPayloadSchema
+# (replicate the schema from api/src/resources/gram/v1/models/jsonTransferSchema.ts)
+node validate.js /path/to/your-model.json
+```
+
+A validation script template is kept at `/tmp/gram-validate/validate.js` from prior sessions; re-create it from the schema file if the temp directory has been cleaned.
+
+### flows array
+
+Each entry in `flows` describes one direction of a data flow from a given component's perspective:
+
+```json
+{
+  "dataFlowId": "<uuid of the dataFlow>",
+  "originComponentId": "<uuid of the component that initiates this flow direction>",
+  "summary": "Short human-readable description",
+  "attributes": {
+    "protocols": ["HTTPS"],
+    "authentication": ["OIDC"],
+    "data_type": ["Personal Information"]
+  }
+}
+```
+
+Bidirectional data flows typically have **two** entries (one per direction, with different `originComponentId`).
+
 ## Additional Resources
 
 - **Threat Modeling**: See [README.md](README.md) for feature overview
 - **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 - **Deployment**: See [QuickStart.md](QuickStart.md) for deployment setup
 - **Development Details**: See [Development.md](Development.md) for technical details
+- **JSON Transfer Schema**: `api/src/resources/gram/v1/models/jsonTransferSchema.ts`
+- **Import Service Logic**: `core/src/data/models/ModelTransferService.ts`
