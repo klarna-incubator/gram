@@ -58,7 +58,8 @@ export async function createApp(
   app.use(metricsMiddleware);
 
   // JSON middleware to automatically parse incoming requests
-  app.use(express.json());
+  // Limit raised to 20mb to accommodate large threat model imports (default 100kb is too small)
+  app.use(express.json({ limit: "15mb" }));
   app.use(cookieParser() as unknown as express.RequestHandler);
   app.use(securityHeaders());
 
