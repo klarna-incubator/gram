@@ -19,7 +19,7 @@ import { getDomainMembers } from "./ldap.js";
 const log = log4js.getLogger("KlarnaReviewerProvider");
 
 const secdevCalendarLink =
-  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0oEj1Db0QiUHOUTkhdAKV0Z1RcN6eGkZE5euU2lwPsZYe3ZMBCcoYceK9cRnCgmmf_XVMcXfgh";
+  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1hnvc5_n46yA-vV5xabFX6QGrhpCF_SrOkwvoUui0u4ZKDDRIWhLKLjEi5M-ZohMlQTHdhVdTs";
 
 export const fallbackReviewer: Reviewer = {
   sub: "secure-development@klarna.com",
