@@ -70,7 +70,7 @@ tasks:
         kep c2c service tag create \
           --service-name "$SERVICE_NAME" \
           --tag "$COMMIT_HASH" \
-          --service-metadata $SERVICE_METADATA_FILE \
+          --file $SERVICE_METADATA_FILE \
           --docker-url "$ARTIFACT_NAME:$COMMIT_HASH" \
           --wait
       - |-
@@ -95,7 +95,7 @@ tasks:
         kep c2c service tag create \
           --service-name "$SERVICE_NAME" \
           --tag "$COMMIT_HASH" \
-          --service-metadata $SERVICE_METADATA_FILE \
+          --file $SERVICE_METADATA_FILE \
           --docker-url "$ARTIFACT_NAME:$COMMIT_HASH" \
           --wait
       - |-
