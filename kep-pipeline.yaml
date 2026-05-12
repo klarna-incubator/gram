@@ -68,14 +68,14 @@ tasks:
     command:
       - |-
         kep c2c service tag create \
-          --name "$SERVICE_NAME" \
+          --service-name "$SERVICE_NAME" \
           --tag "$COMMIT_HASH" \
           --service-metadata $SERVICE_METADATA_FILE \
           --docker-url "$ARTIFACT_NAME:$COMMIT_HASH" \
           --wait
       - |-
         kep c2c service deployment start \
-          --name "$SERVICE_NAME" \
+          --service-name "$SERVICE_NAME" \
           --partition "$PARTITION" \
           --stage "$STAGE" \
           --tag "$COMMIT_HASH" \
@@ -93,14 +93,14 @@ tasks:
     command:
       - |-
         kep c2c service tag create \
-          --name "$SERVICE_NAME" \
+          --service-name "$SERVICE_NAME" \
           --tag "$COMMIT_HASH" \
           --service-metadata $SERVICE_METADATA_FILE \
           --docker-url "$ARTIFACT_NAME:$COMMIT_HASH" \
           --wait
       - |-
         kep c2c service deployment start \
-          --name "$SERVICE_NAME" \
+          --service-name "$SERVICE_NAME" \
           --partition "$PARTITION" \
           --stage "$STAGE" \
           --tag "$COMMIT_HASH" \
