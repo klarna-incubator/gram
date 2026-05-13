@@ -27,7 +27,7 @@ To get approval, {{reviewer.name}} has requested that you schedule a review sess
 
 {{#if reviewIsSecDev}}
 Please schedule a session by selecting a slot on this calendar: 
-https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0oEj1Db0QiUHOUTkhdAKV0Z1RcN6eGkZE5euU2lwPsZYe3ZMBCcoYceK9cRnCgmmf_XVMcXfgh  
+https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1hnvc5_n46yA-vV5xabFX6QGrhpCF_SrOkwvoUui0u4ZKDDRIWhLKLjEi5M-ZohMlQTHdhVdTs  
 {{/if}}
 
 ---
