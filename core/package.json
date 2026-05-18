@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/klarna/gram#readme",
   "engines": {
-    "node": "20"
+    "node": "20.x || 22.x || 24.x"
   },
   "dependencies": {
     "@sentry/node": "^8.49.0",
