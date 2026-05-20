@@ -10,7 +10,7 @@
     "clean": "rimraf ./dist",
     "lint": "prettier --check src/",
     "lint-fix": "prettier -l src/ --write",
-    "debug": "NODE_ENV=development node --loader ts-node/esm --inspect=127.0.0.1 src/index.js",
+    "debug": "NODE_ENV=development tsx --inspect=127.0.0.1 src/index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
   },
   "main": "dist/index.js",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/klarna/gram#readme",
   "engines": {
-    "node": "20"
+    "node": "20.x || 22.x || 24.x"
   },
   "dependencies": {
     "@gram/config": "^4.24.0",
@@ -62,6 +62,7 @@
     "prettier": "^2.3.2",
     "supertest": "^6.3.3",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.2"
+    "tsconfig-paths": "^4.1.2",
+    "tsx": "^4.19.2"
   }
 }
