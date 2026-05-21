@@ -6,9 +6,11 @@
 import { Request, Response } from "express";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = routeParams(req.params).id;
     const compliances = await dal.reviewService.getComplianceForSystems([
       id.toString(),
     ]);

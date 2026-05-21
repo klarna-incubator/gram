@@ -3,9 +3,11 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 import { checkLinkPermission } from "./permission.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function deleteLink(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const linkId = req.params.linkId;
+    const linkId = routeParams(req.params).linkId;
 
     if (!linkId) {
       res.status(400).json({ message: "Missing objectType or objectId" });

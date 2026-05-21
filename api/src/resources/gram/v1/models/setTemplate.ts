@@ -8,6 +8,8 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 import { z } from "zod";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 const SetTemplateSchema = z.object({
   isTemplate: z.boolean(),
 });
@@ -16,7 +18,7 @@ export default (dal: DataAccessLayer) => {
   return async (req: Request, res: Response) => {
     req.authz.is(Role.Admin);
 
-    const modelId = req.params.id;
+    const modelId = routeParams(req.params).id;
     const { isTemplate } = SetTemplateSchema.parse(req.body);
 
     const result = await dal.modelService.setTemplate(modelId, isTemplate);

@@ -1,6 +1,5 @@
-import type { Config } from "@jest/types";
-
-const config: Config.InitialOptions = {
+/** @type {import('@jest/types').Config.InitialOptions} */
+const config = {
   preset: "ts-jest/presets/default-esm",
   extensionsToTreatAsEsm: [".ts"],
   testEnvironment: "node",

@@ -2,13 +2,15 @@ import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 /**
  * PATCH /api/v1/models/{id}
  * @exports {function} handler
  */
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = routeParams(req.params).id;
     const { version, data } = req.body;
 
     await req.authz.hasPermissionsForModelId(id, Permission.Write);

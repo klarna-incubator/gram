@@ -3,13 +3,15 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 import { NewFlowSchema } from "./FlowSchema.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function insertFlow(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const { modelId, dataFlowId, summary, originComponentId, attributes } =
       NewFlowSchema().parse({
         ...req.body,
-        modelId: req.params.modelId,
-        dataFlowId: req.params.dataFlowId,
+        modelId: routeParams(req.params).modelId,
+        dataFlowId: routeParams(req.params).dataFlowId,
       });
 
     // Check if user has access to this object (and if it exists)
