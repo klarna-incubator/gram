@@ -6,9 +6,11 @@
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = routeParams(req.params).id;
     const model = await dal.modelService.getById(id);
     if (model === null) {
       res.sendStatus(404);

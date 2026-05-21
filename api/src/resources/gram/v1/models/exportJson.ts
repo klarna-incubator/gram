@@ -3,9 +3,11 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { validateUUID } from "@gram/core/dist/util/uuid.js";
 import { Request, Response } from "express";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const modelId = req.params.id;
+    const modelId = routeParams(req.params).id;
     if (!validateUUID(modelId)) {
       res.sendStatus(400);
       return;

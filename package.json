@@ -39,6 +39,7 @@
     "node": "20.x || 22.x || 24.x"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.10",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@tsconfig/node22": "^22.0.0",
     "@types/jest": "^29.4.0",

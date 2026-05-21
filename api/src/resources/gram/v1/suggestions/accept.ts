@@ -9,9 +9,11 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { SuggestionID } from "@gram/core/dist/suggestions/models.js";
 import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default function accept(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const { modelId } = req.params;
+    const { modelId } = routeParams(req.params);
     const suggestionId = new SuggestionID(req.body.suggestionId);
 
     if (!validateUUID(modelId)) {
