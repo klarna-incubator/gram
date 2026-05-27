@@ -113,12 +113,6 @@ const classes = [
     icon: "/assets/klarna/job.png",
     componentType: "any",
   },
-  {
-    id: "8756834e-7382-43d6-a4cc-e09b74e352ec",
-    name: "",
-    icon: "/assets/klarna/.png",
-    componentType: "any",
-  }
 ];
 
 export default classes;
