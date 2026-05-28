@@ -9,10 +9,12 @@ import { validateUUID } from "@gram/core/dist/util/uuid.js";
 import { Request, Response } from "express";
 import { ensureControlAndThreatPermission } from "./util.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function create(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const { threatId, controlId } = req.body;
-    const { modelId } = req.params;
+    const { modelId } = routeParams(req.params);
 
     if (
       !validateUUID(modelId) ||

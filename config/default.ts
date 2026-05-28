@@ -205,7 +205,7 @@ export const defaultConfig: GramConfiguration = {
   },
 
   bootstrapProviders: async function (
-    dal: DataAccessLayer,
+    dal: DataAccessLayer
   ): Promise<Providers> {
     // process.env.GLOBAL_AGENT_HTTPS_PROXY = process.env.HTTPS_PROXY;
     // (global as any).GLOBAL_AGENT.HTTPS_PROXY = process.env.HTTPS_PROXY;
@@ -218,13 +218,13 @@ export const defaultConfig: GramConfiguration = {
       new EnvSecret("OIDC_CLIENT_SECRET"),
       new EnvSecret("OIDC_SESSION_SECRET"),
       "email",
-      "okta",
+      "okta"
     );
 
     const ldap = new LDAPBasicAuthIdentityProvider(
       ldapSettings,
       (name: string) => `uid=${name},ou=People,dc=internal,dc=machines`,
-      (username: string) => `${username}@klarna.com`,
+      (username: string) => `${username}@klarna.com`
     );
 
     const ldapAuthz = new LDAPGroupBasedAuthzProvider(dal, {
@@ -266,20 +266,20 @@ export const defaultConfig: GramConfiguration = {
       createJ1Client(
         new EnvSecret("J1_KEY"),
         process.env["J1_ACCOUNT_ID"] as string,
-        process.env["J1_BASE_URL"] as string,
+        process.env["J1_BASE_URL"] as string
       );
 
     const j1TeamProvider = new JupiterOneTeamProvider(j1ClientFactory);
     const registrySystemProvider = new SystemRegistrySystemProvider();
     const j1SystemProvider = new KlarnaSystemProvider(
       registrySystemProvider,
-      j1ClientFactory,
+      j1ClientFactory
     );
     const j1SysPropProvider = new JupiterOneSystemPropertyProvider(
-      j1ClientFactory,
+      j1ClientFactory
     );
     const j1DomainProvider = new JupiterOneDomainSystemPropertyProvider(
-      j1ClientFactory,
+      j1ClientFactory
     );
     const j1ResourceProvider = new JupiterOneResourceProvider(j1ClientFactory);
 
@@ -326,11 +326,11 @@ export const defaultConfig: GramConfiguration = {
           },
         },
         ldapSettings,
-      },
+      }
     );
 
     const threatsaurus = new ThreatsaurusSuggestionSource(
-      process.env["THREATSAURUS_URL"] as string,
+      process.env["THREATSAURUS_URL"] as string
     );
 
     new KlarnaCronJob(dal, reviewerProvider);

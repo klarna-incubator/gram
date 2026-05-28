@@ -46,7 +46,7 @@ export class ThreatModelFinding {
     public label: string,
     public description: string,
     public systemId: string,
-    public modelId: string,
+    public modelId: string
   ) {
     this.systemId = systemId;
     this.modelId = modelId;
@@ -112,11 +112,11 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
 
   wikibaseSdkClient: WikibaseSdkClient = new WikibaseSdkClient();
   wikibaseClient: WikibaseEditClient = new WikibaseEditClient(
-    this.wikibaseSdkClient,
+    this.wikibaseSdkClient
   );
   constructor(
     private dal: DataAccessLayer,
-    exportOnReviewApproved: boolean = true,
+    exportOnReviewApproved: boolean = true
   ) {
     this.exportOnReviewApproved = exportOnReviewApproved;
   }
@@ -153,16 +153,16 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
 
   public async export(
     dal: DataAccessLayer,
-    actionItems: Threat[],
+    actionItems: Threat[]
   ): Promise<void> {
     await Promise.all(
-      actionItems.map((item) => this.exportActionItemIfEligible(dal, item)),
+      actionItems.map((item) => this.exportActionItemIfEligible(dal, item))
     );
   }
 
   private async exportActionItemIfEligible(
     dal: DataAccessLayer,
-    item: Threat,
+    item: Threat
   ): Promise<void> {
     const skipReasons: (keyof typeof WikibaseActionItemExporter.SKIP_REASONS)[] =
       [];
@@ -178,7 +178,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
       log.info(
         `Skipping action item creation for item ${
           item.id
-        } for the following reasons: ${skipReasons.join(", ")}`,
+        } for the following reasons: ${skipReasons.join(", ")}`
       );
       return;
     }
@@ -186,7 +186,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
     const exportedItemQID = await this.createThreatModelFinding(dal, item);
     if (exportedItemQID) {
       log.info(
-        `Successfully exported action item to Wikibase: ${exportedItemQID}`,
+        `Successfully exported action item to Wikibase: ${exportedItemQID}`
       );
     }
 
@@ -197,7 +197,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
       exportedItemQID,
       `https://knowledgegraph.klarna.net/wiki/Item:${exportedItemQID}`,
       "",
-      this.key,
+      this.key
     );
   }
 
@@ -212,7 +212,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   private async shouldUpdateIfAlreadyExported(
     dal: DataAccessLayer,
     item: Threat,
-    skipReasons: string[],
+    skipReasons: string[]
   ) {
     if (!item.modelId) {
       skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.NO_MODEL_ID);
@@ -220,11 +220,11 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
     }
     const links = await dal.linkService.listLinks(
       LinkObjectType.Threat,
-      item.id!,
+      item.id!
     );
     const wikibaseLinks = links.filter(
       (link) =>
-        link.createdBy === this.key || link.url.includes(WIKIBASE_URL_DOMAIN),
+        link.createdBy === this.key || link.url.includes(WIKIBASE_URL_DOMAIN)
     );
     if (wikibaseLinks.length > 0) {
       // Get item ids from wikibase links; catch per-link so one failure doesn't fail the batch
@@ -237,10 +237,10 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
             }
             const itemId = match[0] as EntityId;
             const wikibaseItem = await this.wikibaseSdkClient.getItemDetails(
-              itemId,
+              itemId
             );
             log.debug(
-              `Item ${itemId} details: ${JSON.stringify(wikibaseItem)}`,
+              `Item ${itemId} details: ${JSON.stringify(wikibaseItem)}`
             );
             // If the item is not found, remove the link
             if (!wikibaseItem) {
@@ -249,23 +249,22 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
             } else {
               // If the item is found, update the observed issue qualifier url to the new threat model url
               log.info(
-                `Updating observed issue qualifier url for item ${itemId} to the new threat model url: https://gram.klarna.net/model/${item.modelId}`,
+                `Updating observed issue qualifier url for item ${itemId} to the new threat model url: https://gram.klarna.net/model/${item.modelId}`
               );
               await this.wikibaseClient.editQualifier(
                 itemId,
                 PROPERTIES.OBSERVED_ISSUE,
                 QUALIFIERS.URL,
-                `https://gram.klarna.net/model/${item.modelId}`,
+                `https://gram.klarna.net/model/${item.modelId}`
               );
               skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.UPDATED);
             }
-
           } catch (err) {
             log.warn(
-              `Failed to check or update wikibase link ${link.id} for threat ${item.id}: ${err}`,
+              `Failed to check or update wikibase link ${link.id} for threat ${item.id}: ${err}`
             );
           }
-        }),
+        })
       );
     } else {
     }
@@ -274,7 +273,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   private async shouldSkipIfNoSystemId(
     item: Threat,
     dal: DataAccessLayer,
-    skipReasons: string[],
+    skipReasons: string[]
   ) {
     if (!item.modelId) {
       skipReasons.push(WikibaseActionItemExporter.SKIP_REASONS.NO_SYSTEM_ID);
@@ -291,7 +290,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
 
   private async createThreatModelFinding(
     dal: DataAccessLayer,
-    actionItem: Threat,
+    actionItem: Threat
   ): Promise<any> {
     try {
       // Convert action item to Threat Model Finding
@@ -306,7 +305,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
           PROPERTIES.OBSERVED_ISSUE,
           QUALIFIERS.URL,
           `https://gram.klarna.net/model/${actionItem.modelId}`,
-          true,
+          true
         );
         return itemQID;
       } else {
@@ -317,7 +316,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
       }
     } catch (error) {
       log.error(
-        `Error converting action item ${actionItem.id} to Threat Model Finding: ${error}`,
+        `Error converting action item ${actionItem.id} to Threat Model Finding: ${error}`
       );
       throw error;
     }
@@ -325,7 +324,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
 
   private async convertActionItemToFinding(
     dal: DataAccessLayer,
-    actionItem: Threat,
+    actionItem: Threat
   ): Promise<ThreatModelFinding> {
     const model = await dal.modelService.getById(actionItem.modelId);
     if (!model) {
@@ -339,7 +338,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
       actionItem.title,
       actionItem.description,
       model.systemId,
-      actionItem.modelId,
+      actionItem.modelId
     );
 
     this.assignDescription(model, actionItem, finding);
@@ -357,7 +356,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
         dal,
         actionItem.modelId,
         review,
-        finding,
+        finding
       );
     }
 
@@ -379,10 +378,10 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   private assignDescription(
     model: Model,
     item: Threat,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ) {
     const component = model.data.components.find(
-      (c) => c.id === item.componentId,
+      (c) => c.id === item.componentId
     );
 
     if (component) {
@@ -395,15 +394,15 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   private async assignSystem(
     model: Model,
     _dal: DataAccessLayer,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ): Promise<void> {
     const systemQID = await this.wikibaseSdkClient.getSystemQID(
-      model.systemId!,
+      model.systemId!
     ); // We know that the model has a system ID because we checked it earlier
 
     if (!systemQID) {
       log.warn(
-        `Could not find system QID for system ID ${model?.systemId}, skipping accountable team assignment.`,
+        `Could not find system QID for system ID ${model?.systemId}, skipping accountable team assignment.`
       );
       return;
     }
@@ -413,16 +412,16 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
 
   private async assignAccountableTeam(
     systemQID: EntityId,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ): Promise<void> {
     const systemClaims = await this.wikibaseSdkClient.getItemDetails(
       systemQID,
-      [PROPERTIES.ACCOUNTABLE],
+      [PROPERTIES.ACCOUNTABLE]
     );
 
     if (!systemClaims?.[PROPERTIES.ACCOUNTABLE]) {
       log.warn(
-        `Could not find accountable team QID for system QID ${systemQID}, skipping accountable team assignment.`,
+        `Could not find accountable team QID for system QID ${systemQID}, skipping accountable team assignment.`
       );
       return;
     }
@@ -434,23 +433,23 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
     _dal: DataAccessLayer,
     modelId: string,
     review: Review,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ): Promise<void> {
     const reporterEmail = review.reviewedBy;
     if (!reporterEmail) {
       log.warn(
-        `Could not find reporter email for review, skipping reporter contributor assignment.`,
+        `Could not find reporter email for review, skipping reporter contributor assignment.`
       );
       return;
     }
 
     const reporterQID = await this.wikibaseSdkClient.getUserQIDFromEmail(
-      reporterEmail,
+      reporterEmail
     );
 
     if (!reporterQID) {
       log.warn(
-        `Could not find reporter contributor QID for email ${reporterEmail}, skipping reporter contributor assignment.`,
+        `Could not find reporter contributor QID for email ${reporterEmail}, skipping reporter contributor assignment.`
       );
       return;
     }
@@ -461,7 +460,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   private async assignReporterTeam(
     dal: DataAccessLayer,
     reporterEmail: string | undefined,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ) {
     //TODO: Implement reporter team assignment
     // For now, we're using the Secure Development org unit
@@ -478,7 +477,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   }
   private assignPriorityRank(
     actionItem: Threat,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ): void {
     finding.priorityRank =
       actionItem.severity != null
@@ -487,7 +486,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   }
   private assignEstimatedEffort(
     actionItem: Threat,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ): void {
     finding.reporterEstimatedEffort = 1;
   }
@@ -495,7 +494,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
   private async assignSuggestedSolution(
     dal: DataAccessLayer,
     actionItem: Threat,
-    finding: ThreatModelFinding,
+    finding: ThreatModelFinding
   ): Promise<void> {
     const controls = await dal.controlService.listByThreatId(actionItem.id!);
     if (controls.length > 0) {
@@ -508,7 +507,7 @@ export class WikibaseActionItemExporter implements ActionItemExporter {
               control.description
                 ? control.description
                 : "Please contact the reporter contributor for more information."
-            }`,
+            }`
         )
         .join("; ");
 

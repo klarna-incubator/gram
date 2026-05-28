@@ -33,7 +33,7 @@ export const stagingConfig: GramConfiguration = {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
     const threatsaurus = new ThreatsaurusSuggestionSource(
-      "https://threatsaurus-eu.staging.c2c.klarna.net/v1/",
+      "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
     );
 
     providers.suggestionSources?.push(threatsaurus);
@@ -41,11 +41,11 @@ export const stagingConfig: GramConfiguration = {
     const jiraActionItemExporter = createJiraActionItemExporter(
       this,
       dal,
-      "sandbox",
+      "sandbox"
     );
     const wikibaseActionItemExporter = new WikibaseActionItemExporter(
       dal,
-      false,
+      false
     );
     providers.actionItemExporters = [
       jiraActionItemExporter,

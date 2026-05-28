@@ -9,10 +9,12 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import Mitigation from "@gram/core/dist/data/mitigations/Mitigation.js";
 import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function create(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const { title, description, componentId, threatIds } = req.body;
-    const { modelId } = req.params;
+    const { modelId } = routeParams(req.params);
     const inPlace = req.body.inPlace ? req.body.inPlace : false;
 
     if (title === "" || modelId === "" || componentId === "") {
