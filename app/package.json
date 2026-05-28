@@ -80,7 +80,7 @@
       "canvas": "jest-canvas-mock"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!konva|react-konva-utils)"
+      "node_modules/(?!(konva|react-konva-utils|uuid))"
     ],
     "testEnvironment": "jsdom",
     "setupFiles": [
