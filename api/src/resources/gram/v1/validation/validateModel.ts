@@ -5,9 +5,11 @@
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function validateModel(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const modelId = req.params.id;
+    const modelId = routeParams(req.params).id;
     if (dal.validationEngine.rules.length === 0) {
       res.json({
         id: modelId,

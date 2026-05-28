@@ -78,7 +78,7 @@ export class WikibaseEditClient {
       const claims = entity.claims;
       if (!claims) {
         throw new Error(
-          "No claims returned from Wikibase after item creation.",
+          "No claims returned from Wikibase after item creation."
         );
       }
 
@@ -98,7 +98,7 @@ export class WikibaseEditClient {
           const guid = claim.id;
           // qualifiersForProperty is an object: { qualifierProperty: value }
           for (const [qualifierProperty, value] of Object.entries(
-            qualifiersForProperty,
+            qualifiersForProperty
           )) {
             qualifierObjects.push({
               guid,
@@ -125,14 +125,14 @@ export class WikibaseEditClient {
     propertyId: PropertyId,
     qualifierId: PropertyId,
     value: string,
-    replaceValue: boolean = true,
+    replaceValue: boolean = true
   ) {
     try {
       const claim = await this.wbSdk.getClaimData(itemId, propertyId);
 
       if (!claim?.id) {
         log.warn(
-          `Claim GUID not found for item QID: ${itemId} and property ID: ${propertyId}`,
+          `Claim GUID not found for item QID: ${itemId} and property ID: ${propertyId}`
         );
         return;
       }
@@ -144,7 +144,7 @@ export class WikibaseEditClient {
               guid: claim.id,
               hash: el.hash,
             });
-          }),
+          })
         );
       }
 
@@ -155,7 +155,7 @@ export class WikibaseEditClient {
       });
 
       log.debug(
-        `Qualifier updated for item QID: ${itemId} and property ID: ${propertyId}`,
+        `Qualifier updated for item QID: ${itemId} and property ID: ${propertyId}`
       );
     } catch (error) {
       log.warn("Error editing qualifier:", error);

@@ -8,13 +8,15 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 import { z } from "zod";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 const Schema = z.object({
   shouldReviewActionItems: z.boolean(),
 });
 
 export default (dal: DataAccessLayer) => {
   return async (req: Request, res: Response) => {
-    const modelId = req.params.id;
+    const modelId = routeParams(req.params).id;
 
     await req.authz.hasAnyPermissionsForModelId(modelId, Permission.Write);
 

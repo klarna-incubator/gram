@@ -2,9 +2,11 @@ import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function deleteFlow(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const { flowId } = req.params;
+    const { flowId } = routeParams(req.params);
 
     if (!flowId) {
       res.status(400).json({ message: "Missing id" });
