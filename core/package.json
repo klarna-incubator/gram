@@ -34,8 +34,8 @@
     "node": "20.x || 22.x || 24.x"
   },
   "dependencies": {
-    "@sentry/node": "^10.53.1",
-    "@sentry/profiling-node": "^10.53.1",
+    "@sentry/node": "10.53.1",
+    "@sentry/profiling-node": "10.53.1",
     "emailjs": "^4.0.3",
     "express": "^5.0.1",
     "global-agent": "^3.0.0",
