@@ -4,13 +4,15 @@ import { ModelDataService } from "@gram/core/dist/data/models/ModelDataService.j
 import { validateUUID } from "@gram/core/dist/util/uuid.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 /**
  * GET /api/v1/models/{id}
  * @exports {function} handler
  */
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = routeParams(req.params).id;
     if (!validateUUID(id)) {
       res.sendStatus(400);
       return;

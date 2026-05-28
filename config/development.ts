@@ -14,7 +14,7 @@ export const developmentConfig: GramConfiguration = {
     ttl: 86400,
     secret: {
       auth: new ExposedSecret(
-        "7bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f",
+        "7bc84cf7f80d675d3cefb81bb69247a5feb7a4ed8471bfdf8163753fac5197ea8d088bc88ad98b938375213576e7b06859b036e27cffccf700773e4ec66d243f"
       ),
     },
   },
@@ -64,7 +64,7 @@ export const developmentConfig: GramConfiguration = {
 
     if (process.env.THREATSAURUS_URL) {
       const threatsaurus = new ThreatsaurusSuggestionSource(
-        "https://threatsaurus-eu.staging.c2c.klarna.net/v1/",
+        "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
       );
 
       providers.suggestionSources?.push(threatsaurus);

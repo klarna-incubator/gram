@@ -36,7 +36,7 @@ export type InstanceOfListType = [
   typeof KLARNA_KNOWLEDGE_GRAPH,
   typeof TASK,
   typeof THREAT_MODEL_FINDING,
-  typeof SECURITY_FINDING,
+  typeof SECURITY_FINDING
 ];
 
 export const SECURE_DEVELOPMENT_ORG_UNIT = "Q8564"; // Placeholder for Secure Development (Org Unit)

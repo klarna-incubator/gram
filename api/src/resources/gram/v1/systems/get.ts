@@ -7,9 +7,11 @@ import { Request, Response } from "express";
 import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = routeParams(req.params).id;
     await req.authz.hasPermissionsForSystemId(id, Permission.Read);
     const system = await dal.systemProvider.getSystem(
       { currentRequest: req },

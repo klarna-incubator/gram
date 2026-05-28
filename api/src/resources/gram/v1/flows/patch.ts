@@ -3,12 +3,14 @@ import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 import { PatchFlowSchema } from "./FlowSchema.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function patchFlow(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
     const { flowId, attributes, originComponentId, summary } =
       PatchFlowSchema().parse({
         ...req.body,
-        flowId: parseInt(req.params.flowId),
+        flowId: parseInt(routeParams(req.params).flowId),
       });
 
     const flow = await dal.flowService.getById(flowId);

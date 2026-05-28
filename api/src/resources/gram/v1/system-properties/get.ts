@@ -6,9 +6,11 @@ import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { Request, Response } from "express";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function getProperties(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = routeParams(req.params).id;
 
     const model = await dal.modelService.getById(id);
 

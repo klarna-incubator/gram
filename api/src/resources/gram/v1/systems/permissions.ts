@@ -7,11 +7,13 @@ import { Request, Response } from "express";
 import { getPermissionsForSystem } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     const permissions = await getPermissionsForSystem(
       { currentRequest: req },
-      req.params.id,
+      routeParams(req.params).id,
       req.user
     );
     res.json({ permissions });

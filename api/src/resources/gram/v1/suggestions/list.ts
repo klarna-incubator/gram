@@ -8,9 +8,11 @@ import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default function list(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const { modelId } = req.params;
+    const { modelId } = routeParams(req.params);
 
     if (!validateUUID(modelId)) {
       res.status(400);
