@@ -107,7 +107,7 @@ Do not assume silent approval. **Once the user confirms they are ready to procee
 
 **Always** run this after the upstream pull from **`github`** completes—whether there were **merge conflicts or not**. Upstream lockfiles target the **public** registry; regeneration aligns the lockfile with **Klarna’s npm registry** and avoids wrong resolved URLs or integrity metadata.
 
-**Node.js:** regenerate **`package-lock.json`** using **Node.js 24** only. Before **`npm install`**, ensure the active runtime is **v20.x** (check with **`node -v`**). If needed, switch with whatever the machine already uses—e.g. **`nvm use 24`**, **`fnm use 24`**, **`asdf shell nodejs 24.x`**, **Volta**, or **`mise use node@24`**—do not guess a tool the user does not have; if **Node 24** is unavailable, stop and ask the user to install or expose it.
+**Node.js:** regenerate **`package-lock.json`** using **Node.js 24** only. Before **`npm install`**, ensure the active runtime is **v24.x** (check with **`node -v`**). If needed, switch with whatever the machine already uses—e.g. **`nvm use 24`**, **`fnm use 24`**, **`asdf shell nodejs 24.x`**, **Volta**, or **`mise use node@24`**—do not guess a tool the user does not have; if **Node 24** is unavailable, stop and ask the user to install or expose it.
 
 **If there were merge conflicts:** only run this after the user has resolved every **non–**`package-lock.json` file (and root **`package.json`** is correct if it conflicted).
 

@@ -6,7 +6,8 @@ description: >-
   require staged changes that are homogeneous (either all Klarna-only for origin or all
   open-source for github—never mixed in one index), route paths with explicit user
   confirmation, run npm ci/build/lint for internal-only changes, use a github/main
-  worktree for upstream paths, then commit and push to the correct remote. Use when
+  worktree for upstream paths, then commit and push to the correct remote; for
+  Klarna-internal PRs propose base develop only, never main. Use when
   implementing, committing, or pushing Gram changes; when unsure upstream vs Klarna-only;
   or when the user previously used gram-change-routing for the same decisions.
 disable-model-invocation: false
@@ -171,7 +172,7 @@ This rule exists so **every commit has an unambiguous push destination** (`git p
 Each numbered step is a **separate confirmation gate**—complete one, report, get approval, then continue.
 
 1. **List staged paths** from `git diff --cached --name-only`. **Confirm** the list with the user before any other git commands.
-2. **`git fetch github main`** — ask before running.
+2. **`git fetch github main`**.
 3. **Classify each path** (open source / Klarna-only / config exception). **Confirm** the routing table:
 
    ```text
@@ -185,7 +186,7 @@ Each numbered step is a **separate confirmation gate**—complete one, report, g
 5. **Confirm overall plan** — one remote, one branch/worktree name if open source—before implementing anything not yet applied.
 6. **Act** (one sub-step at a time, each confirmed):
    - **All open source:** follow **Open-source branch workflow** below only.
-   - **All Klarna-only:** run **Klarna-internal pre-PR checks** below, then commit and push to `origin` only after separate confirmations for commit and push.
+   - **All Klarna-only:** run **Klarna-internal pre-PR checks** below, then commit and push to `origin` only after separate confirmations for commit and push; optionally propose a PR **into `develop` only** (see **§10 Klarna-only push and internal PR**)—never into `main`.
 7. **After upstream merges:** ask before starting [pull-opensource-github](../pull-opensource-github/SKILL.md); confirm each step of that skill the same way.
 
 Do **not** push to the wrong remote to “save time.” If routing is ambiguous, ask the user before `git commit` or `git push`.
@@ -217,7 +218,7 @@ If `npm run lint-fix` changes files:
 
 **Do not** commit on the user’s behalf after `lint-fix` without confirmation.
 
-When all three commands pass, report success and ask whether to proceed with commit / PR.
+When all three commands pass, report success and ask whether to proceed with **commit** and, after push, whether to open a **Klarna-internal PR**—see **Klarna-only push and internal PR** (§10) (`develop` only).
 
 Do not read **`.github/workflows/ci.yml`** for this step—use only the commands above.
 
@@ -262,15 +263,34 @@ If `git push github` fails (auth, permissions), stop and tell the user — do no
 
 If a dedicated open-source clone already exists, `cd` there, `git fetch github main`, `git checkout -b "$BRANCH" github/main`, then implement and `git push -u github HEAD` — same rules.
 
-**Klarna-only push** (from this clone, after checks and approvals):
+---
+
+## 10. Klarna-only push and internal PR
+
+For **all Klarna-only** homogeneous changes (after §8 checks and user approvals).
+
+**Push to `origin`:**
 
 ```bash
 git push -u origin HEAD
 ```
 
+**Klarna-internal pull request (optional)** — after a successful push to `origin`, you **may propose** opening a PR on the Klarna GHE `gram` repo. **Base branch must be `develop`—never `main`.** Confirm title, body, and `gh` invocation with the user before running.
+
+Example (default remote is usually `origin`; adjust `--repo` if needed for your `gh` setup):
+
+```bash
+gh pr create --base develop --title "…" --body "$(cat <<'EOF'
+…
+EOF
+)"
+```
+
+Do **not** use `--base main` for Klarna-internal PRs.
+
 ---
 
-## 10. Anti-patterns
+## 11. Anti-patterns
 
 - Do not proceed if there are **no staged changes**—ask the user to `git add` first.
 - Do not run git commands, edit files, commit, push, or open PRs without **explicit user confirmation** for that step.
@@ -283,3 +303,4 @@ git push -u origin HEAD
 - Do not skip **Klarna-internal pre-PR checks** when all changes are internal and the user is about to commit or open a PR on `origin`.
 - Do not run `npm run lint-fix` for failures of `npm ci` or `npm run build`—only for `npm run lint`.
 - Do not **`git commit`** with **mixed** Klarna-only and open-source paths in the index—split into two homogeneous staged passes so each commit pushes to **one** remote only.
+- Do not open or suggest a **Klarna-internal** PR with **`main`** as the base branch—**`develop` only** (open-source PRs against `klarna-incubator/gram` **`main`** are unchanged; see **Open-source branch workflow** above).
