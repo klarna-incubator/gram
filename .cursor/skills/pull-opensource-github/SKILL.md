@@ -176,7 +176,7 @@ From the **repository root**:
 3. **`npm run build`**
 4. **`npm test`**
 
-**Step 9 is complete only when** **`npm run build`** and **`npm test`** have **both** succeeded in this run (after the clean **`npm install`**). A successful **`npm install`** alone does **not** complete step **9**. If either command fails, step **9** stays **incomplete** until both pass after fixes.
+**Step 9 is complete only when** **`npm run build`** and **`npm test`** have **both** succeeded in this run (after the clean **`npm ci`**). A successful **`npm ci`** alone does **not** complete step **9**. If either command fails, step **9** stays **incomplete** until both pass after fixes.
 
 If **`npm run build`** or **`npm test`** fails:
 
@@ -339,7 +339,7 @@ When **`package.json` at the repository root** conflicts, **coach the user** whi
 1. **Merge intentionally**: keep legitimate changes from **both** sides (scripts, workspaces, dependencies, engines).
 2. **Dependencies**: align `dependencies` / `devDependencies` / `peerDependencies` with the merged feature set; remove duplicate keys; preserve semver ranges unless the project standard says otherwise.
 3. **`package-lock.json`**: follow steps **5–9**—never hand-merge the lockfile; always regenerate after `package.json` is settled (and Klarna registry applies) using **Node.js 24** in step **7**; then lint (step **8**); then build/test (step **9**); then push (step **10**); PR (step **11**); after user confirms PR merge, steps **12–13** (delete sync branch, open PR **`develop`** → **`main`**).
-4. **Sanity check**: step **9** is **done** only when **`npm run build`** and **`npm test`** both pass after the **find** cleanup and **`npm install`**—do not substitute **`.github/workflows/ci.yml`** for this step.
+4. **Sanity check**: step **9** is **done** only when **`npm run build`** and **`npm test`** both pass after the **find** cleanup and **`npm ci`**—do not substitute **`.github/workflows/ci.yml`** for this step.
 
 ## Anti-patterns
 
@@ -351,7 +351,7 @@ When **`package.json` at the repository root** conflicts, **coach the user** whi
 - Do not manually merge or edit **`package-lock.json`** during conflict resolution; always regenerate it per step **7** after the pull (and after other conflicts are resolved when applicable)—**Node.js 24** must be active for that **`npm install`** (not another major version unless the user explicitly overrides).
 - Do not skip step **8** after syncing—**`npm run lint`** (and **`npm run lint-fix`** when needed) keeps the branch merge-ready.
 - Do not leave **`lint-fix`** changes uncommitted—commit with a **Conventional Commits** message such as **`chore: fix linting`** (see step **8**).
-- Do not skip step **9**—after **`find`** cleanup of **`package-lock.json`** and **`node_modules`** (plus **`dist`**), run **`npm install`**, **`npm run build`**, and **`npm test`** to validate the branch.
+- Do not skip step **9**—after **`find`** cleanup of **`package-lock.json`** and **`node_modules`** (plus **`dist`**), run **`npm ci`**, **`npm run build`**, and **`npm test`** to validate the branch.
 - Do not use **`.github/workflows/ci.yml`** to decide step **9** commands; use only the sequence in step **9**.
 - Do not mark step **9** complete unless **`npm run build`** and **`npm test`** have **both** passed.
 - Do not skip step **10** after step **9** succeeds unless the user asks to hold the push—then **`git push -u origin HEAD`** (or equivalent) publishes the branch to **`origin`**.
