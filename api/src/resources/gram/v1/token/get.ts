@@ -7,6 +7,7 @@ import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegis
 import * as jwt from "@gram/core/dist/auth/jwt.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { UserToken } from "@gram/core/dist/auth/models/UserToken.js";
+import { Team } from "@gram/core/dist/auth/models/Team.js";
 import log4js from "log4js";
 
 const log = log4js.getLogger("getAuthToken");
@@ -60,10 +61,24 @@ export const getAuthToken =
         );
       }
 
-      const teams = await dal.teamHandler.getTeamsForUser(
-        { currentRequest: req },
-        identity.identity.sub
-      );
+      // Team lookup can hit external providers (e.g. JupiterOne). A failure
+      // there must not turn a successful authentication into a 500 and block
+      // login entirely — degrade gracefully to no teams instead.
+      let teams: Team[] = [];
+      try {
+        teams = await dal.teamHandler.getTeamsForUser(
+          { currentRequest: req },
+          identity.identity.sub
+        );
+      } catch (error: any) {
+        log.warn(
+          `Login succeeded for ${
+            identity.identity.sub
+          } but team lookup failed; continuing with no teams: ${
+            error?.message ?? error
+          }`
+        );
+      }
 
       const token: UserToken = {
         ...user,
@@ -77,7 +92,12 @@ export const getAuthToken =
     }
 
     if (!identity || identity?.status === "error") {
-      res.status(400);
+      res.status(400).json({
+        status: "error",
+        message:
+          (identity && "message" in identity && identity.message) ||
+          "Authentication failed",
+      });
       return;
     }
 
