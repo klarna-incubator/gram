@@ -19,19 +19,10 @@
     "@gram/core": "*",
     "@gram/jupiterone": "^4.9.4",
     "@gram/ldap": "^4.0.2",
-    "@sentry/node": "^7.94.1",
-    "hpagent": "^1.2.0",
     "http-proxy-agent": "^7.0.2",
-    "jira-client": "^8.2.2",
-    "jsprim": "^2.0.2",
     "ldapts": "^4.2.6",
     "node-cron": "^3.0.3",
-    "node-fetch": "^3.3.2",
-    "postman-request": "^2.88.1-postman.33",
-    "precond": "^0.2.3"
+    "node-fetch": "^3.3.2"
   },
-  "private": true,
-  "devDependencies": {
-    "@types/jira-client": "^7.1.7"
-  }
+  "private": true
 }
