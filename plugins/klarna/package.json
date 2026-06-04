@@ -20,7 +20,6 @@
     "@gram/jupiterone": "^4.9.4",
     "@gram/ldap": "^4.0.2",
     "@sentry/node": "^7.94.1",
-    "aws-sdk": "^2.1465.0",
     "hpagent": "^1.2.0",
     "http-proxy-agent": "^7.0.2",
     "jira-client": "^8.2.2",
