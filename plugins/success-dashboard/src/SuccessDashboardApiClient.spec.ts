@@ -1,11 +1,37 @@
-import { describe, expect, it, jest } from "@jest/globals";
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { MockedFunction } from "jest-mock";
-import Threat, { ThreatSeverity } from "@gram/core/dist/data/threats/Threat.js";
 import { SuccessDashboardApiClient } from "./SuccessDashboardApiClient.js";
-import { SECURE_DEVELOPMENT_ORG_UNIT } from "./constant.js";
+import {
+  SECURE_DEVELOPMENT_ORG_UNIT,
+  THREAT_MODEL_FINDING_TAG,
+  SECURITY_FINDING_TAG,
+} from "./constant.js";
+import type { GramActionItemCreatePayload } from "./types.js";
 
-function sampleThreat(): Threat {
-  return new Threat("x", "d", "m", "c", "u@k");
+function samplePayload(
+  overrides: Partial<GramActionItemCreatePayload> = {}
+): GramActionItemCreatePayload {
+  return {
+    title: "x",
+    typeId: "actionable_improvement",
+    description: "d",
+    dueDate: "2026-07-20T00:00:00Z",
+    estimatedEffort: 1,
+    observedIssue: "obs",
+    suggestedSolution: "sol",
+    statusId: "backlog",
+    orgRelations: [
+      {
+        relation: "reporting_team",
+        orgUnit: {
+          externalId: SECURE_DEVELOPMENT_ORG_UNIT,
+          name: "Secure Development",
+        },
+      },
+    ],
+    tagIds: [THREAT_MODEL_FINDING_TAG, SECURITY_FINDING_TAG],
+    ...overrides,
+  };
 }
 
 function headersWith(contentType?: string) {
@@ -38,8 +64,14 @@ function emptyResponse(status = 200): Response {
 }
 
 describe("SuccessDashboardApiClient", () => {
+  beforeEach(() => {
+    // Options must win in tests; the client otherwise prefers these env vars.
+    delete process.env.SUCCESS_DASHBOARD_URL;
+    delete process.env.SUCCESS_DASHBOARD_API_TOKEN;
+  });
+
   describe("createExport", () => {
-    it("POSTs to /api/v2/tickets with awaitSync=true and returns id/qid", async () => {
+    it("POSTs the payload to /api/v2/tickets and returns the parsed body", async () => {
       const fetchMock: MockedFunction<typeof fetch> = jest.fn();
       fetchMock.mockResolvedValue(
         jsonResponse({ id: "uuid-1", qid: "Q42" }, 201)
@@ -49,127 +81,68 @@ describe("SuccessDashboardApiClient", () => {
         fetchImpl: fetchMock,
       });
 
-      const result = await client.createExport(sampleThreat());
+      const result = await client.createExport(samplePayload());
 
       expect(result).toEqual({ id: "uuid-1", qid: "Q42" });
       expect(fetchMock).toHaveBeenCalledTimes(1);
       const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-      expect(url).toBe("https://sd.example/api/v2/tickets?awaitSync=true");
+      expect(url).toBe("https://sd.example/api/v2/tickets");
       expect(init.method).toBe("POST");
-    });
-
-    it("maps a Threat to the Success Dashboard create payload", async () => {
-      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-      fetchMock.mockResolvedValue(
-        jsonResponse({ id: "uuid-1", qid: null }, 201)
-      );
-      const client = new SuccessDashboardApiClient({
-        baseUrl: "https://sd.example",
-        fetchImpl: fetchMock,
-      });
-
-      await client.createExport(sampleThreat());
-
-      const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
       const body = JSON.parse(init.body as string);
       expect(body.typeId).toBe("actionable_improvement");
       expect(body.statusId).toBe("backlog");
       expect(body.title).toBe("x");
-      expect(body.observedIssue).toBe("d");
-      expect(body.suggestedSolution).toBe("");
-      expect(body.estimatedEffort).toBe(1);
-      expect(body.ticketRelations).toEqual([]);
-      expect(body.orgRelations).toEqual({
-        relation: "reporting_team",
-        orgUnit: {
-          externalId: SECURE_DEVELOPMENT_ORG_UNIT,
-          name: "Secure Development",
-        },
-        qualifiers: [
-          {
-            relation: "reporting_contributor",
-            user: { externalId: "u@k", name: "u@k" },
-          },
-        ],
-      });
-      expect(body.attributes).toEqual({ observed_issue_url: "" });
+      expect(body.tagIds).toEqual([
+        THREAT_MODEL_FINDING_TAG,
+        SECURITY_FINDING_TAG,
+      ]);
     });
 
-    it("maps Gram severity to Success Dashboard severity", async () => {
+    it("swallows a non-OK response into a success:false result instead of throwing", async () => {
+      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
+      fetchMock.mockResolvedValue({
+        ok: false,
+        status: 400,
+        statusText: "Bad Request",
+        headers: headersWith(),
+        text: async () => "missing required field: title",
+      } as unknown as Response);
+      const client = new SuccessDashboardApiClient({
+        baseUrl: "https://sd.example",
+        fetchImpl: fetchMock,
+      });
+
+      const result = (await client.createExport(samplePayload())) as {
+        success: boolean;
+        error: unknown;
+      };
+      expect(result.success).toBe(false);
+      expect(String(result.error)).toMatch(
+        /POST https:\/\/sd\.example\/api\/v2\/tickets failed \(400\): missing required field: title/
+      );
+    });
+  });
+
+  describe("createBulkExport", () => {
+    it("POSTs to /api/v2/tickets/bulk with an array body", async () => {
       const fetchMock: MockedFunction<typeof fetch> = jest.fn();
       fetchMock.mockResolvedValue(
-        jsonResponse({ id: "uuid-1", qid: null }, 201)
+        jsonResponse({ success: true, total: 2, created: 2, failed: 0 }, 201)
       );
       const client = new SuccessDashboardApiClient({
         baseUrl: "https://sd.example",
         fetchImpl: fetchMock,
       });
-      const threat = sampleThreat();
-      threat.severity = ThreatSeverity.High;
 
-      await client.createExport(threat);
+      await client.createBulkExport([samplePayload(), samplePayload()]);
 
-      const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+      const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(url).toBe("https://sd.example/api/v2/tickets/bulk");
+      expect(init.method).toBe("POST");
       const body = JSON.parse(init.body as string);
-      expect(body.severity).toBe("2 Major");
-      expect(body.priority).toBe(2);
-    });
-
-    it("omits severity when the threat is Informative (no SD equivalent)", async () => {
-      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-      fetchMock.mockResolvedValue(
-        jsonResponse({ id: "uuid-1", qid: null }, 201)
-      );
-      const client = new SuccessDashboardApiClient({
-        baseUrl: "https://sd.example",
-        fetchImpl: fetchMock,
-      });
-      const threat = sampleThreat();
-      threat.severity = ThreatSeverity.Informative;
-
-      await client.createExport(threat);
-
-      const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-      const body = JSON.parse(init.body as string);
-      expect(body.severity).toBeUndefined();
-    });
-
-    it("sets observed_issue_url and appends the Gram model link to observedIssue", async () => {
-      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-      fetchMock.mockResolvedValue(
-        jsonResponse({ id: "uuid-1", qid: null }, 201)
-      );
-      const client = new SuccessDashboardApiClient({
-        baseUrl: "https://sd.example",
-        publicGramBaseUrl: "https://gram.example",
-        fetchImpl: fetchMock,
-      });
-
-      await client.createExport(sampleThreat());
-
-      const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-      const body = JSON.parse(init.body as string);
-      expect(body.attributes.observed_issue_url).toBe(
-        "https://gram.example/model/m"
-      );
-      expect(body.observedIssue).toContain(
-        "Gram model: https://gram.example/model/m"
-      );
-    });
-
-    it("defaults to the EU production base URL when none is configured", async () => {
-      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-      fetchMock.mockResolvedValue(
-        jsonResponse({ id: "uuid-1", qid: null }, 201)
-      );
-      const client = new SuccessDashboardApiClient({ fetchImpl: fetchMock });
-
-      await client.createExport(sampleThreat());
-
-      const [url] = fetchMock.mock.calls[0] as [string, RequestInit];
-      expect(url).toBe(
-        "https://klarna-dashboards-aim-api-eu.production.c2c.klarna.net/api/v2/tickets?awaitSync=true"
-      );
+      expect(Array.isArray(body)).toBe(true);
+      expect(body).toHaveLength(2);
+      expect(body[0].typeId).toBe("actionable_improvement");
     });
   });
 
@@ -182,30 +155,13 @@ describe("SuccessDashboardApiClient", () => {
         fetchImpl: fetchMock,
       });
 
-      await client.updateExport("uuid-1", sampleThreat());
+      await client.updateExport("uuid-1", { title: "x" });
 
       const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
       expect(url).toBe("https://sd.example/api/v2/tickets/uuid-1");
       expect(init.method).toBe("PUT");
-    });
-
-    it("sends a partial body (no typeId/statusId)", async () => {
-      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-      fetchMock.mockResolvedValue(emptyResponse(200));
-      const client = new SuccessDashboardApiClient({
-        baseUrl: "https://sd.example",
-        fetchImpl: fetchMock,
-      });
-      const threat = sampleThreat();
-      threat.severity = ThreatSeverity.Low;
-
-      await client.updateExport("uuid-1", threat);
-
-      const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
       const body = JSON.parse(init.body as string);
       expect(body.title).toBe("x");
-      expect(body.observedIssue).toBe("d");
-      expect(body.severity).toBe("4 Minor");
       expect(body.typeId).toBeUndefined();
       expect(body.statusId).toBeUndefined();
     });
@@ -218,7 +174,7 @@ describe("SuccessDashboardApiClient", () => {
         fetchImpl: fetchMock,
       });
 
-      await client.updateExport("a/b", sampleThreat());
+      await client.updateExport("a/b", { title: "x" });
 
       const [url] = fetchMock.mock.calls[0] as [string, RequestInit];
       expect(url).toBe("https://sd.example/api/v2/tickets/a%2Fb");
@@ -243,33 +199,58 @@ describe("SuccessDashboardApiClient", () => {
     });
   });
 
-  describe("createBulkExport", () => {
-    it("POSTs to /api/v2/tickets/bulk with an array body", async () => {
+  describe("ticket + contributor lookups", () => {
+    it("GETs a ticket by UUID", async () => {
       const fetchMock: MockedFunction<typeof fetch> = jest.fn();
       fetchMock.mockResolvedValue(
-        jsonResponse(
-          { success: true, total: 1, created: 1, failed: 0, results: [] },
-          201
-        )
+        jsonResponse({ id: "uuid-1", statusId: "backlog" })
       );
       const client = new SuccessDashboardApiClient({
         baseUrl: "https://sd.example",
         fetchImpl: fetchMock,
       });
 
-      await client.createBulkExport([sampleThreat(), sampleThreat()]);
+      await client.getTicketById("uuid-1");
 
       const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-      expect(url).toBe("https://sd.example/api/v2/tickets/bulk");
-      expect(init.method).toBe("POST");
-      const body = JSON.parse(init.body as string);
-      expect(Array.isArray(body)).toBe(true);
-      expect(body).toHaveLength(2);
-      expect(body[0].typeId).toBe("actionable_improvement");
+      expect(url).toBe("https://sd.example/api/v2/tickets/uuid-1");
+      expect(init.method).toBe("GET");
+    });
+
+    it("GETs a ticket by QID", async () => {
+      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
+      fetchMock.mockResolvedValue(
+        jsonResponse({ id: "uuid-1", statusId: "backlog" })
+      );
+      const client = new SuccessDashboardApiClient({
+        baseUrl: "https://sd.example",
+        fetchImpl: fetchMock,
+      });
+
+      await client.getTicketByQid("Q42");
+
+      const [url] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(url).toBe("https://sd.example/api/v2/tickets/qid/Q42");
+    });
+
+    it("GETs a contributor by email under the /api/v1 prefix", async () => {
+      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
+      fetchMock.mockResolvedValue(
+        jsonResponse({ id: "c1", contributorName: "u" })
+      );
+      const client = new SuccessDashboardApiClient({
+        baseUrl: "https://sd.example",
+        fetchImpl: fetchMock,
+      });
+
+      await client.getContributorByEmail("u@k");
+
+      const [url] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(url).toBe("https://sd.example/api/v1/contributors/u%40k");
     });
   });
 
-  describe("auth + errors", () => {
+  describe("auth + headers", () => {
     it("sends Authorization when apiToken is set", async () => {
       const fetchMock: MockedFunction<typeof fetch> = jest.fn();
       fetchMock.mockResolvedValue(
@@ -281,7 +262,7 @@ describe("SuccessDashboardApiClient", () => {
         fetchImpl: fetchMock,
       });
 
-      await client.createExport(sampleThreat());
+      await client.createExport(samplePayload());
 
       const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
       expect((init.headers as Record<string, string>).Authorization).toBe(
@@ -299,31 +280,12 @@ describe("SuccessDashboardApiClient", () => {
         fetchImpl: fetchMock,
       });
 
-      await client.createExport(sampleThreat());
+      await client.createExport(samplePayload());
 
       const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
       expect(
         (init.headers as Record<string, string>).Authorization
       ).toBeUndefined();
-    });
-
-    it("throws with method + URL + status when the API rejects the request", async () => {
-      const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-      fetchMock.mockResolvedValue({
-        ok: false,
-        status: 400,
-        statusText: "Bad Request",
-        headers: headersWith(),
-        text: async () => "missing required field: title",
-      } as unknown as Response);
-      const client = new SuccessDashboardApiClient({
-        baseUrl: "https://sd.example",
-        fetchImpl: fetchMock,
-      });
-
-      await expect(client.createExport(sampleThreat())).rejects.toThrow(
-        /POST https:\/\/sd\.example\/api\/v2\/tickets\?awaitSync=true failed \(400\): missing required field: title/
-      );
     });
   });
 });

@@ -1,226 +1,200 @@
 import { describe, expect, it, jest } from "@jest/globals";
-import type { MockedFunction } from "jest-mock";
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
-import Threat from "@gram/core/dist/data/threats/Threat.js";
+import Threat, { ThreatSeverity } from "@gram/core/dist/data/threats/Threat.js";
+import { LinkObjectType } from "@gram/core/dist/data/links/Link.js";
 import { SuccessDashboardActionItemExporter } from "./SuccessDashboardActionItemExporter.js";
+import { SUCCESS_DASHBOARD_URL_DOMAIN } from "./constant.js";
 
-function validThreat(): Threat {
-  return new Threat("Title", "Desc", "m1", "c1", "u@k");
+function eligibleThreat(): Threat {
+  const threat = new Threat("title", "desc", "m1", "c1", "u@k");
+  threat.id = "tid-1";
+  threat.severity = ThreatSeverity.High;
+  return threat;
 }
 
-function headersWith(contentType?: string) {
+function makeModel() {
   return {
-    get: (name: string) =>
-      name.toLowerCase() === "content-type" ? contentType ?? null : null,
+    id: "m1",
+    systemId: "sys-1",
+    data: { components: [{ id: "c1", name: "Some Component" }] },
   };
 }
 
-function jsonResponse(body: unknown, status = 200): Response {
+/** Minimal DAL stub covering only the services the exporter touches. */
+function makeDal(overrides: Record<string, unknown> = {}): DataAccessLayer {
   return {
-    ok: status >= 200 && status < 300,
-    status,
-    statusText: "",
-    headers: headersWith("application/json"),
-    json: async () => body,
-    text: async () => JSON.stringify(body),
-  } as unknown as Response;
+    modelService: { getById: jest.fn(async () => null) },
+    reviewService: { getByModelId: jest.fn(async () => null) },
+    controlService: { listByThreatId: jest.fn(async () => []) },
+    linkService: {
+      listLinks: jest.fn(async () => []),
+      insertLink: jest.fn(async () => {}),
+      deleteLink: jest.fn(async () => {}),
+    },
+    systemProvider: { getSystem: jest.fn(async () => null) },
+    ...overrides,
+  } as unknown as DataAccessLayer;
 }
 
-function emptyResponse(status = 200): Response {
-  return {
-    ok: status >= 200 && status < 300,
-    status,
-    statusText: "",
-    headers: headersWith(),
-    json: async () => undefined,
-    text: async () => "",
-  } as unknown as Response;
+/** Construct the exporter and stub out its network-facing collaborators. */
+function makeExporter(dal: DataAccessLayer) {
+  const exporter = new SuccessDashboardActionItemExporter(dal, {
+    gramBaseUrl: "https://gram.example",
+  });
+  const client = {
+    createExport: jest.fn(async () => ({ success: true, id: "abcd1234-0000" })),
+    updateExport: jest.fn(async () => ({ success: true, id: "abcd1234-0000" })),
+    getTicketById: jest.fn(async () => ({
+      id: "ticket-uuid",
+      statusId: "in_progress",
+    })),
+    getTicketByQid: jest.fn(async () => ({
+      id: "ticket-uuid",
+      statusId: "in_progress",
+    })),
+    getContributorByEmail: jest.fn(async () => null),
+  };
+  const wikibase = {
+    getSystemQID: jest.fn(async () => "Q999"),
+    getOrgUnitQID: jest.fn(async () => "Q123"),
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  exporter.successDashboardClient = client as any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  exporter.wikibaseClient = wikibase as any;
+  return { exporter, client, wikibase };
 }
-
-const createdTicket = (id = "uuid-1") => jsonResponse({ id, qid: "Q42" }, 201);
 
 describe("SuccessDashboardActionItemExporter", () => {
-  const dal = {} as DataAccessLayer;
-
   it("exposes a stable exporter key", () => {
-    const exporter = new SuccessDashboardActionItemExporter({});
+    const { exporter } = makeExporter(makeDal());
     expect(exporter.key).toBe("success-dashboard");
   });
 
-  it("defaults exportOnReviewApproved to true", () => {
-    const exporter = new SuccessDashboardActionItemExporter({});
-    expect(exporter.exportOnReviewApproved).toBe(true);
+  it("defaults exportOnReviewApproved to true and honours the override", () => {
+    const dal = makeDal();
+    expect(
+      new SuccessDashboardActionItemExporter(dal).exportOnReviewApproved
+    ).toBe(true);
+    expect(
+      new SuccessDashboardActionItemExporter(dal, {
+        exportOnReviewApproved: false,
+      }).exportOnReviewApproved
+    ).toBe(false);
   });
 
-  it("does not invoke fetchImpl when baseUrl is not configured", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    const exporter = new SuccessDashboardActionItemExporter({
-      fetchImpl: fetchMock,
-    });
-    const threat = new Threat("t", "d", "mid", "cid", "user@x");
-    await exporter.export(dal, [threat]);
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it("posts each action item to /api/v2/tickets when baseUrl is set", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    fetchMock.mockResolvedValue(createdTicket());
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-      fetchImpl: fetchMock,
-    });
-    const threat = new Threat("title", "desc", "m1", "c1", "u@k");
-    threat.id = "tid-1";
+  it("skips a threat with no model id", async () => {
+    const dal = makeDal();
+    const { exporter, client } = makeExporter(dal);
+    const threat = new Threat("t", "d", "", "c", "u");
+    threat.severity = ThreatSeverity.High;
 
     await exporter.export(dal, [threat]);
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe("https://sd.example/api/v2/tickets?awaitSync=true");
-    expect(init.method).toBe("POST");
-    const body = JSON.parse((init.body as string) ?? "{}");
+    expect(client.createExport).not.toHaveBeenCalled();
+    expect(dal.linkService.insertLink).not.toHaveBeenCalled();
+  });
+
+  it("skips a low-severity threat that has no existing links", async () => {
+    const dal = makeDal({
+      modelService: { getById: jest.fn(async () => makeModel()) },
+    });
+    const { exporter, client } = makeExporter(dal);
+    const threat = eligibleThreat();
+    threat.severity = ThreatSeverity.Low;
+
+    await exporter.export(dal, [threat]);
+
+    expect(client.createExport).not.toHaveBeenCalled();
+  });
+
+  it("creates a ticket and links it for an eligible threat", async () => {
+    const dal = makeDal({
+      modelService: { getById: jest.fn(async () => makeModel()) },
+    });
+    const { exporter, client } = makeExporter(dal);
+
+    await exporter.export(dal, [eligibleThreat()]);
+
+    expect(client.createExport).toHaveBeenCalledTimes(1);
+    const body = (client.createExport.mock.calls[0] as any[])[0];
     expect(body.title).toBe("title");
     expect(body.typeId).toBe("actionable_improvement");
     expect(body.statusId).toBe("backlog");
-    expect(body.observedIssue).toBe("desc");
-  });
-
-  it("includes Authorization when apiToken is set", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    fetchMock.mockResolvedValue(createdTicket());
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-      apiToken: "secret",
-      fetchImpl: fetchMock,
-    });
-    const threat = new Threat("t", "d", "m", "c", "u");
-
-    await exporter.export(dal, [threat]);
-
-    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect((init.headers as Record<string, string>).Authorization).toBe(
-      "Bearer secret"
-    );
-  });
-
-  it("throws when API returns non-OK", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    fetchMock.mockResolvedValue({
-      ok: false,
-      status: 502,
-      statusText: "Bad Gateway",
-      headers: headersWith(),
-      text: async () => "upstream error",
-    } as unknown as Response);
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-      fetchImpl: fetchMock,
-    });
-    const threat = new Threat("t", "d", "m", "c", "u");
-
-    await expect(exporter.export(dal, [threat])).rejects.toThrow(
-      /failed \(502\): upstream error/
-    );
-  });
-
-  it("createExport throws when baseUrl is not configured", async () => {
-    const exporter = new SuccessDashboardActionItemExporter({});
-    await expect(exporter.createExport(validThreat())).rejects.toThrow(
-      "baseUrl is not configured"
-    );
-  });
-
-  it("createExport throws when title is missing", async () => {
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-    });
-    const bad = validThreat();
-    bad.title = "   ";
-    await expect(exporter.createExport(bad)).rejects.toThrow(
-      "threat.title is required"
-    );
-  });
-
-  it("createExport POSTs to /api/v2/tickets after checks pass", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    fetchMock.mockResolvedValue(createdTicket());
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-      fetchImpl: fetchMock,
-    });
-
-    await exporter.createExport(validThreat());
-
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe("https://sd.example/api/v2/tickets?awaitSync=true");
-    expect(init.method).toBe("POST");
-  });
-
-  it("updateExport throws when exportId is empty", async () => {
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-    });
-    await expect(exporter.updateExport("  ", validThreat())).rejects.toThrow(
-      "exportId is required"
-    );
-  });
-
-  it("updateExport PUTs to /api/v2/tickets/{id} after checks pass", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    fetchMock.mockResolvedValue(emptyResponse(200));
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-      fetchImpl: fetchMock,
-    });
-
-    await exporter.updateExport("uuid-1", validThreat());
-
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe("https://sd.example/api/v2/tickets/uuid-1");
-    expect(init.method).toBe("PUT");
-  });
-
-  it("deleteExport throws when exportId is empty", async () => {
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-    });
-    await expect(exporter.deleteExport("")).rejects.toThrow(
-      "exportId is required"
-    );
-  });
-
-  it("deleteExport DELETEs /api/v2/tickets/{id} after checks pass", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    fetchMock.mockResolvedValue(emptyResponse(204));
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-      fetchImpl: fetchMock,
-    });
-
-    await exporter.deleteExport("uuid-9");
-
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe("https://sd.example/api/v2/tickets/uuid-9");
-    expect(init.method).toBe("DELETE");
-  });
-
-  it("sets observed_issue_url when publicGramBaseUrl is configured", async () => {
-    const fetchMock: MockedFunction<typeof fetch> = jest.fn();
-    fetchMock.mockResolvedValue(createdTicket());
-    const exporter = new SuccessDashboardActionItemExporter({
-      baseUrl: "https://sd.example",
-      publicGramBaseUrl: "https://gram.example/",
-      fetchImpl: fetchMock,
-    });
-    const threat = new Threat("t", "d", "model-9", "c", "u");
-
-    await exporter.export(dal, [threat]);
-
-    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    const body = JSON.parse((init.body as string) ?? "{}");
+    expect(body.observedIssue).toBe("title: desc");
+    expect(body.severity).toBe("2 Major");
+    expect(body.priority).toBe(2);
+    expect(body.mainSystem).toBe("Q999");
     expect(body.attributes.observed_issue_url).toBe(
-      "https://gram.example/model/model-9"
+      "https://gram.example/model/m1"
     );
+
+    expect(dal.linkService.insertLink).toHaveBeenCalledTimes(1);
+    const linkArgs = (dal.linkService.insertLink as jest.Mock).mock.calls[0];
+    expect(linkArgs[0]).toBe(LinkObjectType.Threat);
+    expect(linkArgs[1]).toBe("tid-1");
+    expect(linkArgs[2]).toBe("abcd1234");
+    expect(linkArgs[3]).toBe(
+      `https://${SUCCESS_DASHBOARD_URL_DOMAIN}/abcd1234-0000`
+    );
+    expect(linkArgs[5]).toBe("success-dashboard");
+  });
+
+  it("updates an existing ticket that is still in treatment instead of creating a new one", async () => {
+    const dal = makeDal({
+      modelService: { getById: jest.fn(async () => makeModel()) },
+      linkService: {
+        listLinks: jest.fn(async () => [
+          {
+            id: 5,
+            url: "https://klarna-dashboards.klarna.net/123e4567-e89b-12d3-a456-426614174000",
+            createdBy: "success-dashboard",
+          },
+        ]),
+        insertLink: jest.fn(async () => {}),
+        deleteLink: jest.fn(async () => {}),
+      },
+    });
+    const { exporter, client } = makeExporter(dal);
+    client.getTicketById.mockResolvedValue({
+      id: "ticket-uuid",
+      statusId: "in_progress",
+    });
+
+    await exporter.export(dal, [eligibleThreat()]);
+
+    expect(client.updateExport).toHaveBeenCalledTimes(1);
+    expect((client.updateExport.mock.calls[0] as any[])[0]).toBe("ticket-uuid");
+    expect(client.createExport).not.toHaveBeenCalled();
+    expect(dal.linkService.insertLink).not.toHaveBeenCalled();
+  });
+
+  it("removes a stale link and creates a fresh ticket when the existing one is completed", async () => {
+    const deleteLink = jest.fn(async () => {});
+    const dal = makeDal({
+      modelService: { getById: jest.fn(async () => makeModel()) },
+      linkService: {
+        listLinks: jest.fn(async () => [
+          {
+            id: 7,
+            url: "https://klarna-dashboards.klarna.net/123e4567-e89b-12d3-a456-426614174000",
+            createdBy: "success-dashboard",
+          },
+        ]),
+        insertLink: jest.fn(async () => {}),
+        deleteLink,
+      },
+    });
+    const { exporter, client } = makeExporter(dal);
+    client.getTicketById.mockResolvedValue({
+      id: "ticket-uuid",
+      statusId: "completed",
+    });
+
+    await exporter.export(dal, [eligibleThreat()]);
+
+    expect(deleteLink).toHaveBeenCalledWith(7);
+    expect(client.createExport).toHaveBeenCalledTimes(1);
+    expect(client.updateExport).not.toHaveBeenCalled();
   });
 });
