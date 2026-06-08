@@ -4,7 +4,9 @@ import { LDAPGroupBasedAuthzProvider } from "@gram/ldap";
 import { LDAPUserSearchBase, ldapSettings } from "./default.js";
 import { defaultConfig } from "./default.js";
 import { createJiraActionItemExporter } from "./jira.js";
-import { WikibaseActionItemExporter } from "@gram/wikibase/dist/index.js";
+import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
+import log4js from "log4js";
+const log = log4js.getLogger("productionConfig");
 
 export const productionConfig: GramConfiguration = {
   ...defaultConfig,
@@ -41,15 +43,16 @@ export const productionConfig: GramConfiguration = {
 
     providers.authzProvider = ldapAuthz;
 
-    const jiraActionItemExporter = createJiraActionItemExporter(
-      this,
-      dal,
-      "production"
-    );
-    const wikibaseActionItemExporter = new WikibaseActionItemExporter(dal);
-
-    providers.actionItemExporters = [wikibaseActionItemExporter];
-
+    providers.actionItemExporters = [...(providers.actionItemExporters || [])];
+    if (process.env.SUCCESS_DASHBOARD_URL) {
+      providers.actionItemExporters.push(
+        new SuccessDashboardActionItemExporter(dal, {
+          gramBaseUrl: productionConfig.origin,
+        })
+      );
+    } else {
+      log.info("SUCCESS_DASHBOARD_URL; Success Dashboard exporter disabled");
+    }
     return providers;
   },
 };

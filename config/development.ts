@@ -3,6 +3,7 @@ import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
 import { defaultConfig } from "./default.js";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus/dist/index.js";
 import log4js from "log4js";
+import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
 import { WikibaseActionItemExporter } from "@gram/wikibase/dist/index.js";
 
 const log = log4js.getLogger("DevelopmentConfig");
@@ -58,9 +59,25 @@ export const developmentConfig: GramConfiguration = {
 
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
-    const wikibaseActionItemExporter = new WikibaseActionItemExporter(dal);
 
-    providers.actionItemExporters = [wikibaseActionItemExporter];
+    providers.actionItemExporters = [...(providers.actionItemExporters || [])];
+    log.debug(
+      `Action item exporters: ${providers.actionItemExporters?.length}`
+    );
+    if (
+      process.env.SUCCESS_DASHBOARD_URL &&
+      process.env.SUCCESS_DASHBOARD_API_TOKEN
+    ) {
+      providers.actionItemExporters.push(
+        new SuccessDashboardActionItemExporter(dal, {
+          gramBaseUrl: developmentConfig.origin,
+        })
+      );
+    } else {
+      log.info(
+        "SUCCESS_DASHBOARD_URL or SUCCESS_DASHBOARD_API_TOKEN is not set; Success Dashboard exporter disabled"
+      );
+    }
 
     if (process.env.THREATSAURUS_URL) {
       const threatsaurus = new ThreatsaurusSuggestionSource(
@@ -71,7 +88,9 @@ export const developmentConfig: GramConfiguration = {
     } else {
       log.debug("Threatsaurus is not configured. Skipping");
     }
-
+    log.debug(
+      `Action item exporters: ${providers.actionItemExporters?.length}`
+    );
     return providers;
   },
 };

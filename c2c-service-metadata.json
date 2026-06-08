@@ -27,6 +27,9 @@
         },
         "J1_ACCOUNT_ID": {
           "value": "3b98116a-9563-43c5-8b64-54f0650a7e97"
+        },
+        "GRAM_PUBLIC_URL": {
+          "value": "https://gram-eu.staging.c2c.klarna.net"
         }
       }
     },
@@ -61,6 +64,9 @@
         },
         "J1_ACCOUNT_ID": {
           "value": "45377d01-965c-4c5c-a3c1-e6ac4f80cc48"
+        },
+        "GRAM_PUBLIC_URL": {
+          "value": "https://gram.klarna.net"
         }
       }
     }
@@ -143,7 +149,9 @@
       ]
     },
     "clients": {
-      "cidr_blocks": ["10.0.0.0/8"]
+      "cidr_blocks": [
+        "10.0.0.0/8"
+      ]
     },
     "env": {
       "POSTGRES_HOST": {
@@ -211,8 +219,14 @@
       },
       "WIKIBASE_PASSWORD": {
         "secret": "/wikibase.password"
+      },
+      "SUCCESS_DASHBOARD_URL": {
+        "value": "https://klarna-dashboards.klarna.net"
       }
     },
-    "container_resources": {"size": "small", "architecture": "linux/arm64"}
+    "container_resources": {
+      "size": "small",
+      "architecture": "linux/arm64"
+    }
   }
 }

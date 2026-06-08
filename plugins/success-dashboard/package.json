@@ -1,0 +1,24 @@
+{
+  "name": "@gram/success-dashboard",
+  "type": "module",
+  "version": "4.25.0",
+  "description": "Export Gram action items to the Success Dashboard API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "prettier --check .",
+    "lint-fix": "prettier -l . --write",
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --runInBand --no-cache"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^4.23.0",
+    "@gram/wikibase": "^4.23.0"
+  }
+}
