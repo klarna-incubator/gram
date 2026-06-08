@@ -39,6 +39,7 @@
     "@gram/ldap": "*",
     "@gram/oidc": "*",
     "@gram/stride": "*",
+    "@gram/success-dashboard": "*",
     "@gram/svgporn": "*",
     "@gram/threatlib": "*",
     "@gram/threatsaurus": "*",

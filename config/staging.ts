@@ -2,8 +2,9 @@ import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import { defaultConfig } from "./default.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
-import { createJiraActionItemExporter } from "./jira.js";
-import { WikibaseActionItemExporter } from "@gram/wikibase/dist/index.js";
+import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
+import log4js from "log4js";
+const log = log4js.getLogger("stagingConfig");
 
 export const stagingConfig: GramConfiguration = {
   ...defaultConfig,
@@ -38,19 +39,19 @@ export const stagingConfig: GramConfiguration = {
 
     providers.suggestionSources?.push(threatsaurus);
 
-    const jiraActionItemExporter = createJiraActionItemExporter(
-      this,
-      dal,
-      "sandbox"
-    );
-    const wikibaseActionItemExporter = new WikibaseActionItemExporter(
-      dal,
-      false
-    );
-    providers.actionItemExporters = [
-      jiraActionItemExporter,
-      wikibaseActionItemExporter,
-    ];
+    providers.actionItemExporters = [...(providers.actionItemExporters || [])];
+
+    if (process.env.SUCCESS_DASHBOARD_URL) {
+      providers.actionItemExporters.push(
+        new SuccessDashboardActionItemExporter(dal, {
+          gramBaseUrl: stagingConfig.origin,
+        })
+      );
+    } else {
+      log.info(
+        "SUCCESS_DASHBOARD_URL is not set; Success Dashboard exporter disabled"
+      );
+    }
 
     return providers;
   },
