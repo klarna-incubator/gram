@@ -22,7 +22,7 @@ export class SuccessDashboardApiClient {
 
   constructor(options: SuccessDashboardApiClientOptions = {}) {
     this.baseUrl =
-      process.env.SUCCESS_DASHBOARD_URL?.trim() ||
+      process.env.SUCCESS_DASHBOARD_API_URL?.trim() ||
       options.baseUrl?.trim() ||
       "";
     this.apiToken =

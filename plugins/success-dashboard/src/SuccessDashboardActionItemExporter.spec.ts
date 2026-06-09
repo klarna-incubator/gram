@@ -3,7 +3,7 @@ import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import Threat, { ThreatSeverity } from "@gram/core/dist/data/threats/Threat.js";
 import { LinkObjectType } from "@gram/core/dist/data/links/Link.js";
 import { SuccessDashboardActionItemExporter } from "./SuccessDashboardActionItemExporter.js";
-import { SUCCESS_DASHBOARD_URL_DOMAIN } from "./constant.js";
+import { SUCCESS_DASHBOARD_DOMAIN } from "./constant.js";
 
 function eligibleThreat(): Threat {
   const threat = new Threat("title", "desc", "m1", "c1", "u@k");
@@ -135,7 +135,7 @@ describe("SuccessDashboardActionItemExporter", () => {
     expect(linkArgs[1]).toBe("tid-1");
     expect(linkArgs[2]).toBe("abcd1234");
     expect(linkArgs[3]).toBe(
-      `https://${SUCCESS_DASHBOARD_URL_DOMAIN}/abcd1234-0000`
+      `https://${SUCCESS_DASHBOARD_DOMAIN}/abcd1234-0000`
     );
     expect(linkArgs[5]).toBe("success-dashboard");
   });

@@ -41,7 +41,7 @@ export const stagingConfig: GramConfiguration = {
 
     providers.actionItemExporters = [...(providers.actionItemExporters || [])];
 
-    if (process.env.SUCCESS_DASHBOARD_URL) {
+    if (process.env.SUCCESS_DASHBOARD_API_URL) {
       providers.actionItemExporters.push(
         new SuccessDashboardActionItemExporter(dal, {
           gramBaseUrl: stagingConfig.origin,
@@ -49,7 +49,7 @@ export const stagingConfig: GramConfiguration = {
       );
     } else {
       log.info(
-        "SUCCESS_DASHBOARD_URL is not set; Success Dashboard exporter disabled"
+        "SUCCESS_DASHBOARD_API_URL is not set; Success Dashboard exporter disabled"
       );
     }
 

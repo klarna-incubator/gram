@@ -44,14 +44,16 @@ export const productionConfig: GramConfiguration = {
     providers.authzProvider = ldapAuthz;
 
     providers.actionItemExporters = [...(providers.actionItemExporters || [])];
-    if (process.env.SUCCESS_DASHBOARD_URL) {
+    if (process.env.SUCCESS_DASHBOARD_API_URL) {
       providers.actionItemExporters.push(
         new SuccessDashboardActionItemExporter(dal, {
           gramBaseUrl: productionConfig.origin,
         })
       );
     } else {
-      log.info("SUCCESS_DASHBOARD_URL; Success Dashboard exporter disabled");
+      log.info(
+        "SUCCESS_DASHBOARD_API_URL; Success Dashboard exporter disabled"
+      );
     }
     return providers;
   },
