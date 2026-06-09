@@ -66,7 +66,7 @@ function emptyResponse(status = 200): Response {
 describe("SuccessDashboardApiClient", () => {
   beforeEach(() => {
     // Options must win in tests; the client otherwise prefers these env vars.
-    delete process.env.SUCCESS_DASHBOARD_URL;
+    delete process.env.SUCCESS_DASHBOARD_API_URL;
     delete process.env.SUCCESS_DASHBOARD_API_TOKEN;
   });
 

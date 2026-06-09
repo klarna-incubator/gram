@@ -65,7 +65,7 @@ export const developmentConfig: GramConfiguration = {
       `Action item exporters: ${providers.actionItemExporters?.length}`
     );
     if (
-      process.env.SUCCESS_DASHBOARD_URL &&
+      process.env.SUCCESS_DASHBOARD_API_URL &&
       process.env.SUCCESS_DASHBOARD_API_TOKEN
     ) {
       providers.actionItemExporters.push(
@@ -75,7 +75,7 @@ export const developmentConfig: GramConfiguration = {
       );
     } else {
       log.info(
-        "SUCCESS_DASHBOARD_URL or SUCCESS_DASHBOARD_API_TOKEN is not set; Success Dashboard exporter disabled"
+        "SUCCESS_DASHBOARD_API_URL or SUCCESS_DASHBOARD_API_TOKEN is not set; Success Dashboard exporter disabled"
       );
     }
 

@@ -220,8 +220,8 @@
       "WIKIBASE_PASSWORD": {
         "secret": "/wikibase.password"
       },
-      "SUCCESS_DASHBOARD_URL": {
-        "value": "https://klarna-dashboards.klarna.net"
+      "SUCCESS_DASHBOARD_API_URL": {
+        "value": "http://klarna-dashboards-aim-api-eu.production.c2c.klarna.net"
       }
     },
     "container_resources": {

@@ -21,8 +21,8 @@ export const LOW_SEVERITIES: ThreatSeverity[] = [
   ThreatSeverity.Informative,
   ThreatSeverity.Low,
 ];
-
-export const SUCCESS_DASHBOARD_URL_DOMAIN = "klarna-dashboards.klarna.net";
+export const SUCCESS_DASHBOARD_DOMAIN = "klarna-dashboards.klarna.net";
+export const SUCCESS_DASHBOARD_URL = `https://${SUCCESS_DASHBOARD_DOMAIN}`;
 export const WIKIBASE_URL_DOMAIN = "knowledgegraph.klarna.net";
 
 // ThreatSeverity uses Gram terms; Success Dashboard uses ranked labels.
