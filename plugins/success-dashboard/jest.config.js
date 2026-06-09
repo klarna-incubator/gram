@@ -3,7 +3,6 @@ const config = {
   preset: "ts-jest/presets/default-esm",
   extensionsToTreatAsEsm: [".ts"],
   testEnvironment: "node",
-  verbose: true,
   transform: {
     "^.+\\.tsx?$": [
       "ts-jest",
@@ -16,8 +15,5 @@ const config = {
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
-  coverageProvider: "v8",
-  transformIgnorePatterns: ["<rootDir>/node_modules/"],
-  setupFilesAfterEnv: ["./jest.setup.ts"],
 };
 export default config;
