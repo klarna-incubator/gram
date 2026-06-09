@@ -7,7 +7,7 @@ import { SuccessDashboardApiClient } from "./SuccessDashboardApiClient.js";
 import {
   SKIP_REASONS,
   LOW_SEVERITIES,
-  SUCCESS_DASHBOARD_URL_DOMAIN,
+  SUCCESS_DASHBOARD_DOMAIN,
   WIKIBASE_URL_DOMAIN,
   UPDATE_REASONS,
   SECURE_DEVELOPMENT_ORG_UNIT,
@@ -16,6 +16,7 @@ import {
   THREAT_MODEL_FINDING_TAG,
   SECURITY_FINDING_TAG,
   SLA_IN_DAYS_MAP,
+  SUCCESS_DASHBOARD_URL,
 } from "./constant.js";
 import { LinkObjectType } from "@gram/core/dist/data/links/Link.js";
 import {
@@ -100,7 +101,7 @@ export class SuccessDashboardActionItemExporter implements ActionItemExporter {
             LinkObjectType.Threat,
             item.id!,
             createdTicketId.id.split("-")[0],
-            `https://${SUCCESS_DASHBOARD_URL_DOMAIN}/${createdTicketId.id}`,
+            `${SUCCESS_DASHBOARD_URL}/${createdTicketId.id}`,
             "",
             this.key
           );
@@ -144,7 +145,8 @@ export class SuccessDashboardActionItemExporter implements ActionItemExporter {
     const successDashboardLinks = links.filter(
       (link) =>
         link.createdBy === this.key ||
-        link.url.includes(SUCCESS_DASHBOARD_URL_DOMAIN) ||
+        link.createdBy === "wikibase" ||
+        link.url.includes(SUCCESS_DASHBOARD_DOMAIN) ||
         link.url.includes(WIKIBASE_URL_DOMAIN)
     );
     if (successDashboardLinks.length > 0) {
