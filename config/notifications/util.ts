@@ -28,7 +28,7 @@ function missingTeamEmail(owner: any, review: Review) {
     );
     return missingTeamEmailTemplate({ ownerName: owner.name });
   }
-  return undefined;
+  return null;
 }
 
 export async function generalReviewNotificationVariables(
