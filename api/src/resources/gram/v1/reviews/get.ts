@@ -3,13 +3,15 @@ import { Permission } from "@gram/core/dist/auth/authorization.js";
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 /**
  * GET /api/v1/reviews/{modelId}
  * @exports {function} handler
  */
 export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
-    const { modelId } = req.params;
+    const { modelId } = routeParams(req.params);
     if (!modelId) {
       res.sendStatus(400);
       return;

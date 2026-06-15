@@ -10,9 +10,11 @@ import { SuggestionStatus } from "@gram/core/dist/data/suggestions/Suggestion.js
 import { SuggestionID } from "@gram/core/dist/suggestions/models.js";
 import { validateUUID } from "@gram/core/dist/util/uuid.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export default function reject(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const { modelId } = req.params;
+    const { modelId } = routeParams(req.params);
 
     const suggestionId = new SuggestionID(req.body.suggestionId);
 

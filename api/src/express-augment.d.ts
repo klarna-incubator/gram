@@ -1,6 +1,5 @@
-import { CurrentAuthz, UserToken } from "../../util/requestExtension.js";
+import type { CurrentAuthz, UserToken } from "./util/requestExtension.js";
 
-// to make the file a module and avoid the TypeScript error
 export {};
 
 declare global {

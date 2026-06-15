@@ -6,9 +6,11 @@ import ResourceMatching from "@gram/core/dist/data/matchings/ResourceMatching.js
 import { ensureModelAndMatchingPermission } from "./utils.js";
 import { InvalidInputError } from "@gram/core/dist/util/errors.js";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 export function createResourceMatching(dal: DataAccessLayer) {
   return async (req: Request, res: Response) => {
-    const modelId = req.params?.modelId;
+    const modelId = routeParams(req.params)?.modelId;
     const resourceId = req.body?.resourceId;
     const componentId = req.body?.componentId;
     const user = req.user;
