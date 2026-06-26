@@ -62,6 +62,46 @@ export class LinkDataService extends EventEmitter {
     );
   }
 
+  /**
+   * Batched link lookup over many objects in a single query, optionally scoped to
+   * one created_by. Used for Endpoint 2's before/after export snapshots to avoid
+   * N round-trips. Returns [] for empty input.
+   */
+  async listLinksForObjects(
+    objectType: LinkObjectType,
+    objectIds: LinkObjectId[],
+    createdBy?: string
+  ): Promise<Link[]> {
+    if (objectIds.length === 0) {
+      return [];
+    }
+    const params: any[] = [objectType, objectIds];
+    let query = `
+      SELECT * FROM links
+      WHERE object_type = $1 AND object_id = ANY($2::varchar[])
+    `;
+    if (createdBy !== undefined) {
+      params.push(createdBy);
+      query += ` AND created_by = $3`;
+    }
+
+    const res = await this.pool.query(query, params);
+    return res.rows.map(
+      (row) =>
+        new Link(
+          row.id,
+          row.object_type,
+          row.object_id,
+          row.label,
+          row.url,
+          row.icon,
+          row.created_by,
+          row.created_at,
+          row.updated_at
+        )
+    );
+  }
+
   async insertLink(
     objectType: LinkObjectType,
     objectId: LinkObjectId,
