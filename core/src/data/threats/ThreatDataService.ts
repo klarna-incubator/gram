@@ -30,6 +30,42 @@ export function convertToThreat(row: any): Threat {
   return threat;
 }
 
+export type ExportStatusFilter = "exported" | "not-exported";
+
+/**
+ * Filter for the admin cross-system action item query.
+ * `exporterScope` is resolved by the caller (route handler): `[exporterKey]` when
+ * a specific exporter is requested, otherwise the full set of registered exporter
+ * keys. The same scope drives both the export-status filter and the `exported`
+ * flag / `exportLinks` returned per row.
+ */
+export interface ActionItemFilter {
+  systemIds?: string[];
+  createdFrom?: string; // ISO 8601 — compared against the timestamptz column
+  createdTo?: string;
+  reviewApprovedFrom?: string;
+  reviewApprovedTo?: string;
+  severities?: ThreatSeverity[];
+  exportStatus?: ExportStatusFilter;
+  exporterScope: string[];
+  limit: number;
+  offset: number;
+}
+
+export interface ActionItemExportLink {
+  url: string;
+  createdBy: string;
+  createdAt: number; // ms
+}
+
+export interface AdminActionItem {
+  threat: Threat;
+  systemId: string | null;
+  reviewApprovedAt: number | null; // ms
+  exported: boolean; // scoped to ActionItemFilter.exporterScope
+  exportLinks: ActionItemExportLink[];
+}
+
 export class ThreatDataService extends EventEmitter {
   constructor(private dal: DataAccessLayer) {
     super();
@@ -163,6 +199,131 @@ export class ThreatDataService extends EventEmitter {
     }
 
     return res.rows.map((record) => convertToThreat(record));
+  }
+
+  /**
+   * Hydrate threats by id, for any is_action_item value (the caller partitions).
+   * Single round-trip; returns only non-deleted threats. Returns [] for empty input.
+   */
+  async listByIds(ids: string[]): Promise<Threat[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+    const query = `
+      SELECT
+        id,
+        title,
+        description,
+        model_id,
+        component_id,
+        created_by,
+        extract(epoch from created_at) as created_at,
+        extract(epoch from updated_at) as updated_at,
+        suggestion_id,
+        is_action_item,
+        severity
+      FROM threats
+      WHERE id = ANY($1::uuid[])
+      AND deleted_at IS NULL
+      ORDER BY created_at DESC
+    `;
+    const res = await this.pool.query(query, [ids]);
+    return res.rows.map((record) => convertToThreat(record));
+  }
+
+  /**
+   * Admin cross-system action item query (Endpoint 1). Pure data query over
+   * threats / models / reviews / links — applies no exporter skip logic.
+   * "exported" = the threat has a links row whose created_by is in
+   * filter.exporterScope (exporter-created links only; user links don't count).
+   */
+  async listActionItemsFiltered(
+    filter: ActionItemFilter
+  ): Promise<{ total: number; items: AdminActionItem[] }> {
+    const params: any[] = [
+      filter.exporterScope, // $1 — used in the LATERAL
+      filter.systemIds ?? null, // $2
+      filter.createdFrom ?? null, // $3
+      filter.createdTo ?? null, // $4
+      filter.reviewApprovedFrom ?? null, // $5
+      filter.reviewApprovedTo ?? null, // $6
+      filter.exportStatus ?? null, // $7
+      filter.limit, // $8
+      filter.offset, // $9
+      filter.severities ?? null, // $10
+    ];
+
+    const query = `
+      SELECT
+        t.id,
+        t.title,
+        t.description,
+        t.model_id,
+        t.component_id,
+        t.created_by,
+        t.suggestion_id,
+        extract(epoch from t.created_at) as created_at,
+        extract(epoch from t.updated_at) as updated_at,
+        t.is_action_item,
+        t.severity,
+        m.system_id,
+        extract(epoch from r.approved_at) as review_approved_at,
+        COALESCE(l.exported, false) as exported,
+        COALESCE(l.links, '[]'::json) as export_links,
+        COUNT(*) OVER() as total
+      FROM threats t
+      JOIN models m ON m.id = t.model_id
+      LEFT JOIN reviews r ON r.model_id = t.model_id
+      LEFT JOIN LATERAL (
+        SELECT
+          count(*) > 0 as exported,
+          json_agg(json_build_object(
+            'url', url,
+            'createdBy', created_by,
+            'createdAt', extract(epoch from created_at)
+          )) as links
+        FROM links
+        WHERE object_type = 'threat'
+          AND object_id = t.id::text
+          AND created_by = ANY($1::varchar[])
+      ) l ON true
+      WHERE t.is_action_item = true
+        AND t.deleted_at IS NULL
+        AND ($2::varchar[] IS NULL OR m.system_id = ANY($2::varchar[]))
+        AND ($3::timestamptz IS NULL OR t.created_at >= $3::timestamptz)
+        AND ($4::timestamptz IS NULL OR t.created_at <= $4::timestamptz)
+        AND ($5::timestamptz IS NULL OR r.approved_at >= $5::timestamptz)
+        AND ($6::timestamptz IS NULL OR r.approved_at <= $6::timestamptz)
+        AND ($10::varchar[] IS NULL OR t.severity = ANY($10::varchar[]))
+        AND ($7::text IS NULL
+          OR ($7 = 'exported' AND l.exported)
+          OR ($7 = 'not-exported' AND NOT l.exported))
+      ORDER BY t.created_at DESC
+      LIMIT $8::int OFFSET $9::int
+    `;
+
+    const res = await this.pool.query(query, params);
+
+    const total = res.rows.length > 0 ? parseInt(res.rows[0].total, 10) : 0;
+    const items: AdminActionItem[] = res.rows.map((row) => ({
+      threat: convertToThreat(row),
+      systemId: row.system_id ?? null,
+      reviewApprovedAt:
+        row.review_approved_at != null
+          ? Math.round(Number(row.review_approved_at) * 1000)
+          : null,
+      exported: row.exported ?? false,
+      exportLinks: (row.export_links ?? []).map((link: any) => ({
+        url: link.url,
+        createdBy: link.createdBy,
+        createdAt:
+          link.createdAt != null
+            ? Math.round(Number(link.createdAt) * 1000)
+            : 0,
+      })),
+    }));
+
+    return { total, items };
   }
 
   /**
