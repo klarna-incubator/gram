@@ -69,9 +69,104 @@ describe("admin action-items endpoints", () => {
       expect(Array.isArray(res.body.actionItems)).toBe(true);
     });
 
-    it("400 for unknown exporterKey", async () => {
+    it("counts a user-recorded link as exported", async () => {
+      const id = await actionItem();
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        id,
+        "l",
+        "https://jira.com/browse/ABC-1",
+        "",
+        sampleUser.sub // user identity, not an exporter key
+      );
+
       const res = await request(app)
-        .get("/api/v1/admin/action-items?exporterKey=nope")
+        .get("/api/v1/admin/action-items?exportStatus=exported")
+        .set("Authorization", adminToken);
+
+      expect(res.status).toBe(200);
+      const item = res.body.actionItems.find((a: any) => a.id === id);
+      expect(item).toBeDefined();
+      expect(item.exported).toBe(true);
+    });
+
+    it("filters by exportDomain (true host match)", async () => {
+      const matchId = await actionItem();
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        matchId,
+        "l",
+        "https://team.jira.com/browse/ABC-1",
+        "",
+        sampleUser.sub
+      );
+      const otherId = await actionItem();
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        otherId,
+        "l",
+        "https://notjira.com/x",
+        "",
+        sampleUser.sub
+      );
+
+      const res = await request(app)
+        .get(
+          "/api/v1/admin/action-items?exportDomain=jira.com&exportStatus=exported"
+        )
+        .set("Authorization", adminToken);
+
+      expect(res.status).toBe(200);
+      const ids = res.body.actionItems.map((a: any) => a.id);
+      expect(ids).toContain(matchId);
+      expect(ids).not.toContain(otherId);
+    });
+
+    it("accepts multiple exportDomain values (matches ANY)", async () => {
+      const jiraId = await actionItem();
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        jiraId,
+        "l",
+        "https://jira.com/browse/ABC-1",
+        "",
+        sampleUser.sub
+      );
+      const githubId = await actionItem();
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        githubId,
+        "l",
+        "https://github.com/x",
+        "",
+        sampleUser.sub
+      );
+      const otherId = await actionItem();
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        otherId,
+        "l",
+        "https://example.com/x",
+        "",
+        sampleUser.sub
+      );
+
+      const res = await request(app)
+        .get(
+          "/api/v1/admin/action-items?exportDomain=jira.com&exportDomain=github.com&exportStatus=exported"
+        )
+        .set("Authorization", adminToken);
+
+      expect(res.status).toBe(200);
+      const ids = res.body.actionItems.map((a: any) => a.id);
+      expect(ids).toContain(jiraId);
+      expect(ids).toContain(githubId);
+      expect(ids).not.toContain(otherId);
+    });
+
+    it("400 for empty exportDomain", async () => {
+      const res = await request(app)
+        .get("/api/v1/admin/action-items?exportDomain=")
         .set("Authorization", adminToken);
       expect(res.status).toBe(400);
     });

@@ -34,10 +34,12 @@ export type ExportStatusFilter = "exported" | "not-exported";
 
 /**
  * Filter for the admin cross-system action item query.
- * `exporterScope` is resolved by the caller (route handler): `[exporterKey]` when
- * a specific exporter is requested, otherwise the full set of registered exporter
- * keys. The same scope drives both the export-status filter and the `exported`
- * flag / `exportLinks` returned per row.
+ * Export status is derived from the presence of links on the item, regardless of
+ * `created_by`. When `exportDomain` is set, an item only counts as exported (and
+ * passes the `exportStatus` filter) when it has a link whose URL host equals, or
+ * is a subdomain of, ANY of the supplied domains — a true host match.
+ * `exportLinks` always returns every link on the item, independent of
+ * `exportDomain`.
  */
 export interface ActionItemFilter {
   systemIds?: string[];
@@ -47,7 +49,7 @@ export interface ActionItemFilter {
   reviewApprovedTo?: string;
   severities?: ThreatSeverity[];
   exportStatus?: ExportStatusFilter;
-  exporterScope: string[];
+  exportDomain?: string[]; // optional host filter, e.g. ["jira.com", "github.com"]
   limit: number;
   offset: number;
 }
@@ -62,8 +64,8 @@ export interface AdminActionItem {
   threat: Threat;
   systemId: string | null;
   reviewApprovedAt: number | null; // ms
-  exported: boolean; // scoped to ActionItemFilter.exporterScope
-  exportLinks: ActionItemExportLink[];
+  exported: boolean; // has a (matching, when exportDomain is set) link
+  exportLinks: ActionItemExportLink[]; // all links on the item
 }
 
 export class ThreatDataService extends EventEmitter {
@@ -234,23 +236,38 @@ export class ThreatDataService extends EventEmitter {
   /**
    * Admin cross-system action item query (Endpoint 1). Pure data query over
    * threats / models / reviews / links — applies no exporter skip logic.
-   * "exported" = the threat has a links row whose created_by is in
-   * filter.exporterScope (exporter-created links only; user links don't count).
+   * "exported" = the threat has at least one links row (regardless of
+   * created_by); when filter.exportDomain is set, only links whose URL host
+   * equals or is a subdomain of ANY supplied domain count. exportLinks always
+   * returns every link on the item.
    */
   async listActionItemsFiltered(
     filter: ActionItemFilter
   ): Promise<{ total: number; items: AdminActionItem[] }> {
+    // Lowercased domains for the host `=` comparison; a matching set of
+    // subdomain LIKE patterns (`%.<domain>`) with LIKE wildcards (`\`, `%`, `_`)
+    // escaped so each domain is matched literally. An item matches when a link
+    // host equals or is a subdomain of ANY supplied domain.
+    const exportDomains =
+      filter.exportDomain && filter.exportDomain.length > 0
+        ? filter.exportDomain.map((d) => d.toLowerCase())
+        : null;
+    const exportDomainPatterns = exportDomains
+      ? exportDomains.map((d) => "%." + d.replace(/([\\%_])/g, "\\$1"))
+      : null;
+
     const params: any[] = [
-      filter.exporterScope, // $1 — used in the LATERAL
-      filter.systemIds ?? null, // $2
-      filter.createdFrom ?? null, // $3
-      filter.createdTo ?? null, // $4
-      filter.reviewApprovedFrom ?? null, // $5
-      filter.reviewApprovedTo ?? null, // $6
-      filter.exportStatus ?? null, // $7
-      filter.limit, // $8
-      filter.offset, // $9
-      filter.severities ?? null, // $10
+      exportDomains, // $1 — host equality set + presence gate
+      exportDomainPatterns, // $2 — escaped subdomain LIKE patterns
+      filter.systemIds ?? null, // $3
+      filter.createdFrom ?? null, // $4
+      filter.createdTo ?? null, // $5
+      filter.reviewApprovedFrom ?? null, // $6
+      filter.reviewApprovedTo ?? null, // $7
+      filter.exportStatus ?? null, // $8
+      filter.limit, // $9
+      filter.offset, // $10
+      filter.severities ?? null, // $11
     ];
 
     const query = `
@@ -268,7 +285,7 @@ export class ThreatDataService extends EventEmitter {
         t.severity,
         m.system_id,
         extract(epoch from r.approved_at) as review_approved_at,
-        COALESCE(l.exported, false) as exported,
+        COALESCE(l.matched, false) as exported,
         COALESCE(l.links, '[]'::json) as export_links,
         COUNT(*) OVER() as total
       FROM threats t
@@ -276,30 +293,42 @@ export class ThreatDataService extends EventEmitter {
       LEFT JOIN reviews r ON r.model_id = t.model_id
       LEFT JOIN LATERAL (
         SELECT
-          count(*) > 0 as exported,
+          CASE
+            WHEN $1::text[] IS NULL THEN count(*) > 0
+            ELSE COALESCE(bool_or(
+              tl.host = ANY($1::text[])
+              OR tl.host LIKE ANY($2::text[])
+            ), false)
+          END as matched,
           json_agg(json_build_object(
-            'url', url,
-            'createdBy', created_by,
-            'createdAt', extract(epoch from created_at)
+            'url', tl.url,
+            'createdBy', tl.created_by,
+            'createdAt', extract(epoch from tl.created_at)
           )) as links
-        FROM links
-        WHERE object_type = 'threat'
-          AND object_id = t.id::text
-          AND created_by = ANY($1::varchar[])
+        FROM (
+          SELECT
+            url,
+            created_by,
+            created_at,
+            lower(substring(url from '://(?:[^@/?#]*@)?([^:/?#]+)')) as host
+          FROM links
+          WHERE object_type = 'threat'
+            AND object_id = t.id::text
+        ) tl
       ) l ON true
       WHERE t.is_action_item = true
         AND t.deleted_at IS NULL
-        AND ($2::varchar[] IS NULL OR m.system_id = ANY($2::varchar[]))
-        AND ($3::timestamptz IS NULL OR t.created_at >= $3::timestamptz)
-        AND ($4::timestamptz IS NULL OR t.created_at <= $4::timestamptz)
-        AND ($5::timestamptz IS NULL OR r.approved_at >= $5::timestamptz)
-        AND ($6::timestamptz IS NULL OR r.approved_at <= $6::timestamptz)
-        AND ($10::varchar[] IS NULL OR t.severity = ANY($10::varchar[]))
-        AND ($7::text IS NULL
-          OR ($7 = 'exported' AND l.exported)
-          OR ($7 = 'not-exported' AND NOT l.exported))
+        AND ($3::varchar[] IS NULL OR m.system_id = ANY($3::varchar[]))
+        AND ($4::timestamptz IS NULL OR t.created_at >= $4::timestamptz)
+        AND ($5::timestamptz IS NULL OR t.created_at <= $5::timestamptz)
+        AND ($6::timestamptz IS NULL OR r.approved_at >= $6::timestamptz)
+        AND ($7::timestamptz IS NULL OR r.approved_at <= $7::timestamptz)
+        AND ($11::varchar[] IS NULL OR t.severity = ANY($11::varchar[]))
+        AND ($8::text IS NULL
+          OR ($8 = 'exported' AND COALESCE(l.matched, false))
+          OR ($8 = 'not-exported' AND NOT COALESCE(l.matched, false)))
       ORDER BY t.created_at DESC
-      LIMIT $8::int OFFSET $9::int
+      LIMIT $9::int OFFSET $10::int
     `;
 
     const res = await this.pool.query(query, params);
