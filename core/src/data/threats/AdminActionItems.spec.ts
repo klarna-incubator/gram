@@ -54,7 +54,6 @@ describe("Admin action item queries", () => {
   }
 
   const baseFilter = {
-    exporterScope: ["wikibase"],
     limit: 50,
     offset: 0,
   };
@@ -129,17 +128,44 @@ describe("Admin action item queries", () => {
       expect(items[0].exportLinks[0].url).toBe("https://wb/Q1");
     });
 
-    it("does NOT count a user-added link as exported", async () => {
+    it("counts a user-added link as exported (created_by is unreliable)", async () => {
       const modelId = await createModel("sys-a");
       const ai = await createActionItem(modelId);
       await dal.linkService.insertLink(
         LinkObjectType.Threat,
         ai.id!,
         "label",
-        "https://ref",
+        "https://jira.com/browse/ABC-1",
         "",
         "alice@klarna.com" // user sub, not an exporter key
       );
+
+      const { items } = await data.listActionItemsFiltered(baseFilter);
+      expect(items[0].exported).toBe(true);
+      expect(items[0].exportLinks).toHaveLength(1);
+      expect(items[0].exportLinks[0].url).toBe("https://jira.com/browse/ABC-1");
+    });
+
+    it("counts a link from a removed exporter as exported", async () => {
+      const modelId = await createModel("sys-a");
+      const ai = await createActionItem(modelId);
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        ai.id!,
+        "label",
+        "https://old/Q1",
+        "",
+        "removed-exporter" // key no longer registered
+      );
+
+      const { items } = await data.listActionItemsFiltered(baseFilter);
+      expect(items[0].exported).toBe(true);
+      expect(items[0].exportLinks).toHaveLength(1);
+    });
+
+    it("treats an item with no links as not exported", async () => {
+      const modelId = await createModel("sys-a");
+      await createActionItem(modelId);
 
       const { items } = await data.listActionItemsFiltered(baseFilter);
       expect(items[0].exported).toBe(false);
@@ -199,6 +225,139 @@ describe("Admin action item queries", () => {
         exported.id
       );
       expect(onlyMissing.items).toHaveLength(1);
+    });
+
+    async function actionItemWithLink(
+      modelId: string,
+      url: string,
+      createdBy = "alice@klarna.com"
+    ): Promise<Threat> {
+      const ai = await createActionItem(modelId);
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        ai.id!,
+        "l",
+        url,
+        "",
+        createdBy
+      );
+      return ai;
+    }
+
+    it("exportDomain matches the exact host and subdomains, not look-alikes", async () => {
+      const modelId = await createModel("sys-a");
+      const exact = await actionItemWithLink(
+        modelId,
+        "https://jira.com/browse/ABC-1"
+      );
+      const sub = await actionItemWithLink(
+        modelId,
+        "https://team.jira.com/browse/ABC-2"
+      );
+      await actionItemWithLink(modelId, "https://notjira.com/x");
+      await actionItemWithLink(modelId, "https://jira.com.evil/x");
+
+      const { items } = await data.listActionItemsFiltered({
+        ...baseFilter,
+        exportDomain: ["jira.com"],
+        exportStatus: "exported",
+      });
+      expect(items.map((i) => i.threat.id).sort()).toEqual(
+        [exact.id, sub.id].sort()
+      );
+    });
+
+    it("exportDomain not-exported returns items without a matching-host link", async () => {
+      const modelId = await createModel("sys-a");
+      await actionItemWithLink(modelId, "https://jira.com/browse/ABC-1");
+      const other = await actionItemWithLink(modelId, "https://example.com/x");
+      const none = await createActionItem(modelId);
+
+      const { items } = await data.listActionItemsFiltered({
+        ...baseFilter,
+        exportDomain: ["jira.com"],
+        exportStatus: "not-exported",
+      });
+      expect(items.map((i) => i.threat.id).sort()).toEqual(
+        [other.id, none.id].sort()
+      );
+    });
+
+    it("exportLinks returns ALL links even when exportDomain is set", async () => {
+      const modelId = await createModel("sys-a");
+      const ai = await createActionItem(modelId);
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        ai.id!,
+        "l1",
+        "https://jira.com/browse/ABC-1",
+        "",
+        "alice@klarna.com"
+      );
+      await dal.linkService.insertLink(
+        LinkObjectType.Threat,
+        ai.id!,
+        "l2",
+        "https://example.com/x",
+        "",
+        "alice@klarna.com"
+      );
+
+      const { items } = await data.listActionItemsFiltered({
+        ...baseFilter,
+        exportDomain: ["jira.com"],
+      });
+      expect(items).toHaveLength(1);
+      expect(items[0].exported).toBe(true);
+      expect(items[0].exportLinks.map((l) => l.url).sort()).toEqual(
+        ["https://example.com/x", "https://jira.com/browse/ABC-1"].sort()
+      );
+    });
+
+    it("matches a domain literally (LIKE wildcards are not special) and handles userinfo/port", async () => {
+      const modelId = await createModel("sys-a");
+      const withPort = await actionItemWithLink(
+        modelId,
+        "https://user@jira.com:443/x"
+      );
+      // A literal "%" in the domain must not act as a wildcard host match.
+      await actionItemWithLink(modelId, "https://jira.com/x");
+
+      const portMatch = await data.listActionItemsFiltered({
+        ...baseFilter,
+        exportDomain: ["jira.com"],
+        exportStatus: "exported",
+      });
+      expect(portMatch.items.map((i) => i.threat.id)).toContain(withPort.id);
+
+      const wildcard = await data.listActionItemsFiltered({
+        ...baseFilter,
+        exportDomain: ["j%.com"],
+        exportStatus: "exported",
+      });
+      expect(wildcard.items).toHaveLength(0);
+    });
+
+    it("matches a link host against ANY of several exportDomains", async () => {
+      const modelId = await createModel("sys-a");
+      const jira = await actionItemWithLink(
+        modelId,
+        "https://jira.com/browse/ABC-1"
+      );
+      const github = await actionItemWithLink(
+        modelId,
+        "https://sub.github.com/x"
+      );
+      await actionItemWithLink(modelId, "https://example.com/x");
+
+      const { items } = await data.listActionItemsFiltered({
+        ...baseFilter,
+        exportDomain: ["jira.com", "github.com"],
+        exportStatus: "exported",
+      });
+      expect(items.map((i) => i.threat.id).sort()).toEqual(
+        [jira.id, github.id].sort()
+      );
     });
 
     it("filters by severity (one or many)", async () => {

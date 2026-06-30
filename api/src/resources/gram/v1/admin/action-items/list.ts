@@ -17,6 +17,12 @@ const isoDate = z
 
 const severityEnum = z.nativeEnum(ThreatSeverity);
 
+/** A single export domain: trimmed, must be non-empty. */
+const exportDomainItem = z
+  .string()
+  .transform((s) => s.trim())
+  .refine((s) => s.length > 0, "must not be empty");
+
 const QuerySchema = z.object({
   systemId: z.union([z.string(), z.array(z.string())]).optional(),
   createdFrom: isoDate.optional(),
@@ -24,7 +30,9 @@ const QuerySchema = z.object({
   reviewApprovedFrom: isoDate.optional(),
   reviewApprovedTo: isoDate.optional(),
   severity: z.union([severityEnum, z.array(severityEnum)]).optional(),
-  exporterKey: z.string().optional(),
+  exportDomain: z
+    .union([exportDomainItem, z.array(exportDomainItem)])
+    .optional(),
   exportStatus: z.enum(["exported", "not-exported"]).optional(),
   limit: z.coerce.number().int().min(1).max(MAX_LIMIT).default(DEFAULT_LIMIT),
   offset: z.coerce.number().int().min(0).default(0),
@@ -44,12 +52,6 @@ export function listAdminActionItems(dal: DataAccessLayer) {
     }
     const q = parsed.data;
 
-    const registeredKeys = dal.actionItemHandler.exporters.map((e) => e.key);
-    if (q.exporterKey && !registeredKeys.includes(q.exporterKey)) {
-      res.status(400).json({ error: `Unknown exporterKey: ${q.exporterKey}` });
-      return;
-    }
-
     const systemIds =
       q.systemId === undefined
         ? undefined
@@ -64,8 +66,12 @@ export function listAdminActionItems(dal: DataAccessLayer) {
         ? q.severity
         : [q.severity];
 
-    // Caller resolves the export scope; the service stays agnostic of the registry.
-    const exporterScope = q.exporterKey ? [q.exporterKey] : registeredKeys;
+    const exportDomain =
+      q.exportDomain === undefined
+        ? undefined
+        : Array.isArray(q.exportDomain)
+        ? q.exportDomain
+        : [q.exportDomain];
 
     const filter: ActionItemFilter = {
       systemIds,
@@ -75,7 +81,7 @@ export function listAdminActionItems(dal: DataAccessLayer) {
       reviewApprovedTo: q.reviewApprovedTo,
       severities,
       exportStatus: q.exportStatus as ExportStatusFilter | undefined,
-      exporterScope,
+      exportDomain,
       limit: q.limit,
       offset: q.offset,
     };
