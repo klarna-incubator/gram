@@ -18,6 +18,7 @@ import errorHandler from "./middlewares/errorHandler.js";
 import loggerMw from "./middlewares/logger.js";
 import { securityHeaders } from "./middlewares/securityHeaders.js";
 import { actionItemRouter } from "./resources/gram/v1/action-items/router.js";
+import { adminActionItemsRouter } from "./resources/gram/v1/admin/action-items/router.js";
 import crash from "./resources/gram/v1/admin/crash.js";
 import { retryReviewApproval } from "./resources/gram/v1/admin/retryReviewApproval.js";
 import setRoles from "./resources/gram/v1/admin/setRoles.js";
@@ -166,6 +167,11 @@ export async function createApp(
     "/admin/retry_review_approval",
     authz.is(Role.Admin),
     retryReviewApproval(dal)
+  );
+  authenticatedRoutes.use(
+    "/admin/action-items",
+    authz.is(Role.Admin),
+    adminActionItemsRouter(dal)
   );
 
   app.use("/api/v1", unauthenticatedRoutes);

@@ -19,6 +19,8 @@ import {
   useDeleteThreatMutation,
   useUpdateThreatMutation,
 } from "../../../../api/gram/threats";
+import { useCanExportActionItems } from "../../../../hooks/useCanExportActionItems";
+import { useCanManageLink } from "../../../../hooks/useCanManageLink";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
 import { useComponentControls } from "../../hooks/useComponentControls";
 import { useModelID } from "../../hooks/useModelID";
@@ -80,7 +82,8 @@ export function Threat({
   const threatsMap = mitigations?.threatsMap || {};
 
   const readOnly = useReadOnly();
-
+  const canExportActionItems = useCanExportActionItems();
+  const canManageLink = useCanManageLink();
   const linkedControls = controls.filter((c) =>
     threatsMap[threat.id]?.includes(c.id)
   );
@@ -210,16 +213,18 @@ export function Threat({
               />
 
               <Box sx={{ marginLeft: "auto", alignSelf: "flex-start" }}>
-                {!readOnly && !hideExport && exporters?.length > 0 && (
-                  <Tooltip title="Export Threat">
-                    <IconButton
-                      onClick={openExportActionItemModal}
-                      size="small"
-                    >
-                      <IosShareIcon fontSize="inherit" />
-                    </IconButton>
-                  </Tooltip>
-                )}
+                {canExportActionItems &&
+                  !hideExport &&
+                  exporters?.length > 0 && (
+                    <Tooltip title="Export Threat">
+                      <IconButton
+                        onClick={openExportActionItemModal}
+                        size="small"
+                      >
+                        <IosShareIcon fontSize="inherit" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
 
                 {!readOnly && !hideDelete && (
                   <Tooltip title="Delete Threat">
@@ -305,7 +310,11 @@ export function Threat({
         )}
 
         <Box sx={{ marginTop: "10px" }}>
-          <Links objectType={"threat"} objectId={threat.id} />
+          <Links
+            objectType={"threat"}
+            objectId={threat.id}
+            canManageLink={canManageLink}
+          />
         </Box>
       </CardContent>
     </Card>

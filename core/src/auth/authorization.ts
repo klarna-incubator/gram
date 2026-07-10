@@ -15,6 +15,8 @@ export enum Permission {
   Write = "write",
   Delete = "delete",
   Review = "review",
+  ExportActionItems = "export_action_items",
+  ManageLink = "manage_link",
 }
 
 export const AllPermissions = [
@@ -22,6 +24,8 @@ export const AllPermissions = [
   Permission.Write,
   Permission.Delete,
   Permission.Review,
+  Permission.ExportActionItems,
+  Permission.ManageLink,
 ];
 
 export let authzProvider: AuthzProvider = new DummyAuthzProvider();

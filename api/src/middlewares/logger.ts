@@ -8,6 +8,8 @@ import _ from "lodash";
 import { Logger } from "log4js";
 import { LogLine } from "@gram/core/dist/logger/index.js";
 
+import { routeParams } from "../util/routeParams.js";
+
 function applyFilters(
   obj: any,
   blocklist: undefined | string[],
@@ -79,7 +81,7 @@ function logger(opts: any) {
       opts.includeKeys.body
     );
     const params = applyFilters(
-      req.params,
+      routeParams(req.params),
       opts.excludeKeys.param,
       opts.includeKeys.param
     );

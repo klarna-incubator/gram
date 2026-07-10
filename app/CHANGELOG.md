@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.25.0](https://github.com/klarna-incubator/gram/compare/v4.24.0...v4.25.0) (2026-05-28)
+
+### Bug Fixes
+
+- include uuid in jest transformIgnorePatterns ([7f557fb](https://github.com/klarna-incubator/gram/commit/7f557fbf898948bd741739f12154a40416f12899))
+
+### Features
+
+- **models:** add full JSON model export/import workflow with UI support ([8defa16](https://github.com/klarna-incubator/gram/commit/8defa1661fd00fcd1df0e606da551a7af5efd9c2))
+- **models:** fix data-flow binding, make JSON import in-place only and preserve model metadata ([1e992b9](https://github.com/klarna-incubator/gram/commit/1e992b93e3a1706ab2f73948afac551dd8065ec4))
+
+# [4.24.0](https://github.com/klarna-incubator/gram/compare/v4.23.0...v4.24.0) (2026-03-16)
+
+### Features
+
+- **auth:** add export_action_items and manage_link permissions ([487c458](https://github.com/klarna-incubator/gram/commit/487c458fad2e4f208463bb5ecc81c847b9d071a4))
+
 # [4.23.0](https://github.com/klarna-incubator/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
 
 ### Bug Fixes

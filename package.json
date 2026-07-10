@@ -36,24 +36,30 @@
     "plugins/*"
   ],
   "private": true,
+  "engines": {
+    "node": "20.x || 22.x || 24.x"
+  },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@jest/globals": "^29.7.0",
     "@types/jest": "^29.4.0",
-    "@types/node": "^20.4.2",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.11.10",
     "all-contributors-cli": "^6.26.1",
     "conventional-changelog-cli": "^2.2.2",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-jsdom": "^27.5.1",
     "jest-mock": "^29.4.1",
-    "lerna": "^8.1.6",
+    "lerna": "^9.0.5",
     "prettier": "^2.3.2",
     "rimraf": "^4.1.2",
-    "snyk": "^1.1291.1",
+    "snyk": "^1.1297.3",
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@tsconfig/node24": "^24.0.4",
     "log4js": "^6.9.1",
     "tsx": "^4.19.3"
   }

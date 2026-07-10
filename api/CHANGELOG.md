@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.25.0](https://github.com/klarna/gram/compare/v4.24.0...v4.25.0) (2026-05-28)
+
+### Bug Fixes
+
+- :test_tube: fix jest globals version and tests ([0d30238](https://github.com/klarna/gram/commit/0d3023867d4ad97cee9d31a5198a622f9b440811))
+- **models:** harden JSON import/export for orphan refs and legacy component systems ([2f2100a](https://github.com/klarna/gram/commit/2f2100a46a4a9766f60df387e9d468ff8e41292a))
+- pin jest-environment-jsdom to ^27.5.1 and sentry packages to exact versions ([75b8e15](https://github.com/klarna/gram/commit/75b8e1573a617c703a18adefc6e6bd6cf7572757))
+
+### Features
+
+- **models:** add full JSON model export/import workflow with UI support ([8defa16](https://github.com/klarna/gram/commit/8defa1661fd00fcd1df0e606da551a7af5efd9c2))
+- **models:** fix data-flow binding, make JSON import in-place only and preserve model metadata ([1e992b9](https://github.com/klarna/gram/commit/1e992b93e3a1706ab2f73948afac551dd8065ec4))
+- **models:** link data-flows data, make JSON import in-place only and preserve model metadata), fixed linter ([1aa03bd](https://github.com/klarna/gram/commit/1aa03bdabe2d91d1839172f3cd049eda4b716b80))
+
+# [4.24.0](https://github.com/klarna/gram/compare/v4.23.0...v4.24.0) (2026-03-16)
+
+### Bug Fixes
+
+- fix path-to-route error ([9bec723](https://github.com/klarna/gram/commit/9bec723fb9a2b02fcacd64602160e19a224d2d8f))
+
+### Features
+
+- **auth:** add export_action_items and manage_link permissions ([487c458](https://github.com/klarna/gram/commit/487c458fad2e4f208463bb5ecc81c847b9d071a4))
+
 # [4.23.0](https://github.com/klarna/gram/compare/v4.22.3...v4.23.0) (2025-03-05)
 
 ### Bug Fixes

@@ -1,10 +1,10 @@
 {
   "name": "@gram/app",
   "proxy": "http://localhost:8080",
-  "version": "4.23.0",
+  "version": "4.25.0",
   "private": true,
   "engines": {
-    "node": "20"
+    "node": "20.x || 22.x || 24.x"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -17,10 +17,10 @@
     "@reduxjs/toolkit": "^1.7.2",
     "@sentry/react": "^7.6.0",
     "@sentry/tracing": "^7.6.0",
-    "dompurify": "^3.1.6",
+    "dompurify": "^3.4.11",
     "jwt-decode": "^3.1.2",
     "konva": "^8.4.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "marked": "^14.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
@@ -28,23 +28,25 @@
     "react-konva": "^17.0.2-4",
     "react-konva-utils": "^0.2.0",
     "react-redux": "^7.2.6",
-    "react-router-dom": "^6.4.1",
+    "react-router-dom": "^6.30.4",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
     "use-image": "^1.0.6"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-modules-commonjs": "^7.0.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "@testing-library/react": "^9.5.0",
     "@testing-library/react-hooks": "^3.4.1",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "jest-canvas-mock": "^2.4.0",
     "jest-each": "^27.0.6",
     "react-scripts": "^5.0.1",
     "react-test-renderer": "^17.0.1",
     "redux-test-utils": "^1.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^14.0.0"
   },
   "scripts": {
     "start": "PORT=4726 REACT_APP_VERSION=$npm_package_version react-scripts start",
@@ -78,7 +80,7 @@
       "canvas": "jest-canvas-mock"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!konva|react-konva-utils)"
+      "node_modules/(?!(konva|react-konva-utils|uuid))"
     ],
     "testEnvironment": "jsdom",
     "setupFiles": [

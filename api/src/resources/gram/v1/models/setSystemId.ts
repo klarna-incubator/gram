@@ -4,6 +4,8 @@ import { InvalidInputError } from "@gram/core/dist/util/errors.js";
 import { Request, Response } from "express";
 import { z } from "zod";
 
+import { routeParams } from "../../../../util/routeParams.js";
+
 const SetSystemIdSchema = z.object({
   systemId: z.string().max(255).nullable(),
 });
@@ -16,7 +18,7 @@ export default (dal: DataAccessLayer) =>
   async (req: Request, res: Response) => {
     req.authz.is(Role.Admin);
 
-    const id = req.params.id;
+    const id = routeParams(req.params).id;
     const { systemId } = SetSystemIdSchema.parse(req.body);
 
     if (

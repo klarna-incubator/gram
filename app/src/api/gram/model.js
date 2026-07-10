@@ -83,6 +83,28 @@ const modelApi = api.injectEndpoints({
       transformResponse: (response) => response,
       invalidatesTags: ["Model", "Models", "Systems"],
     }),
+    exportModelJson: build.query({
+      query: ({ id }) => ({
+        url: `/models/${id}/export-json`,
+      }),
+      transformResponse: (response) => response.payload,
+      providesTags: [],
+    }),
+    importModelJson: build.mutation({
+      query: ({ payload, targetModelId }) => ({
+        url: `/models/import-json`,
+        method: "POST",
+        body: { mode: "in-place", payload, targetModelId },
+      }),
+      transformResponse: (response) => response,
+      invalidatesTags: [
+        "Model",
+        "Models",
+        "Controls",
+        "Threats",
+        "Mitigations",
+      ],
+    }),
   }),
 });
 
@@ -97,4 +119,6 @@ export const {
   useSetTemplateMutation,
   useSetSystemIdMutation,
   useSetShouldReviewActionItemsMutation,
+  useLazyExportModelJsonQuery,
+  useImportModelJsonMutation,
 } = modelApi;

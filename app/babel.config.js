@@ -13,7 +13,7 @@ module.exports = {
   plugins: ["@babel/plugin-proposal-class-properties"],
   env: {
     test: {
-      plugins: ["transform-es2015-modules-commonjs"],
+      plugins: ["@babel/plugin-transform-modules-commonjs"],
     },
   },
 };

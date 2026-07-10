@@ -45,8 +45,7 @@ export class LDAPGroupBasedAuthzProvider
         return [];
       }
 
-      const arr = getAttributeAsArray(object, this.settings.groupAttribute);
-      const groups = arr.map((a) => a.toString());
+      const groups = getAttributeAsArray(object, this.settings.groupAttribute);
 
       const roles = groups
         .map((g) => this.settings.groupToRoleMap.get(g))
