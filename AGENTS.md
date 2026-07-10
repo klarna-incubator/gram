@@ -274,9 +274,157 @@ docker compose up -d          # Recreate fresh
 - Lint check passes
 - Build succeeds
 
+## Creating and Importing Threat Model JSON
+
+Gram supports exporting and importing full threat models as JSON. When an AI agent generates or modifies a threat model JSON for import, it **must** conform to the schema validated by Zod in `api/src/resources/gram/v1/models/jsonTransferSchema.ts` and the business-logic checks in `core/src/data/models/ModelTransferService.ts`. The sections below summarise everything an agent needs to know.
+
+### Top-level JSON structure
+
+```json
+{
+  "metadata": { "schemaVersion": 1, "exportedAt": "<ISO8601>", "exportedBy": "<email>" },
+  "model":     { "id": "<uuid>", "systemId": "<string|null>", "version": "<non-empty string>", "isTemplate": false, "shouldReviewActionItems": null },
+  "modelData": { "components": [...], "dataFlows": [...] },
+  "threats":   [...],
+  "controls":  [...],
+  "mitigations": [...],
+  "suggestions": { "threats": [], "controls": [] },
+  "links":     [],
+  "flows":     [...],
+  "resourceMatchings": [],
+  "review":    null
+}
+```
+
+### Component types (`modelData.components`)
+
+| `type` | Meaning |
+|--------|---------|
+| `"ee"` | External Entity (actor or external system outside trust boundary) |
+| `"proc"` | Process (internal service or application) |
+| `"ds"` | Data Store (database, file store, cache) |
+| `"tb"` | Trust Boundary (visual grouping box, no threat attachment) |
+
+Required fields per component: `id` (UUID), `x` (number), `y` (number), `type`, `name`.
+Optional: `width`, `height`, `description`, `classes`, `systems` (array of system-ID strings).
+
+### Canvas coordinate system
+
+- Component positions (`x`, `y`) are the top-left corner in canvas pixels.
+- A typical canvas layout uses 100–200 px spacing between components.
+- Trust boundary boxes use `width` and `height` to define their extent.
+- Data flow `points` arrays are flat `[x1, y1, x2, y2, ...]` canvas coordinates that define waypoints **between** the start and end components. An empty array `[]` draws a straight line.
+
+### Enum values — use exactly these strings
+
+| Field | Valid values |
+|-------|-------------|
+| `threats[].severity` | `"informative"` `"low"` `"medium"` `"high"` `"critical"` |
+| `suggestions[].status` | `"new"` `"rejected"` `"accepted"` |
+| `review.status` | `"requested"` `"approved"` `"canceled"` `"meeting-requested"` |
+| `links[].objectType` | `"model"` `"threat"` `"control"` `"system"` |
+| `modelData.components[].type` | `"ee"` `"ds"` `"proc"` `"tb"` |
+
+### Referential integrity rules (enforced by server)
+
+1. All `id` fields must be valid UUID strings.
+2. Every `dataFlow.startComponent.id` and `dataFlow.endComponent.id` must match a component `id` in `modelData.components`.
+3. Every `threats[].componentId` and `controls[].componentId` must match a component `id` **or** a data flow `id` (threats/controls can be attached to either).
+4. Every `mitigations[].threatId` must match a `threats[].id`; every `mitigations[].controlId` must match a `controls[].id`. There is **no skipping** — unresolvable mitigations throw an error.
+5. Every `flows[].dataFlowId` must match a data flow `id`; every `flows[].originComponentId` must match a component `id`. Unresolvable flows also throw an error (unlike threats/controls which are skipped with a warning).
+6. `metadata.schemaVersion` must be exactly `1`.
+
+### Size constraint
+
+The import handler enforces a **10 MB** limit on the payload (`importJson.ts`). The Express body parser allows **15 MB** (slightly higher so the handler's error message is displayed instead of a generic 413). Keep generated JSON files well under 10 MB.
+
+For large models, reduce verbose descriptions or remove the optional `aiInstructions` block from `metadata` before importing. A safe rule of thumb: descriptions truncated to 350 characters and no `aiInstructions` will keep a 40-threat / 60-control model well under the limit.
+
+### Discovering and assigning component classes
+
+Each component can carry a `classes` array that links it to a tech-stack icon and drives threat/control suggestions from the plugin library. Use the catalog script to discover every available class:
+
+```bash
+# List all classes (table)
+node scripts/list-component-classes.mjs
+
+# Filter by keyword
+node scripts/list-component-classes.mjs --filter secrets
+
+# Restrict to one plugin
+node scripts/list-component-classes.mjs --plugin aws
+
+# Output as JSON for scripting
+node scripts/list-component-classes.mjs --format json
+```
+
+**Commonly needed classes (quick reference)**
+
+| Class name | ID | Plugin | Typical use |
+|---|---|---|---|
+| `AWS` | `6f860ca0-d093-462e-8724-345de463917d` | aws | Generic AWS resource |
+| `AWS Secrets Manager` | `764ac511-e39b-499b-a8ee-7cac43ac72dc` | aws | Secrets store |
+| `AWS Systems Manager` | `c0d9c5bc-04b7-4a71-bf14-38dc104b1607` | aws | SSM Parameter Store |
+| `Amazon RDS` | `f313446f-d8b1-435d-b406-40f3b5d1b4ef` | aws | Relational database |
+| `Amazon S3 Standard` | `b40ebed3-46cd-41b7-a956-cfd23ce25a4e` | aws | Object storage |
+| `AWS Lambda` | `ef220954-5701-4a7c-8dae-416b8d5d8536` | aws | Serverless function |
+| `Amazon EC2` | `892eb7eb-3ed7-452e-9d57-4dd06c25b65d` | aws | Virtual machine |
+| `AWS Identity and Access Management` | `5c49ceab-723b-4911-902d-78588bc3af4c` | aws | IAM |
+| `Azure Active Directory` | `7e0c3809-64f4-4402-8f72-35cb214ab798` | azure | Microsoft Entra ID / AAD |
+| `Microsoft Azure` | `39032a3c-d160-412c-8d75-7064cc4362a5` | svgporn | Azure-hosted SaaS |
+| `Microsoft` | `7ea205a0-8256-44e2-bb18-3bf37d685bde` | svgporn | Microsoft product/service |
+| `Microsoft Windows` | `3fc8b4c6-0821-4f4d-9890-fb72f5e043b4` | svgporn | Windows endpoint |
+| `Microsoft Teams` | `d3d4e92b-a71e-4eaf-8588-ad13cebd52ca` | svgporn | Teams collaboration |
+| `Google Workspace` | `d3d98298-1600-4f36-9ed6-d0e688d4d8f6` | svgporn | Google Workspace |
+| `Google Drive` | `b9a59d2f-0960-4195-8593-0684cf825544` | svgporn | Google Drive |
+| `slack` | `8f937e72-4c0e-4774-a79b-a4b6268a2f6f` | svgporn | Slack |
+| `docker` | `ec2b239c-e9ac-4b6e-bb38-acd636d71269` | svgporn | Docker container |
+| `Python` | `761c167b-b742-4baa-a6cb-9e2ea2530b1e` | svgporn | Python service |
+| `Kafka` | `7452d79f-fa2a-49bf-a739-46bfe6af2c77` | svgporn | Kafka / streaming |
+| `Okta` | `3743370f-1118-426e-8263-7cb405fd74c1` | svgporn | Okta IdP |
+
+Each class object in the JSON must include `id`, `name`, `icon`, and `componentType`. Use the script output to get the correct `icon` path — **do not guess it**.
+
+### Validating a generated JSON before import
+
+Use the Zod schema directly to pre-validate without running the server:
+
+```bash
+# Install zod v3 (matches Gram's pinned version) in a temp dir
+mkdir -p /tmp/gram-validate && cd /tmp/gram-validate
+npm init -y && npm install zod@3
+
+# Then write a validate.js script that imports ModelJsonTransferPayloadSchema
+# (replicate the schema from api/src/resources/gram/v1/models/jsonTransferSchema.ts)
+node validate.js /path/to/your-model.json
+```
+
+A validation script template is kept at `/tmp/gram-validate/validate.js` from prior sessions; re-create it from the schema file if the temp directory has been cleaned.
+
+### flows array
+
+Each entry in `flows` describes one direction of a data flow from a given component's perspective:
+
+```json
+{
+  "dataFlowId": "<uuid of the dataFlow>",
+  "originComponentId": "<uuid of the component that initiates this flow direction>",
+  "summary": "Short human-readable description",
+  "attributes": {
+    "protocols": ["HTTPS"],
+    "authentication": ["OIDC"],
+    "data_type": ["Personal Information"]
+  }
+}
+```
+
+Bidirectional data flows typically have **two** entries (one per direction, with different `originComponentId`).
+
 ## Additional Resources
 
 - **Threat Modeling**: See [README.md](README.md) for feature overview
 - **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 - **Deployment**: See [QuickStart.md](QuickStart.md) for deployment setup
 - **Development Details**: See [Development.md](Development.md) for technical details
+- **JSON Transfer Schema**: `api/src/resources/gram/v1/models/jsonTransferSchema.ts`
+- **Import Service Logic**: `core/src/data/models/ModelTransferService.ts`
