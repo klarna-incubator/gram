@@ -3,6 +3,7 @@ import { DataAccessLayer } from "../data/dal.js";
 import log4js from "log4js";
 import {
   ComponentValidationRule,
+  ModelTestRuleArgs,
   ModelValidationRule,
   ValidationResult,
   ValidationRule,
@@ -21,6 +22,16 @@ function isComponentValidation(
 
 function isModelValidation(rule: ValidationRule): rule is ModelValidationRule {
   return rule.type === "model";
+}
+
+async function areAllConditionalRulesMet(
+  conditionalRules: NonNullable<ValidationRule["conditionalRules"]>,
+  ruleArgs: ModelTestRuleArgs
+): Promise<boolean> {
+  const results = await Promise.all(
+    conditionalRules.map((condition) => condition(ruleArgs))
+  );
+  return results.every((condition) => condition);
 }
 
 const CACHE_EXPIRY_INTERVAL_MS = 1000 * 60 * 60 * 24; // 24 hours
@@ -138,17 +149,12 @@ export class ValidationEngine extends EventEmitter {
         continue;
       }
 
-      if (rule.conditionalRules && rule.conditionalRules.length > 0) {
-        const conditions = rule.conditionalRules.map(async (condition) => {
-          return await condition(ruleArgs);
-        });
-        const results = await Promise.all(conditions);
-
-        const areAllConditionsMet = results.every((condition) => condition);
-
-        if (!areAllConditionsMet) {
-          continue;
-        }
+      if (
+        rule.conditionalRules &&
+        rule.conditionalRules.length > 0 &&
+        !(await areAllConditionalRulesMet(rule.conditionalRules, ruleArgs))
+      ) {
+        continue;
       }
 
       try {
@@ -171,14 +177,12 @@ export class ValidationEngine extends EventEmitter {
         if (!isComponentValidation(rule)) {
           continue;
         }
-        //Skip the rule if conditional rules are not met
-        if (rule.conditionalRules && rule.conditionalRules.length > 0) {
-          for (const condition of rule.conditionalRules) {
-            const isConditionMet = await condition(ruleArgs);
-            if (!isConditionMet) {
-              continue;
-            }
-          }
+        if (
+          rule.conditionalRules &&
+          rule.conditionalRules.length > 0 &&
+          !(await areAllConditionalRulesMet(rule.conditionalRules, ruleArgs))
+        ) {
+          continue;
         }
 
         // Skip the rule if the component type is not in the affectedType array
