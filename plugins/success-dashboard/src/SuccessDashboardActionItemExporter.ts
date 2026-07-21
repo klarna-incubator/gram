@@ -413,22 +413,12 @@ export class SuccessDashboardActionItemExporter implements ActionItemExporter {
       },
     });
 
-    // Add reporting contributor relation
-    const review = await this.getActionItemModelReview(threat);
-    if (review && review.reviewedBy) {
-      const contributor =
-        await this.successDashboardClient.getContributorByEmail(
-          review.reviewedBy
-        );
-      if (contributor) {
-        orgRelation.push({
-          relation: "reporting_contributor",
-          user: {
-            externalId: contributor.id,
-            name: contributor.contributorName,
-          },
-        });
-      }
+    const reportingContributor = await this.resolveReportingContributor(threat);
+    if (reportingContributor) {
+      orgRelation.push({
+        relation: "reporting_contributor",
+        user: reportingContributor,
+      });
     }
 
     // Add accountable team relation
@@ -447,6 +437,35 @@ export class SuccessDashboardActionItemExporter implements ActionItemExporter {
     }
 
     return orgRelation;
+  }
+
+  private async resolveReportingContributor(
+    threat: Threat
+  ): Promise<{ externalId: string; name: string } | null> {
+    const review = await this.getActionItemModelReview(threat);
+    const candidateEmails = [
+      threat.createdBy?.trim(),
+      review?.reviewedBy?.trim(),
+    ].filter((email): email is string => Boolean(email));
+
+    const seen = new Set<string>();
+    for (const email of candidateEmails) {
+      if (seen.has(email)) {
+        continue;
+      }
+      seen.add(email);
+
+      const contributor =
+        await this.successDashboardClient.getContributorByEmail(email);
+      if (contributor) {
+        return {
+          externalId: contributor.id,
+          name: contributor.contributorName,
+        };
+      }
+    }
+
+    return null;
   }
 
   private async buildMainSystem(threat: Threat): Promise<string> {
