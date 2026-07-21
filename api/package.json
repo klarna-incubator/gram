@@ -33,7 +33,7 @@
   "dependencies": {
     "@gram/config": "^4.25.0",
     "@gram/core": "^4.25.0",
-    "@sentry/node": "10.53.1",
+    "@sentry/node": "10.66.0",
     "@sentry/profiling-node": "10.66.0",
     "cookie-parser": "^1.4.7",
     "express": "^5.0.1",
