@@ -144,6 +144,40 @@ describe("ValidationEngine", () => {
     expect(resultList[0].ruleName).toBe("should be selected");
   });
 
+  it("should select appropriate component rules based on conditions", async () => {
+    validationEngine.register([
+      {
+        type: "component",
+        name: "should be selected",
+        conditionalRules: [async () => true],
+        affectedType: ["proc", "ee", "ds", "tb"],
+        test: async () => false,
+        messageTrue: "should never be true",
+        messageFalse: "Yep, it was selected",
+      },
+      {
+        type: "component",
+        name: "should not be selected",
+        conditionalRules: [async () => false, async () => true],
+        affectedType: ["proc", "ee", "ds", "tb"],
+        test: async () => false,
+        messageTrue: "should never be true",
+        messageFalse: "Yep, it was selected",
+      },
+    ]);
+    const modelId = await createSampleModel(dal);
+    const resultList = await validationEngine.getResults(modelId);
+    const selectedResults = resultList.filter(
+      (result) => result.ruleName === "should be selected"
+    );
+    const notSelectedResults = resultList.filter(
+      (result) => result.ruleName === "should not be selected"
+    );
+
+    expect(selectedResults.length).toBe(2);
+    expect(notSelectedResults.length).toBe(0);
+  });
+
   it("should select appropriate component rules based on affectedType", async () => {
     validationEngine.register([
       {
