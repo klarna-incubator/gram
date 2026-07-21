@@ -169,6 +169,67 @@ describe("SuccessDashboardActionItemExporter", () => {
     expect(dal.linkService.insertLink).not.toHaveBeenCalled();
   });
 
+  it("prefers threat.createdBy over review.reviewedBy for reporting_contributor", async () => {
+    const dal = makeDal({
+      modelService: { getById: jest.fn(async () => makeModel()) },
+      reviewService: {
+        getByModelId: jest.fn(async () => ({ reviewedBy: "reviewer@k" })),
+      },
+    });
+    const { exporter, client } = makeExporter(dal);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (client.getContributorByEmail as any).mockImplementation(
+      async (email: string) => {
+        if (email === "u@k") {
+          return { id: "creator-id", contributorName: "Creator User" };
+        }
+        if (email === "reviewer@k") {
+          return { id: "reviewer-id", contributorName: "Reviewer User" };
+        }
+        return null;
+      }
+    );
+
+    await exporter.export(dal, [eligibleThreat()]);
+
+    const body = (client.createExport.mock.calls[0] as any[])[0];
+    const reportingContributor = body.orgRelations.find(
+      (r: { relation: string }) => r.relation === "reporting_contributor"
+    );
+    expect(reportingContributor.user.externalId).toBe("creator-id");
+    expect(client.getContributorByEmail).toHaveBeenCalledWith("u@k");
+    expect(client.getContributorByEmail).not.toHaveBeenCalledWith("reviewer@k");
+  });
+
+  it("falls back to review.reviewedBy when threat.createdBy is not a contributor", async () => {
+    const dal = makeDal({
+      modelService: { getById: jest.fn(async () => makeModel()) },
+      reviewService: {
+        getByModelId: jest.fn(async () => ({ reviewedBy: "reviewer@k" })),
+      },
+    });
+    const { exporter, client } = makeExporter(dal);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (client.getContributorByEmail as any).mockImplementation(
+      async (email: string) => {
+        if (email === "reviewer@k") {
+          return { id: "reviewer-id", contributorName: "Reviewer User" };
+        }
+        return null;
+      }
+    );
+
+    await exporter.export(dal, [eligibleThreat()]);
+
+    const body = (client.createExport.mock.calls[0] as any[])[0];
+    const reportingContributor = body.orgRelations.find(
+      (r: { relation: string }) => r.relation === "reporting_contributor"
+    );
+    expect(reportingContributor.user.externalId).toBe("reviewer-id");
+    expect(client.getContributorByEmail).toHaveBeenCalledWith("u@k");
+    expect(client.getContributorByEmail).toHaveBeenCalledWith("reviewer@k");
+  });
+
   it("removes a stale link and creates a fresh ticket when the existing one is completed", async () => {
     const deleteLink = jest.fn(async () => {});
     const dal = makeDal({
