@@ -74,5 +74,8 @@ export interface IdentityProvider extends Provider {
    * Implementations MUST fully validate the token (signature, issuer, audience,
    * client id, expiry) before returning an "ok" result.
    */
-  getIdentityFromToken?(token: string, ctx: RequestContext): Promise<LoginResult>;
+  getIdentityFromToken?(
+    token: string,
+    ctx: RequestContext
+  ): Promise<LoginResult>;
 }
