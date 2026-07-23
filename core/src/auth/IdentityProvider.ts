@@ -68,14 +68,13 @@ export interface IdentityProvider extends Provider {
 
   /**
    * Optional non-interactive path: establish identity from a presented bearer
-   * token (e.g. an access token from a trusted OIDC provider, minted for Gram's
-   * app via KEP CLI token exchange) rather than an interactive login flow.
+   * token rather than an interactive login flow.
    * Providers that don't support bearer-token auth leave this undefined.
    * Implementations MUST fully validate the token (signature, issuer, audience,
    * client id, expiry) before returning an "ok" result.
    */
   getIdentityFromToken?(
     token: string,
-    ctx: RequestContext
+    ctx: RequestContext,
   ): Promise<LoginResult>;
 }
