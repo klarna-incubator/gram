@@ -75,6 +75,6 @@ export interface IdentityProvider extends Provider {
    */
   getIdentityFromToken?(
     token: string,
-    ctx: RequestContext,
+    ctx: RequestContext
   ): Promise<LoginResult>;
 }
