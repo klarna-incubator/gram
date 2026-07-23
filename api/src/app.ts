@@ -73,7 +73,7 @@ export async function createApp(
   const cache = cacheMw();
 
   // Register Global Middleware
-  app.use(validateTokenMiddleware);
+  app.use(validateTokenMiddleware(dal));
   app.use(loggerMw(loggerMwOpts));
   app.use(express.static("frontend/"));
   app.use(authz);

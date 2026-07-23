@@ -65,4 +65,16 @@ export interface IdentityProvider extends Provider {
    * @param headers
    */
   getIdentity(ctx: RequestContext): Promise<LoginResult>;
+
+  /**
+   * Optional non-interactive path: establish identity from a presented bearer
+   * token rather than an interactive login flow.
+   * Providers that don't support bearer-token auth leave this undefined.
+   * Implementations MUST fully validate the token (signature, issuer, audience,
+   * client id, expiry) before returning an "ok" result.
+   */
+  getIdentityFromToken?(
+    token: string,
+    ctx: RequestContext
+  ): Promise<LoginResult>;
 }
