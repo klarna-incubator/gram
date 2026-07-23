@@ -6,7 +6,10 @@ import { sampleUser } from "../test-util/sampleUser.js";
 import { authRequiredMiddleware, validateTokenMiddleware } from "./auth.js";
 
 const app = express();
-app.use(validateTokenMiddleware);
+// These cases only exercise the Gram-JWT path; when it fails the bearer
+// fallback finds no bearer-capable provider registered, so `dal` is never
+// dereferenced.
+app.use(validateTokenMiddleware({} as any));
 app.get("/unprotected", (req, res) => {
   res.end();
 });

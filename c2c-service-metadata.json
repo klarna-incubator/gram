@@ -222,6 +222,12 @@
       },
       "SUCCESS_DASHBOARD_API_URL": {
         "value": "http://klarna-dashboards-aim-api-eu.production.c2c.klarna.net"
+      },
+      "OIDC_BEARER_ISSUER_URL": {
+        "secret": "/auth.oidc.bearer_issuer_url"
+      },
+      "OIDC_BEARER_CLIENT_ID": {
+        "secret": "/auth.oidc.bearer_client_id"
       }
     },
     "container_resources": {
