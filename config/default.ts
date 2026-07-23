@@ -218,7 +218,10 @@ export const defaultConfig: GramConfiguration = {
       new EnvSecret("OIDC_CLIENT_SECRET"),
       new EnvSecret("OIDC_SESSION_SECRET"),
       "email",
-      "okta"
+      "okta",
+      ["api://kepcli"],
+      new EnvSecret("OIDC_BEARER_ISSUER_URL"),
+      new EnvSecret("OIDC_BEARER_CLIENT_ID")
     );
 
     const ldap = new LDAPBasicAuthIdentityProvider(
