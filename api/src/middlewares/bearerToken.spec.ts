@@ -1,5 +1,8 @@
 import IdentityProviderRegistry from "@gram/core/dist/auth/IdentityProviderRegistry.js";
-import { IdentityProvider, LoginResult } from "@gram/core/dist/auth/IdentityProvider.js";
+import {
+  IdentityProvider,
+  LoginResult,
+} from "@gram/core/dist/auth/IdentityProvider.js";
 import request from "supertest";
 import { createTestApp } from "../test-util/app.js";
 import { sampleUser } from "../test-util/sampleUser.js";

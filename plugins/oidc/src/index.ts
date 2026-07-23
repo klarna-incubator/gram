@@ -53,7 +53,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
      * separately. When undefined, falls back to this provider's login
      * `clientId` (the `OIDC_CLIENT_ID` secret) for backward compatibility.
      */
-    private bearerClientId?: string | Secret,
+    private bearerClientId?: string | Secret
   ) {
     this.redirectUrl = `${config.origin}/login/callback/${key}`;
 
@@ -143,7 +143,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
       {
         httpOnly: true,
         sameSite: "strict",
-      },
+      }
     );
 
     return {
@@ -172,7 +172,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
     // Check if cookies object exists
     if (!ctx.currentRequest.cookies) {
       log.error(
-        "Cookies object is undefined - cookie-parser middleware may not be configured",
+        "Cookies object is undefined - cookie-parser middleware may not be configured"
       );
 
       // Try to get cookie from headers directly as fallback
@@ -182,7 +182,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
           cookieHeader
             .split(";")
             .map((cookie) => cookie.trim().split("="))
-            .map(([key, value]) => [key, decodeURIComponent(value)]),
+            .map(([key, value]) => [key, decodeURIComponent(value)])
         );
 
         if (cookies["oidc-code"]) {
@@ -192,7 +192,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
         }
       } else {
         throw new Error(
-          "No cookies found in request. Ensure cookie-parser middleware is configured.",
+          "No cookies found in request. Ensure cookie-parser middleware is configured."
         );
       }
     }
@@ -201,7 +201,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
       ctx.currentRequest.cookies["oidc-code"].split(".");
     // TODO: make oidc security parameters configurable, since different providers want different things.
     const { code_verifier, state } = JSON.parse(
-      aes256gcm(this.sessionCryptoKey).decrypt(ct, iv, authTag),
+      aes256gcm(this.sessionCryptoKey).decrypt(ct, iv, authTag)
     );
 
     // Clear cookie after use
@@ -238,7 +238,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
 
     if (!payload) {
       let message = `OIDC error occured: ${decodeURIComponent(
-        (ctx.currentRequest.query["error_description"] || "")?.toString(),
+        (ctx.currentRequest.query["error_description"] || "")?.toString()
       )}`;
 
       return {
@@ -291,7 +291,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
 
     if (!issuer || !issuer.metadata.jwks_uri || !issuer.metadata.issuer) {
       throw new Error(
-        "Bearer-token issuer not discovered or missing jwks_uri/issuer metadata",
+        "Bearer-token issuer not discovered or missing jwks_uri/issuer metadata"
       );
     }
 
@@ -361,7 +361,7 @@ export class OIDCIdentityProvider implements IdentityProvider {
 
     if (!expectedClientId) {
       log.warn(
-        "Bearer-token auth has no client id configured; refusing to accept tokens",
+        "Bearer-token auth has no client id configured; refusing to accept tokens"
       );
       return { status: "error", message: "Invalid token" };
     }

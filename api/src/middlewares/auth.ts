@@ -22,7 +22,7 @@ const log = log4js.getLogger("authMw");
 async function resolveUserToken(
   dal: DataAccessLayer,
   req: Request,
-  sub: string,
+  sub: string
 ): Promise<UserToken | null> {
   const user = await dal.userHandler.lookupUser({ currentRequest: req }, sub);
   if (!user) {
@@ -31,7 +31,7 @@ async function resolveUserToken(
   const roles = await dal.authzProvider.getRolesForUser(sub);
   const teams = await dal.teamHandler.getTeamsForUser(
     { currentRequest: req },
-    sub,
+    sub
   );
   return { ...user, sub, roles, teams };
 }
@@ -45,7 +45,7 @@ async function resolveUserToken(
 async function tryBearerToken(
   dal: DataAccessLayer,
   req: Request,
-  token: string,
+  token: string
 ): Promise<UserToken | null> {
   for (const provider of IdentityProviderRegistry.values()) {
     if (!provider.getIdentityFromToken) {
@@ -111,7 +111,7 @@ export function validateTokenMiddleware(dal: DataAccessLayer) {
 export async function authRequiredMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   if (!req.user) {
     res.sendStatus(401);
