@@ -48,7 +48,7 @@ export type EmailTemplateVariables = NotificationVariables & {
 
 export type EmailTemplateRenderer = (
   variables: NotificationVariables,
-  notificationConfig: NotificationConfiguration,
+  notificationConfig: NotificationConfiguration
 ) => EmailSendableTemplate | DropMarker;
 
 /**
@@ -74,8 +74,8 @@ export function defineEmailTemplate(
   body: string,
   buildVariables: (
     base: NotificationVariables,
-    notificationConfig: NotificationConfiguration,
-  ) => EmailTemplateVariables | DropMarker,
+    notificationConfig: NotificationConfiguration
+  ) => EmailTemplateVariables | DropMarker
 ): EmailTemplateRenderer {
   const compiledSubject = Handlebars.compile(subject, { strict: true });
   // Warning: noEscape is used here to avoid escaping special characters. The email
@@ -87,7 +87,7 @@ export function defineEmailTemplate(
 
   return (
     base: NotificationVariables,
-    notificationConfig: NotificationConfiguration,
+    notificationConfig: NotificationConfiguration
   ) => {
     const emailVariables = buildVariables(base, notificationConfig);
 
@@ -140,14 +140,14 @@ export class EmailNotificationProvider extends NotificationProvider {
   constructor(
     private settings: EmailNotificationProviderSettings,
     private templates: EmailProviderTemplates,
-    private notificationConfig: NotificationConfiguration,
+    private notificationConfig: NotificationConfiguration
   ) {
     super();
   }
 
   render(
     templateKey: NotificationTemplateKey,
-    variables: NotificationVariables,
+    variables: NotificationVariables
   ): ProviderTemplate | undefined {
     return this.templates[templateKey]?.(variables, this.notificationConfig);
   }
@@ -191,14 +191,14 @@ export class EmailNotificationProvider extends NotificationProvider {
       to: emailTemplate.recipients.map(
         (r) =>
           `${sanitizeRecipientName(r.name)} <${sanitizeEmail(
-            overrideMail || r.email,
-          )}>`,
+            overrideMail || r.email
+          )}>`
       ),
       cc: emailTemplate.cc.map(
         (cc) =>
           `${sanitizeRecipientName(cc.name)} <${sanitizeEmail(
-            overrideMail || cc.email,
-          )}>`,
+            overrideMail || cc.email
+          )}>`
       ),
       subject: emailTemplate.subject,
       content: "text/plain; charset=utf-8", // Warning: if you change this, the template render above does not escape HTML!

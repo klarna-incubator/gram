@@ -29,8 +29,7 @@ export const renderReviewRequestedReminderTemplate = defineEmailTemplate(
       recipients,
       ownerIsNotRequester: base.requester.email != base.owner.email,
       ...base,
-      reassignAfterDays:
-        notificationConfig.reviewReminders?.reassignAfterDays,
+      reassignAfterDays: notificationConfig.reviewReminders?.reassignAfterDays,
     };
-  },
+  }
 );
