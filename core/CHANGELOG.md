@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.26.0](https://github.com/klarna/gram/compare/v4.25.0...v4.26.0) (2026-08-04)
+
+### Bug Fixes
+
+- **ci:** sync lockfile and resolve core config import ([8b75793](https://github.com/klarna/gram/commit/8b75793110b1db08ab19c0a7b876f74fe767008d))
+- **deps:** align @sentry/node with @sentry/profiling-node 10.66.0 ([8af37c8](https://github.com/klarna/gram/commit/8af37c8e9c612cd3607f361d48f22a10db9a4688))
+- make all svgs work in firefox ([50bc128](https://github.com/klarna/gram/commit/50bc128b9a1ff3ba8d294f09c3a56987ac42bca2))
+
+### Features
+
+- **api:** add admin action items list and export endpoints ([ce3732c](https://github.com/klarna/gram/commit/ce3732ca970b3b2b1cf17229cabb86c91dd78ceb))
+- **api:** filter admin action items by export domain instead of exporter key ([5692ba9](https://github.com/klarna/gram/commit/5692ba9bbef428459b653655f5c5c946738517d5))
+- **auth:** add OIDC bearer token auth for M2M API access ([874d2f3](https://github.com/klarna/gram/commit/874d2f325fdfd5424687094ae09893d20cafed10))
+- **notifications:** add flexible notification provider plugin model ([f288ac8](https://github.com/klarna/gram/commit/f288ac84cfb973c559bc9e9bf662344df7cdbda0))
+- **notifications:** inject notification config into email templates ([271b44c](https://github.com/klarna/gram/commit/271b44cfa8ea077a87c2961f99f8ef7f62e90a55))
+
 # [4.25.0](https://github.com/klarna/gram/compare/v4.24.0...v4.25.0) (2026-05-28)
 
 ### Bug Fixes

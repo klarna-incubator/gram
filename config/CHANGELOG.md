@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.26.0](https://github.com/klarna/gram/compare/v4.25.0...v4.26.0) (2026-08-04)
+
+### Bug Fixes
+
+- **ci:** sync lockfile and resolve core config import ([8b75793](https://github.com/klarna/gram/commit/8b75793110b1db08ab19c0a7b876f74fe767008d))
+
+### Features
+
+- **notifications:** add flexible notification provider plugin model ([f288ac8](https://github.com/klarna/gram/commit/f288ac84cfb973c559bc9e9bf662344df7cdbda0))
+- **notifications:** inject notification config into email templates ([271b44c](https://github.com/klarna/gram/commit/271b44cfa8ea077a87c2961f99f8ef7f62e90a55))
+
 # [4.25.0](https://github.com/klarna/gram/compare/v4.24.0...v4.25.0) (2026-05-28)
 
 **Note:** Version bump only for package @gram/config
