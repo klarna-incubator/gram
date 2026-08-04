@@ -13,29 +13,29 @@ var:
 tasks:
   install:
     stage: install
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202607200928-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202608031013-builder
     var:
       NODE_ENV: development
     command:
       - npm install
   lint:
     stage: quality
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202607200928-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202608031013-builder
     command:
       - npm run lint
   validate_metadata:
     stage: build
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/kep-cli:6.202607201019
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/kep-cli:6.202608030927
     command:
       - kep c2c service metadata validate --file $SERVICE_METADATA_FILE
   build:
     stage: build
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202607200928-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202608031013-builder
     command:
       - npm run build
   test:
     stage: test
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202607200928-builder
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/node:22.202608031013-builder
     resources:
       size: extra-large
     var:
@@ -61,7 +61,7 @@ tasks:
       - push:
           branches:
             - develop
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/kep-cli:6.202607201019
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/kep-cli:6.202608030927
     var:
       PARTITION: eu
       STAGE: staging
@@ -86,7 +86,7 @@ tasks:
       - push:
           branches:
             - main
-    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/kep-cli:6.202607201019
+    image: l-docker-klarna-production.artifactory.klarna.net/klarna/tools/kep-cli:6.202608030927
     var:
       PARTITION: eu
       STAGE: production
