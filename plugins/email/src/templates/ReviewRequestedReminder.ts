@@ -30,5 +30,5 @@ export const renderReviewRequestedReminderTemplate = defineEmailTemplate(
       ownerIsNotRequester: base.requester.email != base.owner.email,
       ...base,
     };
-  },
+  }
 );

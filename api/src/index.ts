@@ -71,7 +71,7 @@ const listen = async () => {
   setInterval(
     () =>
       notificationHandler(dal.notificationService, dal.notificationProviders),
-    NOTIFICATION_INTERVAL,
+    NOTIFICATION_INTERVAL
   );
   // Retry previously-failed notifications every minute - no attempt limit or
   // backoff, every currently-failed row gets another shot on every run.
@@ -79,9 +79,9 @@ const listen = async () => {
     () =>
       notificationRetryHandler(
         dal.notificationService,
-        dal.notificationProviders,
+        dal.notificationProviders
       ),
-    NOTIFICATION_RETRY_INTERVAL,
+    NOTIFICATION_RETRY_INTERVAL
   );
   setInterval(() => dal.validationEngine.cache.expire(), 10 * 60 * 1000); // Clean up the Validation cache every 10 minutes
   // Delete notification rows older than one month, regardless of status - a
@@ -89,9 +89,9 @@ const listen = async () => {
   setInterval(
     () =>
       dal.notificationService.deleteOlderThan(
-        new Date(Date.now() - NOTIFICATION_RETENTION_WINDOW),
+        new Date(Date.now() - NOTIFICATION_RETENTION_WINDOW)
       ),
-    NOTIFICATION_RETENTION_INTERVAL,
+    NOTIFICATION_RETENTION_INTERVAL
   );
 };
 

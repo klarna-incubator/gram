@@ -29,5 +29,5 @@ export const renderReviewRequestedTemplate = defineEmailTemplate(
       recipients,
       ...base,
     };
-  },
+  }
 );

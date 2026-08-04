@@ -76,7 +76,7 @@ export class ReviewDataService extends EventEmitter {
   private async queueReviewNotification(
     templateKey: string,
     review: Review,
-    buildExtraVariables?: () => Promise<Record<string, any>>,
+    buildExtraVariables?: () => Promise<Record<string, any>>
   ): Promise<number[]> {
     const variables =
       this.dal.notificationProviders.size === 0
@@ -124,7 +124,7 @@ export class ReviewDataService extends EventEmitter {
     ctx: RequestContext,
     filters: ReviewListFilter,
     page?: number,
-    dateOrder?: "ASC" | "DESC",
+    dateOrder?: "ASC" | "DESC"
   ): Promise<ReviewListResult> {
     const params: string[] = [];
     let pi = 1;
@@ -148,13 +148,13 @@ export class ReviewDataService extends EventEmitter {
       const systemIdsFromProperties = Array.from(
         await this.dal.sysPropHandler.listSystemsByFilters(
           ctx,
-          filters.properties,
-        ),
+          filters.properties
+        )
       );
       systems = new Set(
         systemIdsFromProperties.filter(
-          (sid) => !filters.systemIds || systems.has(sid),
-        ),
+          (sid) => !filters.systemIds || systems.has(sid)
+        )
       );
     }
 
@@ -166,7 +166,7 @@ export class ReviewDataService extends EventEmitter {
       statements.push(
         `m.system_id IN (${Array.from(systems)
           .map(() => `$${pi++}::varchar`)
-          .join(", ")})`,
+          .join(", ")})`
       );
       Array.from(systems).forEach((sys) => params.push(sys));
     }
@@ -175,7 +175,7 @@ export class ReviewDataService extends EventEmitter {
       statements.push(
         `status IN (${filters.statuses
           .map(() => `$${pi++}::varchar`)
-          .join(", ")})`,
+          .join(", ")})`
       );
       filters.statuses.forEach((s) => params.push(s));
     }
@@ -240,16 +240,16 @@ export class ReviewDataService extends EventEmitter {
             systemProperties: await this.dal.sysPropHandler.contextualize(
               ctx,
               row.model_system_id,
-              true,
+              true
             ),
           };
-        }),
+        })
       ),
     };
   }
 
   async getComplianceForSystems(
-    systemIds: string[],
+    systemIds: string[]
   ): Promise<ReviewSystemCompliance[]> {
     if (systemIds.length === 0) {
       return [];
@@ -261,7 +261,7 @@ export class ReviewDataService extends EventEmitter {
     statements.push(
       `m.system_id IN (${Array.from(systemIds)
         .map(() => `$${pi++}::varchar`)
-        .join(", ")})`,
+        .join(", ")})`
     );
 
     const dynamicStatements = statements.join(" AND ");
@@ -310,8 +310,8 @@ export class ReviewDataService extends EventEmitter {
           row.approved_at,
           row.pending_model_id,
           row.pending_model_status,
-          row.no_review_model_id,
-        ),
+          row.no_review_model_id
+        )
     );
   }
 
@@ -388,7 +388,7 @@ export class ReviewDataService extends EventEmitter {
     await this.queueReviewNotification("review-declined", review, async () => ({
       previousReviewer: await lookupPreviousReviewer(
         this.dal,
-        oldReview?.reviewedBy,
+        oldReview?.reviewedBy
       ),
     }));
 
@@ -399,7 +399,7 @@ export class ReviewDataService extends EventEmitter {
     modelId: string,
     approvingUser?: string,
     note?: string,
-    extras?: any,
+    extras?: any
   ) {
     const review = await this.update(modelId, {
       status: ReviewStatus.Approved,
@@ -428,7 +428,7 @@ export class ReviewDataService extends EventEmitter {
 
     if (oldReview === null) {
       this.log.warn(
-        `A call was made to change reviewer on a non-existent review object`,
+        `A call was made to change reviewer on a non-existent review object`
       );
       return null;
     }
@@ -455,9 +455,9 @@ export class ReviewDataService extends EventEmitter {
       async () => ({
         previousReviewer: await lookupPreviousReviewer(
           this.dal,
-          oldReview.reviewedBy,
+          oldReview.reviewedBy
         ),
-      }),
+      })
     );
 
     return review;
@@ -490,7 +490,7 @@ export class ReviewDataService extends EventEmitter {
       requestedBy?: string | null;
       note?: string;
       extras?: object;
-    },
+    }
   ) {
     const fieldStatements: string[] = [];
     const params: (string | null)[] = [];

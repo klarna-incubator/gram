@@ -42,5 +42,5 @@ export const renderReviewApprovedTemplate = defineEmailTemplate(
       ownerIsNotRequester: base.requester.email != base.owner.email,
       ...base,
     };
-  },
+  }
 );

@@ -1,5 +1,5 @@
 import log4js from "log4js";
-import { config } from "@gram/config";
+import { config } from "../../config/index.js";
 import { linkToModel } from "../../util/links.js";
 import System from "../systems/System.js";
 import { DataAccessLayer } from "../dal.js";
@@ -22,7 +22,7 @@ Please set your team's email address so notifications can reach the right people
 function missingTeamEmail(owner: any, review: Review): string | null {
   if (!owner.email || owner.email === "UNDEFINED") {
     log.warn(
-      `Templating a notification for modelId: ${review.modelId}, but email for owner ${owner.name} is not set or undefined (value: ${owner.email})`,
+      `Templating a notification for modelId: ${review.modelId}, but email for owner ${owner.name} is not set or undefined (value: ${owner.email})`
     );
     return missingTeamEmailWarning(owner.name);
   }
@@ -56,12 +56,12 @@ function getSupportContact(): { name: string; email?: string } | undefined {
  */
 export async function buildReviewNotificationVariables(
   dal: DataAccessLayer,
-  review: Review,
+  review: Review
 ): Promise<NotificationVariables> {
   const model = await dal.modelService.getById(review.modelId);
   if (model === null) {
     throw new Error(
-      `Review object has invalid model id: ${review.modelId}. This should not be possible as all reviews are bound to a model. Help?`,
+      `Review object has invalid model id: ${review.modelId}. This should not be possible as all reviews are bound to a model. Help?`
     );
   }
 
@@ -108,7 +108,7 @@ export async function buildReviewNotificationVariables(
     (async () => {
       const requester = await dal.userHandler.lookupUser(
         {},
-        review.requestedBy,
+        review.requestedBy
       );
       return {
         email: review.requestedBy,
@@ -149,7 +149,7 @@ export async function buildReviewNotificationVariables(
  */
 export async function lookupPreviousReviewer(
   dal: DataAccessLayer,
-  previousReviewer: string | undefined,
+  previousReviewer: string | undefined
 ): Promise<{ name: string; email?: string }> {
   const lookup = previousReviewer
     ? await dal.reviewerHandler.lookupReviewer({}, previousReviewer)

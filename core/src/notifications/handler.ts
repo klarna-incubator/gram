@@ -28,7 +28,7 @@ const outcomeToStatus: Record<DeliveryOutcome, NotificationStatus> = {
 async function processNotifications(
   notificationService: NotificationDataService,
   providers: Map<string, NotificationProvider>,
-  notifications: Notification[],
+  notifications: Notification[]
 ) {
   const outcomes = await Promise.all(
     notifications.map(async (notification) => {
@@ -43,7 +43,7 @@ async function processNotifications(
               notificationId: id,
               notificationType: notification.type,
             },
-          },
+          }
         );
         return { id, outcome: "dropped" as DeliveryOutcome };
       }
@@ -51,10 +51,10 @@ async function processNotifications(
       const outcome = await provider.handle(
         notification.templateKey,
         notification.variables,
-        id,
+        id
       );
       return { id, outcome };
-    }),
+    })
   );
 
   const idsByOutcome: Record<DeliveryOutcome, number[]> = {
@@ -72,7 +72,7 @@ async function processNotifications(
     });
     await notificationService.updateStatus(
       idsByOutcome.sent,
-      outcomeToStatus.sent,
+      outcomeToStatus.sent
     );
   }
 
@@ -84,7 +84,7 @@ async function processNotifications(
     });
     await notificationService.updateStatus(
       idsByOutcome.failed,
-      outcomeToStatus.failed,
+      outcomeToStatus.failed
     );
   }
 
@@ -96,7 +96,7 @@ async function processNotifications(
     });
     await notificationService.updateStatus(
       idsByOutcome.dropped,
-      outcomeToStatus.dropped,
+      outcomeToStatus.dropped
     );
   }
 }
@@ -111,7 +111,7 @@ async function processNotifications(
  */
 export async function notificationHandler(
   notificationService: NotificationDataService,
-  providers: Map<string, NotificationProvider>,
+  providers: Map<string, NotificationProvider>
 ) {
   const notifications = await notificationService.pollNewNotifications();
 
@@ -133,7 +133,7 @@ export async function notificationHandler(
  */
 export async function notificationRetryHandler(
   notificationService: NotificationDataService,
-  providers: Map<string, NotificationProvider>,
+  providers: Map<string, NotificationProvider>
 ) {
   const notifications = await notificationService.pollFailedNotifications();
 

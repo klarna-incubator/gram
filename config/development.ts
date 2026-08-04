@@ -60,7 +60,7 @@ export const developmentConfig: GramConfiguration = {
         {
           ...emailProviderTemplates,
           "magic-link": renderMagicLinkTemplate,
-        },
+        }
       ),
     ];
 

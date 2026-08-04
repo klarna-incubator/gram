@@ -89,7 +89,7 @@ export abstract class NotificationProvider {
    */
   abstract render(
     templateKey: NotificationTemplateKey,
-    variables: NotificationVariables,
+    variables: NotificationVariables
   ): ProviderTemplate | undefined;
 
   /**
@@ -103,7 +103,7 @@ export abstract class NotificationProvider {
   async handle(
     templateKey: NotificationTemplateKey,
     variables: NotificationVariables,
-    notificationId: number,
+    notificationId: number
   ): Promise<DeliveryOutcome> {
     let template: ProviderTemplate | undefined;
 
