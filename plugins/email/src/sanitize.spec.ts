@@ -1,6 +1,6 @@
-import { sanitizeRecipientName } from "./email.js";
+import { sanitizeRecipientName } from "./sanitize.js";
 
-describe("email", () => {
+describe("sanitize", () => {
   describe("sanitizeRecipientName", () => {
     ["Jön Jånsson", "jürgen straße"].map((name) =>
       it(`should allow ${name}`, () => {

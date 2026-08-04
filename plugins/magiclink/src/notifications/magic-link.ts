@@ -1,32 +1,32 @@
-import { PlaintextHandlebarsNotificationTemplate } from "@gram/core/dist/notifications/NotificationTemplate.js";
+import { defineEmailTemplate, EmailRecipient } from "@gram/email";
 
-const key = "magic-link";
-
-const subject = `Sign-in to Gram`;
+const subject = "Your Gram sign-in link";
 
 const template = `
-Hello {{recipientName}},
+Hi!
 
-You or somone else is requesting to access your account via sign-in link. To access your account, simply click on the unique link provided below:
+Click the link below to sign in to Gram:
 
-🔗 {{link}} 🔐
+{{link}}
 
-Please keep this link confidential and avoid sharing it with others. It is exclusively meant for your personal use.
+If you didn't request this, you can safely ignore this email.
 `.trim();
 
-export const MagicLinkEmail = () =>
-  new PlaintextHandlebarsNotificationTemplate(
-    key,
-    subject,
-    template,
-    async (dal, { recipientName, link, recipient }) => {
-      const recipients = [recipient];
-
-      return {
-        recipients,
-        cc: [],
-        link,
-        recipientName,
-      };
-    }
-  );
+/**
+ * Renders the magic-link login email. A deployment wanting the email channel
+ * to deliver this must merge it into whatever `EmailProviderTemplates` map it
+ * passes to `EmailNotificationProvider`, e.g.
+ * `{ ...emailProviderTemplates, "magic-link": renderMagicLinkTemplate }`.
+ */
+export const renderMagicLinkTemplate = defineEmailTemplate(
+  subject,
+  template,
+  (base) => {
+    const recipient: EmailRecipient = { email: base.recipient?.to };
+    return {
+      ...base,
+      recipients: [recipient],
+      cc: [],
+    };
+  }
+);

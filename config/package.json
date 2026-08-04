@@ -32,6 +32,7 @@
     "@gram/azure": "^4.25.0",
     "@gram/cncf": "^4.25.0",
     "@gram/core": "^4.25.0",
+    "@gram/email": "^4.25.0",
     "@gram/kubernetes": "^4.25.0",
     "@gram/magiclink": "^4.25.0",
     "@gram/stride": "^4.25.0",
