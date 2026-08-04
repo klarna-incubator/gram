@@ -18,7 +18,7 @@ Thank you.
 export const renderReviewRequestedReminderTemplate = defineEmailTemplate(
   subject,
   template,
-  (base) => {
+  (base, notificationConfig) => {
     const recipients = [base.requester];
     if (base.owner.email && base.owner.email !== "UNDEFINED") {
       recipients.push(base.owner);
@@ -29,6 +29,8 @@ export const renderReviewRequestedReminderTemplate = defineEmailTemplate(
       recipients,
       ownerIsNotRequester: base.requester.email != base.owner.email,
       ...base,
+      reassignAfterDays:
+        notificationConfig.reviewReminders?.reassignAfterDays,
     };
-  }
+  },
 );

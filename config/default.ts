@@ -273,7 +273,8 @@ export const defaultConfig: GramConfiguration = {
           {
             ...emailProviderTemplates,
             "magic-link": renderMagicLinkTemplate,
-          }
+          },
+          defaultConfig.notifications,
         ),
       ],
       reviewerProvider: new StaticReviewerProvider(

@@ -3,7 +3,11 @@ import { Message, SMTPClient } from "emailjs";
 import log4js from "log4js";
 import { Secret } from "@gram/core/dist/config/Secret.js";
 import { sanitizeEmail } from "@gram/core/dist/util/sanitize.js";
-import { NotificationVariables } from "@gram/core/dist/data/notifications/NotificationInput.js";
+import {
+  NotificationTemplateKey,
+  NotificationVariables,
+} from "@gram/core/dist/data/notifications/NotificationInput.js";
+import { NotificationConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import {
   DropMarker,
   isDropMarker,
@@ -43,7 +47,8 @@ export type EmailTemplateVariables = NotificationVariables & {
 };
 
 export type EmailTemplateRenderer = (
-  variables: NotificationVariables
+  variables: NotificationVariables,
+  notificationConfig: NotificationConfiguration,
 ) => EmailSendableTemplate | DropMarker;
 
 /**
@@ -68,8 +73,9 @@ export function defineEmailTemplate(
   subject: string,
   body: string,
   buildVariables: (
-    base: NotificationVariables
-  ) => EmailTemplateVariables | DropMarker
+    base: NotificationVariables,
+    notificationConfig: NotificationConfiguration,
+  ) => EmailTemplateVariables | DropMarker,
 ): EmailTemplateRenderer {
   const compiledSubject = Handlebars.compile(subject, { strict: true });
   // Warning: noEscape is used here to avoid escaping special characters. The email
@@ -79,8 +85,11 @@ export function defineEmailTemplate(
     noEscape: true,
   });
 
-  return (base: NotificationVariables) => {
-    const emailVariables = buildVariables(base);
+  return (
+    base: NotificationVariables,
+    notificationConfig: NotificationConfiguration,
+  ) => {
+    const emailVariables = buildVariables(base, notificationConfig);
 
     if (isDropMarker(emailVariables)) {
       return emailVariables;
@@ -130,16 +139,17 @@ export class EmailNotificationProvider extends NotificationProvider {
 
   constructor(
     private settings: EmailNotificationProviderSettings,
-    private templates: EmailProviderTemplates
+    private templates: EmailProviderTemplates,
+    private notificationConfig: NotificationConfiguration,
   ) {
     super();
   }
 
   render(
-    templateKey: string,
-    variables: NotificationVariables
+    templateKey: NotificationTemplateKey,
+    variables: NotificationVariables,
   ): ProviderTemplate | undefined {
-    return this.templates[templateKey]?.(variables);
+    return this.templates[templateKey]?.(variables, this.notificationConfig);
   }
 
   private async getClient(): Promise<SMTPClient> {
@@ -181,14 +191,14 @@ export class EmailNotificationProvider extends NotificationProvider {
       to: emailTemplate.recipients.map(
         (r) =>
           `${sanitizeRecipientName(r.name)} <${sanitizeEmail(
-            overrideMail || r.email
-          )}>`
+            overrideMail || r.email,
+          )}>`,
       ),
       cc: emailTemplate.cc.map(
         (cc) =>
           `${sanitizeRecipientName(cc.name)} <${sanitizeEmail(
-            overrideMail || cc.email
-          )}>`
+            overrideMail || cc.email,
+          )}>`,
       ),
       subject: emailTemplate.subject,
       content: "text/plain; charset=utf-8", // Warning: if you change this, the template render above does not escape HTML!

@@ -44,6 +44,47 @@ export interface Providers {
   resourceProviders?: ResourceProvider[];
 }
 
+export interface NotificationConfiguration {
+  /**
+   * Cadence (in days) for the review-lifecycle reminder/reassignment cron jobs.
+   * Optional - deployments that don't set these keep the built-in defaults.
+   */
+  reviewReminders?: {
+    // How many days after a review is requested before the first reminder is sent.
+    requestedAfterDays: number;
+    // How often (in days) a meeting-requested reminder repeats until a meeting is scheduled.
+    meetingRequestedRemindForEveryXDays: number;
+    // How many days of inactivity before an overdue review is automatically reassigned.
+    reassignAfterDays: number;
+  };
+  /**
+   * Link to your org's threat-model review playbook, referenced in
+   * review-requested notification emails.
+   */
+  playbookUrl?: string;
+  /**
+   * Optional link to book/schedule a threat-model review session (e.g. a
+   * calendar booking page), referenced in review-meeting-requested
+   * notification emails.
+   */
+  sessionBookingUrl?: string;
+  /**
+   * Cadence (in ms) for the notification background jobs started in
+   * api/src/index.ts. Optional - deployments that don't set these keep the
+   * built-in defaults.
+   */
+  intervals?: {
+    // How often to poll and send newly queued notifications.
+    notificationInterval?: number;
+    // How often to retry previously-failed notifications.
+    notificationRetryInterval?: number;
+    // How often to run the notification retention cleanup sweep.
+    notificationRetentionInterval?: number;
+    // How old (in ms) a notification row must be before the retention sweep deletes it.
+    notificationRetentionWindow?: number;
+  };
+}
+
 export interface GramConfiguration {
   appPort: number;
   controlPort: number;
@@ -86,49 +127,7 @@ export interface GramConfiguration {
     };
   };
 
-  notifications: {
-    /**
-     * Cadence (in days) for the review-lifecycle reminder/reassignment cron jobs.
-     * Optional - deployments that don't set these keep the built-in defaults.
-     */
-    reviewReminders?: {
-      // How many days after a review is requested before the first reminder is sent.
-      requestedAfterDays: number;
-      // How often (in days) a meeting-requested reminder repeats until a meeting is scheduled.
-      meetingRequestedRemindForEveryXDays: number;
-      // How many days of inactivity before an overdue review is automatically reassigned.
-      reassignAfterDays: number;
-    };
-
-    /**
-     * Link to your org's threat-model review playbook, referenced in
-     * review-requested notification emails.
-     */
-    playbookUrl?: string;
-
-    /**
-     * Optional link to book/schedule a threat-model review session (e.g. a
-     * calendar booking page), referenced in review-meeting-requested
-     * notification emails.
-     */
-    sessionBookingUrl?: string;
-
-    /**
-     * Cadence (in ms) for the notification background jobs started in
-     * api/src/index.ts. Optional - deployments that don't set these keep the
-     * built-in defaults.
-     */
-    intervals?: {
-      // How often to poll and send newly queued notifications.
-      notificationInterval?: number;
-      // How often to retry previously-failed notifications.
-      notificationRetryInterval?: number;
-      // How often to run the notification retention cleanup sweep.
-      notificationRetentionInterval?: number;
-      // How old (in ms) a notification row must be before the retention sweep deletes it.
-      notificationRetentionWindow?: number;
-    };
-  };
+  notifications: NotificationConfiguration;
 
   /**
    * Optional contact details to the team or person managing this Gram installation.
