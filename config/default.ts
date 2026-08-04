@@ -11,14 +11,14 @@ import type {
 import type { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import System from "@gram/core/dist/data/systems/System.js";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
+import { EmailNotificationProvider, emailProviderTemplates } from "@gram/email";
 import {
-  MagicLinkEmail,
   MagicLinkIdentityProvider,
   MagicLinkMigrations,
+  renderMagicLinkTemplate,
 } from "@gram/magiclink";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatLibSuggestionProvider } from "@gram/threatlib";
-import defaultNotifications from "./notifications/index.js";
 import { StaticAuthzProvider } from "./providers/static/StaticAuthzProvider.js";
 import { StaticReviewerProvider } from "./providers/static/StaticReviewerProvider.js";
 import { StaticSystemProvider } from "./providers/static/StaticSystemProvider.js";
@@ -55,16 +55,7 @@ export const defaultConfig: GramConfiguration = {
         : false,
   },
 
-  notifications: {
-    providers: {
-      email: {
-        host: new EnvSecret("EMAIL_HOST"),
-        port: new EnvSecret("EMAIL_PORT"),
-        password: new EnvSecret("EMAIL_PASSWORD"),
-        user: new EnvSecret("EMAIL_USER"),
-      },
-    },
-  },
+  notifications: {},
 
   log: {
     layout: "json",
@@ -271,7 +262,20 @@ export const defaultConfig: GramConfiguration = {
         ...SVGPornComponentClasses,
       ],
       identityProviders: [magicLink],
-      notificationTemplates: [MagicLinkEmail(), ...defaultNotifications],
+      notificationProviders: [
+        new EmailNotificationProvider(
+          {
+            host: new EnvSecret("EMAIL_HOST"),
+            port: new EnvSecret("EMAIL_PORT"),
+            user: new EnvSecret("EMAIL_USER"),
+            password: new EnvSecret("EMAIL_PASSWORD"),
+          },
+          {
+            ...emailProviderTemplates,
+            "magic-link": renderMagicLinkTemplate,
+          },
+        ),
+      ],
       reviewerProvider: new StaticReviewerProvider(
         sampleReviewers,
         fallbackReviewer

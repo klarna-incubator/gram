@@ -37,7 +37,7 @@ export async function bootstrap(): Promise<DataAccessLayer> {
   );
 
   bt.registerComponentClasses(providers.componentClasses || []);
-  bt.registerNotificationTemplates(providers.notificationTemplates || []);
+  bt.registerNotificationProviders(providers.notificationProviders || []);
 
   providers.suggestionSources?.forEach((ssp) =>
     bt.registerSuggestionSource(ssp)

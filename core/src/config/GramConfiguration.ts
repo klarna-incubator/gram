@@ -7,7 +7,7 @@ import type { ReviewerProvider } from "../data/reviews/ReviewerProvider.js";
 import type { SystemPropertyProvider } from "../data/system-property/SystemPropertyProvider.js";
 import type { SystemProvider } from "../data/systems/SystemProvider.js";
 import type { ResourceProvider } from "../resources/ResourceHandler.js";
-import type { NotificationTemplate } from "../notifications/NotificationTemplate.js";
+import type { NotificationProvider } from "../notifications/NotificationProvider.js";
 import type { SuggestionSource } from "../suggestions/models.js";
 import type { AssetFolder } from "./AssetFolder.js";
 import type { Secret } from "./Secret.js";
@@ -35,7 +35,7 @@ export interface Providers {
   systemPropertyProviders?: SystemPropertyProvider[];
   assetFolders?: AssetFolder[];
   componentClasses?: ComponentClass[];
-  notificationTemplates?: NotificationTemplate[];
+  notificationProviders?: NotificationProvider[];
   suggestionSources?: SuggestionSource[];
   teamProvider?: TeamProvider;
   actionItemExporters?: ActionItemExporter[];
@@ -87,16 +87,46 @@ export interface GramConfiguration {
   };
 
   notifications: {
-    providers: {
-      email: {
-        user: Secret;
-        password: Secret;
-        host: Secret;
-        port: Secret;
-        senderName?: string;
-        // Allow overriding recipient email for debug purposes. This will make all outgoing email go to this address instead.
-        overrideRecipient?: string;
-      };
+    /**
+     * Cadence (in days) for the review-lifecycle reminder/reassignment cron jobs.
+     * Optional - deployments that don't set these keep the built-in defaults.
+     */
+    reviewReminders?: {
+      // How many days after a review is requested before the first reminder is sent.
+      requestedAfterDays: number;
+      // How often (in days) a meeting-requested reminder repeats until a meeting is scheduled.
+      meetingRequestedRemindForEveryXDays: number;
+      // How many days of inactivity before an overdue review is automatically reassigned.
+      reassignAfterDays: number;
+    };
+
+    /**
+     * Link to your org's threat-model review playbook, referenced in
+     * review-requested notification emails.
+     */
+    playbookUrl?: string;
+
+    /**
+     * Optional link to book/schedule a threat-model review session (e.g. a
+     * calendar booking page), referenced in review-meeting-requested
+     * notification emails.
+     */
+    sessionBookingUrl?: string;
+
+    /**
+     * Cadence (in ms) for the notification background jobs started in
+     * api/src/index.ts. Optional - deployments that don't set these keep the
+     * built-in defaults.
+     */
+    intervals?: {
+      // How often to poll and send newly queued notifications.
+      notificationInterval?: number;
+      // How often to retry previously-failed notifications.
+      notificationRetryInterval?: number;
+      // How often to run the notification retention cleanup sweep.
+      notificationRetentionInterval?: number;
+      // How old (in ms) a notification row must be before the retention sweep deletes it.
+      notificationRetentionWindow?: number;
     };
   };
 

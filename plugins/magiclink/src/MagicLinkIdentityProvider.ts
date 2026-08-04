@@ -49,7 +49,7 @@ export class MagicLinkIdentityProvider implements IdentityProvider {
 
     await this.dal.notificationService.queue({
       templateKey: "magic-link",
-      params: {
+      variables: {
         link: url,
         recipient: {
           sub: email,

@@ -1,5 +1,7 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
+import { EmailNotificationProvider, emailProviderTemplates } from "@gram/email";
+import { renderMagicLinkTemplate } from "@gram/magiclink";
 import { defaultConfig } from "./default.js";
 
 export const developmentConfig: GramConfiguration = {
@@ -24,16 +26,7 @@ export const developmentConfig: GramConfiguration = {
   },
 
   notifications: {
-    providers: {
-      email: {
-        host: new ExposedSecret(""),
-        port: new ExposedSecret("25"),
-        password: new ExposedSecret(""),
-        user: new ExposedSecret(""),
-        // overrideRecipient: "your-email"
-        // senderName: "[Development] Gram",
-      },
-    },
+    ...defaultConfig.notifications,
   },
 
   log: {
@@ -49,5 +42,28 @@ export const developmentConfig: GramConfiguration = {
       },
       simplified: true,
     },
+  },
+
+  async bootstrapProviders(dal) {
+    const providers = await defaultConfig.bootstrapProviders(dal);
+
+    providers.notificationProviders = [
+      new EmailNotificationProvider(
+        {
+          host: new ExposedSecret(""),
+          port: new ExposedSecret("25"),
+          password: new ExposedSecret(""),
+          user: new ExposedSecret(""),
+          // overrideRecipient: "your-email"
+          senderName: "[Development] Gram",
+        },
+        {
+          ...emailProviderTemplates,
+          "magic-link": renderMagicLinkTemplate,
+        },
+      ),
+    ];
+
+    return providers;
   },
 };
