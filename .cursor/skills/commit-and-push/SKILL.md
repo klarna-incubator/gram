@@ -134,13 +134,14 @@ Paths that often exist only on `origin` / not on `github/main`: `infra/`, `kep-p
 
 When preparing a branch for **`origin`** (merge, sync, or internal PR):
 
-1. **Before push**, diff against the internal base (usually `origin/develop`) and ensure **no** `.github/workflows/**` changes are included.
-2. If a merge or sync introduced workflow diffs, **restore** those files from the internal base before pushing:
+1. **Before push**, diff against the internal base (usually `origin/develop`) and ensure **no** `.github/workflows/**` changes are included in the **resulting tree**.
+2. **Also check commit history**: Klarna GHE push protection rejects pushes if **any commit** in the range being pushed touched `.github/workflows/**`—restoring `ci.yml` at the tip is **not** enough after merging `github/main` or open-source release tags. Prefer a **single squashed commit** on `origin/develop` with workflow files restored from the internal base:
 
    ```bash
    git fetch origin develop
-   git checkout origin/develop -- .github/workflows/
-   git commit -m "chore: exclude GitHub Actions workflows from internal push"
+   git reset --soft origin/develop
+   git restore --source=origin/develop --staged --worktree .github/workflows/
+   git commit -m "feat(...): sync … (CI excluded; github only)"
    ```
 
 3. Do **not** ask the user to choose between bypassing push protection and dropping CI changes—the default is **always** leave CI on `github`.
