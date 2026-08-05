@@ -1,0 +1,26 @@
+{
+  "name": "@gram/email",
+  "type": "module",
+  "version": "4.26.0",
+  "description": "SMTP-based NotificationProvider for Gram",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "prettier --check .",
+    "lint-fix": "prettier -l . --write",
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --detectOpenHandles --no-cache --runInBand --logHeapUsage --forceExit"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gram/core": "^4.26.0",
+    "emailjs": "^4.0.3",
+    "handlebars": "^4.7.9",
+    "log4js": "^6.6.1"
+  },
+  "private": true
+}

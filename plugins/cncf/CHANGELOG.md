@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.26.0](/compare/v4.25.0...v4.26.0) (2026-08-05)
+
+### Bug Fixes
+
+- make all svgs work in firefox 50bc128
+
 # [4.25.0](https://github.com/klarna-incubator/gram/compare/v4.24.0...v4.25.0) (2026-05-28)
 
 **Note:** Version bump only for package @gram/cncf

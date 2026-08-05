@@ -1,22 +1,16 @@
-import { Review } from "../reviews/Review.js";
-
-type NotificationInputVariables = {
-  review?: Review;
-  [k: string]: unknown;
+export type NotificationVariables = {
+  [key: string]: any;
 };
 
-export type NotificationTemplateKey =
-  | "review-approved"
-  | "review-requested"
-  | "review-requested-reminder"
-  | "review-meeting-requested"
-  | "review-meeting-requested-reminder"
-  | "review-reviewer-changed"
-  | "review-canceled"
-  | "review-declined"
-  | string;
+export type NotificationTemplateKey = string;
 
 export type NotificationInput = {
   templateKey: NotificationTemplateKey;
-  params: NotificationInputVariables;
+  /**
+   * The fully-resolved, channel-agnostic domain data for this event. Callers
+   * (e.g. ReviewDataService, KlarnaCronJob) resolve this themselves before
+   * queuing - there's no per-key template registry that does it on their
+   * behalf, since that resolution isn't actually deployment-configurable.
+   */
+  variables: NotificationVariables;
 };

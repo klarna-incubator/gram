@@ -20,7 +20,6 @@
     "@gram/jupiterone": "^4.9.4",
     "@gram/ldap": "^4.0.2",
     "http-proxy-agent": "^7.0.2",
-    "ldapts": "^8.1.8",
     "node-cron": "^4.2.1",
     "node-fetch": "^3.3.2"
   },

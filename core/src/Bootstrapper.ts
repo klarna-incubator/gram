@@ -3,7 +3,7 @@ import { isAbsolute, join } from "path";
 import { ComponentClass } from "./data/component-classes/index.js";
 import { DataAccessLayer } from "./data/dal.js";
 import log4js from "log4js";
-import { NotificationTemplate } from "./notifications/NotificationTemplate.js";
+import { NotificationProvider } from "./notifications/NotificationProvider.js";
 import { SuggestionSource } from "./suggestions/models.js";
 import { AuthzProvider } from "./auth/AuthzProvider.js";
 import { IdentityProvider } from "./auth/IdentityProvider.js";
@@ -97,10 +97,23 @@ export class Bootstrapper {
     this.log.info(`Registered ${classes.length} component classes`);
   }
 
-  registerNotificationTemplates(templates: NotificationTemplate[]): void {
-    templates.forEach((t) => {
-      this.dal.templateHandler.register(t);
-      this.log.info(`Registered notification template: ${t.key}`);
+  /**
+   * Registers the notification channels active for this deployment. Which
+   * channels exist is decided entirely by what's passed here - notificationHandler
+   * fans a queued event out to every registered provider by inserting one row per
+   * provider (see NotificationDataService.queue()). Throws if two or more
+   * providers share the same `key`, since that would silently misroute every row
+   * for that key to whichever provider happened to register last.
+   */
+  registerNotificationProviders(providers: NotificationProvider[]): void {
+    providers.forEach((p) => {
+      if (this.dal.notificationProviders.has(p.key)) {
+        throw new Error(
+          `Duplicate NotificationProvider key: "${p.key}" is already registered`
+        );
+      }
+      this.dal.notificationProviders.set(p.key, p);
+      this.log.info(`Registered notification provider: ${p.key}`);
     });
   }
 

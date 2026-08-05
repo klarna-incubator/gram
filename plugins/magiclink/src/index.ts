@@ -1,5 +1,5 @@
 import { MagicLinkIdentityProvider } from "./MagicLinkIdentityProvider.js";
-import { MagicLinkEmail } from "./notifications/magic-link.js";
+import { renderMagicLinkTemplate } from "./notifications/magic-link.js";
 import { Migration } from "@gram/core/dist/data/Migration.js";
 import path from "path";
 import * as url from "url";
@@ -11,4 +11,8 @@ const MagicLinkMigrations = new Migration(
   "magic-link"
 );
 
-export { MagicLinkIdentityProvider, MagicLinkEmail, MagicLinkMigrations };
+export {
+  MagicLinkIdentityProvider,
+  MagicLinkMigrations,
+  renderMagicLinkTemplate,
+};
