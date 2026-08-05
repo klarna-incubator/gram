@@ -124,6 +124,27 @@ git ls-tree -r --name-only github/main -- "${path}"
 
 Paths that often exist only on `origin` / not on `github/main`: `infra/`, `kep-pipeline.yaml`, `.klarna-system-metadata.json`, `plugins/jupiterone/`, Klarna-specific docs, `.cursor/skills/` in this fork. Re-verify with `git cat-file` / `git ls-tree`—do not rely on memory.
 
+### Always open source — GitHub Actions / CI (mandatory)
+
+**Never** commit or push changes under `.github/workflows/` (including `ci.yml`) to **`origin`**. Klarna GHE enforces push protection on these paths.
+
+| Path | Target | Notes |
+|------|--------|-------|
+| `.github/workflows/**` | **`github` only** | Always land CI/workflow changes in `klarna-incubator/gram` via the open-source branch workflow; sync into the internal clone later with [pull-opensource-github](../pull-opensource-github/SKILL.md) if needed. |
+
+When preparing a branch for **`origin`** (merge, sync, or internal PR):
+
+1. **Before push**, diff against the internal base (usually `origin/develop`) and ensure **no** `.github/workflows/**` changes are included.
+2. If a merge or sync introduced workflow diffs, **restore** those files from the internal base before pushing:
+
+   ```bash
+   git fetch origin develop
+   git checkout origin/develop -- .github/workflows/
+   git commit -m "chore: exclude GitHub Actions workflows from internal push"
+   ```
+
+3. Do **not** ask the user to choose between bypassing push protection and dropping CI changes—the default is **always** leave CI on `github`.
+
 ---
 
 ## 5. Exception — discuss with the user first
@@ -182,7 +203,7 @@ Each numbered step is a **separate confirmation gate**—complete one, report, g
    config/production.ts          → ask user
    ```
 
-4. **Single-target (homogeneity) gate:** every staged path must resolve to the **same** destination (`github` **or** `origin`). If any path is Klarna-only and any path is open-source, **stop**—do not commit; ask the user to unstage one side and re-stage a homogeneous set. If any path is still a **config exception** without a chosen target, **stop** until the user decides and the index matches that target only.
+4. **Single-target (homogeneity) gate:** every staged path must resolve to the **same** destination (`github` **or** `origin`). If any path is Klarna-only and any path is open-source, **stop**—do not commit; ask the user to unstage one side and re-stage a homogeneous set. If any path is still a **config exception** without a chosen target, **stop** until the user decides and the index matches that target only. If any staged path is under **`.github/workflows/`**, the destination must be **`github`**—never `origin`.
 5. **Confirm overall plan** — one remote, one branch/worktree name if open source—before implementing anything not yet applied.
 6. **Act** (one sub-step at a time, each confirmed):
    - **All open source:** follow **Open-source branch workflow** below only.
@@ -269,6 +290,8 @@ If a dedicated open-source clone already exists, `cd` there, `git fetch github m
 
 For **all Klarna-only** homogeneous changes (after §8 checks and user approvals).
 
+**Before push**, verify the branch does not modify `.github/workflows/**` relative to `origin/develop` (see **Always open source — GitHub Actions / CI** in §4). Restore from `origin/develop` if a merge introduced workflow diffs.
+
 **Push to `origin`:**
 
 ```bash
@@ -304,3 +327,4 @@ Do **not** use `--base main` for Klarna-internal PRs.
 - Do not run `npm run lint-fix` for failures of `npm ci` or `npm run build`—only for `npm run lint`.
 - Do not **`git commit`** with **mixed** Klarna-only and open-source paths in the index—split into two homogeneous staged passes so each commit pushes to **one** remote only.
 - Do not open or suggest a **Klarna-internal** PR with **`main`** as the base branch—**`develop` only** (open-source PRs against `klarna-incubator/gram` **`main`** are unchanged; see **Open-source branch workflow** above).
+- Do not push **`.github/workflows/**`** changes to **`origin`**—CI belongs on **`github`** only; restore workflow files from `origin/develop` before an internal push rather than requesting push-protection bypass.
