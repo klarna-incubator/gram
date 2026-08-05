@@ -1,7 +1,7 @@
 {
   "name": "@gram/magiclink",
   "type": "module",
-  "version": "4.25.0",
+  "version": "4.26.0",
   "description": "Pack with local auth provider",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,8 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gram/core": "^4.25.0",
-    "@gram/email": "^4.25.0",
+    "@gram/core": "^4.26.0",
+    "@gram/email": "^4.26.0",
     "pg": "^8.11.0"
   },
   "private": true
