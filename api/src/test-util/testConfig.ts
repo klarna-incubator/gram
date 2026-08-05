@@ -51,16 +51,7 @@ export const testConfig: GramConfiguration = {
     ssl: false,
   },
 
-  notifications: {
-    providers: {
-      email: {
-        host: new ExposedSecret("nope"),
-        port: new ExposedSecret("25"),
-        password: new ExposedSecret("nope"),
-        user: new ExposedSecret("nope"),
-      },
-    },
-  },
+  notifications: {},
 
   log: {
     layout: "json",

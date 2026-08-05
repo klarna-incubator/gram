@@ -20,6 +20,5 @@ const config = {
   transformIgnorePatterns: ["<rootDir>/node_modules/"],
   globalSetup: "./jest.globalSetup.js",
   setupFilesAfterEnv: ["./jest.setup.ts"],
-  testPathIgnorePatterns: ["<rootDir>/dist/"],
 };
 export default config;

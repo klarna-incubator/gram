@@ -38,7 +38,7 @@ Backend tests are run with `--runInBand` and need the test postgres container (p
 
 The monorepo splits responsibilities across five workspaces:
 
-- **`core/`** (`@gram/core`) — all backend domain logic: data services, auth, validation, suggestions, notifications, plugin registry, and database migrations (`core/src/data/migrations/*.sql`, applied automatically at boot via `postgres-migrations`). Exports the `DataAccessLayer` (DAL) and the `Bootstrapper`.
+- **`core/`** (`@gram/core`) — all backend domain logic: data services, auth, validation, suggestions, notifications (see `core/src/notifications/README.md` for the `NotificationProvider` plugin model), plugin registry, and database migrations (`core/src/data/migrations/*.sql`, applied automatically at boot via `postgres-migrations`). Exports the `DataAccessLayer` (DAL) and the `Bootstrapper`.
 - **`api/`** (`@gram/api`) — Express app + WebSocket server. Thin layer: routers under `api/src/resources/gram/v1/<entity>/router.ts` are wired in `api/src/app.ts` and delegate to services on the DAL. Real-time collaborative editing lives in `api/src/ws/`.
 - **`app/`** (`@gram/app`) — React 17 + Redux + Konva (canvas). Built with CRA / `react-scripts`. Diagram rendering uses Konva via `react-konva`.
 - **`config/`** (`@gram/config`) — composition root. `default.ts` builds a `GramConfiguration` whose `bootstrapProviders(dal)` returns all providers (auth, systems, teams, reviewers, suggestion sources, validation rules, asset folders, component classes, search providers, resource providers). To add functionality, register it here.

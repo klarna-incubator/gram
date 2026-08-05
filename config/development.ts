@@ -1,10 +1,12 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
-import { defaultConfig } from "./default.js";
+import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
+import { EmailNotificationProvider, emailProviderTemplates } from "@gram/email";
+import { renderMagicLinkTemplate } from "@gram/magiclink";
+import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus/dist/index.js";
 import log4js from "log4js";
-import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
-import { WikibaseActionItemExporter } from "@gram/wikibase/dist/index.js";
+import { defaultConfig } from "./default.js";
 
 const log = log4js.getLogger("DevelopmentConfig");
 
@@ -30,16 +32,7 @@ export const developmentConfig: GramConfiguration = {
   },
 
   notifications: {
-    providers: {
-      email: {
-        host: new ExposedSecret(""),
-        port: new ExposedSecret("25"),
-        password: new ExposedSecret(""),
-        user: new ExposedSecret(""),
-        overrideRecipient: "secure-development@klarna.com",
-        senderName: "[Development] Gram",
-      },
-    },
+    ...defaultConfig.notifications,
   },
 
   log: {
@@ -59,6 +52,28 @@ export const developmentConfig: GramConfiguration = {
 
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
+
+    providers.notificationProviders = [
+      new EmailNotificationProvider(
+        {
+          host: new EnvSecret("EMAIL_HOST"),
+          port: new EnvSecret("EMAIL_PORT"),
+          password: new EnvSecret("EMAIL_PASSWORD"),
+          user: new EnvSecret("EMAIL_USER"),
+          overrideRecipient: await new EnvSecret(
+            "EMAIL_OVERRIDE_RECIPIENT"
+          ).getValue(),
+          senderName:
+            (await new EnvSecret("EMAIL_SENDER_NAME").getValue()) ||
+            "[Development] Gram",
+        },
+        {
+          ...emailProviderTemplates,
+          "magic-link": renderMagicLinkTemplate,
+        },
+        developmentConfig.notifications
+      ),
+    ];
 
     providers.actionItemExporters = [...(providers.actionItemExporters || [])];
     log.debug(
@@ -80,14 +95,13 @@ export const developmentConfig: GramConfiguration = {
     }
 
     if (process.env.THREATSAURUS_URL) {
-      const threatsaurus = new ThreatsaurusSuggestionSource(
-        "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"
+      providers.suggestionSources?.push(
+        new ThreatsaurusSuggestionSource(process.env.THREATSAURUS_URL)
       );
-
-      providers.suggestionSources?.push(threatsaurus);
     } else {
       log.debug("Threatsaurus is not configured. Skipping");
     }
+
     log.debug(
       `Action item exporters: ${providers.actionItemExporters?.length}`
     );

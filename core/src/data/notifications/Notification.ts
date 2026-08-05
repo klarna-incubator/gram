@@ -1,11 +1,23 @@
-import { NotificationVariables } from "../../notifications/NotificationTemplate.js";
-import { NotificationTemplateKey } from "./NotificationInput.js";
+import {
+  NotificationTemplateKey,
+  NotificationVariables,
+} from "./NotificationInput.js";
 
-export type NotificationStatus = "new" | "pending" | "sent" | "failed";
+export type NotificationStatus =
+  | "new"
+  | "pending"
+  | "sent"
+  | "failed"
+  | "dropped";
 
 export class Notification {
   id?: number;
-  type: "email";
+  /**
+   * The key of the NotificationProvider this row is destined for (see
+   * NotificationProvider.key). One row is created per registered provider at
+   * queue time - this is not a hardcoded channel literal anymore.
+   */
+  type: string;
   status: NotificationStatus;
   sentAt?: number;
   createdAt?: number;
@@ -13,9 +25,10 @@ export class Notification {
 
   constructor(
     public templateKey: NotificationTemplateKey,
-    public variables: NotificationVariables
+    public variables: NotificationVariables,
+    type: string
   ) {
-    this.type = "email";
+    this.type = type;
     this.status = "new";
   }
 }

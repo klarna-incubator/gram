@@ -4,7 +4,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "private": true,
-  "version": "4.25.0",
+  "version": "4.26.0",
   "description": "Gram Configuration",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -37,6 +37,7 @@
     "@gram/klarna": "*",
     "@gram/kubernetes": "*",
     "@gram/ldap": "*",
+    "@gram/magiclink": "*",
     "@gram/oidc": "*",
     "@gram/stride": "*",
     "@gram/success-dashboard": "*",
@@ -44,6 +45,7 @@
     "@gram/threatlib": "*",
     "@gram/threatsaurus": "*",
     "@gram/wikibase": "*",
+    "@gram/email": "*",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {

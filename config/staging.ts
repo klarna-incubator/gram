@@ -1,9 +1,11 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
-import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
-import { defaultConfig } from "./default.js";
 import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
+import { EmailNotificationProvider, emailProviderTemplates } from "@gram/email";
 import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
+import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import log4js from "log4js";
+import { defaultConfig } from "./default.js";
+
 const log = log4js.getLogger("stagingConfig");
 
 export const stagingConfig: GramConfiguration = {
@@ -18,20 +20,26 @@ export const stagingConfig: GramConfiguration = {
   httpsProxy: process.env.HTTPS_PROXY,
 
   notifications: {
-    providers: {
-      email: {
-        host: new EnvSecret("EMAIL_HOST"),
-        port: new EnvSecret("EMAIL_PORT"),
-        password: new EnvSecret("EMAIL_PASSWORD"),
-        user: new EnvSecret("EMAIL_USER"),
-        overrideRecipient: "secure-development@klarna.com",
-        senderName: "[Staging] Gram",
-      },
-    },
+    ...defaultConfig.notifications,
   },
 
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
+
+    providers.notificationProviders = [
+      new EmailNotificationProvider(
+        {
+          host: new EnvSecret("EMAIL_HOST"),
+          port: new EnvSecret("EMAIL_PORT"),
+          password: new EnvSecret("EMAIL_PASSWORD"),
+          user: new EnvSecret("EMAIL_USER"),
+          overrideRecipient: "secure-development@klarna.com",
+          senderName: "[Staging] Gram",
+        },
+        emailProviderTemplates,
+        stagingConfig.notifications
+      ),
+    ];
 
     const threatsaurus = new ThreatsaurusSuggestionSource(
       "https://threatsaurus-eu.staging.c2c.klarna.net/v1/"

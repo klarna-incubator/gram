@@ -10,6 +10,10 @@ import {
 import { Review, ReviewStatus } from "./Review.js";
 import { ReviewSystemCompliance } from "./ReviewSystemCompliance.js";
 import { GramConnectionPool } from "../postgres.js";
+import {
+  buildReviewNotificationVariables,
+  lookupPreviousReviewer,
+} from "./reviewNotificationVariables.js";
 
 export function convertToReview(row: any): Review {
   const review = new Review(row.model_id, row.requested_by, row.status);
@@ -61,6 +65,29 @@ export class ReviewDataService extends EventEmitter {
   private pool: GramConnectionPool;
 
   log = log4js.getLogger("ReviewDataService");
+
+  /**
+   * Resolves this event's notification variables and queues it. Skips the
+   * (potentially expensive: team/user/system lookups) variable resolution when
+   * no NotificationProvider is registered, since queue() discards it anyway in
+   * that case - but still calls queue() unconditionally, since it's responsible
+   * for the actual no-op decision (and callers may rely on it always running).
+   */
+  private async queueReviewNotification(
+    templateKey: string,
+    review: Review,
+    buildExtraVariables?: () => Promise<Record<string, any>>
+  ): Promise<number[]> {
+    const variables =
+      this.dal.notificationProviders.size === 0
+        ? {}
+        : {
+            ...(await buildReviewNotificationVariables(this.dal, review)),
+            ...(buildExtraVariables ? await buildExtraVariables() : {}),
+          };
+
+    return this.dal.notificationService.queue({ templateKey, variables });
+  }
 
   /**
    * Get the review object by modelId
@@ -303,12 +330,7 @@ export class ReviewDataService extends EventEmitter {
     `;
     const { modelId, requestedBy, reviewedBy, status, note } = review;
 
-    await this.dal.notificationService.queue({
-      templateKey: "review-requested",
-      params: {
-        review,
-      },
-    });
+    await this.queueReviewNotification("review-requested", review);
 
     await this.pool.query(query, [
       modelId,
@@ -331,16 +353,15 @@ export class ReviewDataService extends EventEmitter {
     });
 
     if (!review) {
-      this.log.error(`No review exists for ${modelId}`);
+      this.log.error(`No review exists for modelId`, {
+        payload: {
+          modelId,
+        },
+      });
       return review;
     }
 
-    await this.dal.notificationService.queue({
-      templateKey: "review-canceled",
-      params: {
-        review,
-      },
-    });
+    await this.queueReviewNotification("review-canceled", review);
 
     return review;
   }
@@ -356,17 +377,20 @@ export class ReviewDataService extends EventEmitter {
     });
 
     if (!review) {
-      this.log.error(`No review exists for ${modelId}`);
+      this.log.error(`No review exists for modelId`, {
+        payload: {
+          modelId,
+        },
+      });
       return review;
     }
 
-    await this.dal.notificationService.queue({
-      templateKey: "review-declined",
-      params: {
-        review,
-        previousReviewer: oldReview?.reviewedBy,
-      },
-    });
+    await this.queueReviewNotification("review-declined", review, async () => ({
+      previousReviewer: await lookupPreviousReviewer(
+        this.dal,
+        oldReview?.reviewedBy
+      ),
+    }));
 
     return review;
   }
@@ -384,18 +408,17 @@ export class ReviewDataService extends EventEmitter {
       extras,
     });
     if (!review) {
-      this.log.error(`No review exists for ${modelId}`);
+      this.log.error(`No review exists for modelId`, {
+        payload: {
+          modelId,
+        },
+      });
       return review;
     }
 
     this.emit("approved", { review });
 
-    await this.dal.notificationService.queue({
-      templateKey: "review-approved",
-      params: {
-        review,
-      },
-    });
+    await this.queueReviewNotification("review-approved", review);
 
     return review;
   }
@@ -418,17 +441,24 @@ export class ReviewDataService extends EventEmitter {
       reviewedBy: newReviewer,
     });
     if (!review) {
-      this.log.error(`No review exists for ${modelId}`);
+      this.log.error(`No review exists for modelId`, {
+        payload: {
+          modelId,
+        },
+      });
       return review;
     }
 
-    await this.dal.notificationService.queue({
-      templateKey: "review-reviewer-changed",
-      params: {
-        review,
-        previousReviewer: oldReview.reviewedBy,
-      },
-    });
+    await this.queueReviewNotification(
+      "review-reviewer-changed",
+      review,
+      async () => ({
+        previousReviewer: await lookupPreviousReviewer(
+          this.dal,
+          oldReview.reviewedBy
+        ),
+      })
+    );
 
     return review;
   }
@@ -439,16 +469,15 @@ export class ReviewDataService extends EventEmitter {
       reviewedBy: requestingUser,
     });
     if (!review) {
-      this.log.error(`No review exists for ${modelId}`);
+      this.log.error(`No review exists for modelId`, {
+        payload: {
+          modelId,
+        },
+      });
       return review;
     }
 
-    await this.dal.notificationService.queue({
-      templateKey: "review-meeting-requested",
-      params: {
-        review,
-      },
-    });
+    await this.queueReviewNotification("review-meeting-requested", review);
 
     return review;
   }

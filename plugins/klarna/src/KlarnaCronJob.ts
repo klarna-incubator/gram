@@ -1,6 +1,7 @@
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
 import { ReviewStatus } from "@gram/core/dist/data/reviews/Review.js";
 import { convertToReview } from "@gram/core/dist/data/reviews/ReviewDataService.js";
+import { buildReviewNotificationVariables } from "@gram/core/dist/data/reviews/reviewNotificationVariables.js";
 import { LDAPCache } from "@gram/ldap/dist/index.js";
 import log4js from "log4js";
 import cron from "node-cron";
@@ -94,9 +95,7 @@ export class KlarnaCronJob {
 
       await this.dal.notificationService.queue({
         templateKey: "review-meeting-requested-reminder",
-        params: {
-          review,
-        },
+        variables: await buildReviewNotificationVariables(this.dal, review),
       });
     }
   }
@@ -122,7 +121,7 @@ export class KlarnaCronJob {
 
       // As a precaution, update the review before sending the email,
       // in case the email fails somehow and does not get saved as reminded (to avoid spam)
-      const updateQuery = `UPDATE reviews await
+      const updateQuery = `UPDATE reviews 
       SET requested_reminder_sent_count=$1 
       WHERE model_id=$2`;
       await this.dal.pool.query(updateQuery, [
@@ -130,14 +129,12 @@ export class KlarnaCronJob {
         review.modelId,
       ]);
 
-      const nid = await this.dal.notificationService.queue({
+      const nidsForReview = await this.dal.notificationService.queue({
         templateKey: "review-requested-reminder",
-        params: {
-          review,
-        },
+        variables: await buildReviewNotificationVariables(this.dal, review),
       });
 
-      nids.push(nid);
+      nids.push(...nidsForReview);
     }
     log.info(`Sent reminders with notification ids [${nids}]`);
   }

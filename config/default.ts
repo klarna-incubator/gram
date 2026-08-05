@@ -25,6 +25,7 @@ import {
   KlarnaSystemProvider,
 } from "@gram/klarna";
 import { KubernetesAssets, KubernetesComponentClasses } from "@gram/kubernetes";
+import { EmailNotificationProvider, emailProviderTemplates } from "@gram/email";
 import {
   LDAPBasicAuthIdentityProvider,
   LDAPGroupBasedAuthzProvider,
@@ -36,7 +37,6 @@ import { StrideSuggestionProvider } from "@gram/stride";
 import { SVGPornAssets, SVGPornComponentClasses } from "@gram/svgporn";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus";
 import { SystemRegistrySystemProvider } from "@gram/klarna";
-import defaultNotifications from "./notifications/index.js";
 
 export const LDAPUserSearchBase = "ou=People,dc=internal,dc=machines";
 export const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
@@ -76,16 +76,7 @@ export const defaultConfig: GramConfiguration = {
     },
   },
 
-  notifications: {
-    providers: {
-      email: {
-        host: new EnvSecret("EMAIL_HOST"),
-        port: new EnvSecret("EMAIL_PORT"),
-        password: new EnvSecret("EMAIL_PASSWORD"),
-        user: new EnvSecret("EMAIL_USER"),
-      },
-    },
-  },
+  notifications: {},
 
   log: {
     layout: "json",
@@ -356,7 +347,21 @@ export const defaultConfig: GramConfiguration = {
         ...KubernetesComponentClasses,
       ],
       identityProviders: [oidc, ldap],
-      notificationTemplates: [...defaultNotifications],
+      notificationProviders: [
+        new EmailNotificationProvider(
+          {
+            host: new EnvSecret("EMAIL_HOST"),
+            port: new EnvSecret("EMAIL_PORT"),
+            user: new EnvSecret("EMAIL_USER"),
+            password: new EnvSecret("EMAIL_PASSWORD"),
+          },
+          {
+            ...emailProviderTemplates,
+          
+          },
+          defaultConfig.notifications
+        ),
+      ],
       reviewerProvider,
       systemProvider: j1SystemProvider,
       systemPropertyProviders: [j1SysPropProvider, j1DomainProvider],

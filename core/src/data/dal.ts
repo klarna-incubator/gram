@@ -1,5 +1,5 @@
 import pg from "pg";
-import { TemplateHandler } from "../notifications/TemplateHandler.js";
+import { NotificationProvider } from "../notifications/NotificationProvider.js";
 import { SuggestionEngine } from "../suggestions/engine.js";
 import { ComponentClassHandler } from "./component-classes/index.js";
 import { SystemPropertyHandler } from "./system-property/SystemPropertyHandler.js";
@@ -59,7 +59,9 @@ export class DataAccessLayer {
   // Non-Database related handlers
   sysPropHandler: SystemPropertyHandler;
   ccHandler: ComponentClassHandler;
-  templateHandler: TemplateHandler;
+  // Registered NotificationProvider instances, keyed by their `key`. Populated by
+  // Bootstrapper.registerNotificationProviders() at boot.
+  notificationProviders: Map<string, NotificationProvider>;
   suggestionEngine: SuggestionEngine;
   userHandler: UserHandler;
   reviewerHandler: ReviewerHandler;
@@ -86,7 +88,7 @@ export class DataAccessLayer {
     this.pool = new GramConnectionPool(pool);
     this.sysPropHandler = new SystemPropertyHandler();
     this.ccHandler = new ComponentClassHandler();
-    this.templateHandler = new TemplateHandler();
+    this.notificationProviders = new Map();
     this.teamHandler = new TeamHandler();
     this.userHandler = new UserHandler();
     this.reviewerHandler = new ReviewerHandler();

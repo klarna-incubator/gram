@@ -1,5 +1,7 @@
 import { ldapQueryOne } from "@gram/ldap";
-import { Client, Entry } from "ldapts";
+
+type LdapClient = Parameters<typeof ldapQueryOne>[0];
+type LdapEntry = NonNullable<Awaited<ReturnType<typeof ldapQueryOne>>>;
 
 const LDAPTeamSearchBase = "ou=Klarna,dc=internal,dc=machines";
 
@@ -10,7 +12,7 @@ export type LDAPDomain = {
 };
 
 export async function getDomainMembers(
-  client: Client,
+  client: LdapClient,
   klarnaProjectCode: string
 ): Promise<string[]> {
   const domain = await ldapQueryOne(client, LDAPTeamSearchBase, {
@@ -36,5 +38,5 @@ export async function getDomainMembers(
 
   return users
     .filter((u) => u !== null)
-    .map((u) => (u as Entry)["mail"] as string);
+    .map((u) => (u as LdapEntry)["mail"] as string);
 }
