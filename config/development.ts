@@ -1,8 +1,6 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
-import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
-import { EmailNotificationProvider, emailProviderTemplates } from "@gram/email";
-import { renderMagicLinkTemplate } from "@gram/magiclink";
+import { KepNotifierNotificationProvider } from "@gram/klarna";
 import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus/dist/index.js";
 import log4js from "log4js";
@@ -33,6 +31,8 @@ export const developmentConfig: GramConfiguration = {
 
   notifications: {
     ...defaultConfig.notifications,
+    sessionBookingUrl:
+      "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1hnvc5_n46yA-vV5xabFX6QGrhpCF_SrOkwvoUui0u4ZKDDRIWhLKLjEi5M-ZohMlQTHdhVdTs",
   },
 
   log: {
@@ -53,26 +53,12 @@ export const developmentConfig: GramConfiguration = {
   async bootstrapProviders(dal) {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
+    // Development uses KEP Notifier only for review notifications. Email is
+    // intentionally disabled to avoid SMTP setup locally; staging/production
+    // register both EmailNotificationProvider and KepNotifierNotificationProvider
+    // in default.ts.
     providers.notificationProviders = [
-      new EmailNotificationProvider(
-        {
-          host: new EnvSecret("EMAIL_HOST"),
-          port: new EnvSecret("EMAIL_PORT"),
-          password: new EnvSecret("EMAIL_PASSWORD"),
-          user: new EnvSecret("EMAIL_USER"),
-          overrideRecipient: await new EnvSecret(
-            "EMAIL_OVERRIDE_RECIPIENT"
-          ).getValue(),
-          senderName:
-            (await new EnvSecret("EMAIL_SENDER_NAME").getValue()) ||
-            "[Development] Gram",
-        },
-        {
-          ...emailProviderTemplates,
-          "magic-link": renderMagicLinkTemplate,
-        },
-        developmentConfig.notifications
-      ),
+      new KepNotifierNotificationProvider(dal),
     ];
 
     providers.actionItemExporters = [...(providers.actionItemExporters || [])];

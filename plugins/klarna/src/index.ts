@@ -6,6 +6,7 @@ export { KlarnaReviewerProvider } from "./KlarnaReviewerProvider.js";
 export { KlarnaCronJob } from "./KlarnaCronJob.js";
 export { KlarnaSystemProvider } from "./KlarnaSystemProvider.js";
 export { SystemRegistrySystemProvider } from "./system/SystemRegistrySystemProvider.js";
+export { KepNotifierNotificationProvider } from "./notifications/KepNotifierNotificationProvider.js";
 import classes from "./classes.js";
 import * as url from "url";
 
