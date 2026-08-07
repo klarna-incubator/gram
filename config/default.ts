@@ -357,7 +357,6 @@ export const defaultConfig: GramConfiguration = {
           },
           {
             ...emailProviderTemplates,
-          
           },
           defaultConfig.notifications
         ),
