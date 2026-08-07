@@ -18,6 +18,7 @@ import {
   createJ1Client,
 } from "@gram/jupiterone";
 import {
+  KepNotifierNotificationProvider,
   KlarnaAssets,
   KlarnaComponentClasses,
   KlarnaCronJob,
@@ -76,7 +77,10 @@ export const defaultConfig: GramConfiguration = {
     },
   },
 
-  notifications: {},
+  notifications: {
+    sessionBookingUrl:
+      "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1hnvc5_n46yA-vV5xabFX6QGrhpCF_SrOkwvoUui0u4ZKDDRIWhLKLjEi5M-ZohMlQTHdhVdTs",
+  },
 
   log: {
     layout: "json",
@@ -360,6 +364,7 @@ export const defaultConfig: GramConfiguration = {
           },
           defaultConfig.notifications
         ),
+        new KepNotifierNotificationProvider(dal),
       ],
       reviewerProvider,
       systemProvider: j1SystemProvider,

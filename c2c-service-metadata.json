@@ -30,6 +30,9 @@
         },
         "GRAM_PUBLIC_URL": {
           "value": "https://gram-eu.staging.c2c.klarna.net"
+        },
+        "KEP_NOTIFIER_URL": {
+          "value": "https://kep-notifier-eu.staging.c2c.klarna.net"
         }
       }
     },
@@ -67,6 +70,9 @@
         },
         "GRAM_PUBLIC_URL": {
           "value": "https://gram.klarna.net"
+        },
+        "KEP_NOTIFIER_URL": {
+          "value": "https://kep-notifier-eu.production.c2c.klarna.net"
         }
       }
     }

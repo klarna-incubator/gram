@@ -1,8 +1,5 @@
 import type { GramConfiguration } from "@gram/core/dist/config/GramConfiguration.js";
 import { ExposedSecret } from "@gram/core/dist/config/ExposedSecret.js";
-import { EnvSecret } from "@gram/core/dist/config/EnvSecret.js";
-import { EmailNotificationProvider, emailProviderTemplates } from "@gram/email";
-import { renderMagicLinkTemplate } from "@gram/magiclink";
 import { SuccessDashboardActionItemExporter } from "@gram/success-dashboard/dist/index.js";
 import { ThreatsaurusSuggestionSource } from "@gram/threatsaurus/dist/index.js";
 import log4js from "log4js";
@@ -33,6 +30,8 @@ export const developmentConfig: GramConfiguration = {
 
   notifications: {
     ...defaultConfig.notifications,
+    sessionBookingUrl:
+      "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1hnvc5_n46yA-vV5xabFX6QGrhpCF_SrOkwvoUui0u4ZKDDRIWhLKLjEi5M-ZohMlQTHdhVdTs",
   },
 
   log: {
@@ -54,14 +53,14 @@ export const developmentConfig: GramConfiguration = {
     const providers = await defaultConfig.bootstrapProviders(dal);
 
     providers.notificationProviders = [
-      new EmailNotificationProvider(
+      /* new EmailNotificationProvider(
         {
           host: new EnvSecret("EMAIL_HOST"),
           port: new EnvSecret("EMAIL_PORT"),
           password: new EnvSecret("EMAIL_PASSWORD"),
           user: new EnvSecret("EMAIL_USER"),
           overrideRecipient: await new EnvSecret(
-            "EMAIL_OVERRIDE_RECIPIENT"
+            "EMAIL_OVERRIDE_RECIPIENT",
           ).getValue(),
           senderName:
             (await new EnvSecret("EMAIL_SENDER_NAME").getValue()) ||
@@ -71,8 +70,8 @@ export const developmentConfig: GramConfiguration = {
           ...emailProviderTemplates,
           "magic-link": renderMagicLinkTemplate,
         },
-        developmentConfig.notifications
-      ),
+        developmentConfig.notifications,
+      ), */
     ];
 
     providers.actionItemExporters = [...(providers.actionItemExporters || [])];
