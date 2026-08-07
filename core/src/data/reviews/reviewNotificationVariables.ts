@@ -119,6 +119,7 @@ export async function buildReviewNotificationVariables(
   ]);
 
   const modelInfo = {
+    modelId: review.modelId,
     link: linkToModel(review.modelId),
     name: `${system ? system.displayName + " - " : ""}${model.version}`,
   };
@@ -129,6 +130,7 @@ export async function buildReviewNotificationVariables(
     owner,
     fallbackReviewer,
     contact,
+    system,
     model: modelInfo,
     missingTeamEmail: missingTeamEmail(owner, review),
     review: {
