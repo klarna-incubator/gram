@@ -72,7 +72,7 @@
           "value": "https://gram.klarna.net"
         },
         "KEP_NOTIFIER_URL": {
-          "value": "ttps://kep-notifier-internal-eu.production.c2c.klarna.net"
+          "value": "https://kep-notifier-internal-eu.production.c2c.klarna.net"
         }
       }
     }
