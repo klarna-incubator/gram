@@ -30,37 +30,34 @@ export function configureLogging() {
       payload: {},
     };
 
-    const events = logEvent.data.map((event) => {
-      const line = { ...logLine };
+    for (const event of logEvent.data) {
       if (typeof event === "string") {
-        line.message = event;
-        return line;
+        logLine.message = event;
+        continue;
       }
 
       if (event) {
         if (event.payload) {
-          line.payload = event.payload;
+          logLine.payload = event.payload;
         }
 
         if (event.meta) {
-          line.meta = event.meta;
+          logLine.meta = event.meta;
         }
 
         if (event.correlation_id) {
-          line.correlation_id = event.correlation_id;
+          logLine.correlation_id = event.correlation_id;
         }
 
         // Serialize errors, otherwise JSON.stringify on Error returns {}
         if (event.message && event.stack) {
-          line.message = event.message;
-          line.payload.stack = event.stack;
+          logLine.message = event.message;
+          logLine.payload.stack = event.stack;
         }
       }
+    }
 
-      return line;
-    });
-
-    return events.map((event) => JSON.stringify(event)).join("");
+    return JSON.stringify(logLine);
   });
 
   const log4jconfig: log4js.Configuration = {
