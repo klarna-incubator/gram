@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { api } from "../api/gram/api";
+import { getAuthToken } from "../api/gram/util/authToken";
 
 const initialState = {
-  authenticated: false,
+  // Seeded from the stored token so the first render already knows whether the
+  // authenticated routes exist. Otherwise every reload renders the catch-all
+  // 404 until LoginRedirect's effect has run.
+  authenticated: getAuthToken() !== null,
 };
 
 const authSlice = createSlice({

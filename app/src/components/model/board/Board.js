@@ -293,14 +293,20 @@ export default function Board() {
       requestAnimationFrame(() => {
         const stagePos = getStagePointerPosition();
         if (editDataFlow) {
-          setEditDataFlow((prevNewDataFlow) => ({
-            ...prevNewDataFlow,
-            points: [
-              ...prevNewDataFlow.points.slice(0, -2),
-              stagePos.x,
-              stagePos.y,
-            ],
-          }));
+          setEditDataFlow((prevNewDataFlow) =>
+            // The dataflow may have been completed or cancelled between this
+            // frame being requested and it running.
+            prevNewDataFlow
+              ? {
+                  ...prevNewDataFlow,
+                  points: [
+                    ...prevNewDataFlow.points.slice(0, -2),
+                    stagePos.x,
+                    stagePos.y,
+                  ],
+                }
+              : prevNewDataFlow
+          );
         } else if (selectionRectangle.visible) {
           setSelectionRectangle((prevSelectionRectangle) => ({
             ...prevSelectionRectangle,
@@ -419,10 +425,16 @@ export default function Board() {
 
     if (editDataFlow) {
       const { x, y } = getStagePointerPosition();
-      setEditDataFlow((prevEditDataFlow) => ({
-        ...prevEditDataFlow,
-        points: [...prevEditDataFlow.points, x, y],
-      }));
+      setEditDataFlow((prevEditDataFlow) =>
+        // A click that completed the dataflow also bubbles up to the stage, so
+        // the dataflow can already be gone by the time this update is applied.
+        prevEditDataFlow
+          ? {
+              ...prevEditDataFlow,
+              points: [...prevEditDataFlow.points, x, y],
+            }
+          : prevEditDataFlow
+      );
     } else {
       hideStageDialog();
     }
@@ -460,6 +472,7 @@ export default function Board() {
         component &&
         component?.type !== COMPONENT_TYPE.TRUST_BOUNDARY
       ) {
+        e.cancelBubble = true;
         onMagnetClick(id)();
         return;
       }
@@ -496,11 +509,12 @@ export default function Board() {
         if (componentId === editDataFlow.startComponent.id) return;
         // Clicking a magnet with a dataFlow already defined =>
         // the dataFlow should finish.
-        editDataFlow.endComponent = {
-          id: componentId,
-        };
-
-        dispatch(addDataFlow(editDataFlow));
+        dispatch(
+          addDataFlow({
+            ...editDataFlow,
+            endComponent: { id: componentId },
+          })
+        );
         setEditDataFlow(false);
       }
     };

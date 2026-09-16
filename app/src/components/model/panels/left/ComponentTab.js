@@ -270,7 +270,7 @@ export function MatchComponentWithResource({
         id="match-resource-select-label"
         label="Match with a resource"
         fullWidth
-        value={resourceInput ? resourceInput.id : null}
+        value={resourceInput}
         onChange={handleChange}
         disabled={filteredResources.length === 0}
       >

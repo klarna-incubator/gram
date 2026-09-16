@@ -7,6 +7,7 @@ import {
   useGetSystemPermissionsQuery,
   useGetSystemQuery,
 } from "../../api/gram/system";
+import { errorStatus } from "../../api/gram/util/errorStatus";
 import { useTitle } from "../../hooks/useTitle";
 import { ErrorPage } from "../elements/ErrorPage";
 import { ModelList } from "../elements/list/ModelList";
@@ -46,10 +47,10 @@ export function System() {
   }
 
   if (isError) {
-    return <ErrorPage code={error.originalStatus} />;
+    return <ErrorPage code={errorStatus(error)} />;
   }
 
-  if (!permissions.includes(PERMISSIONS.READ)) {
+  if (!permissions?.includes(PERMISSIONS.READ)) {
     return <ErrorPage code={403} />;
   }
 
@@ -63,7 +64,7 @@ export function System() {
 
         <Typography className="dimmed">
           {system.owners?.map((owner) => (
-            <Link className="dimmed" to={`/team/${owner.id}`}>
+            <Link key={owner.id} className="dimmed" to={`/team/${owner.id}`}>
               {owner.name}
             </Link>
           ))}{" "}

@@ -35,7 +35,7 @@ jobs:
 
       - name: "Clean install"
         shell: bash
-        run: npm ci
+        run: npm ci --verbose
 
       - name: "Build"
         shell: bash

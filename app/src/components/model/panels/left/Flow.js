@@ -85,7 +85,14 @@ function DynamicTextField({ value, onChange, label, attribute, ...props }) {
   );
 }
 
-function DynamicDescription({ value, onChange, label, attribute, ...props }) {
+function DynamicDescription({
+  value,
+  onChange,
+  label,
+  attribute,
+  disabled,
+  ...props
+}) {
   const [val, setVal] = useState(value);
 
   useEffect(() => {
@@ -95,14 +102,12 @@ function DynamicDescription({ value, onChange, label, attribute, ...props }) {
   return (
     <EditableDescription
       {...props}
-      multiline={attribute.multiline}
       variant="outlined"
       description={val}
-      label={label}
-      updateDescription={(e) => setVal(e)}
-      onKeyDown={shouldBlur}
-      onBlur={(e) => {
-        onChange(e);
+      readOnly={disabled}
+      updateDescription={(description) => {
+        setVal(description);
+        onChange({ target: { value: description } });
       }}
       showPreviewTitle
     />

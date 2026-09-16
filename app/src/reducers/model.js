@@ -74,7 +74,11 @@ const mutatorReducer = (state = initialState, action) => {
       };
 
     case ADD_DATA_FLOW:
-      return { ...state, dataFlows: [...state.dataFlows, action.dataFlow] };
+      return {
+        ...state,
+        dataFlows: [...state.dataFlows, action.dataFlow],
+        remote: !!action.remote,
+      };
 
     case MOVE_NODES:
       const movedComponentsState = state.components.map((c) => {
