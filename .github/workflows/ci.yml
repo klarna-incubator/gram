@@ -10,11 +10,6 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [20, 22, 24]
-
     # Service containers to run with `container-job`
     services:
       postgres:
@@ -31,11 +26,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
 
       - name: "Clean install"
         shell: bash
-        run: npm ci
+        run: npm ci --verbose
 
       - name: "Build"
         shell: bash
