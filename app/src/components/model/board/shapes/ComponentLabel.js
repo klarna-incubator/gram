@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text } from "react-konva";
 import { Html } from "react-konva-utils";
 import { useReadOnly } from "../../../../hooks/useReadOnly";
@@ -16,10 +16,15 @@ export function ComponentLabel({
   onClick,
 }) {
   const readOnly = useReadOnly();
-  const editNameRef = useRef();
   const patchComponent = usePatchComponent(componentId);
   const [newName, setNewName] = useState(name);
   const [editing, setEditing] = useState(false);
+
+  // The input below is rendered into a separate React root by <Html>, which
+  // mounts it a microtask after the click handler returns — so there is no
+  // point at which the handler can select it directly. A callback ref selects
+  // the text at the moment the input actually attaches.
+  const selectOnMount = useCallback((input) => input?.select(), []);
 
   useEffect(() => {
     setNewName(name);
@@ -44,7 +49,6 @@ export function ComponentLabel({
     onClick && onClick(e);
     e.cancelBubble = true; // Prevents the event from bubbling up to component and selecting it, which would cause re-render and loss of focus.
     setEditing(true);
-    editNameRef.current.select();
   }
 
   return (
@@ -92,7 +96,7 @@ export function ComponentLabel({
               color: "black",
             }}
             spellCheck={false}
-            ref={editNameRef}
+            ref={selectOnMount}
             value={newName}
             onChange={(e) => {
               setNewName(e.target.value);

@@ -131,7 +131,7 @@ export default function App() {
                     <Route path="/admin" element={<AdminPage />} />
                   </>
                 )}
-                <Route component={() => <ErrorPage code={404} />} />
+                <Route path="*" element={<ErrorPage code={404} />} />
               </Routes>
             </Box>
           </Box>

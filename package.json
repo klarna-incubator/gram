@@ -3,8 +3,8 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "lerna run test",
-    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build",
+    "test": "lerna run --concurrency 1 test",
+    "build": "lerna run --scope=@gram/api --scope=@gram/app --include-dependencies build --concurrency 1",
     "build-backend": "lerna run --scope=@gram/api --include-dependencies build",
     "build-all": "lerna run build",
     "dev": "npm run build-backend && lerna run start --parallel",
@@ -14,7 +14,7 @@
     "lint-fix": "lerna run lint-fix",
     "start-frontend": "npm run -w app start",
     "start-backend": "npm run -w api start",
-    "docker-start": "SERVE_FRONTEND=yesplease node api/dist/index.js",
+    "docker-start": "NODE_ENV=$C2C_SERVICE_STAGE SERVE_FRONTEND=yesplease node api/dist/index.js",
     "version": "lerna version --force-publish",
     "fix-firefox-svg": "tsx scripts/fix-firefox-svg.ts"
   },
@@ -62,5 +62,14 @@
     "@tsconfig/node24": "^24.0.4",
     "log4js": "^6.9.1",
     "tsx": "^4.19.3"
+  },
+  "overrides": {
+    "form-data": "^4.0.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-test-renderer": "^18.3.1"
+  },
+  "volta": {
+    "node": "24.15.0"
   }
 }

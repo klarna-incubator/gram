@@ -8,6 +8,7 @@ import {
   useGetModelPermissionsQuery,
   useGetModelQuery,
 } from "../../api/gram/model";
+import { errorStatus } from "../../api/gram/util/errorStatus";
 import { useModelSync } from "../../hooks/useModelSync";
 import { useOpenModal } from "../../hooks/useOpenModal";
 import { webSocketActions } from "../../redux/webSocketSlice";
@@ -98,7 +99,7 @@ export function Model() {
   useModelSync();
 
   if (isError) {
-    return <ErrorPage code={error.originalStatus} />;
+    return <ErrorPage code={errorStatus(error)} />;
   }
 
   if (model?.id !== id) return <LoadingPage isLoading={true} />;
