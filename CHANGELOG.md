@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.27.0](https://github.com/klarna-incubator/gram/compare/v4.26.0...v4.27.0) (2026-09-17)
+
+### Bug Fixes
+
+- **api:** return empty resources for models without a systemId ([22b8ff6](https://github.com/klarna-incubator/gram/commit/22b8ff6626998a18bae6f6099e7af466c9127af6))
+- **core:** remove trailing commas for prettier compliance ([1be0218](https://github.com/klarna-incubator/gram/commit/1be02181ccc06d93e5167fb0b6f0815323c288f0))
+- **logger:** merge multi-arg log calls into a single JSON line ([40849f5](https://github.com/klarna-incubator/gram/commit/40849f564c123f36df61aa42d3f8af6d7c515deb))
+
+### Features
+
+- **core:** expose modelId and system in review notification variables ([91bc5a3](https://github.com/klarna-incubator/gram/commit/91bc5a387c7a64107a21561ccaa9339b651b50de))
+
 # [4.26.0](https://github.com/klarna-incubator/gram/compare/v4.25.0...v4.26.0) (2026-08-05)
 
 ### Bug Fixes

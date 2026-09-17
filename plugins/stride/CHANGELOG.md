@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.27.0](/compare/v4.26.0...v4.27.0) (2026-09-17)
+
+**Note:** Version bump only for package @gram/stride
+
 # [4.26.0](/compare/v4.25.0...v4.26.0) (2026-08-05)
 
 **Note:** Version bump only for package @gram/stride

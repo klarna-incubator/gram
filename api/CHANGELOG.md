@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.27.0](https://github.com/klarna/gram/compare/v4.26.0...v4.27.0) (2026-09-17)
+
+### Bug Fixes
+
+- **api:** return empty resources for models without a systemId ([22b8ff6](https://github.com/klarna/gram/commit/22b8ff6626998a18bae6f6099e7af466c9127af6))
+
 # [4.26.0](https://github.com/klarna/gram/compare/v4.25.0...v4.26.0) (2026-08-05)
 
 ### Bug Fixes
