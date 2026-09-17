@@ -283,7 +283,9 @@ export function ResourceList({
         }}
       >
         <Typography sx={{ textAlign: "center" }}>
-          No resource found for this system.
+          {systemInScope
+            ? "No resource found for this system."
+            : "This model is not attached to a system, so it has no resources."}
         </Typography>
       </Box>
     );

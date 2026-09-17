@@ -1,4 +1,6 @@
 import { DataAccessLayer } from "@gram/core/dist/data/dal.js";
+import Model from "@gram/core/dist/data/models/Model.js";
+import { randomUUID } from "crypto";
 import { createTestApp } from "../../../../test-util/app.js";
 import { sampleUserToken } from "../../../../test-util/sampleTokens.js";
 import { testResourceProvider } from "../../../../test-util/testResourceHandler.js";
@@ -9,10 +11,14 @@ describe("getResources", () => {
   let token: string;
   let dal: DataAccessLayer;
   let validModelId: string;
+  let standaloneModelId: string;
   beforeAll(async () => {
     ({ app, dal } = await createTestApp());
     token = await sampleUserToken();
     validModelId = await createSampleModel(dal);
+
+    const standaloneModel = new Model(null, "standalone-version", "root");
+    standaloneModelId = await dal.modelService.create(standaloneModel);
     //dal.resourceHandler.register(testResourceProvider);
   });
 
@@ -40,6 +46,21 @@ describe("getResources", () => {
       .set("Authorization", token);
     expect(Array.isArray(res.body)).toBeTruthy();
     expect(res.body.length).toEqual(0);
+  });
+
+  it("should return 200 and an empty list for a model without a systemId", async () => {
+    const res = await request(app)
+      .get("/api/v1/resources/" + standaloneModelId)
+      .set("Authorization", token);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([]);
+  });
+
+  it("should return 404 when the model does not exist", async () => {
+    const res = await request(app)
+      .get("/api/v1/resources/" + randomUUID())
+      .set("Authorization", token);
+    expect(res.status).toBe(404);
   });
 
   it("should return the resources from the registered resource providers", async () => {
