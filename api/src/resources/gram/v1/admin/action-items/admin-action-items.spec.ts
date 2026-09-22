@@ -316,4 +316,42 @@ describe("admin action-items endpoints", () => {
       expect(res.body.results[0].outcome).toBe("alreadyExported");
     });
   });
+
+  describe("GET /api/v1/admin/action-items/failures", () => {
+    it("400 for an unsupported filter rather than silently ignoring it", async () => {
+      const res = await request(app)
+        .get("/api/v1/admin/action-items/failures?modelID=oops")
+        .set("Authorization", adminToken);
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    });
+
+    it("200 when modelId is spelled correctly", async () => {
+      const res = await request(app)
+        .get(`/api/v1/admin/action-items/failures?modelId=${modelId}`)
+        .set("Authorization", adminToken);
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("failures");
+      expect(res.body.filters.modelId).toBe(modelId);
+    });
+  });
+
+  describe("GET /api/v1/admin/action-items/failures/count", () => {
+    it("400 for an unsupported filter rather than silently ignoring it", async () => {
+      const res = await request(app)
+        .get("/api/v1/admin/action-items/failures/count?modelID=oops")
+        .set("Authorization", adminToken);
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    });
+
+    it("200 when modelId is spelled correctly", async () => {
+      const res = await request(app)
+        .get(`/api/v1/admin/action-items/failures/count?modelId=${modelId}`)
+        .set("Authorization", adminToken);
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("count");
+      expect(res.body.filters.modelId).toBe(modelId);
+    });
+  });
 });
