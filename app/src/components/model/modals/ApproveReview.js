@@ -22,6 +22,7 @@ import {
 } from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
+import { RequestError } from "../../elements/RequestError";
 import { PERMISSIONS } from "../constants";
 import { ActionItemList } from "../panels/left/ActionItemList";
 
@@ -107,16 +108,7 @@ export function ApproveReview({ modelId }) {
             </DialogContentText>
           </>
         )}
-        {isError && (
-          <>
-            <DialogContentText variant="h6">
-              Something went wrong :(
-            </DialogContentText>
-            <DialogContentText variant="caption">
-              Error: {error}
-            </DialogContentText>
-          </>
-        )}
+        {isError && <RequestError error={error} />}
       </DialogContent>
       <DialogActions>
         <Button

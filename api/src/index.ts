@@ -19,9 +19,9 @@ import { version } from "./util/version.js";
 // Defaults - deployments can override any of these via
 // config.notifications.intervals.
 const DEFAULT_NOTIFICATION_INTERVAL = 1000 * 30; // every 30 seconds
-const DEFAULT_NOTIFICATION_RETRY_INTERVAL = 1000 * 60; // every minute
-const DEFAULT_NOTIFICATION_RETENTION_INTERVAL = 1000 * 60 * 60 * 24 * 7; // weekly
-const DEFAULT_NOTIFICATION_RETENTION_WINDOW = 1000 * 60 * 60 * 24 * 30; // one month
+const DEFAULT_NOTIFICATION_RETRY_INTERVAL = 1000 * 60 * 60 * 2; // every 2 hours
+const DEFAULT_NOTIFICATION_CLEAN_UP_INTERVAL = 1000 * 60 * 60 * 24; // 1 day
+const DEFAULT_NOTIFICATION_RETENTION_WINDOW = 1000 * 60 * 60 * 24 * 7; // 1 week
 
 const log = log4js.getLogger("api");
 
@@ -37,13 +37,17 @@ const listen = async () => {
   const dal = await bootstrap();
 
   const intervals = config.notifications.intervals;
+  // How often to check for new notifications
   const NOTIFICATION_INTERVAL =
     intervals?.notificationInterval ?? DEFAULT_NOTIFICATION_INTERVAL;
+  // How often to retry failed notifications
   const NOTIFICATION_RETRY_INTERVAL =
     intervals?.notificationRetryInterval ?? DEFAULT_NOTIFICATION_RETRY_INTERVAL;
-  const NOTIFICATION_RETENTION_INTERVAL =
-    intervals?.notificationRetentionInterval ??
-    DEFAULT_NOTIFICATION_RETENTION_INTERVAL;
+  // How often to delete old notifications
+  const NOTIFICATION_CLEAN_UP_INTERVAL =
+    intervals?.notificationCleanUpInterval ??
+    DEFAULT_NOTIFICATION_CLEAN_UP_INTERVAL;
+  // How long to keep old notifications before deleting them
   const NOTIFICATION_RETENTION_WINDOW =
     intervals?.notificationRetentionWindow ??
     DEFAULT_NOTIFICATION_RETENTION_WINDOW;
@@ -73,8 +77,8 @@ const listen = async () => {
       notificationHandler(dal.notificationService, dal.notificationProviders),
     NOTIFICATION_INTERVAL
   );
-  // Retry previously-failed notifications every minute - no attempt limit or
-  // backoff, every currently-failed row gets another shot on every run.
+  // Retry previously-failed notifications based on the retry interval - no attempt limit or
+  // backoff, every currently-failed notification gets another shot on every run.
   setInterval(
     () =>
       notificationRetryHandler(
@@ -84,14 +88,15 @@ const listen = async () => {
     NOTIFICATION_RETRY_INTERVAL
   );
   setInterval(() => dal.validationEngine.cache.expire(), 10 * 60 * 1000); // Clean up the Validation cache every 10 minutes
-  // Delete notification rows older than one month, regardless of status - a
+
+  // Delete notification rows older than the retention window, regardless of status - a
   // retention backstop, not a substitute for the failed/stalled health checks.
   setInterval(
     () =>
       dal.notificationService.deleteOlderThan(
         new Date(Date.now() - NOTIFICATION_RETENTION_WINDOW)
       ),
-    NOTIFICATION_RETENTION_INTERVAL
+    NOTIFICATION_CLEAN_UP_INTERVAL
   );
 };
 

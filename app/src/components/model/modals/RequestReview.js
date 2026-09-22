@@ -15,6 +15,7 @@ import { useGetModelPermissionsQuery } from "../../../api/gram/model";
 import { useCreateReviewMutation } from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
+import { RequestError } from "../../elements/RequestError";
 import { ReviewerDropdown } from "../../elements/ReviewerDropdown";
 import { PERMISSIONS } from "../constants";
 
@@ -72,12 +73,7 @@ export function RequestReview({ modelId }) {
             </Typography>
           </>
         )}
-        {isError && (
-          <>
-            <Typography variant="h6">Something went wrong :(</Typography>
-            <Typography variant="caption">Error: {error}</Typography>
-          </>
-        )}
+        {isError && <RequestError error={error} />}
       </DialogContent>
       <DialogActions>
         <Button

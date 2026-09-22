@@ -11,8 +11,8 @@ At this time, the threat model was not approved.
 You can access and review the threat model here: {{model.link}}
 
 To get approval, {{reviewer.name}} has requested that you schedule a review session to review the threat model.
-{{#if sessionBookingLink}}
-You can book a session here: {{sessionBookingLink}}
+{{#if sessionBookingUrl}}
+You can book a session here: {{sessionBookingUrl}}
 {{/if}}
 
 {{#if review.note}}

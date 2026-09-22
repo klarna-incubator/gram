@@ -30,6 +30,7 @@ async function processNotifications(
   providers: Map<string, NotificationProvider>,
   notifications: Notification[]
 ) {
+  // Process notifications and get the outcome of each notification
   const outcomes = await Promise.all(
     notifications.map(async (notification) => {
       const id = notification.id as number;
@@ -57,11 +58,13 @@ async function processNotifications(
     })
   );
 
+  // Group notifications by outcome and update the status of the notifications in database
   const idsByOutcome: Record<DeliveryOutcome, number[]> = {
     sent: [],
     failed: [],
     dropped: [],
   };
+
   outcomes.forEach(({ id, outcome }) => idsByOutcome[outcome].push(id));
 
   if (idsByOutcome.sent.length > 0) {

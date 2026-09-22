@@ -14,6 +14,7 @@ import { useGetModelPermissionsQuery } from "../../../api/gram/model";
 import { useRequestReviewMeetingMutation } from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
+import { RequestError } from "../../elements/RequestError";
 import { PERMISSIONS } from "../constants";
 
 export function RequestMeeting({ modelId }) {
@@ -58,12 +59,7 @@ export function RequestMeeting({ modelId }) {
             </Typography>
           </>
         )}
-        {isError && (
-          <>
-            <Typography variant="h6">Something went wrong :(</Typography>
-            <Typography variant="caption">Error: {error}</Typography>
-          </>
-        )}
+        {isError && <RequestError error={error} />}
       </DialogContent>
       <DialogActions>
         <Button

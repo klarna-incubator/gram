@@ -16,6 +16,7 @@ import { useGetModelPermissionsQuery } from "../../../api/gram/model";
 import { useCancelReviewMutation } from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
+import { RequestError } from "../../elements/RequestError";
 import { PERMISSIONS } from "../../model/constants";
 
 export function CancelReview(props) {
@@ -66,16 +67,7 @@ export function CancelReview(props) {
             </DialogContentText>
           </>
         )}
-        {isError && (
-          <>
-            <DialogContentText variant="h6">
-              Something went wrong :(
-            </DialogContentText>
-            <DialogContentText variant="caption">
-              Error: {error}
-            </DialogContentText>
-          </>
-        )}
+        {isError && <RequestError error={error} />}
       </DialogContent>
       <DialogActions>
         <Button

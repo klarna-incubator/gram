@@ -56,7 +56,7 @@ const reviewApi = api.injectEndpoints({
         method: "POST",
         body: { ...fields },
       }),
-      transformResponse: (response, meta, arg) => response.review,
+      transformResponse: (response, meta, arg) => response.result,
       invalidatesTags: ["Review", "ModelPermissions", "Models", "System"],
     }),
     declineReview: build.mutation({
@@ -65,7 +65,7 @@ const reviewApi = api.injectEndpoints({
         method: "POST",
         body: { ...fields },
       }),
-      transformResponse: (response, meta, arg) => response.review,
+      transformResponse: (response, meta, arg) => response.result,
       invalidatesTags: ["Review", "ModelPermissions", "Models", "System"],
     }),
     cancelReview: build.mutation({
@@ -74,7 +74,7 @@ const reviewApi = api.injectEndpoints({
         method: "POST",
         body: { ...fields },
       }),
-      transformResponse: (response, meta, arg) => response.review,
+      transformResponse: (response, meta, arg) => response.result,
       invalidatesTags: ["Review", "ModelPermissions", "Models", "System"],
     }),
     requestReviewMeeting: build.mutation({
@@ -82,7 +82,7 @@ const reviewApi = api.injectEndpoints({
         url: `/reviews/${modelId}/request-meeting`,
         method: "POST",
       }),
-      transformResponse: (response, meta, arg) => response.review,
+      transformResponse: (response, meta, arg) => response.result,
       invalidatesTags: ["Review", "ModelPermissions", "Models", "System"],
     }),
     changeReviewer: build.mutation({
@@ -93,7 +93,7 @@ const reviewApi = api.injectEndpoints({
           newReviewer,
         },
       }),
-      transformResponse: (response, meta, arg) => response.review,
+      transformResponse: (response, meta, arg) => response.result,
       invalidatesTags: ["Review", "ModelPermissions", "Models", "System"],
     }),
     reviewers: build.query({
