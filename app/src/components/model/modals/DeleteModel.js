@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteModelMutation } from "../../../api/gram/model";
 import { useHasModelPermissionsWithId } from "../../../hooks/useHasModelPermissions";
 import { modalActions } from "../../../redux/modalSlice";
+import { RequestError } from "../../elements/RequestError";
 import { PERMISSIONS } from "../constants";
 
 export function DeleteModel({ modelId }) {
@@ -65,12 +66,7 @@ export function DeleteModel({ modelId }) {
           {result.isLoading && "The model is being deleted, please hold on."}
           {result.isSuccess &&
             "The threat model was deleted. You will be redirected shortly. 👋"}
-          {result.isError && (
-            <>
-              <Typography variant="h6">Something went wrong :(</Typography>
-              <Typography variant="caption">Error: {result.error}</Typography>
-            </>
-          )}
+          {result.isError && <RequestError error={result.error} />}
         </>
       </DialogContent>
       <DialogActions>

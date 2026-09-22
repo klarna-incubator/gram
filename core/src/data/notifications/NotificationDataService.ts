@@ -18,6 +18,60 @@ function convertToNotification(row: any) {
   return model;
 }
 
+export type NotificationListFilter = {
+  status?: NotificationStatus;
+  template_key?: string;
+  type?: string;
+  /**
+   * Matched against `variables -> model ->> modelId`. There is no model_id
+   * column: review-lifecycle events carry the model they concern inside their
+   * resolved variables (see buildReviewNotificationVariables).
+   */
+  modelId?: string;
+  createdAfter?: Date | string;
+  createdBefore?: Date | string;
+  limit: number;
+  offset: number;
+};
+
+function notificationListFilterClause(filter: NotificationListFilter) {
+  const conditions: string[] = [];
+  const params: (string | Date | number)[] = [];
+
+  if (filter.status) {
+    params.push(filter.status);
+    conditions.push(`status = $${params.length}`);
+  }
+  if (filter.template_key) {
+    params.push(filter.template_key);
+    conditions.push(`template_key = $${params.length}`);
+  }
+  if (filter.type) {
+    params.push(filter.type);
+    conditions.push(`type = $${params.length}`);
+  }
+  if (filter.modelId) {
+    params.push(filter.modelId);
+    conditions.push(`variables -> 'model' ->> 'modelId' = $${params.length}`);
+  }
+  if (filter.createdAfter) {
+    params.push(filter.createdAfter);
+    conditions.push(`created_at >= $${params.length}::timestamptz`);
+  }
+  if (filter.createdBefore) {
+    params.push(filter.createdBefore);
+    conditions.push(`created_at <= $${params.length}::timestamptz`);
+  }
+
+  const where =
+    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+  params.push(filter.limit, filter.offset);
+  const suffix = `${where} ORDER BY created_at DESC, id DESC LIMIT $${
+    params.length - 1
+  }::int OFFSET $${params.length}::int`;
+  return { suffix, params };
+}
+
 export class NotificationDataService {
   constructor(private dal: DataAccessLayer) {
     this.pool = dal.pool;
@@ -168,6 +222,23 @@ export class NotificationDataService {
     return convertToNotification(res.rows[0]);
   }
 
+  async listNotifications(
+    filter: NotificationListFilter = {
+      status: undefined,
+      template_key: undefined,
+      type: undefined,
+      createdAfter: undefined,
+      createdBefore: undefined,
+      limit: 10,
+      offset: 0,
+    }
+  ): Promise<Notification[]> {
+    const { suffix, params } = notificationListFilterClause(filter);
+    const query = `SELECT * FROM notifications ${suffix}`;
+    const res = await this.pool.query(query, params);
+    return res.rows.map(convertToNotification);
+  }
+
   /**
    * Deletes every notification row created before the given cutoff, regardless of
    * its status - `sent`, `failed`, `dropped`, and even still-unresolved
@@ -181,6 +252,14 @@ export class NotificationDataService {
     const res = await this.pool.query(
       `DELETE FROM notifications WHERE created_at < $1`,
       [cutoff]
+    );
+    return res.rowCount ?? 0;
+  }
+
+  async deleteNotificationById(id: number): Promise<number> {
+    const res = await this.pool.query(
+      `DELETE FROM notifications WHERE id = $1`,
+      [id]
     );
     return res.rowCount ?? 0;
   }

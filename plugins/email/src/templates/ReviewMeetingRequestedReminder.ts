@@ -9,8 +9,8 @@ Hi {{owner.name}}{{#if ownerIsNotRequester}} and {{requester.name}}{{/if}}!
 
 We would like to remind you that you still have to schedule a threat model meeting for {{model.name}} and
 it has been more than {{remindEveryXDays}} days since the meeting was requested ({{review.meetingRequestedAt}}).
-{{#if sessionBookingLink}}
-You can book a session here: {{sessionBookingLink}}
+{{#if sessionBookingUrl}}
+You can book a session here: {{sessionBookingUrl}}
 {{/if}}
 
 If you no longer need the review, please use the cancel review option on the left side panel.

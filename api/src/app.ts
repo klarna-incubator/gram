@@ -46,6 +46,7 @@ import { tokenRouter } from "./resources/gram/v1/token/router.js";
 import { userRouter } from "./resources/gram/v1/user/router.js";
 import { validationRouter } from "./resources/gram/v1/validation/router.js";
 import { initSentry } from "./util/sentry.js";
+import { adminNotificationRouter } from "./resources/gram/v1/admin/notifications/router.js";
 
 export async function createApp(
   dal: DataAccessLayer
@@ -173,6 +174,11 @@ export async function createApp(
     "/admin/action-items",
     authz.is(Role.Admin),
     adminActionItemsRouter(dal)
+  );
+  authenticatedRoutes.use(
+    "/admin/notifications",
+    authz.is(Role.Admin),
+    adminNotificationRouter(dal)
   );
 
   app.use("/api/v1", unauthenticatedRoutes);

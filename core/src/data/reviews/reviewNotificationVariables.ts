@@ -140,7 +140,7 @@ export async function buildReviewNotificationVariables(
       meetingRequestedAt: review.meetingRequestedAt?.toLocaleDateString(),
     },
     playbookLink: config.notifications.playbookUrl,
-    sessionBookingLink: config.notifications.sessionBookingUrl,
+    sessionBookingUrl: config.notifications.sessionBookingUrl,
     reassignAfterDays: config.notifications.reviewReminders?.reassignAfterDays,
   };
 }

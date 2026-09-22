@@ -14,3 +14,18 @@ export function errorStatus(error) {
   if (Number.isInteger(error.originalStatus)) return error.originalStatus;
   return undefined;
 }
+
+/**
+ * Renders an RTK Query error as a string safe to pass to React as a child.
+ *
+ * An RTK Query error is always an object, so rendering it directly throws
+ * "Objects are not valid as a React child". Only the status is surfaced: the
+ * response body can carry internal detail such as messages and stack traces,
+ * which belong in the API logs rather than the UI.
+ */
+export function errorMessage(error) {
+  if (!error) return undefined;
+
+  const status = errorStatus(error);
+  return status ? `Request failed with status ${status}` : "Request failed";
+}

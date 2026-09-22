@@ -79,7 +79,7 @@ export interface NotificationConfiguration {
     // How often to retry previously-failed notifications.
     notificationRetryInterval?: number;
     // How often to run the notification retention cleanup sweep.
-    notificationRetentionInterval?: number;
+    notificationCleanUpInterval?: number;
     // How old (in ms) a notification row must be before the retention sweep deletes it.
     notificationRetentionWindow?: number;
   };

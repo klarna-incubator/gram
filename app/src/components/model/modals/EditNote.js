@@ -19,6 +19,7 @@ import {
 } from "../../../api/gram/review";
 import { modalActions } from "../../../redux/modalSlice";
 import { LoadingPage } from "../../elements/loading/loading-page/LoadingPage";
+import { RequestError } from "../../elements/RequestError";
 import { PERMISSIONS } from "../constants";
 
 export function EditNote({ modelId }) {
@@ -81,12 +82,7 @@ export function EditNote({ modelId }) {
           value={localNote}
           onChange={(e) => setLocalNote(e.target.value)}
         />
-        {isError && (
-          <>
-            <Typography variant="h6">Something went wrong :(</Typography>
-            <Typography variant="caption">Error: {error}</Typography>
-          </>
-        )}
+        {isError && <RequestError error={error} />}
       </DialogContent>
       <DialogActions>
         <Button
