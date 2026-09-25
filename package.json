@@ -66,8 +66,7 @@
   "overrides": {
     "form-data": "^4.0.6",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-test-renderer": "^18.3.1"
+    "react-dom": "^18.3.1"
   },
   "volta": {
     "node": "24.15.0"
