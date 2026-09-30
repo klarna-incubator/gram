@@ -75,13 +75,21 @@ export interface NotificationConfiguration {
    */
   intervals?: {
     // How often to poll and send newly queued notifications.
-    notificationInterval?: number;
+    notificationNewInterval?: number;
     // How often to retry previously-failed notifications.
-    notificationRetryInterval?: number;
+    notificationFailedInterval?: number;
+    // How often to confirm stale pending notifications.
+    notificationPendingInterval?: number;
+    // Minimum age (ms) of a pending row before the confirmation poller selects it.
+    notificationPendingLease?: number;
+    // Still-pending confirmation polls before the row is dropped.
+    notificationConfirmationAttemptCap?: number;
+    // HTTP timeout (ms) for provider calls that must finish inside the pending lease.
+    notificationHttpTimeout?: number;
     // How often to run the notification retention cleanup sweep.
     notificationCleanUpInterval?: number;
     // How old (in ms) a notification row must be before the retention sweep deletes it.
-    notificationRetentionWindow?: number;
+    notificationCleanUpThreshold?: number;
   };
 }
 

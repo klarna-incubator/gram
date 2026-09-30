@@ -139,6 +139,22 @@ describe("NotificationDataService implementation", () => {
       const notifications = await data.pollFailedNotifications();
       expect(notifications.map((n) => n.id)).not.toContain(nid);
     });
+
+    it("should not claim failed rows that already have a provider ref", async () => {
+      const [nid] = await data.queue({
+        templateKey: "review-approved",
+        variables: { param: "hello" },
+      });
+      await data.updateStatus([nid], "failed");
+      await data.persistProviderRef(nid, "req-1");
+
+      const notifications = await data.pollFailedNotifications();
+      expect(notifications.map((n) => n.id)).not.toContain(nid);
+
+      const fetched = await data.getNotification(nid);
+      expect(fetched.status).toBe("failed");
+      expect(fetched.providerRef).toBe("req-1");
+    });
   });
 
   describe("updateStatus", () => {
@@ -230,6 +246,74 @@ describe("NotificationDataService implementation", () => {
 
       const fetched = await data.getNotification(nid);
       expect(fetched.id).toBe(nid);
+    });
+  });
+
+  describe("provider ref and pending confirmation", () => {
+    async function age(id: number) {
+      await dal.pool.query(
+        `UPDATE notifications
+         SET updated_at = current_timestamp - interval '5 minutes'
+         WHERE id = $1`,
+        [id]
+      );
+    }
+
+    it("persists a provider ref while leaving status pending", async () => {
+      const [nid] = await data.queue({
+        templateKey: "review-approved",
+        variables: { param: "hello" },
+      });
+      await data.pollNewNotifications();
+
+      const stored = await data.persistProviderRef(nid, "req-1");
+      expect(stored).toBe(true);
+
+      const fetched = await data.getNotification(nid);
+      expect(fetched.status).toBe("pending");
+      expect(fetched.providerRef).toBe("req-1");
+      expect(fetched.confirmationAttempts).toBe(0);
+    });
+
+    it("polls stale pending rows and skips rows inside the lease", async () => {
+      const [staleId] = await data.queue({
+        templateKey: "review-approved",
+        variables: { param: "hello" },
+      });
+      const [freshId] = await data.queue({
+        templateKey: "review-approved",
+        variables: { param: "hello again" },
+      });
+      await data.pollNewNotifications();
+      await age(staleId);
+
+      const stale = await data.pollStalePendingNotifications(60 * 1000);
+      expect(stale.map((n) => n.id)).toEqual([staleId]);
+
+      const fresh = await data.getNotification(freshId);
+      expect(fresh.status).toBe("pending");
+    });
+
+    it("reclaims a null-ref pending row as new and leaves a row with a ref", async () => {
+      const [nullRefId] = await data.queue({
+        templateKey: "review-approved",
+        variables: { param: "hello" },
+      });
+      const [withRefId] = await data.queue({
+        templateKey: "review-approved",
+        variables: { param: "hello again" },
+      });
+      await data.pollNewNotifications();
+      await data.persistProviderRef(withRefId, "req-1");
+
+      await data.reclaimPendingAsNew([nullRefId, withRefId]);
+
+      const reclaimed = await data.getNotification(nullRefId);
+      const kept = await data.getNotification(withRefId);
+      expect(reclaimed.status).toBe("new");
+      expect(reclaimed.providerRef).toBeUndefined();
+      expect(kept.status).toBe("pending");
+      expect(kept.providerRef).toBe("req-1");
     });
   });
 });

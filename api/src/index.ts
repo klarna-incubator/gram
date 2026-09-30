@@ -10,18 +10,11 @@ import { bootstrap } from "@gram/core/dist/bootstrap.js";
 import log4js from "log4js";
 import {
   notificationHandler,
-  notificationRetryHandler,
+  NotificationHandlerConfig,
 } from "@gram/core/dist/notifications/handler.js";
 import { attachWebsocketServer } from "./ws/index.js";
 import { config } from "@gram/core/dist/config/index.js";
 import { version } from "./util/version.js";
-
-// Defaults - deployments can override any of these via
-// config.notifications.intervals.
-const DEFAULT_NOTIFICATION_INTERVAL = 1000 * 30; // every 30 seconds
-const DEFAULT_NOTIFICATION_RETRY_INTERVAL = 1000 * 60 * 60 * 2; // every 2 hours
-const DEFAULT_NOTIFICATION_CLEAN_UP_INTERVAL = 1000 * 60 * 60 * 24; // 1 day
-const DEFAULT_NOTIFICATION_RETENTION_WINDOW = 1000 * 60 * 60 * 24 * 7; // 1 week
 
 const log = log4js.getLogger("api");
 
@@ -35,22 +28,6 @@ process.on("uncaughtException", handleUnhandledError);
 const listen = async () => {
   log.info(`Starting gram@${version}`);
   const dal = await bootstrap();
-
-  const intervals = config.notifications.intervals;
-  // How often to check for new notifications
-  const NOTIFICATION_INTERVAL =
-    intervals?.notificationInterval ?? DEFAULT_NOTIFICATION_INTERVAL;
-  // How often to retry failed notifications
-  const NOTIFICATION_RETRY_INTERVAL =
-    intervals?.notificationRetryInterval ?? DEFAULT_NOTIFICATION_RETRY_INTERVAL;
-  // How often to delete old notifications
-  const NOTIFICATION_CLEAN_UP_INTERVAL =
-    intervals?.notificationCleanUpInterval ??
-    DEFAULT_NOTIFICATION_CLEAN_UP_INTERVAL;
-  // How long to keep old notifications before deleting them
-  const NOTIFICATION_RETENTION_WINDOW =
-    intervals?.notificationRetentionWindow ??
-    DEFAULT_NOTIFICATION_RETENTION_WINDOW;
 
   // Create Express Apps
   const app = await createApp(dal);
@@ -71,32 +48,16 @@ const listen = async () => {
   controlServer.listen(controlPort);
   log.info(`controlServer - listening to ${controlPort}`);
 
-  // Set up async processes (notification handler)
-  setInterval(
-    () =>
-      notificationHandler(dal.notificationService, dal.notificationProviders),
-    NOTIFICATION_INTERVAL
-  );
-  // Retry previously-failed notifications based on the retry interval - no attempt limit or
-  // backoff, every currently-failed notification gets another shot on every run.
-  setInterval(
-    () =>
-      notificationRetryHandler(
-        dal.notificationService,
-        dal.notificationProviders
-      ),
-    NOTIFICATION_RETRY_INTERVAL
-  );
-  setInterval(() => dal.validationEngine.cache.expire(), 10 * 60 * 1000); // Clean up the Validation cache every 10 minutes
+  setInterval(() => dal.validationEngine.cache.expire(), 10 * 60 * 1000);
 
-  // Delete notification rows older than the retention window, regardless of status - a
-  // retention backstop, not a substitute for the failed/stalled health checks.
-  setInterval(
-    () =>
-      dal.notificationService.deleteOlderThan(
-        new Date(Date.now() - NOTIFICATION_RETENTION_WINDOW)
-      ),
-    NOTIFICATION_CLEAN_UP_INTERVAL
+  const intervals: Partial<NotificationHandlerConfig> =
+    config.notifications.intervals ?? {};
+
+  // Set up notification handler (polls notifications and routes them to the appropriate provider)
+  notificationHandler(
+    dal.notificationService,
+    dal.notificationProviders,
+    intervals
   );
 };
 
