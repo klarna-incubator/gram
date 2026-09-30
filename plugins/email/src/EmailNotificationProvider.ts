@@ -14,6 +14,7 @@ import {
   NotificationProvider,
   ProviderTemplate,
   SendableTemplate,
+  SendResult,
 } from "@gram/core/dist/notifications/NotificationProvider.js";
 import { sanitizeRecipientName } from "./sanitize.js";
 
@@ -176,7 +177,7 @@ export class EmailNotificationProvider extends NotificationProvider {
     return this.client;
   }
 
-  protected async send(template: EmailSendableTemplate): Promise<boolean> {
+  protected async send(template: EmailSendableTemplate): Promise<SendResult> {
     const emailTemplate = template as EmailSendableTemplate;
     const client = await this.getClient();
 
@@ -204,8 +205,15 @@ export class EmailNotificationProvider extends NotificationProvider {
       content: "text/plain; charset=utf-8", // Warning: if you change this, the template render above does not escape HTML!
     });
 
-    log.debug(`Sending mail: ${JSON.stringify(msg, null, 2)}`);
+    log.debug("Sending notification", {
+      meta: { provider: this.key },
+      payload: {
+        recipientCount: emailTemplate.recipients.length,
+        ccCount: emailTemplate.cc.length,
+      },
+    });
 
-    return !!(await client.sendAsync(msg));
+    const delivered = !!(await client.sendAsync(msg));
+    return delivered ? { outcome: "sent" } : { outcome: "failed" };
   }
 }

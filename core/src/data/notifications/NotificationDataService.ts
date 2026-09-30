@@ -12,6 +12,8 @@ function convertToNotification(row: any) {
   );
   model.id = row.id;
   model.status = row.status;
+  model.providerRef = row.provider_ref || undefined;
+  model.confirmationAttempts = parseInt(row.confirmation_attempts ?? 0, 10);
   model.createdAt = row.created_at * 1000;
   model.updatedAt = row.updated_at * 1000;
   model.sentAt = row.sent_at * 1000;
@@ -99,9 +101,10 @@ export class NotificationDataService {
     const providers = [...this.dal.notificationProviders.values()];
 
     if (providers.length === 0) {
-      this.log.debug(
-        `Notification skipped, no providers registered: ${input.templateKey}`
-      );
+      this.log.debug("Skipped notification", {
+        meta: { templateKey: input.templateKey },
+        payload: { reason: "No notification provider registered" },
+      });
       return [];
     }
 
@@ -121,11 +124,10 @@ export class NotificationDataService {
       return insertedIds;
     });
 
-    this.log.debug(
-      `Queued new notification ${input.templateKey} for ${
-        providers.length
-      } provider(s) - ${JSON.stringify(input)}`
-    );
+    this.log.debug("Queued notification", {
+      meta: { templateKey: input.templateKey },
+      payload: { notificationIds: ids, count: ids.length },
+    });
 
     return ids;
   }
@@ -153,23 +155,58 @@ export class NotificationDataService {
   }
 
   /**
-   * Claims up to 25 rows in the given status (oldest first), moving them to
-   * `pending` so they aren't picked up twice, and returns them for processing.
+   * Claims up to 25 rows in the given status (oldest first).
+   *
+   * - `new` — claim as `pending` so the new-row handler can dispatch.
+   * - `failed` — same claim, but only rows with no `provider_ref`. A ref means
+   *   confirmation failed; claiming those would POST again.
+   * - `pending` — refresh `updated_at` and leave status `pending`, and only
+   *   rows older than `leaseMs`, so an in-flight dispatch is not selected.
+   * - `sent` / `dropped` — terminal; nothing to claim.
    */
   private async pollNotificationsByStatus(
-    status: "new" | "failed"
+    status: NotificationStatus,
+    leaseMs?: number
   ): Promise<Notification[]> {
+    if (status === "sent" || status === "dropped") {
+      return [];
+    }
+
+    const filters = ["status = $1"];
+    const params: Array<string | number> = [status];
+
+    if (status === "failed") {
+      /* Failed rows that already have a provider ref failed confirmation, not
+       * dispatch. Claiming them would POST again. */
+      filters.push("provider_ref IS NULL");
+    }
+
+    if (status === "pending") {
+      /* Lease is required for pending poll to avoid claiming rows that are still in flight */
+      if (leaseMs == null) {
+        throw new Error("Pending poll requires a lease");
+      }
+      params.push(leaseMs);
+      filters.push(
+        `updated_at < current_timestamp - ($${params.length}::int * interval '1 millisecond')`
+      );
+    }
+
     const query = `
     UPDATE notifications
     SET status = 'pending', updated_at = current_timestamp
     WHERE id in (
         SELECT id FROM notifications
-        WHERE status = $1
+        WHERE ${filters.join(" AND ")}
         ORDER BY updated_at ASC
         LIMIT 25
     )
     RETURNING *`;
-    const res = await this.pool.query(query, [status]);
+    const res = await this.pool.query(query, params);
+    this.log.debug("Polled notifications by status", {
+      meta: { status },
+      payload: { count: res.rows.length },
+    });
     return res.rows.map(convertToNotification);
   }
 
@@ -190,6 +227,71 @@ export class NotificationDataService {
    */
   async pollFailedNotifications(): Promise<Notification[]> {
     return this.pollNotificationsByStatus("failed");
+  }
+
+  /**
+   * Claims up to 25 `pending` rows whose `updated_at` is older than `leaseMs`
+   * (oldest first). Claiming only refreshes `updated_at` — status stays
+   * `pending` — so a live dispatch inside the lease is not selected, and a
+   * claimed row is not selected again until the lease passes.
+   */
+  async pollStalePendingNotifications(
+    leaseMs: number
+  ): Promise<Notification[]> {
+    return this.pollNotificationsByStatus("pending", leaseMs);
+  }
+
+  /**
+   * Stores the provider notification id and leaves `status` as `pending`.
+   * Bumps `updated_at` so the pending poller does not select the row until
+   * the lease has passed.
+   */
+  async persistProviderRef(id: number, providerRef: string) {
+    const res = await this.pool.query(
+      `UPDATE notifications
+       SET provider_ref = $2, updated_at = current_timestamp
+       WHERE id = $1`,
+      [id, providerRef]
+    );
+    return res.rowCount != null && res.rowCount > 0;
+  }
+
+  /**
+   * Moves stale pending rows that never obtained a provider ref back to `new`
+   * so the new-row poller can dispatch them. Rows that already have a ref are
+   * left untouched.
+   */
+  async reclaimPendingAsNew(ids: number[]) {
+    const safeIds = ids
+      .map((i) => parseInt(String(i), 10))
+      .filter((i) => Number.isInteger(i));
+    if (safeIds.length === 0) {
+      return false;
+    }
+    const placeholders = safeIds.map((_, index) => `$${index + 1}`).join(", ");
+    const res = await this.pool.query(
+      `UPDATE notifications
+       SET status = 'new', updated_at = current_timestamp
+       WHERE provider_ref IS NULL AND id IN (${placeholders})`,
+      safeIds
+    );
+    return res.rowCount != null && res.rowCount > 0;
+  }
+
+  /**
+   * Counts one confirmation poll that is still in flight. Does not change
+   * `status`.
+   */
+  async incrementConfirmationAttempts(id: number): Promise<number> {
+    const res = await this.pool.query(
+      `UPDATE notifications
+       SET confirmation_attempts = confirmation_attempts + 1,
+           updated_at = current_timestamp
+       WHERE id = $1
+       RETURNING confirmation_attempts`,
+      [id]
+    );
+    return parseInt(res.rows[0].confirmation_attempts, 10);
   }
 
   /**

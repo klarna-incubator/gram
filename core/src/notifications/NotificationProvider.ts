@@ -6,7 +6,26 @@ import {
 
 const log = log4js.getLogger("NotificationProvider");
 
-export type DeliveryOutcome = "sent" | "failed" | "dropped";
+/**
+ * What `send()` returns. `awaiting-confirmation` means the provider accepted
+ * the dispatch and delivery is confirmed later (via `checkStatus`), usually
+ * with a `ref` to poll. One-shot transports return `sent` or `failed` and no
+ * ref.
+ */
+export type SendResult =
+  | { outcome: "sent" }
+  | { outcome: "failed" }
+  | { outcome: "awaiting-confirmation"; ref?: string };
+
+/**
+ * What `handle()` returns to the dispatcher. Includes `dropped`, which
+ * `send()` never produces.
+ */
+export type DispatchResult = SendResult | { outcome: "dropped" };
+
+export type StatusCheckOutcome = "sent" | "pending" | "failed" | "missing_ref";
+
+export type StatusCheckResult = { outcome: StatusCheckOutcome };
 
 /**
  * Explicit marker a provider returns from render() to deliberately opt a
@@ -93,18 +112,27 @@ export abstract class NotificationProvider {
   ): ProviderTemplate | undefined;
 
   /**
+   * Sends a real (non-dropped) rendered template via this provider's transport.
+   * Implemented by concrete providers - each defines its own sendable template
+   * shape internally.
+   */
+  protected abstract send(template: SendableTemplate): Promise<SendResult>;
+
+  /**
    * Attempts delivery of a single row routed to this provider and resolves the
    * outcome:
    * - no entry at all (render() returns undefined) -> `failed`, logged here
    * - explicit drop marker -> `dropped`
    * - real template -> delegates to send(); `sent` on success, `failed` (logged)
-   *   on a falsy result or a thrown transport error
+   *   on a failed result or a thrown transport error, or
+   *   `awaiting-confirmation` (with optional `ref`) when delivery is confirmed
+   *   separately
    */
   async handle(
     templateKey: NotificationTemplateKey,
     variables: NotificationVariables,
     notificationId: number
-  ): Promise<DeliveryOutcome> {
+  ): Promise<DispatchResult> {
     let template: ProviderTemplate | undefined;
 
     try {
@@ -115,69 +143,47 @@ export abstract class NotificationProvider {
       // this runs inside a Promise.all() over a whole polled batch, so an
       // uncaught throw would silently drop outcome-tracking for every other
       // notification in that batch, not just this one.
-      log.error("Provider threw while rendering notification", {
-        payload: {
-          notificationId,
-          error: describeError(err),
-        },
-        meta: {
-          provider: this.key,
-          templateKey,
-        },
+      log.error("Failed to render notification", {
+        meta: { notificationId, provider: this.key, templateKey },
+        payload: { error: describeError(err), errorCode: err?.code },
       });
-      return "failed";
+      return { outcome: "failed" };
     }
 
     if (template === undefined) {
-      log.warn("Provider has no template entry for key - reporting failed", {
-        payload: {
-          notificationId,
-        },
-        meta: {
-          provider: this.key,
-          templateKey,
-        },
+      log.warn("Failed to render notification", {
+        meta: { notificationId, provider: this.key, templateKey },
+        payload: { reason: "No template found for this provider" },
       });
-      return "failed";
+      return { outcome: "failed" };
     }
 
     if (isDropMarker(template)) {
-      return "dropped";
+      return { outcome: "dropped" };
     }
 
     try {
-      const success = await this.send(template);
-      if (!success) {
-        log.warn("Provider failed to send notification", {
-          payload: {
-            notificationId,
-          },
-          meta: {
-            provider: this.key,
-            templateKey,
-          },
+      const result = await this.send(template);
+      if (result.outcome === "failed") {
+        log.warn("Failed to send notification", {
+          meta: { notificationId, provider: this.key, templateKey },
+          payload: { reason: "Provider failed to send notification" },
         });
       }
-      return success ? "sent" : "failed";
+      return result;
     } catch (err: any) {
-      log.error("Provider threw while sending notification", {
-        payload: {
-          notificationId,
-          error: describeError(err),
-        },
-        meta: {
-          provider: this.key,
-          templateKey,
-        },
+      log.error("Failed to send notification", {
+        meta: { notificationId, provider: this.key, templateKey },
+        payload: { error: describeError(err), errorCode: err?.code },
       });
-      return "failed";
+      return { outcome: "failed" };
     }
   }
 
   /**
-   * Sends a real (non-dropped) rendered template via this provider's transport.
-   * Implemented by concrete providers - each defines its own sendable template
-   * shape internally.
+   * Optional confirmation of an earlier dispatch, looked up by the provider's
+   * own notification id. Providers that finish delivery inside `send()` leave
+   * this unimplemented; the pending poller must not call a status API for them.
    */
-  protected abstract send(template: SendableTemplate): Promise<boolean>;
+  checkStatus?(ref: string): Promise<StatusCheckResult>;
 }

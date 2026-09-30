@@ -3,6 +3,7 @@ import {
   NotificationProvider,
   ProviderTemplate,
   SendableTemplate,
+  SendResult,
 } from "../notifications/NotificationProvider.js";
 
 /**
@@ -10,13 +11,13 @@ import {
  * to render the "review-approved" key (returning a fixed sendable template by
  * default, never a drop marker, unless configured otherwise) - any other key
  * resolves to "no entry" (failed), matching a real provider's behavior for an
- * unimplemented template key. `send()` resolves to `sendResult` (true by
+ * unimplemented template key. `send()` resolves to `sendResult` (`sent` by
  * default) unless `sendImpl` is supplied for finer control (e.g. throwing, or
  * per-call behavior).
  */
 export class FakeNotificationProvider extends NotificationProvider {
-  sendResult = true;
-  sendImpl?: (template: SendableTemplate) => Promise<boolean>;
+  sendResult: SendResult = { outcome: "sent" };
+  sendImpl?: (template: SendableTemplate) => Promise<SendResult>;
   // When set, render() throws this instead of returning renderResult - for
   // simulating a template implementation that throws (e.g. a Handlebars
   // `strict: true` template hitting a missing field).
@@ -39,10 +40,7 @@ export class FakeNotificationProvider extends NotificationProvider {
     return this.renderResult;
   }
 
-  protected async send(template: SendableTemplate): Promise<boolean> {
-    if (this.sendImpl) {
-      return this.sendImpl(template);
-    }
-    return this.sendResult;
+  protected async send(template: SendableTemplate): Promise<SendResult> {
+    return this.sendImpl ? await this.sendImpl(template) : this.sendResult;
   }
 }
