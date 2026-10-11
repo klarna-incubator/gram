@@ -19,7 +19,7 @@
   "dependencies": {
     "@gram/core": "^4.27.0",
     "emailjs": "^4.0.3",
-    "handlebars": "^4.7.9",
+    "handlebars": "^4.7.10",
     "log4js": "^6.6.1"
   },
   "private": true
