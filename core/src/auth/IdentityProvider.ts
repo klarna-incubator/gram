@@ -1,6 +1,7 @@
 import { RequestContext } from "../data/providers/RequestContext.js";
 import { Provider } from "../data/providers/Provider.js";
 import { Identity } from "./models/Identity.js";
+import { UserToken } from "./models/UserToken.js";
 
 export type IdentityProviderForm = {
   type: "redirect" | "email";
@@ -77,4 +78,13 @@ export interface IdentityProvider extends Provider {
     token: string,
     ctx: RequestContext
   ): Promise<LoginResult>;
+
+  /**
+   * Optional non-interactive path: establish the caller from the request
+   * itself, e.g. from a header set by a trusted proxy in front of Gram.
+   * It is only called for requests that no bearer token authenticated.
+   * It must return null if the request carries no credential it handles.
+   * Implementations must only trust request data that clients cannot forge.
+   */
+  authenticateRequest?(ctx: RequestContext): Promise<UserToken | null>;
 }
