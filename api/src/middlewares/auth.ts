@@ -17,7 +17,7 @@ const log = log4js.getLogger("authMw");
 async function tryGramTokenValidation(
   dal: DataAccessLayer,
   req: Request,
-  token: string,
+  token: string
 ): Promise<UserToken | null> {
   try {
     return await jwt.validateToken(token);
@@ -39,7 +39,7 @@ async function tryGramTokenValidation(
 async function tryIdentityProvidersToken(
   dal: DataAccessLayer,
   req: Request,
-  token: string,
+  token: string
 ): Promise<UserToken | null> {
   for (const provider of IdentityProviderRegistry.values()) {
     if (!provider.getIdentityFromToken) {
@@ -53,7 +53,7 @@ async function tryIdentityProvidersToken(
         return await resolveUserToken(
           dal,
           { currentRequest: req },
-          result.identity.sub,
+          result.identity.sub
         );
       }
     } catch (error: any) {
@@ -120,7 +120,7 @@ export function validateTokenMiddleware(dal: DataAccessLayer) {
         const idProviderTokenUser = await tryIdentityProvidersToken(
           dal,
           req,
-          bearerToken,
+          bearerToken
         );
         if (idProviderTokenUser) {
           req.user = idProviderTokenUser;
@@ -145,7 +145,7 @@ export function validateTokenMiddleware(dal: DataAccessLayer) {
 export async function authRequiredMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   if (!req.user) {
     res.sendStatus(401);
