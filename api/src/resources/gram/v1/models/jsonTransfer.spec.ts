@@ -201,6 +201,52 @@ describe("models.jsonTransfer", () => {
     expect(importedMitigations.body.mitigations.length).toBe(1);
   });
 
+  it("rejects a flow whose origin is not an endpoint of its data flow", async () => {
+    const sourceModelId = await createSourceModel();
+    const exportRes = await request(app)
+      .get(`/api/v1/models/${sourceModelId}/export-json`)
+      .set("Authorization", token);
+    expect(exportRes.status).toBe(200);
+
+    const payload = exportRes.body.payload;
+    const otherComponentId = randomUUID();
+    const invalidPayload = {
+      ...payload,
+      modelData: {
+        ...payload.modelData,
+        components: [
+          ...payload.modelData.components,
+          {
+            id: otherComponentId,
+            x: 3,
+            y: 3,
+            type: "proc",
+            name: "Unrelated process",
+          },
+        ],
+      },
+      flows: [
+        {
+          dataFlowId: payload.modelData.dataFlows[0].id,
+          originComponentId: otherComponentId,
+          summary: "Invisible directional detail",
+          attributes: { protocols: "HTTPS" },
+        },
+      ],
+    };
+
+    const importRes = await request(app)
+      .post("/api/v1/models/import-json")
+      .set("Authorization", token)
+      .send({
+        mode: "in-place",
+        targetModelId: sourceModelId,
+        payload: invalidPayload,
+      });
+
+    expect(importRes.status).toBe(400);
+  });
+
   it("imports in in-place mode and keeps target model id", async () => {
     const sourceModelId = await createSourceModel();
 
