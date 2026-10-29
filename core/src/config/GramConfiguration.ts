@@ -19,6 +19,47 @@ import { ValidationRule } from "../validation/models.js";
 import type { DynamicAttribute } from "../attributes/attributes.js";
 import { ConnectionOptions } from "tls";
 
+export const realtimeTransports = ["websocket", "sse"] as const;
+
+export type RealtimeTransport = (typeof realtimeTransports)[number];
+
+export const defaultRealtimeTransport: RealtimeTransport = "websocket";
+
+/**
+ * Settings of the "sse" transport, all in positive integers. Anything left
+ * unset takes the default defined by the SSE transport.
+ */
+export interface SseConfiguration {
+  /**
+   * How often (ms) a keep-alive is written to each open stream. The client
+   * treats 15s without any message as a lost connection (`timeoutTime` in
+   * app/src/redux/middleware/realtimeTransport/realtime.js:23), so keep it well
+   * under that (10000 or less).
+   */
+  keepAliveMS?: number;
+  /**
+   * How long (ms) a connection may go without any request from its client
+   * before the server closes it. The client heartbeats every 20s (`heartbeatMS`
+   * in app/src/redux/middleware/realtimeTransport/sse.js:91), but browsers
+   * throttle background tabs to about one a minute, so use 60000 or more.
+   */
+  idleTimeoutMS?: number;
+  /**
+   * How many real-time streams one user may have open on one model (for
+   * example in several tabs). Opening another closes the user's oldest. A
+   * small number such as 3 to 5 covers normal use.
+   */
+  maxConnectionsPerUser?: number;
+}
+
+/** Real-time collaboration settings, as written in the config files. */
+export interface RealtimeTransportConfiguration {
+  /** Which transport is active. Defaults to "websocket". */
+  type?: RealtimeTransport;
+  /** Settings for the "sse" transport; ignored for "websocket". */
+  sse?: SseConfiguration;
+}
+
 export interface Providers {
   /**
    * Required for minimal setup.
@@ -97,6 +138,12 @@ export interface GramConfiguration {
   appPort: number;
   controlPort: number;
   origin: string;
+
+  /**
+   * Transport used for real-time collaboration. Defaults to "websocket".
+   * Use "sse" in environments that cannot proxy WebSocket connections.
+   */
+  realtimeTransport?: RealtimeTransportConfiguration;
 
   /**
    * Database settings

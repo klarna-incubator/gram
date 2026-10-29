@@ -39,7 +39,7 @@ Backend tests are run with `--runInBand` and need the test postgres container (p
 The monorepo splits responsibilities across five workspaces:
 
 - **`core/`** (`@gram/core`) — all backend domain logic: data services, auth, validation, suggestions, notifications (see `core/src/notifications/README.md` for the `NotificationProvider` plugin model), plugin registry, and database migrations (`core/src/data/migrations/*.sql`, applied automatically at boot via `postgres-migrations`). Exports the `DataAccessLayer` (DAL) and the `Bootstrapper`.
-- **`api/`** (`@gram/api`) — Express app + WebSocket server. Thin layer: routers under `api/src/resources/gram/v1/<entity>/router.ts` are wired in `api/src/app.ts` and delegate to services on the DAL. Real-time collaborative editing lives in `api/src/ws/`.
+- **`api/`** (`@gram/api`) — Express app + WebSocket server. Thin layer: routers under `api/src/resources/gram/v1/<entity>/router.ts` are wired in `api/src/app.ts` and delegate to services on the DAL. Real-time collaborative editing lives in `api/src/realtimeTransport/`.
 - **`app/`** (`@gram/app`) — React 17 + Redux + Konva (canvas). Built with CRA / `react-scripts`. Diagram rendering uses Konva via `react-konva`.
 - **`config/`** (`@gram/config`) — composition root. `default.ts` builds a `GramConfiguration` whose `bootstrapProviders(dal)` returns all providers (auth, systems, teams, reviewers, suggestion sources, validation rules, asset folders, component classes, search providers, resource providers). To add functionality, register it here.
 - **`plugins/*`** — independently published packages (`@gram/aws`, `@gram/azure`, `@gram/cncf`, `@gram/github`, `@gram/jira`, `@gram/kubernetes`, `@gram/ldap`, `@gram/magiclink`, `@gram/oidc`, `@gram/stride`, `@gram/svgporn`, `@gram/threatlib`). They expose providers/component classes/assets/migrations consumed by `config/default.ts`.
@@ -49,7 +49,7 @@ The monorepo splits responsibilities across five workspaces:
 1. `api/src/index.ts` → `bootstrap()` (in `core/src/bootstrap.ts`) constructs the `DataAccessLayer`, runs DB migrations, then invokes `config.bootstrapProviders(dal)` and registers each provider through the `Bootstrapper` (see `core/src/Bootstrapper.ts`).
 2. `createApp(dal)` mounts middleware (`metrics`, `validateToken`, `logger`, `authz`) and routers under `/api/v1`. Routes split into `unauthenticatedRoutes` (banners, menu, contact, `/auth/*`) and `authenticatedRoutes` (everything else, gated by `authRequiredMiddleware`).
 3. Route handlers receive the DAL and call into `core/src/data/*/<Entity>DataService.ts` for persistence, or into handlers (`UserHandler`, `TeamHandler`, `SearchHandler`, `ResourceHandler`, `SuggestionEngine`, `ValidationEngine`) for non-DB logic.
-4. WebSocket connections (`api/src/ws/`) attach to the same HTTP server and share the DAL — there's only one process; the app is **not horizontally scalable** (documented limitation).
+4. WebSocket connections (`api/src/realtimeTransport/`) attach to the same HTTP server and share the DAL — there's only one process; the app is **not horizontally scalable** (documented limitation).
 
 ### Plugins
 

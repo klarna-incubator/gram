@@ -12,7 +12,7 @@ import {
   notificationHandler,
   NotificationHandlerConfig,
 } from "@gram/core/dist/notifications/handler.js";
-import { attachWebsocketServer } from "./ws/index.js";
+import { attachRealtime } from "./realtimeTransport/index.js";
 import { config } from "@gram/core/dist/config/index.js";
 import { version } from "./util/version.js";
 
@@ -38,8 +38,8 @@ const listen = async () => {
   // Set up HTTP servers and start listening
   const appPort = config.appPort;
   const appServer = http.createServer(app);
-  // Attach websocket handler
-  attachWebsocketServer(appServer, dal);
+  // Attach the configured real-time transport
+  attachRealtime(appServer, dal);
   appServer.listen(appPort);
   log.info(`appServer - listening to ${appPort}`);
 

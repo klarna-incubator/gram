@@ -11,7 +11,7 @@ import {
 import { errorStatus } from "../../api/gram/util/errorStatus";
 import { useModelSync } from "../../hooks/useModelSync";
 import { useOpenModal } from "../../hooks/useOpenModal";
-import { webSocketActions } from "../../redux/webSocketSlice";
+import { realtimeActions } from "../../redux/realtimeSlice";
 import { ErrorPage } from "../elements/ErrorPage";
 import { LoadingPage } from "../elements/loading/loading-page/LoadingPage";
 import { MODALS } from "../elements/modal/ModalManager";
@@ -83,8 +83,8 @@ export function Model() {
   // create a WS client and close when component is unloaded
   useEffect(() => {
     if (id && readAllowed) {
-      dispatch(webSocketActions.establishConnection(id));
-      return () => dispatch(webSocketActions.disconnect());
+      dispatch(realtimeActions.establishConnection(id));
+      return () => dispatch(realtimeActions.disconnect());
     }
   }, [id, readAllowed, dispatch]);
 

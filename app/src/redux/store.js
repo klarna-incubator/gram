@@ -5,23 +5,23 @@ import { api } from "../api/gram/api";
 import model from "../reducers/model";
 import { authReducer } from "./authSlice";
 import { unauthenticatedErrorHandler } from "./middleware/unauthenticatedMIddleware";
-import { webSocketMiddleware } from "./middleware/webSocket";
+import { realtimeMiddleware } from "./middleware/realtimeTransport";
 import modalReducer from "./modalSlice";
-import webSocketReducer from "./webSocketSlice";
+import realtimeReducer from "./realtimeSlice";
 
 export const store = configureStore({
   reducer: {
     model,
     modal: modalReducer,
     auth: authReducer,
-    webSocket: webSocketReducer,
+    realtime: realtimeReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
       api.middleware,
       thunk,
-      webSocketMiddleware,
+      realtimeMiddleware,
       unauthenticatedErrorHandler,
     ]),
 });
