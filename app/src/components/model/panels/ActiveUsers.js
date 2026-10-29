@@ -11,7 +11,7 @@ const initials = (name) =>
 
 export function ActiveUsers() {
   const activeUsers = useSelector(
-    ({ webSocket: { activeUsers } }) => activeUsers
+    ({ realtime: { activeUsers } }) => activeUsers
   );
   if (!activeUsers) return null;
   return (

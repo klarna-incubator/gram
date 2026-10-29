@@ -33,6 +33,7 @@ export const defaultConfig: GramConfiguration = {
   appPort: 8080,
   controlPort: 8081,
   origin: "http://localhost:4726",
+  realtimeTransport: { type: "websocket" },
 
   jwt: {
     ttl: 86400,

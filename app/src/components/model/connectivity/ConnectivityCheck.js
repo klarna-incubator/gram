@@ -8,12 +8,20 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { webSocketActions } from "../../../redux/webSocketSlice";
+import { useGetConfigQuery } from "../../../api/gram/config";
+import { realtimeActions } from "../../../redux/realtimeSlice";
+
+const TRANSPORT_LABELS = {
+  sse: "Server-Sent Events (SSE)",
+  websocket: "WebSocket",
+};
 
 function ConnectivityCheck() {
   const dispatch = useDispatch();
+  const { data: config } = useGetConfigQuery();
+  const transportLabel = TRANSPORT_LABELS[config?.realtimeTransport];
   const { isConnected, isEstablishing, modelId } = useSelector(
-    ({ webSocket: { isConnected, isEstablishing, modelId } }) => ({
+    ({ realtime: { isConnected, isEstablishing, modelId } }) => ({
       isConnected,
       isEstablishing,
       modelId,
@@ -46,7 +54,8 @@ function ConnectivityCheck() {
           {!isEstablishing && !isConnected && !timeout && (
             <>
               <Typography>
-                Your websocket connection to the server has timed out or been
+                Your real-time connection to the server
+                {transportLabel && ` (${transportLabel})`} has timed out or been
                 closed remotely. This could be due to bad connectivity, or the
                 Gram server having a bad time.
               </Typography>
@@ -71,7 +80,7 @@ function ConnectivityCheck() {
               <Button
                 variant="contained"
                 onClick={() => {
-                  dispatch(webSocketActions.establishConnection(modelId));
+                  dispatch(realtimeActions.establishConnection(modelId));
                   setFakeTimeout(true);
                   setTimeout(() => {
                     setFakeTimeout(false);

@@ -18,8 +18,8 @@ const initialState = {
   activeUsers: [],
 };
 
-const webSocketSlice = createSlice({
-  name: "webSocket",
+const realtimeSlice = createSlice({
+  name: "realtime",
   initialState,
   reducers: {
     establishConnection: (state, action) => {
@@ -46,5 +46,5 @@ const webSocketSlice = createSlice({
   },
 });
 
-export const webSocketActions = webSocketSlice.actions;
-export default webSocketSlice.reducer;
+export const realtimeActions = realtimeSlice.actions;
+export default realtimeSlice.reducer;

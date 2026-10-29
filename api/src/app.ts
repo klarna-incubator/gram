@@ -25,6 +25,7 @@ import setRoles from "./resources/gram/v1/admin/setRoles.js";
 import { getFlowAttributes } from "./resources/gram/v1/attributes/get.js";
 import { getBanner } from "./resources/gram/v1/banners/get.js";
 import { searchClasses } from "./resources/gram/v1/component-classes/search.js";
+import { getConfig } from "./resources/gram/v1/config/get.js";
 import { getContact } from "./resources/gram/v1/contact/get.js";
 import { controlsRouter } from "./resources/gram/v1/controls/router.js";
 import { flowsRouter } from "./resources/gram/v1/flows/router.js";
@@ -46,6 +47,8 @@ import { tokenRouter } from "./resources/gram/v1/token/router.js";
 import { userRouter } from "./resources/gram/v1/user/router.js";
 import { validationRouter } from "./resources/gram/v1/validation/router.js";
 import { initSentry } from "./util/sentry.js";
+import { sseRouter } from "./realtimeTransport/sse.js";
+import { defaultRealtimeTransport } from "@gram/core/dist/config/GramConfiguration.js";
 import { adminNotificationRouter } from "./resources/gram/v1/admin/notifications/router.js";
 
 export async function createApp(
@@ -84,6 +87,7 @@ export async function createApp(
   unauthenticatedRoutes.get("/banners", getBanner(dal));
   unauthenticatedRoutes.get("/menu", getMenu);
   unauthenticatedRoutes.get("/contact", getContact);
+  unauthenticatedRoutes.get("/config", getConfig(dal));
   unauthenticatedRoutes.get("/attributes/flow", getFlowAttributes);
 
   // Token (Auth) Routes
@@ -111,6 +115,11 @@ export async function createApp(
     "/models/:modelId/mitigations",
     mitigationsRouter(dal)
   );
+
+  // Real-time events (SSE transport only)
+  if ((config.realtimeTransport?.type ?? defaultRealtimeTransport) === "sse") {
+    authenticatedRoutes.use("/models/:modelId/events", sseRouter(dal));
+  }
 
   // Models
   authenticatedRoutes.use("/models", modelsRouter(dal));

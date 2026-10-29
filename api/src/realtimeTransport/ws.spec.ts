@@ -8,10 +8,11 @@ import { randomUUID } from "crypto";
 import express from "express";
 import http from "http";
 import WebSocket from "ws";
-import * as ws from "./index.js";
+import * as ws from "./ws.js";
 import { genUser } from "@gram/core/dist/test-util/authz.js";
 import { sampleOwnedSystem } from "../test-util/sampleOwnedSystem.js";
-import { ModelWebsocketServer, _permissionsInterface } from "./model.js";
+import { ModelWebsocketServer } from "./ws.js";
+import { _permissionsInterface } from "./permissions.js";
 
 const receive = (client: WebSocket, t = 500) =>
   new Promise<any>((resolve, reject) => {
@@ -45,7 +46,7 @@ describe("websocket protocol", () => {
 
   const app = express();
   const appServer = http.createServer(app);
-  let wssRegistry: any;
+  let roomRegistry: any;
   let cleanupInterval: any;
   let firstClient: WebSocket | null = null;
   let secondClient: WebSocket | null = null;
@@ -54,14 +55,14 @@ describe("websocket protocol", () => {
     const pool = await createPostgresPool();
     dal = new DataAccessLayer(pool);
     modelGetById = jest.spyOn(dal.modelService, "getById");
-    ({ wssRegistry, cleanupInterval } = ws.attachWebsocketServer(
+    ({ roomRegistry, cleanupInterval } = ws.attachWebsocketServer(
       appServer,
       dal
     ));
   });
 
   beforeEach(() => {
-    wssRegistry.clear();
+    roomRegistry.clear();
 
     getPermissionsForModel.mockImplementation(async () => {
       return [Permission.Read, Permission.Write];
@@ -127,7 +128,7 @@ describe("websocket protocol", () => {
 
     const received = await receive(firstClient);
     const parsed = JSON.parse(received);
-    expect(parsed.type).toEqual("webSocket/activeUsers");
+    expect(parsed.type).toEqual("realtime/activeUsers");
     expect(parsed.payload.users).toHaveLength(2);
   });
 
@@ -255,7 +256,7 @@ describe("websocket protocol", () => {
       dal
     );
     server.pingTimeoutMS = 500; // Set timeout to something low to speed up this test.
-    wssRegistry.set(id, server);
+    roomRegistry.set(id, server);
 
     firstClient = new WebSocket(`http://localhost:8123/api/ws/${id}`, {
       headers: { origin: "http://localhost:4726" },
@@ -279,16 +280,40 @@ describe("websocket protocol", () => {
 
     let received = await receive(firstClient); // second user joining
     let parsed = JSON.parse(received);
-    expect(parsed.type).toEqual("webSocket/activeUsers");
+    expect(parsed.type).toEqual("realtime/activeUsers");
     expect(parsed.payload.users).toHaveLength(2);
 
     secondClient.terminate(); // simulate second user disconnecting in an unclean manner
 
     received = await receive(firstClient, 2000); // second user joining, wait up to 2000 ms to receive the message to ensure timeout kicks in
     parsed = JSON.parse(received);
-    expect(parsed.type).toEqual("webSocket/activeUsers");
+    expect(parsed.type).toEqual("realtime/activeUsers");
     expect(parsed.payload.users).toHaveLength(1);
     expect(parsed.payload.users[0].sub).toEqual("first@abc.xyz");
+  });
+
+  it("should close sockets that do not authenticate in time, even if they answer pings", async () => {
+    const id = randomUUID();
+    const server = new ModelWebsocketServer(
+      new Model(id, "whatever", "hello"),
+      dal
+    );
+    server.authTimeoutMS = 300;
+    roomRegistry.set(id, server);
+
+    const client = new WebSocket(`http://localhost:8123/api/ws/${id}`, {
+      headers: { origin: "http://localhost:4726" },
+    });
+    await connected(client);
+
+    const closed = await new Promise<boolean>((resolve) => {
+      const timeout = setTimeout(() => resolve(false), 1500);
+      client.on("close", () => {
+        clearTimeout(timeout);
+        resolve(true);
+      });
+    });
+    expect(closed).toBe(true);
   });
 
   it("should only reflect valid whitelisted packets", async () => {
@@ -298,7 +323,7 @@ describe("websocket protocol", () => {
       dal
     );
     server.pingTimeoutMS = 500; // Set timeout to something low to speed up this test.
-    wssRegistry.set(id, server);
+    roomRegistry.set(id, server);
 
     firstClient = new WebSocket(`http://localhost:8123/api/ws/${id}`, {
       headers: { sub: "first@abc.xyz", origin: "http://localhost:4726" },
@@ -341,7 +366,7 @@ describe("websocket protocol", () => {
       dal
     );
     server.pingTimeoutMS = 500; // Set timeout to something low to speed up this test.
-    wssRegistry.set(id, server);
+    roomRegistry.set(id, server);
 
     firstClient = new WebSocket(`http://localhost:8123/api/ws/${id}`, {
       headers: { origin: "http://localhost:4726" },

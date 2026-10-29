@@ -28,6 +28,7 @@ import {
 } from "../../../../api/gram/resource-matching";
 import { useModelID } from "../../hooks/useModelID";
 import { useGetReviewQuery } from "../../../../api/gram/review";
+import { useGetConfigQuery } from "../../../../api/gram/config";
 
 export function ComponentTab() {
   const dispatch = useDispatch();
@@ -44,13 +45,16 @@ export function ComponentTab() {
     modelId,
   });
 
+  const { data: config } = useGetConfigQuery();
+  const showResources = !!config?.features?.resources;
+
   const {
     isLoading: isLoadingResources,
     isError,
     data: resources,
-  } = useGetResourcesQuery(modelId);
+  } = useGetResourcesQuery(modelId, { skip: !showResources });
   const { data: resourceMatchings, isLoading: isLoadingMatchings } =
-    useListMatchingQuery(modelId);
+    useListMatchingQuery(modelId, { skip: !showResources });
 
   const filteredResources = resources?.filter((resource) =>
     resourceMatchings?.find(
@@ -167,51 +171,53 @@ export function ComponentTab() {
             </Box>
           </CardContent>
         </Card>
-        <Card elevation={2}>
-          <CardContent>
-            <Typography variant="h6" sx={{ marginBottom: "1rem" }}>
-              Resources
-            </Typography>
-            {(isLoadingMatchings || isLoadingResources) && (
-              <Box
-                sx={{
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Stack spacing={1}>
-                  <Typography>Loading</Typography>
-                  <LinearProgress sx={{ width: "100%" }} />
-                </Stack>
-              </Box>
-            )}
-            {!isLoadingMatchings && !isLoadingResources && (
-              <>
-                <MatchComponentWithResource
-                  modelId={modelId}
-                  resources={resources}
-                  component={component}
-                  matchings={resourceMatchings}
-                  modelReviewStatus={review?.status}
-                />
-
-                {filteredResources?.length > 0 ? (
-                  <ResourceList
-                    isLoading={isLoadingResources}
-                    isError={isError}
-                    resources={filteredResources}
+        {showResources && (
+          <Card elevation={2}>
+            <CardContent>
+              <Typography variant="h6" sx={{ marginBottom: "1rem" }}>
+                Resources
+              </Typography>
+              {(isLoadingMatchings || isLoadingResources) && (
+                <Box
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Stack spacing={1}>
+                    <Typography>Loading</Typography>
+                    <LinearProgress sx={{ width: "100%" }} />
+                  </Stack>
+                </Box>
+              )}
+              {!isLoadingMatchings && !isLoadingResources && (
+                <>
+                  <MatchComponentWithResource
+                    modelId={modelId}
+                    resources={resources}
+                    component={component}
+                    matchings={resourceMatchings}
+                    modelReviewStatus={review?.status}
                   />
-                ) : (
-                  <Typography sx={{ marginTop: "1rem" }}>
-                    No resource matched
-                  </Typography>
-                )}
-              </>
-            )}
-          </CardContent>
-        </Card>
+
+                  {filteredResources?.length > 0 ? (
+                    <ResourceList
+                      isLoading={isLoadingResources}
+                      isError={isError}
+                      resources={filteredResources}
+                    />
+                  ) : (
+                    <Typography sx={{ marginTop: "1rem" }}>
+                      No resource matched
+                    </Typography>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </Box>
     </Box>
   );

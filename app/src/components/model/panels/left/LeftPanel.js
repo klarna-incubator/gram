@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { ToggleLeftPanelButton } from "../../board/components/ToggleLeftPanelButton";
 import { COMPONENT_TYPE } from "../../board/constants";
 import { useSelectedComponent } from "../../hooks/useSelectedComponent";
+import { useGetConfigQuery } from "../../../../api/gram/config";
 import { ActionItemTab } from "./ActionItemTab";
 import { ResourceTab } from "./ResourceTab";
 import { ComponentTab } from "./ComponentTab";
@@ -43,6 +44,8 @@ export function LeftPanel() {
   const [tab, setTab] = useState(TAB.SYSTEM);
 
   const selectedComponent = useSelectedComponent();
+  const { data: config } = useGetConfigQuery();
+  const showResources = config?.features?.resources;
 
   const { leftPanelCollapsed } = useSelector(({ model }) => ({
     leftPanelCollapsed: model.leftPanelCollapsed,
@@ -104,7 +107,9 @@ export function LeftPanel() {
         {isDataFlow && (
           <Tab disableRipple label="DATA FLOW" value={TAB.DATA_FLOW} />
         )}
-        <Tab disableRipple label="RESOURCES" value={TAB.RESOURCES} />
+        {showResources && (
+          <Tab disableRipple label="RESOURCES" value={TAB.RESOURCES} />
+        )}
       </Tabs>
 
       <TabPanel value={tab} index={TAB.SYSTEM}>
@@ -119,9 +124,11 @@ export function LeftPanel() {
       <TabPanel value={tab} index={TAB.DATA_FLOW}>
         {isDataFlow && <DataFlowTab />}
       </TabPanel>
-      <TabPanel value={tab} index={TAB.RESOURCES}>
-        <ResourceTab />
-      </TabPanel>
+      {showResources && (
+        <TabPanel value={tab} index={TAB.RESOURCES}>
+          <ResourceTab />
+        </TabPanel>
+      )}
       <LeftFooter />
     </Box>
   );

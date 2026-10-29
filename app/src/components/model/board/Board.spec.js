@@ -16,7 +16,7 @@ const renderComponent = (props, store) =>
 
 describe("Board", () => {
   const store = createMockStore({
-    webSocket: {
+    realtime: {
       activeUsers: [
         {
           sub: "joakim-user@example.com",

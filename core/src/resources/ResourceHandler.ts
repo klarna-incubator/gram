@@ -35,6 +35,10 @@ export class ResourceHandler {
     this.resourceProviders.push(provider);
   }
 
+  hasProviders(): boolean {
+    return this.resourceProviders.length > 0;
+  }
+
   async getResources(systemId: string): Promise<ResourceResult> {
     return [
       await Promise.all(
