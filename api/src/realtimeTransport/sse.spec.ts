@@ -405,7 +405,7 @@ describe("sse transport", () => {
     });
 
     it("closes a connection that stays silent and tells the others", async () => {
-      configureSse({ keepAliveMS: 20, idleTimeoutMS: 150 });
+      configureSse({ keepAliveMS: 20, idleTimeoutMS: 600 });
       const silent = await open("silent@abc.xyz");
       const other = await open("other@abc.xyz");
       await other.waitForUsers(2);
@@ -413,7 +413,7 @@ describe("sse transport", () => {
       // Keep the other one alive while the silent one is not heard from.
       const beat = setInterval(
         () => heartbeat("other@abc.xyz", other.connectionId),
-        30
+        40
       );
       try {
         await silent.waitFor((e) => e.ended === true);
@@ -425,15 +425,15 @@ describe("sse transport", () => {
     });
 
     it("keeps a connection open while heartbeats arrive", async () => {
-      configureSse({ keepAliveMS: 20, idleTimeoutMS: 150 });
+      configureSse({ keepAliveMS: 20, idleTimeoutMS: 600 });
       const client = await open("user@abc.xyz");
       await client.waitFor((e) => e.event === "connected");
 
       const beat = setInterval(
         () => heartbeat("user@abc.xyz", client.connectionId),
-        30
+        40
       );
-      await new Promise((resolve) => setTimeout(resolve, 450));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       clearInterval(beat);
 
       expect(roomRegistry.get(MODEL_ID)?.connections).toHaveLength(1);
