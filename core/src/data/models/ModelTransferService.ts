@@ -509,15 +509,22 @@ export class ModelTransferService extends EventEmitter {
       }
     });
 
+    const dataFlowsById = new Map(
+      payload.modelData.dataFlows.map((dataFlow) => [dataFlow.id, dataFlow])
+    );
     payload.flows.forEach((flow) => {
-      if (!dataFlowIds.has(flow.dataFlowId)) {
+      const dataFlow = dataFlowsById.get(flow.dataFlowId);
+      if (!dataFlow) {
         throw new InvalidInputError(
           `Flow references unknown data flow ${flow.dataFlowId}.`
         );
       }
-      if (!componentIds.has(flow.originComponentId)) {
+      if (
+        flow.originComponentId !== dataFlow.startComponent.id &&
+        flow.originComponentId !== dataFlow.endComponent.id
+      ) {
         throw new InvalidInputError(
-          `Flow references unknown component ${flow.originComponentId}.`
+          `Flow origin ${flow.originComponentId} must be an endpoint of data flow ${flow.dataFlowId}.`
         );
       }
     });
