@@ -14,6 +14,17 @@ import { hasSentry } from "../util/sentry.js";
 
 const log = log4js.getLogger("authMw");
 
+function peekJwtAlg(token: string): string {
+  try {
+    const header = JSON.parse(
+      Buffer.from(token.split(".")[0], "base64url").toString("utf8")
+    );
+    return String(header?.alg ?? "none");
+  } catch {
+    return "not-a-jwt";
+  }
+}
+
 async function tryGramTokenValidation(
   dal: DataAccessLayer,
   req: Request,
@@ -23,7 +34,13 @@ async function tryGramTokenValidation(
     return await jwt.validateToken(token);
   } catch (error: any) {
     log.warn("Gram token validation error", {
-      payload: { error: error?.message },
+      payload: {
+        error: error?.message,
+        // Header only (never the token itself): shows which kind of token was presented.
+        tokenAlg: peekJwtAlg(token),
+        method: req.method,
+        path: req.path,
+      },
       meta: { provider: "gram" },
     });
     return null;
@@ -128,12 +145,27 @@ export function validateTokenMiddleware(dal: DataAccessLayer) {
       }
     }
 
+    let authMethod = req.user ? "bearer" : "none";
     if (!req.user) {
       const requestUser = await tryAuthenticateRequest(req);
       if (requestUser) {
         req.user = requestUser;
+        authMethod = `request:${requestUser.provider ?? "unknown"}`;
       }
     }
+
+    log.info("Request authentication result", {
+      payload: {
+        method: req.method,
+        path: req.path,
+        authenticated: Boolean(req.user),
+        authMethod,
+        user: req.user?.sub,
+        roles: req.user?.roles,
+        provider: req.user?.provider,
+        hadBearerToken: Boolean(bearerToken),
+      },
+    });
 
     if (req.user && hasSentry()) {
       Sentry.setUser({ email: req.user.sub, roles: req.user.roles });
