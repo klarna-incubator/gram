@@ -1,69 +1,68 @@
 import { Autocomplete, MenuItem, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useLazyListSystemsQuery } from "../../api/gram/system";
+import React, { useEffect, useMemo, useState } from "react";
+import { useLazySearchQuery } from "../../api/gram/search";
+
+const NO_SYSTEM = { value: null, label: "No System" };
 
 export function SystemDropdown({ value, onChange, ...props }) {
-  const [options, setOptions] = useState([{ value: null, label: "No System" }]);
-  const [inputValue, setInputValue] = React.useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [searchLazy, { data: searchResult, isFetching }] = useLazySearchQuery();
 
-  const [listLazy, { data: result, isLoading }] = useLazyListSystemsQuery();
-  const systems = result?.systems || null;
-
+  // System search was removed from GET /systems; use the generic search API.
   useEffect(() => {
-    if (!systems) return;
-    const newOptions =
-      systems.map((r) => ({
-        value: r.id,
-        label: r.shortName,
-      })) || [];
-    newOptions.push({ value: null, label: "No System" });
+    if (inputValue === "") return;
+    searchLazy({ searchText: inputValue, types: ["system"] });
+  }, [inputValue, searchLazy]);
 
-    setOptions(newOptions);
-  }, [systems, setOptions]);
+  const options = useMemo(() => {
+    const found = (searchResult?.[0]?.items || []).map((r) => ({
+      value: r.id,
+      label: r.label,
+    }));
+    return [...found, NO_SYSTEM];
+  }, [searchResult]);
 
-  useEffect(() => {
-    if (inputValue === "") {
-      return;
-    }
-    listLazy({
-      filter: "search",
-      search: inputValue,
-    });
-  }, [inputValue, listLazy]);
+  const selected = useMemo(
+    () =>
+      value
+        ? options.find((o) => o.value === value) || {
+            value,
+            label: value,
+          }
+        : null,
+    [value, options]
+  );
 
   return (
     <Autocomplete
       fullWidth
-      value={value}
+      autoHighlight
+      value={selected}
       onChange={(e, newValue) => {
-        onChange(newValue.value);
+        onChange(newValue ? newValue.value : null);
       }}
-      loading={isLoading}
+      loading={isFetching}
       options={options}
-      renderInput={(props) => (
+      getOptionLabel={(o) => o.label ?? o.value ?? ""}
+      renderInput={(params) => (
         <TextField
           variant="standard"
           label={"System"}
           helperText={"Type to search for a system"}
-          {...props}
+          {...params}
         />
       )}
       onInputChange={(_, newInputValue) => {
         setInputValue(newInputValue);
       }}
-      filterSelectedOptions
-      isOptionEqualToValue={(option, value) => {
-        return value === option.value;
-      }}
+      isOptionEqualToValue={(option, val) => option.value === val.value}
       filterOptions={(x) => x}
-      renderOption={(props, opt) => {
-        return (
-          <MenuItem {...props} value={opt.value} key={opt.value}>
-            {opt.label}&nbsp;
-            {opt.value && <span style={{ color: "gray" }}> ({opt.value})</span>}
-          </MenuItem>
-        );
-      }}
+      renderOption={(props, opt) => (
+        <MenuItem {...props} value={opt.value} key={opt.value ?? "no-system"}>
+          {opt.label}&nbsp;
+          {opt.value && <span style={{ color: "gray" }}> ({opt.value})</span>}
+        </MenuItem>
+      )}
       {...props}
     />
   );
